@@ -17,12 +17,12 @@ env.application_name = 'budgetweb'   # name of webapp
 env.root_package_name = 'budgetweb'  # name of app in webapp
 
 env.remote_home = '/home/django'  # remote home root
-env.remote_python_version = ''  # python version
+env.remote_python_version = 3.4  # python version
 env.remote_virtualenv_root = join(env.remote_home, '.virtualenvs')  # venv root
 env.remote_virtualenv_dir = join(env.remote_virtualenv_root,
                                  env.application_name)  # venv for webapp dir
 # git repository url
-env.remote_repo_url = 'git@git.net:budgetweb.git'
+env.remote_repo_url = 'git@git.unistra.fr:di/budgetweb.git'
 env.local_tmp_dir = '/tmp'  # tmp dir
 env.remote_static_root = '/var/www/static/'  # root of static files
 env.locale = 'fr_FR.UTF-8'  # locale to use on remote
@@ -30,7 +30,7 @@ env.timezone = 'Europe/Paris'  # timezone for remote
 env.keep_releases = 2  # number of old releases to keep before cleaning
 env.extra_goals = ['preprod']  # add extra goal(s) to defaults (test,dev,prod)
 env.dipstrap_version = 'latest'
-env.verbose_output = False  # True for verbose output
+env.verbose_output = True  # True for verbose output
 
 # optional parameters
 
