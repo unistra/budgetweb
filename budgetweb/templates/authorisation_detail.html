@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<TABLE>
+<CAPTION> Autorisation </CAPTION>
+<thead>
+    <TH>Login de l'utilisateur</TH>
+    <TH>Objet</TH>
+    <TH> Supprimer</TH>
+</thead>
+<tbody>
+<TR>
+       <TD>{{ Authorisation.username }}</TD>
+       <TD>{{ Authorisation.objet }}</TD>
+       <TD><a href="{% url 'authorisation_delete' pkauth=Authorisation.pk %}">supprimer</a></TD>
+
+</TR>
+</tbody>
+<tfoot>
+     <tr><td> Total</td><td> {{ Authorisation.count }} entrees</td></tr>
+</tfoot>
+</TABLE>
+
+       <TD><a href="{% url 'authorisation_list'%}">Retour à la liste</a></TD>
+
+{% endblock %}

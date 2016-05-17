@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<TABLE>
+<CAPTION> Tableau des origines des fonds </CAPTION>
+<thead>
+    <TH> Id </TH>
+    <TH> Id parent </TH>
+    <TH> Nom </TH>
+    <TH> Libellé </TH>
+    <TH> Type </TH>
+    <TH> Budget? </TH>
+    <TH> Nomades? </TH>
+</thead>
+<tbody>
+<TR>
+       <TD> {{ reponse.ofid }} </TD>
+       <TD> {{ reponse.ofparent }}</TD>
+       <TD> {{ reponse.ofname }}</TD>
+       <TD> {{ reponse.oflabel }}</TD>
+       <TD> {{ reponse.oftype }}</TD>
+       <TD> {{ reponse.ofbudget }}</TD>
+       <TD> {{ reponse.ofnomades }}</TD>
+       <TD><a href="{% url 'originefonds_delete' pkof=of.pk %}">supprimer</a></TD>
+</TR>
+</tbody>
+<tfoot>
+     <tr><td> Total</td><td> {{ reponse.count }} entrees</td></tr>
+</tfoot>
+</TABLE>
+
+       <TD><a href="{% url 'originefonds_list'%}">Retour à la liste</a></TD>
+
+{% endblock %}

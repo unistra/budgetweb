@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<TABLE>
+<CAPTION> Periode budgetaire </CAPTION>
+<thead>
+    <TH>Code abregé</TH>
+    <TH>Label</TH>
+    <TH>P&eacuteriode</TH>
+    <TH>Bloqu&eacute</TH>
+    <TH> Supprimer</TH>
+</thead>
+<tbody>
+<TR>
+       <TD>{{ reponse.name }}</TD>
+       <TD>{{ reponse.label }}</TD>
+       <TD>{{ reponse.annee }}</TD>
+       <TD>{{ reponse.bloque }}</TD>
+       <TD><a href="{% url 'periodebudget_delete' pkpb=reponse.id %}">supprimer {{ reponse.id }}</a></TD>
+
+</TR>
+</tbody>
+<tfoot>
+     <tr><td> Total</td><td> 1 entree</td></tr>
+</tfoot>
+</TABLE>
+
+       <TD><a href="{% url 'periodebudget_list'%}">Retour à la liste</a></TD>
+
+{% endblock %}

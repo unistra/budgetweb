@@ -1,0 +1,20 @@
+
+{% extends 'base.html' %}
+{% block content %}
+
+<form action="" method="POST" class="post-form">{% csrf_token %}
+<TABLE BORDER="1">
+<TR><TD>Import des depenses</TD></TR>
+<TR><TD> Chemin d'accès </TD><TD><input type="text" size=50 name="lechemin" id="lechemin"></TD></TR>
+</TABLE>
+<input type="submit" value="Save">
+</form>
+
+<TABLE BORDER=1>
+<TR><TD>
+Message:
+</TD><TD> {{lemessage}}
+</TD></TR>
+</TABLE>
+{% endblock %}
+

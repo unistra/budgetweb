@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% load myfilters %}
+
+
+<br>
+<br>
+
+{% with depenses|first as firstdep %} 
+<a href="{% url 'menu1_list' %}"> Accueil > </a>
+&nbsp&nbsp&nbsp
+<a class=info href=""> {{ firstdep.structlev1.name }} <span> {{ firstdep.structlev1.label }}</span></a> >
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+<a class=info href=""> {{ firstdep.structlev2.name }} <span> {{ firstdep.structlev2.label }} </span></a> >
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp 
+<a class=info href="">{{ firstdep.structlev3.name }} <span> {{ firstdep.structlev3.label }} </span>></a> 
+<br>
+<br>
+<b><span id="cc"> CC {{ firstdep.structlev3.label }} ></span></b> 
+{% endwith %}
+<br><br>
+
+
+<a href="{% url 'depensefull_new2' %}" class="top-menu"> Nouvelle d&eacutepense <span class="glyphicon glyphicon-plus"></span></a>
+
+<br>
+<br>
+
+<TABLE WIDTH=100% border=1>
+<CAPTION> Tableau des d&eacutepenses </CAPTION><!-- essai2-->
+<thead class="thcc">
+
+    <TH> Identifiant </TH>
+
+    <TH> Compte Budg.  </TH>  <!-- Compte Depense lev2-->
+    <TH> Chap.      </TH> <!--Compte Depense lev1-->
+    <TH> Dest. </TH>  <!--domaine fonctionnel -->
+    <TH> Masse </TH>
+    <TH> Origine des fonds   </TH>
+    <TH> Origine des fonds   </TH>
+
+    <TH> Pfi   </TH> <!--Plan Financement -->
+    <TH> Montant dc    </TH>
+    <TH> Montant cp    </TH>
+    <TH> Montant ae    </TH>
+    <TH> Commentaire </TH>
+    <TH> Créé par </TH>
+    <TH> Date de création </TH>
+    <TH> Modifié par </TH>
+    <TH> Date de modification</TH>
+</thead>
+<tbody>
+{% for depense in depenses %}
+<TR class="tdcc">
+       <TD><a href="{% url 'depensefull_detail2' pkdep=depense.pk %}"> {{ depense.myid    }} </a></TD>
+
+       <TD>{{ depense.cptdeplev2.ccname  }}</TD>
+       <TD>{{ depense.cptdeplev1.ccname  }}</TD>
+       <TD>{{ depense.domfonc.dfcode }}</TD>
+       <TD>{{ depense.domfonc.dfcode }} </TD>
+       <TD>{{ depense.orfonds.ofname }}</TD>
+       <TD>{{ depense.orfonds2.ofname }}</TD>
+
+       <TD>{{ depense.plfi.name    }}</TD>
+       <TD>{{ depense.montantdc }}</TD>
+       <TD>{{ depense.montantcp }}</TD>
+       <TD>{{ depense.montantae }}</TD>
+       <TD>{{ depense.commentaire }}</TD>
+       <TD>{{ depense.creepar }}</TD>
+       <TD>{{ depense.creele }}</TD>
+       <TD>{{ depense.modifiepar }}</TD>
+       <TD>{{ depense.modifiele }}</TD>
+</TR>
+{% endfor %}
+</tbody>
+<tfoot>
+     <tr class="thcc">
+      <td> Total</td><td> {{ depenses.count }} entrees</td><td></td><td></td><td></td><td></td><td></td><td></td>
+      <td>{{totaldc.montantdc__sum}}</td><td>{{totalcp.montantcp__sum}}</td><td>{{totalae.montantae__sum}}</td>
+      <td></td><td></td><td></td><td></td><td></td>
+    </tr>
+</tfoot>
+</TABLE>
+<br>
+<br>
+
+{% endblock %}
+
+

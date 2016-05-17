@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<TABLE>
+<CAPTION> Structure </CAPTION>
+<thead>
+    <TH> Id app </TH>
+    <TH> Type </TH>
+    <TH> Nom </TH>
+    <TH> Libellé </TH>
+    <TH> Parent Id </TH>
+    <TH> Ordre </TH>
+    <TH> Niv </TH>
+    <TH> Bloq </TH>
+    <TH> Modifdate </TH>
+    <TH> Modifpar </TH>
+    <TH> dfmc </TH>
+    <TH> fdr </TH>
+    <TH> Supprimer</TH>
+</thead>
+<tbody>
+<TR>
+       <TD> {{ reponse.myid }}      </TD>
+       <TD> -{{ reponse.type }}-  </TD>
+       <TD> {{ reponse.name   }}  </TD>
+       <TD> {{ reponse.label  }}  </TD>
+       <TD> {{ reponse.parentid   }}  </TD>
+       <TD> {{ reponse.ordre  }}  </TD>
+       <TD> {{ reponse.niv }}  </TD>
+       <TD> {{ reponse.bloq }}  </TD>
+       <TD> {{ reponse.modifdate }}  </TD>
+       <TD> {{ reponse.modifpar }}  </TD>
+       <TD> {{ reponse.dfmc }}  </TD>
+       <TD> {{ reponse.fdr }}  </TD>
+       <TD><a href="{% url 'structure_delete' pkst=reponse.pk %}">supprimer</a></TD>
+
+</TR>
+</tbody>
+<tfoot>
+     <tr><td> Total</td><td> {{ reponse.count }} entrees</td></tr>
+</tfoot>
+</TABLE>
+
+       <TD><a href="{% url 'structure_list'%}">Retour à la liste</a></TD>
+
+{% endblock %}

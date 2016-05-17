@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<br><br>
+{% with recettes|first as firstrec %}
+<a href="{% url 'menu1_list' %}"> Accueil > </a>
+&nbsp&nbsp&nbsp
+<a class=info href=""> {{ firstrec.structlev1.name }} <span> {{ firstrec.structlev1.label }}</span></a> >
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+<a class=info href=""> {{ firstrec.structlev2.name }} <span> {{ firstrec.structlev2.label }} </span></a> >
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+<a class=info href="">{{ firstrec.structlev3.name }} <span> {{ firstrec.structlev3.label }} </span>></a>
+<br>
+<br>
+<b><span id="cc"> CP {{ firstrec.structlev3.label }} ></span></b>
+{% endwith %}
+<br>
+
+<br>
+<br>
+<a href="{% url 'recettefull_new2' %}" class="top-menu"> Nouvelle recette<span class="glyphicon glyphicon-plus"></span></a>
+<br>
+<br>
+
+<TABLE WIDTH=100% border=1>
+<CAPTION> Tableau des recettes</CAPTION>
+<thead class="thcp">
+
+    <TH> Identifiant </TH>
+
+    <TH> Compte Depense      </TH>
+    <TH> Compte Depense      </TH>
+    <TH> Domaine Fonctionnel </TH>
+
+    <TH> Origine des fonds   </TH>
+    <TH> Origine des fonds   </TH>
+
+    <TH> Plan Financement    </TH>
+    <TH> P&eacuteriode Budget. </TH>
+    <TH> Montant     </TH>
+    <TH> Montant AR  </TH>
+    <TH> Montant RE  </TH>
+
+    <TH> Commentaire </TH>
+    <TH> Fichier   </TH>
+    <TH> Créé par </TH>
+    <TH> Date de création </TH>
+    <TH> Modifié par </TH>
+    <TH> Date de modification</TH>
+
+</thead>
+<tbody>
+{% for depense in recettes %}
+<TR class="tdcp">
+       <TD><a href="{% url 'recettefull_detail2' pkrec=depense.pk %}">{{depense.id}} / {{depense.myid}} </a></TD>
+
+       <TD>{{ depense.cptdeplev1.ccname  }}</TD>
+       <TD>{{ depense.cptdeplev2.ccname  }}</TD>
+       <TD>{{ depense.domfonc.dfcode }}</TD>
+       <TD>{{ depense.orfonds.ofname }}</TD>
+       <TD>{{ depense.orfonds2.ofname }}</TD>
+
+       <TD>{{ depense.plfi    }}</TD>
+       <TD>{{ depense.periodebudget    }}</TD>
+
+       <TD>{{ depense.montant }}</TD>
+       <TD>{{ depense.montantar }}</TD>
+       <TD>{{ depense.montantre }}</TD>
+
+       <TD>{{ depense.commentaire }}</TD>
+       <TD>{{ depense.nom_des_fichiers }}</TD>
+       <TD>{{ depense.creepar }}</TD>
+       <TD>{{ depense.creele }}</TD>
+       <TD>{{ depense.modifiepar }}</TD>
+       <TD>{{ depense.modifiele }}</TD>
+
+</TR>
+{% endfor %}
+</tbody>
+<tfoot>
+   <tr class="thcp"><td> Total</td><td> {{ recettes.count }} entrees</td> <td></td><td></td><td></td><td></td><td></td>
+    <td></td> <td>{{total.montant__sum}}</td> <td>{{totalar.montantar__sum}}</td><td> {{totalre.montantre__sum}}</td>
+    <td></td><td></td><td></td><td></td><td></td><td></td>
+
+   </tr>
+</tfoot>
+</TABLE>
+<br>
+
+{% endblock %}
+
+

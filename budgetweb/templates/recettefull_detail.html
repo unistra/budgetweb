@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<TABLE WIDTH=75% border=1>
+<CAPTION> Depense </CAPTION>
+<thead>
+    <TR> <TH> Identifiant </TH> <TD>{{ recette.myid    }}</TD> </TR>
+    <TR> <TH> Structurel1   </TH> <TD>{{ recette.structlev1  }}</TD> </TR>
+    <TR> <TH> Structurel2   </TH> <TD>{{ recette.structlev2  }}</TD> </TR>
+    <TR> <TH> Structurel3   </TH> <TD>{{ recette.structlev3  }}</TD> </TR>
+
+    <TR> <TH> Compte Depensel1      </TH> <TD>{{ recette.cptdeplev1  }}</TD> </TR>
+    <TR> <TH> Compte Depensel2      </TH> <TD>{{ recette.cptdeplev2  }}</TD> </TR>
+    <TR> <TH> Domaine Fonctionnel </TH> <TD>{{ recette.domfonc }}</TD> </TR>
+    <TR> <TH> Origine des fonds   </TH> <TD>{{ recette.orfonds }}</TD> </TR>
+    <TR> <TH> Origine des fonds   </TH> <TD>{{ recette.orfonds2 }}</TD> </TR>
+
+    <TR> <TH> Plan Financement    </TH> <TD>{{ recette.plfi    }}</TD> </TR>
+    <TR> <TH> Montant     </TH> <TD>{{ recette.montant }}</TD> </TR>
+    <TR> <TH> Montant  AR   </TH> <TD>{{ recette.montantar }}</TD> </TR>
+    <TR> <TH> Montant  RE   </TH> <TD>{{ recette.montantre }}</TD> </TR>
+    <TR> <TH> Commentaire </TH> <TD>{{ recette.commentaire }}</TD> </TR>
+    <TR> <TH> P&eacuteriode budg&eacutetaire </TH> <TD>{{ recette.periodebudget }}</TD> </TR>
+
+    <TR> <TH> Fichier </TH> <TD>{{ recette.nom_des_fichiers }}</TD> </TR>
+
+</thead>
+<tbody>
+</tbody>
+<tfoot>
+     <tr><td> Total</td><td> 1 entree</td></tr>
+</tfoot>
+</TABLE>
+
+       <TD><a href="{% url 'recettefull_list'%}">Retour à la liste</a></TD>
+
+{% endblock %}

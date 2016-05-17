@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Liste des origines des fonds</h1>
+
+
+<form action="" method="POST">{% csrf_token %}
+<TABLE BORDER=1>
+   <TR><TD>Type </TD><TD>
+            <input type="text" name="oftype"></TD>
+   </TR>
+   <TR><TD>Libellé </TD><TD>
+            <input type="text" name="oflabel"></TD>
+   </TR>
+       <input type="submit" value="chercher">
+    </TABLE>
+</form>
+
+<br>
+<br>
+
+<TABLE>
+<CAPTION> Tableau des origines des fonds </CAPTION>
+<thead>
+    <TH style="padding:0 15px 0 15px;"> Id </TH>
+    <TH style="padding:0 15px 0 15px;"> Id parent </TH>
+    <TH style="padding:0 15px 0 15px;"> Nom </TH>
+    <TH style="padding:0 15px 0 15px;"> Libellé </TH>
+    <TH style="padding:0 15px 0 15px;"> Type </TH>
+    <TH style="padding:0 15px 0 15px;"> Budget? </TH>
+    <TH style="padding:0 15px 0 15px;"> Nomades? </TH>
+    <TH style="padding:0 15px 0 15px;"> Supprimer </TH>
+</thead>
+<tbody>
+{% for of in reponses %}
+<TR>
+       <TD style="padding:0 15px 0 15px;"> --{{ of.ofid }}-- </TD>
+       <TD style="padding:0 15px 0 15px;"> --{{ of.ofparent }}-- </TD>
+       <TD style="padding:0 15px 0 15px;"> {{ of.ofname }}</TD>
+       <TD style="padding:0 15px 0 15px;"> {{ of.oflabel }}</TD>
+       <TD style="padding:0 15px 0 15px;"> --{{ of.oftype }}-- </TD>
+       <TD style="padding:0 15px 0 15px;"> {{ of.ofbudget }}</TD>
+       <TD style="padding:0 15px 0 15px;"> {{ of.ofnomades }}</TD>
+       <TD style="padding:0 15px 0 15px;"><a href="{% url 'originefonds_delete' pkof=of.pk %}">supprimer</a></TD>
+
+</TR>
+{% endfor %}
+</tbody>
+<tfoot>
+     <tr><td> Total</td><td> {{ originefonds.count }} entrees</td></tr>
+</tfoot>
+</TABLE>
+<br>
+<br>
+<a href="{% url 'originefonds_new' %}" class="top-menu"> Nouvelle origine fonds<span class="glyphicon glyphicon-plus"></span></a>
+
+{% endblock %}
+
+
