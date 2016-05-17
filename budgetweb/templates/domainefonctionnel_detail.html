@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<TABLE>
+<CAPTION> Domaine fonctionnel </CAPTION>
+<thead>
+    <TH> Id DF </TH>
+    <TH> Libellé </TH>
+    <TH> Cumul - Groupe </TH>
+    <TH> Groupe fonctionnel </TH>
+    <TH> Remarque </TH>
+    <TH> Description </TH>
+    <TH> Supprimer</TH>
+</thead>
+<tbody>
+<TR>
+       <TD> {{ reponse.dfcode }}      </TD>
+       <TD> {{ reponse.dflabel }}  </TD>
+       <TD> {{ reponse.dfgrpcumul }}  </TD>
+       <TD> {{ reponse.dfgrpfonc  }}  </TD>
+       <TD> {{ reponse.dfrmq   }}  </TD>
+       <TD> {{ reponse.dfdesc  }}  </TD>
+       <TD><a href="{% url 'domainefonctionnel_delete' pkdf=reponse.pk %}">supprimer</a></TD>
+
+</TR>
+</tbody>
+<tfoot>
+     <tr><td> Total</td><td> {{ reponse.count }} entrees</td></tr>
+</tfoot>
+</TABLE>
+
+       <TD><a href="{% url 'domainefonctionnel_list'%}">Retour à la liste</a></TD>
+
+{% endblock %}

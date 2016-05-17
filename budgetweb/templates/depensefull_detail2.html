@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<TABLE WIDTH=75% border=1>
+<CAPTION> Depense </CAPTION>
+<tbody>
+    <TR> <TH> Identifiant </TH> <TD>{{ depense.myid    }}</TD> </TR>
+    <TR> <TH> Structurel1   </TH> <TD>{{ depense.structlev1  }}</TD> </TR>
+    <TR> <TH> Structurel2   </TH> <TD>{{ depense.structlev2  }}</TD> </TR>
+    <TR> <TH> Structurel3   </TH> <TD>{{ depense.structlev3  }}</TD> </TR>
+
+    <TR> <TH> Compte Depensel1      </TH> <TD>{{ depense.cptdeplev1  }}</TD> </TR>
+    <TR> <TH> Compte Depensel2      </TH> <TD>{{ depense.cptdeplev2  }}</TD> </TR>
+    <TR> <TH> Domaine Fonctionnel </TH> <TD>{{ depense.domfonc }}</TD> </TR>
+    <TR> <TH> Origine des fonds   </TH> <TD>{{ depense.orfonds }}</TD> </TR>
+    <TR> <TH> Origine des fonds   </TH> <TD>{{ depense.orfonds2 }}</TD> </TR>
+
+    <TR> <TH> Plan Financement    </TH> <TD>{{ depense.plfi    }}</TD> </TR>
+    <TR> <TH> Montant dc    </TH> <TD>{{ depense.montantdc }}</TD> </TR>
+    <TR> <TH> Montant ae    </TH> <TD>{{ depense.montantae }}</TD> </TR>
+    <TR> <TH> Date ae    </TH> <TD>{{ depense.dateae }}</TD> </TR>
+    <TR> <TH> Montant cp    </TH> <TD>{{ depense.montantcp }}</TD> </TR>
+    <TR> <TH> Commentaire </TH> <TD>{{ depense.commentaire }}</TD> </TR>
+    <TR> <TH> P&eacuteriode budg&eacutetaire </TH> <TD>{{ depense.periodebudget }}</TD> </TR>
+
+    <TR> <TH> Fichier </TH> <TD>{{ depense.nom_des_fichiers }}</TD> </TR>
+    <TR> <TH> Créé par </TH>     <TD>{{ depense.creepar }}</TD> </TR>
+    <TR> <TH> Date de création </TH><TD>{{ depense.creele }}</TD> </TR>
+    <TR> <TH> Modifié par </TH><TD>{{ depense.modifiepar }}</TD> </TR>
+    <TR> <TH> Date de modification</TH><TD>{{ depense.modifiele }}</TD> </TR>
+    <TR> <TH>  </TH></TD><TD><a href="{% url 'depensefull_delete2' pkdep=depense.id %}">supprimer</a></TD> </TR>
+
+</tbody>
+</TABLE>
+{% with localpkcc=depense.structlev3.pk %}
+       <TD><a href="{% url 'depensefull_parcc' pkcc=localpkcc %}">Retour à la liste</a></TD>
+{% endwith %}
+
+{% endblock %}

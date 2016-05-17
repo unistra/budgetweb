@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Supprimer une depense</h1>
+    <form method="POST" class="post-form">{% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="save btn btn-default" value="ok">Supprimer</button>
+        <a href="{% url 'depensefull_list' %}" class="btn btn-default">Cancel</a>
+    </form>
+<br>
+<br>
+
+{% endblock %}

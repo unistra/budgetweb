@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Liste des comptes comptables</h1>
+
+
+<form action="" method="POST">{% csrf_token %}
+<TABLE BORDER=1>
+   <TR><TD>Nom </TD><TD>
+            <input type="text" name="ccname"></TD>
+   </TR>
+   <TR><TD>Libellé </TD><TD>
+            <input type="text" name="cclabel"></TD>
+   </TR>
+       <input type="submit" value="chercher">
+    </TABLE>
+</form>
+
+<br>
+<br>
+
+<TABLE>
+<CAPTION> Tableau des comptes comptables </CAPTION>
+<thead>
+    <TH style="padding:0 15px 0 15px;"> Id app </TH>
+    <TH style="padding:0 15px 0 15px;"> Id parent </TH>
+    <TH style="padding:0 15px 0 15px;"> Nom </TH>
+    <TH style="padding:0 15px 0 15px;"> Libellé </TH>
+    <TH style="padding:0 15px 0 15px;"> Type R/D </TH>
+    <TH style="padding:0 15px 0 15px;"> Input </TH>
+    <TH style="padding:0 15px 0 15px;"> Type de contrôle </TH>
+    <TH style="padding:0 15px 0 15px;"> Supprimer</TH>
+</thead>
+<tbody>
+{% for reponse in reponses %}
+<TR>
+       <TD style="padding:0 15px 0 15px;"> -{{ reponse.ccid }}-      </TD>
+       <TD style="padding:0 15px 0 15px;"> -{{ reponse.ccparent }}-  </TD>
+       <TD style="padding:0 15px 0 15px;"> {{ reponse.ccname   }}  </TD>
+       <TD style="padding:0 15px 0 15px;"> {{ reponse.cclabel  }}  </TD>
+       <TD style="padding:0 15px 0 15px;"> {{ reponse.cctype   }}  </TD>
+       <TD style="padding:0 15px 0 15px;"> {{ reponse.ccinput  }}  </TD>
+       <TD style="padding:0 15px 0 15px;"> {{ reponse.cctypectrl }}  </TD>
+       <TD><a href="{% url 'comptecomptable_delete' pkcc=reponse.pk %}">supprimer</a></TD>
+
+</TR>
+{% endfor %}
+</tbody>
+<tfoot>
+     <tr><td> Total</td><td> {{ reponses.count }} entrees</td></tr>
+</tfoot>
+</TABLE>
+<br>
+<br>
+<a href="{% url 'comptecomptable_new' %}" class="top-menu"> Nouveau compte comptable <span class="glyphicon glyphicon-plus"></span></a>
+
+{% endblock %}
+
+

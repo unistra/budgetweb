@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<TABLE>
+<CAPTION> Depense </CAPTION>
+<thead>
+    <TH> Identifiant </TH>
+    <TH> Structure   </TH>
+    <TH> Compte Depense      </TH>
+    <TH> Domaine Fonctionnel </TH>
+    <TH> Origine des fonds   </TH>
+    <TH> Plan Financement    </TH>
+    <TH> Montant     </TH>
+    <TH> Commentaire </TH>
+    <TH> Supprimer   </TH>
+</thead>
+<tbody>
+<TR>
+
+       <TD>{{ depense.myid    }}</TD>
+       <TD>{{ depense.struct  }}</TD>
+       <TD>{{ depense.cptdep  }}</TD>
+       <TD>{{ depense.domfonc }}</TD>
+       <TD>{{ depense.orfonds }}</TD>
+       <TD>{{ depense.plfi    }}</TD>
+       <TD>{{ depense.montant }}</TD>
+       <TD>{{ depense.commentaire }}</TD>
+       <TD><a href="{% url 'depense_delete' pkdep=depense.pk %}">supprimer</a></TD>
+
+</TR>
+</tbody>
+<tfoot>
+     <tr><td> Total</td><td> {{ depense.count }} entrees</td></tr>
+</tfoot>
+</TABLE>
+
+       <TD><a href="{% url 'depense_list'%}">Retour à la liste</a></TD>
+
+{% endblock %}

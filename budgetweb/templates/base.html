@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 {% load staticfiles %}
 {% load dipstrapfiles %}
+{% load myfilters %}
 <html>
 <head>
     <title>{% block title %}budgetweb{% endblock %}</title>
@@ -11,9 +12,14 @@
     <link rel="stylesheet" href="{% dipstrap 'css/bootstrap-unistra.min.css' %}">
     <link rel="stylesheet" href="{% dipstrap 'css/bootstrap-theme-unistra.min.css' %}">
     <link rel="stylesheet" href="{% dipstrap 'css/main.css' %}">
+    <link rel="stylesheet" href="/budgetweb/site_media/css/-styl.css">
     <link rel="stylesheet" href="{% static 'css/budgetweb.css' %}" type="text/css" title="no title" charset="utf-8" />
-    
+    <style>
+     td { padding:0 15px 0 15px; }
+    </style> 
     <script src="{% dipstrap 'js/vendor/modernizr-2.6.2-respond-1.1.0.min.js' %}"></script>
+    <script src="{% dipstrap 'js/vendor/jquery-1.11.0.min.js' %}"></script>
+    <script src="{% dipstrap 'js/vendor/bootstrap.min.js' %}"></script>
     {% block head-javascript %}{% endblock %}
 </head>
 
@@ -32,8 +38,52 @@
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="#">Home</a></li>
+                       <li class="dropdown">
+                       <a class="dropdown-toggle" data-toggle="dropdown" href="#"> Menu BudgetWeb
+                       <span class="caret"></span></a>
+                       <ul class="dropdown-menu">
+                          <li><a href="{% url 'menu1_list'%}">Menu cf cp cc </a></li>
+                          <li><a href="{% url 'authorisation_list'%}">Liste des -autorisations-</a></li>
+                          <li><a href="{% url 'comptecomptable_list'%}">Liste des -comptes comptables-</a></li>
+                          <li><a href="{% url 'domainefonctionnel_list'%}">Liste des -domaines fonctionnels-</a></li>
+                          <li><a href="{% url 'originefonds_list'%}">Liste des -origines des fonds- </a></li>
+                          <li><a href="{% url 'structure_list'%}">Liste des -structures- </a></li>
+                          <li><a href="{% url 'planfinancement_list'%}">Liste des -plans de financement- </a></li>
+                          <li><a href="{% url 'depense_list'%}">Liste des -depenses- </a></li>
+                          <li><a href="{% url 'depensefull_list'%}">Liste des -depenses-V2 </a></li>
+                          <li><a href="{% url 'recettefull_list'%}">Liste des -recettes-V2 </a></li>
+                          <li><a href="{% url 'periodebudget_list'%}">Liste des -P&eacuteriode budg&eacutetaire- </a></li>
+
+
+                          <li><a href="#"> --- --- --- </a></li>
+                          <li><a href="{% url 'authorisation_importcsv'%}">Import des autorisations</a></li>
+                          <li><a href="{% url 'authorisation_deleteall'%}">Nettoyer la table des autorisations</a></li>
+                          <li><a href="#"> --- --- --- </a></li>
+                          <li><a href="{% url 'comptecomptable_importcsv'%}">Import des comptes comptables</a></li>
+                          <li><a href="{% url 'comptecomptable_deleteall'%}">Nettoyer la table des comptes comptables</a></li>
+                          <li><a href="#"> --- --- --- </a></li>
+                          <li><a href="{% url 'domainefonctionnel_importcsv'%}">Import des domaines fonctionnels</a></li>
+                          <li><a href="{% url 'domainefonctionnel_deleteall'%}">Nettoyer la table des domaines fonctionnels</a></li>
+                          <li><a href="#"> --- --- --- </a></li>
+                          <li><a href="{% url 'originefonds_importcsv'%}">Import des origines des fonds</a></li>
+                          <li><a href="{% url 'originefonds_deleteall'%}">Nettoyer la table des origines des fonds</a></li>
+                          <li><a href="#"> --- --- --- </a></li>
+                          <li><a href="{% url 'structure_importcsv'%}">Import des structures</a></li>
+                          <li><a href="{% url 'structure_deleteall'%}">Nettoyer la table des structures</a></li>
+                          <li><a href="#"> --- --- --- </a></li>
+                          <li><a href="{% url 'planfinancement_importcsv'%}">Import des -plans de financement- </a></li>
+                          <li><a href="{% url 'planfinancement_deleteall'%}">Nettoyer la table des -plans de financement-</a></li>
+                          <li><a href="#"> --- --- --- </a></li>
+                          <li><a href="{% url 'depense_importcsv'%}">Import des -depenses- </a></li>
+                          <li><a href="{% url 'depense_deleteall'%}">Nettoyer la table des -depenses-</a></li>
+                          <li><a href="#"> --- --- --- </a></li>
+                          <li><a href="{% url 'recettefull_deleteall'%}">Nettoyer la table des -recettes-</a></li>
+
+                       </ul>
+                    </li>
                     <li><a href="#about">About</a></li>
                     <li><a href="#contact">Contact</a></li>
+
                 </ul>
             </div>
         </div>
@@ -50,8 +100,6 @@
             </div>
         </footer>
     </div>
-    <script src="{% dipstrap 'js/vendor/jquery-1.11.0.min.js' %}"></script>
-    <script src="{% dipstrap 'js/vendor/bootstrap.min.js' %}"></script>
     {% block foot-javascript %}{% endblock %}
 </body>
 </html>
