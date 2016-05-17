@@ -131,7 +131,6 @@ STATIC_URL = '/budgetweb/site_media/'
 # Additional locations of static files
 STATICFILES_DIRS = (
     normpath(join(DJANGO_ROOT, 'static')),
-    '/var/www/html/budgetweb/budgetweb/static/',
 )
 
 # List of finder classes that know how to find static files in
