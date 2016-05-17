@@ -89,21 +89,21 @@ def dev():
 def test():
     """Define test stage"""
     env.roledefs = {
-        'web': ['budgetweb-test.net'],
-        'lb': ['lb.budgetweb-test.net'],
+        'web': ['django-test.u-strasbg.fr'],
+        'lb': ['django-test.u-strasbg.fr'],
     }
     # env.user = 'root'  # user for ssh
     env.backends = ['127.0.0.1']
-    env.server_name = 'budgetweb-test.net'
+    env.server_name = 'budgetweb-test.u-strasbg.fr'
     env.short_server_name = 'budgetweb-test'
     env.static_folder = '/site_media/'
     env.server_ip = ''
     env.no_shared_sessions = False
     env.server_ssl_on = True
-    env.path_to_cert = '/etc/ssl/certs/budgetweb.net.pem'
-    env.path_to_cert_key = '/etc/ssl/private/budgetweb.net.key'
+    env.path_to_cert = '/etc/ssl/certs/wildcard.u-strasbg.fr-cert.pem'
+    env.path_to_cert_key = '/etc/ssl/private/wildcard.u-strasbg.fr-key.pem'
     env.goal = 'test'
-    env.socket_port = ''
+    env.socket_port = '8037'
     env.socket_host = '127.0.0.1'
     env.map_settings = {}
     execute(build_env)
