@@ -123,7 +123,7 @@ MEDIA_URL = '/media/'
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
 STATIC_ROOT = normpath(join(SITE_ROOT, 'assets'))
-PROJECT_ROOT ='/var/www/html/budgetweb/budgetweb'
+#PROJECT_ROOT ='/var/www/html/budgetweb/budgetweb'
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
 STATIC_URL = '/budgetweb/site_media/'
