@@ -2,23 +2,27 @@
 
 {% block content %}
 
-<TABLE>
+<br>
+<br>
+<br>
+<br>
+
+<TABLE border=1>
 <CAPTION> Autorisation </CAPTION>
 <thead>
-    <TH>Login de l'utilisateur</TH>
-    <TH>Objet</TH>
-    <TH> Supprimer</TH>
+    <TH> &nbsp Login de l'utilisateur &nbsp </TH>
+    <TH> &nbsp Objet &nbsp </TH>
+    <TH> &nbsp Supprimer &nbsp</TH>
 </thead>
 <tbody>
 <TR>
        <TD>{{ Authorisation.username }}</TD>
-       <TD>{{ Authorisation.objet }}</TD>
+       <TD>{{ Authorisation.myobject }}</TD>
        <TD><a href="{% url 'authorisation_delete' pkauth=Authorisation.pk %}">supprimer</a></TD>
 
 </TR>
 </tbody>
 <tfoot>
-     <tr><td> Total</td><td> {{ Authorisation.count }} entrees</td></tr>
 </tfoot>
 </TABLE>
 

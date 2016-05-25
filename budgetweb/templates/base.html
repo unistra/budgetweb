@@ -43,6 +43,7 @@
                        <span class="caret"></span></a>
                        <ul class="dropdown-menu">
                           <li><a href="{% url 'menu1_list'%}">Menu cf cp cc </a></li>
+                          <li><a href="{% url 'menu2_list'%}">Menu cf cp cc </a></li>
                           <li><a href="{% url 'authorisation_list'%}">Liste des -autorisations-</a></li>
                           <li><a href="{% url 'comptecomptable_list'%}">Liste des -comptes comptables-</a></li>
                           <li><a href="{% url 'domainefonctionnel_list'%}">Liste des -domaines fonctionnels-</a></li>
@@ -81,6 +82,12 @@
 
                        </ul>
                     </li>
+		    {% if user.is_authenticated %}
+		    <li id="logout-menu"><a href="/accounts/logout/"><span class="glyphicon glyphicon-log-out"></span> ({{ request.user.username }})</a></li>
+		    {% else %}
+		    <li id="login-menu"><a href="/accounts/login/"><span class="glyphicon  glyphicon-log-out"></span></a></li>
+		    {% endif %}
+
                     <li><a href="#about">About</a></li>
                     <li><a href="#contact">Contact</a></li>
 

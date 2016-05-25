@@ -29,41 +29,9 @@ from django.contrib.auth.models import Group
 #---------------------------------------------------------------------------------
 
 #@login_required(login_url='/accounts/login/')
-def my_test_login(request):
-    if not request.user.is_authenticated():
-        return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
-        return render(request, 'myapp/login_error.html')
 
 def search(request):
     pass
-
-def my_logout(request):
-    logout(request)
-    return render(request, 'logout.html',{'username':''})
-    return redirect('/body')
-
-    # Redirect to a success page.
-def my_login(request):
-    if request.method == "POST":
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-                return render_to_response('base.html')
-            else:
-                # Return a 'disabled account' error message
-               message="Invalid user"
-               return render(request, 'loginerr02.html',{'message':message})
-        else:
-            # Return an 'invalid login' error message.
-               message="Invalid Login"
-               return render(request, 'loginerr01.html',{'message':message})
-    else:
-        message = "pas de POST"
-        return render(request, 'login.html',{'message':message})
-
 
 #---------------------------------------
 
@@ -94,11 +62,11 @@ def index5(request):
     return render(request, 'tests/notemptygrid3.html')
 
 
-"""
-class Authorisation(models.Model):
-    username = models.CharField(max_length=100)
-    object = models.CharField(max_length=100)
-"""
+#"""------------------
+#class Authorisation(models.Model):
+#    username = models.CharField(max_length=100)
+#    object = models.CharField(max_length=100)
+#-----------------------------------------"""
 
 def authorisation_list(request):
     if request.method== "POST":
@@ -107,11 +75,11 @@ def authorisation_list(request):
         if user == "" and obj == "" :
             myauth=Authorisation.objects.all()
         elif user == "" :
-            myauth=Authorisation.objects.filter(object__icontains = obj)
+            myauth=Authorisation.objects.filter(myobject__icontains = obj)
         elif obj == "" :
             myauth=Authorisation.objects.filter(username__icontains = user)
         else:
-            myauth=Authorisation.objects.filter(username__icontains = user).filter(object__icontains = obj)
+            myauth=Authorisation.objects.filter(username__icontains = user).filter(myobject__icontains = obj)
     else: 
         myauth=Authorisation.objects.all()
 
@@ -123,15 +91,41 @@ def authorisation_user(request,myuser=""):
     return render(equest, 'authorisation_lists.html', {'Authorisation':myauth})
 
 
-def is_authorised(myuser, object):
-    if '*' in object:
-        return Authorisation.objects.filter(
-                 username=myuser,object=object
-                 ).count()
+def is_authorised(myuser, myobject):
+    # chercher les autorisations dans la table
+    # si il y a * dans la table, ok tout
+    # si il y a qqch* alors detailler
+    # si autorisation exacte ok
+    #print ("called with :"+myuser+"::"+myobject)
+    thecount1=Authorisation.objects.filter(username=myuser).filter(myobject='*').count()
+    if thecount1 >0:
+        return thecount1
     else:
-        return Authorisation.objects.filter(
-                 username=myuser, object_startswith=object
-                 ).count()
+        a1=Authorisation.objects.filter(
+              username=myuser)
+        myobject=myobject.strip()
+        a2=a1.filter(myobject=myobject
+                 )
+        thecount=a2.count()
+
+        if thecount > 0:
+            return thecount
+        else:
+            #decouper 
+            i=0
+            found=0
+            while (i < len(myobject)) and (found == 0):
+                myobjectsubstr = myobject[0:i]
+                a2=a1.filter(myobject__startswith=myobjectsubstr)
+                for o in a2:
+                    j=i+1
+                    if len(o.myobject)>=j and o.myobject[i:j] == '*':
+                        found=1
+                        print('* match autorisation for '+ myuser +'::'+myobject+'::'+o.myobject+'::'+o.myobject[i:j])
+                        return found
+                i+=1
+            return found 
+
 
 def authorisation_delete(request,pkauth):
     myauth = get_object_or_404(Authorisation,pk=pkauth)
@@ -183,7 +177,7 @@ def authorisation_importcsv(request):
                      monauth=Authorisation()
                      ligne=ligne.split(";")
                      monauth.username=ligne[0]
-                     monauth.object = ligne[1]
+                     monauth.myobject = ligne[1]
                      monauth.save() 
              lemessage=lemessage+ "  ok fichier "+ lechemin+ " importé "+ str(nblignes) +" lignes trouvées."  
              fichier.close()
@@ -1031,11 +1025,13 @@ def depense_new2(request):
 """ ----------------------------------------------------------------------------
 
 -------------------------------------------------------------------------- """
+@login_required
 def depensefull_new(request):
     if request.method == "POST":
         form = DepenseFullForm(request.POST)
         if form.is_valid():
             newdepense = form.save(commit=False)
+            newdepense.creepar = request.user.username
             newdepense.save()
             return redirect('depensefull_list')
         else:
@@ -1051,6 +1047,7 @@ def depensefull_edit(request,pkdep):
         form = DepenseFullForm(request.POST,instance=mydep)
         if form.is_valid():
             mydep = form.save(commit=False)
+            mydep.modifiepar = request.user.username
             mydep.save()
             return redirect('depensefull_list')
         else:
@@ -1069,7 +1066,7 @@ def handle_uploaded_file(f, filepathandname):
             destination.write(chunk)
 
 
-
+@login_required
 def depensefull_new2(request):
 
     #desc11=Classification.objects.all().filter(type="1")
@@ -1085,7 +1082,19 @@ def depensefull_new2(request):
     plfis = PlanFinancement.objects.all()
 
     budget = PeriodeBudget.objects.filter(bloque=False).first()
-    
+# pour les autorisations creer un dico avec le sobjets
+    structlev1ok = [] 
+    for i in structlev1s:
+        if is_authorised(request.user.username,i.name):
+            structlev1ok.append(i)
+ 
+    structlev2ok = []
+    for j in structlev2s:
+        if is_authorised(request.user.username,j.name):
+            structlev2ok.append(i)
+       #else:
+        #    structlev1pok.append(i)
+
     if request.method == "POST":
         struct1 = Structure.objects.filter(id=request.POST.get("structlev1")).first()
         struct2ref=request.POST.get("structlev2").split("-----")
@@ -1137,11 +1146,12 @@ def depensefull_new2(request):
         madepense.montantcp = montantcp
         madepense.commentaire = commentaire
         madepense.periodebudget = budget
-        username = None
-        if request.user.is_authenticated():
-            username = request.user.username
-        madepense.creepar = username
-        madepense.modifiepar = username
+        #username = None
+        #if request.user.is_authenticated():
+        #    username = request.user.username
+        madepense.creepar = request.user.username
+        #madepense.creepar = username
+        madepense.modifiepar = request.user.username
 
         #handle_uploaded_file(request.Files['file'],'/tmp/file1.txt')
         #madepense.noms_des_fichiers=request.Files['file']
@@ -1159,7 +1169,8 @@ def depensefull_new2(request):
         return redirect('depensefull_parcc',pkcc=localpkcc)
 
     else:
-        return render(request, 'depensefull_new_v2.html', {'structlev1s': structlev1s ,'structlev2s': structlev2s,
+        print("autorisations pour : "+str(len(structlev1ok)))
+        return render(request, 'depensefull_new_v2.html', {'structlev1s': structlev1ok ,'structlev2s': structlev2ok,
                                                            'cptdeplev1s': cptdeplev1s, 'cptdeplev2s':cptdeplev2s,
                                                            'domfoncs': domfoncs , 'orfonds': orfonds,
                                                            'plfis': plfis})
@@ -1194,8 +1205,9 @@ def depensefull_parcc(request,pkcc):
     totaldc=DepenseFull.objects.filter (structlev3=madep).aggregate(Sum('montantdc'))
     totalcp=DepenseFull.objects.filter (structlev3=madep).aggregate(Sum('montantcp'))
     totalae=DepenseFull.objects.filter (structlev3=madep).aggregate(Sum('montantae'))
-
-    return render(request, 'depensefullcc_lists.html', {'depenses':mydep, 'totaldc':totaldc, 'totalcp':totalcp,'totalae':totalae,'pkcc':pkcc})
+    lev2 = Structure.objects.get(myid=madep.parentid)
+    lev1 = Structure.objects.get(myid=lev2.parentid) 
+    return render(request, 'depensefullcc_lists.html', {'depenses':mydep, 'totaldc':totaldc, 'totalcp':totalcp,'totalae':totalae,'pkcc':pkcc,'mastructurelev1':lev1,'mastructurelev2':lev2,'mastructurelev3':madep})
 
 
 def recettefull_parcp(request,pkcp):
@@ -1206,8 +1218,9 @@ def recettefull_parcp(request,pkcp):
     total=RecetteFull.objects.filter (structlev3=madep).aggregate(Sum('montant'))
     totalar=RecetteFull.objects.filter (structlev3=madep).aggregate(Sum('montantar'))
     totalre=RecetteFull.objects.filter (structlev3=madep).aggregate(Sum('montantre'))
-
-    return render(request, 'recettefullcp_lists.html', {'recettes':myrec, 'total':total, 'totalar':totalar,'totalre':totalre,'pkcp':pkcp})
+    lev2 = Structure.objects.get(myid=madep.parentid)
+    lev1 = Structure.objects.get(myid=lev2.parentid)
+    return render(request, 'recettefullcp_lists.html', {'recettes':myrec, 'total':total, 'totalar':totalar,'totalre':totalre,'pkcp':pkcp,'mastructurelev1':lev1,'mastructurelev2':lev2,'mastructurelev3':madep})
 
 
 
@@ -1303,14 +1316,20 @@ def depensefull_deleteall(request):
 def ajax_add_todo1(request,pkstr1):
     print ("calling_add_todo1")
     if request.is_ajax():
-        print("called by ajax")
+        #print("called by ajax")
         myid=Structure.objects.get(id=pkstr1).myid
-        print("thekey:"+myid)
+        #print("thekey:"+myid)
         struct2qset=Structure.objects.all().filter(parentid=myid)
+        structlev2ok = []
+        for j in struct2qset:
+            if is_authorised(request.user.username,j.name):
+                structlev2ok.append(j)
+
+
         todo_items=[]
         #todo_items=['test 1', 'test 2',]
         #todo_items.append('toto')
-        for s in struct2qset:
+        for s in structlev2ok:
             todo_items.append(str(s.id)+"-----"+str(s.name)+"-----"+str(s.label))
         print(todo_items)
         data = json.dumps(todo_items)
@@ -1322,18 +1341,23 @@ def ajax_add_todo1(request,pkstr1):
 
 #Recettes Ajax find structure level 2 from level1
 def ajax_recadd_todo1(request,pkstr1):
-    print ("calling_add_todo1")
+    #print ("calling_add_todo1")
     if request.is_ajax():
-        print("called by ajax")
         myid=Structure.objects.get(id=pkstr1).myid
-        print("thekey:"+myid)
+        #print("thekey:"+myid)
         struct2qset=Structure.objects.all().filter(parentid=myid)
         todo_items=[]
         #todo_items=['test 1', 'test 2',]
         #todo_items.append('toto')
-        for s in struct2qset:
+        #print('username:'+request.user.username)
+        structlev2ok = []
+        for j in struct2qset:
+            if is_authorised(request.user.username,j.name):
+                structlev2ok.append(j)
+
+        for s in structlev2ok:
             todo_items.append(str(s.id)+"-----"+str(s.name)+"-----"+str(s.label))
-        print(todo_items)
+        #print(todo_items)
         data = json.dumps(todo_items)
         #data=json.dumps(struct2qset)
         return HttpResponse(data, content_type='application/json')
@@ -1344,18 +1368,23 @@ def ajax_recadd_todo1(request,pkstr1):
 
 #Depenses ajax find struct level3 from level2
 def ajax_findstruct_lev3(request,pkstr1):
-    print ("calling_add_todo1")
+    #print ("calling_add_todo1")
     if request.is_ajax():
-        print("called by ajax")
+        #print("called by ajax")
         myid=Structure.objects.get(id=pkstr1).myid
-        print("thekey:"+myid)
+        print("recherche des fils de thekey:"+myid)
         struct2qset=Structure.objects.all().filter(parentid=myid)
         todo_items=[]
-        #todo_items=['test 1', 'test 2',]
-        #todo_items.append('toto')
-        for s in struct2qset:
+        print("recherche des fils de thekey:"+myid+ " nb trouves:" + str(len(struct2qset)))
+        structlev3ok = []
+        for j in struct2qset:
+            if is_authorised(request.user.username,j.name):
+                print('testons1:' + request.user.username+"::"+j.name)
+                structlev3ok.append(j)
+
+        for s in structlev3ok:
             todo_items.append(str(s.id)+"-----"+str(s.name)+"-----"+str(s.label))
-        print(todo_items)
+        #print(todo_items)
         data = json.dumps(todo_items)
         return HttpResponse(data, content_type='application/json')
     else:
@@ -1363,18 +1392,25 @@ def ajax_findstruct_lev3(request,pkstr1):
 
 #Recettes ajax find struct level3 from level2
 def ajax_recfindstruct_lev3(request,pkstr1):
-    print ("calling_add_todo1")
+    #print ("calling_add_todo1")
     if request.is_ajax():
-        print("called by ajax")
+        #print("called by ajax")
         myid=Structure.objects.get(id=pkstr1).myid
-        print("thekey:"+myid)
+        #print("thekey:"+myid)
         struct2qset=Structure.objects.all().filter(parentid=myid)
         todo_items=[]
         #todo_items=['test 1', 'test 2',]
         #todo_items.append('toto')
-        for s in struct2qset:
+
+        structlev3ok = []
+        for j in struct2qset:
+            if is_authorised(request.user.username,j.name):
+                print('testons:' + request.user.username+"::"+j.name)
+                structlev3ok.append(j)
+
+        for s in structlev3ok:
             todo_items.append(str(s.id)+"-----"+str(s.name)+"-----"+str(s.label))
-        print(todo_items)
+        #print(todo_items)
         data = json.dumps(todo_items)
         return HttpResponse(data, content_type='application/json')
     else:
@@ -1383,14 +1419,14 @@ def ajax_recfindstruct_lev3(request,pkstr1):
 
 #Depenses ajax_add_cptdev_lev2
 def ajax_add_cptdev_lev2(request,pkcpt):
-    print ("calling_add_cptdev")
+    #print ("calling_add_cptdev")
     if request.is_ajax():
-        print("called by ajax cptdev")
+        #print("called by ajax cptdev")
         struct2qset=CompteComptable.objects.all().filter(ccparent=pkcpt)
         todo_items=[]
         for s in struct2qset:
             todo_items.append(str(s.ccid)+"-----"+str(s.ccname)+"-----"+str(s.cclabel))
-        print(todo_items)
+        #print(todo_items)
         data = json.dumps(todo_items)
         return HttpResponse(data, content_type='application/json')
     else:
@@ -1399,14 +1435,14 @@ def ajax_add_cptdev_lev2(request,pkcpt):
 
 #Recettes ajax_add_cptdev_lev2
 def ajax_recadd_cptdev_lev2(request,pkcpt):
-    print ("calling_add_cptdev")
+    #print ("calling_add_cptdev")
     if request.is_ajax():
-        print("called by ajax cptdev")
+        #print("called by ajax cptdev")
         struct2qset=CompteComptable.objects.all().filter(ccparent=pkcpt)
         todo_items=[]
         for s in struct2qset:
             todo_items.append(str(s.ccid)+"-----"+str(s.ccname)+"-----"+str(s.cclabel))
-        print(todo_items)
+        #print(todo_items)
         data = json.dumps(todo_items)
         return HttpResponse(data, content_type='application/json')
     else:
@@ -1415,9 +1451,9 @@ def ajax_recadd_cptdev_lev2(request,pkcpt):
 
 #Depenses ajax find origine des fonds
 def ajax_findorigfond_lev2(request,pkor):
-    print ("calling_findorigfond")
+    #print ("calling_findorigfond")
     ofid=OrigineFonds.objects.get(id=pkor).ofid
-    print ("ofid :"+str(ofid))
+    #print ("ofid :"+str(ofid))
     if request.is_ajax():
         qset=OrigineFonds.objects.all().filter(ofparent=ofid)
         todo_items=[]
@@ -1430,9 +1466,9 @@ def ajax_findorigfond_lev2(request,pkor):
 
 #Recettes ajax find origine des fonds
 def ajax_recfindorigfond_lev2(request,pkor):
-    print ("calling_findorigfond")
+    #print ("calling_findorigfond")
     ofid=OrigineFonds.objects.get(id=pkor).ofid
-    print ("ofid :"+str(ofid))
+    #print ("ofid :"+str(ofid))
     if request.is_ajax():
         qset=OrigineFonds.objects.all().filter(ofparent=ofid)
         todo_items=[]
@@ -1446,7 +1482,7 @@ def ajax_recfindorigfond_lev2(request,pkor):
 
 
 def ajax_more_todo11(request):
-    print ("calling_more_todo1111")
+    #print ("calling_more_todo1111")
     if request.is_ajax():
         todo_items=['test 1', 'test 2',]
         data = json.dumps(todo_items)
@@ -1455,7 +1491,7 @@ def ajax_more_todo11(request):
         raise Http404
 
 def ajax_more_todo1(request):
-    print ("calling_more_todo1")
+    #print ("calling_more_todo1")
     if request.is_ajax():
         todo_items=['test 1', 'test 2',]
         data = json.dumps(todo_items)
@@ -1495,6 +1531,7 @@ def recettefull_new(request):
         form = RecetteFullForm(request.POST)
         if form.is_valid():
             newrecette = form.save(commit=False)
+            newrecette.creepar = request.user.username
             newrecette.save()
             return redirect('recettefull_list')
         else:
@@ -1509,6 +1546,7 @@ def recettefull_new3(request):
         form = RecetteFullForm(request.POST)
         if form.is_valid():
             newrecette = form.save(commit=False)
+            newrecette.creepar = request.user.username
             newrecette.save()
             return redirect('recettefull_list')
         else:
@@ -1582,12 +1620,11 @@ def recettefull_new2(request):
         #handle_uploaded_file(request.Files['file'],'/tmp/file1.txt')
         #madepense.noms_des_fichiers=request.Files['file']
 
-        username = None
-        if request.user.is_authenticated():
-            username = request.user.username
-
-        madepense.creepar = username
-        madepense.modifiepar = username 
+        #username = None
+        #if request.user.is_authenticated():
+        #    username = request.user.username
+        madepense.creepar = request.user.username
+        madepense.modifiepar = request.user.username
         madepense.save()
         madepense.myid = madepense.id
         madepense.save()
@@ -1687,6 +1724,7 @@ def recettefull_edit(request,pkrec):
         form = RecetteFullForm(request.POST,instance=myrec)
         if form.is_valid():
             myrec = form.save(commit=False)
+            myrec.modifiepar = request.user.username
             myrec.save()
             return redirect('recettefull_list')
         else:

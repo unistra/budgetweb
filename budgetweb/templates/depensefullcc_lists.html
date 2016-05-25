@@ -8,7 +8,7 @@
 <br>
 
 {% with depenses|first as firstdep %} 
-<a href="{% url 'menu1_list' %}"> Accueil > </a>
+<a href="{% url 'menu2_list' %}"> Accueil > </a>
 &nbsp&nbsp&nbsp
 <a class=info href=""> {{ firstdep.structlev1.name }} <span> {{ firstdep.structlev1.label }}</span></a> >
 &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
@@ -19,6 +19,20 @@
 <br>
 <b><span id="cc"> CC {{ firstdep.structlev3.label }} ></span></b> 
 {% endwith %}
+<br><br>
+
+&nbsp&nbsp&nbsp
+<br><br>
+<a href="{% url 'menu2_list' %}"> Accueil > </a>
+&nbsp&nbsp&nbsp
+<a class=info href=""> {{ mastructurelev1.name }} <span> {{ mastructurelev1.label }}</span></a> >
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+<a class=info href=""> {{ mastructurelev2.name }} <span> {{ mastructrurelev2.label }} </span></a> >
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+<a class=info href="">{{ mastructurelev3.name }} <span> {{ mastructurelev3.label }} </span>></a>
+<br>
+<br>
+<b><span id="cc"> CC {{ mastructurelev3.label }} ></span></b>
 <br><br>
 
 

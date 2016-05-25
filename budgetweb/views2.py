@@ -14,6 +14,7 @@ from .models import OrigineFonds , Structure , PlanFinancement , Depense , Depen
 from .forms import DepenseForm2 , DepenseFullForm , RecetteFullForm , PeriodeBudgetForm
 from django.template import RequestContext
 from decimal import *
+from django.contrib.auth.decorators import login_required
 
 
 def rapporthtmlheadersrc():
@@ -93,33 +94,6 @@ def rapporthtmlheadersrc():
     html.append('    <th>bal.</th>')
     html.append('</tr>')
     return html
-
-"""
-    nom = models.CharField(max_length=100)
-    repertoire = models.CharField(max_length=100,blank=True,null=True)
-    chemin = models.CharField(max_length=100,blank=True,null=True)
-    mylieu = models.ForeignKey('Lieu',blank=True, null=True)
-    desc1 = models.ForeignKey('Classification',related_name='desc1',blank=True, null=True)
-    desc2 = models.ForeignKey('Classification',related_name='desc2',blank=True, null=True)
-    desc3 = models.ForeignKey('Classification',related_name='desc3',blank=True, null=True)
-    desc4 = models.ForeignKey('Classification',related_name='desc4',blank=True, null=True)
-    desc5 = models.ForeignKey('Classification',related_name='desc5',blank=True, null=True)
-    desc6 = models.ForeignKey('Classification',related_name='desc6',blank=True, null=True)
-    valide = models.CharField(max_length=100,blank=True,null=True)
-    apn = models.CharField(max_length=100,blank=True,null=True)
-    photolh = models.CharField(max_length=100,blank=True,null=True)
-    exif1 = models.CharField(max_length=100,blank=True,null=True)
-    exif2 = models.CharField(max_length=100,blank=True,null=True)
-    exif3 = models.CharField(max_length=100,blank=True,null=True)
-    exif4 = models.CharField(max_length=100,blank=True,null=True)
-    exif5 = models.CharField(max_length=100,blank=True,null=True)
-    exif6 = models.CharField(max_length=100,blank=True,null=True)
-    exif7 = models.CharField(max_length=100,blank=True,null=True)
-    taille= models.CharField(max_length=100,blank=True,null=True)
-    date = models.DateTimeField(default=timezone.now)
-    imported_date=models.DateTimeField(blank=True, null=True)
-"""
-
 
 
 
@@ -331,39 +305,107 @@ def totalrecette(moncp):
     parent1=Structure.objects.filter(myid=moncp.parentid).first()
     parent2=Structure.objects.filter(myid=parent1.parentid).first()
     lesrecettes=RecetteFull.objects.filter(structlev3=parent1)
-    print("trouvé nb recettes : " + str(lesrecettes.count()))
     montotal=Decimal(0.00)
     for mesrec in lesrecettes:
         if mesrec.montant != None:
             montotal = montotal+Decimal(mesrec.montant)
-        print("et un de plus")
 
     return "<center>- &nbsp; &nbsp; &nbsp;</center>" if montotal==Decimal(0.00) else montotal
 
 
 def totaldepense(moncc):
-    #moncc=Structure.objects.filter(myid=myid).first()
-    #print("moncc trouvé:" + str(moncc.id)+" pour " + str(myid)+"--"+str(moncc)) 
-    #lesdepenses=DepenseFull.objects.all()
-    #for dep in lesdepenses:
-    #    print ("Depense: "+ str(dep.id)+ "--" +str(dep.montantdc))
-    #    print (dep.structlev3)
     parent1=Structure.objects.filter(myid=moncc.parentid).first()
     parent2=Structure.objects.filter(myid=parent1.parentid).first()
     lesdepenses=DepenseFull.objects.filter(structlev3=parent2)
-    print("trouvé nb dépenses : " + str(lesdepenses.count()))
     montotal=Decimal(0.00)
     for mesdep in lesdepenses:
         if mesdep.montantdc != None:
             montotal = montotal+Decimal(mesdep.montantdc)
-        print("et un de plus")
 
     return "<center>- &nbsp; &nbsp; &nbsp;</center>" if montotal==Decimal(0.00) else montotal 
+
+
+def htmlforcpcc(peremyid,pereid,decalage):
+    html=[]
+    lesfils=Structure.objects.all().filter(parentid=peremyid).filter(type=" cp").order_by('name')
+    localpere = lesfils.first()
+    localperemyid=localpere.myid
+    #lespttsfils2=Structure.objects.all().filter(parentid=localperemyid).order_by('name')
+    for pttfils2 in lesfils:
+        pttfils2desc1  = unicode(pttfils2.name)+"++"+str(pttfils2.type) if pttfils2.name else "nom_vide"
+        pttfils2myid = str(pttfils2.myid)
+        pttfils2label= unicode(pttfils2.label)
+        # il y a 13 colonnes
+        html.append('<tr onmouseover="cfover(this)" onmouseout="cfout(this)" class="thcc">')
+        html.append('<td class="tx"> <span class="traits"> &nbsp;&#9474;')
+        i=decalage
+        while i>0:
+            html.append(' &nbsp;')
+            i-=1
+        html.append(' &#9492;</span>')
+        html.append('<!-- position:relative -->')
+        html.append('<a style=\'padding-top:120px;\' name="1977">')
+        html.append('<a class="cp info" href="">'+pttfils2desc1 + '<span>' + pttfils2label+'</span></a></td>')
+        html.append('     <td class="bl">&nbsp;</td>         ')
+        html.append('<td>'+""+'</td>')
+        html.append('<td align="center"><a href="../recettefull/'+pereid+'/parcp/">'+str(totalrecette(pttfils2))+'</a></td>')
+        html.append('     <td class="bl">&nbsp;</td>         ')
+        html.append('<td>' + "" +'</td>')
+        html.append('<td></td>')
+        html.append('     <td class="bl">&nbsp;</td>         ')
+        html.append('<td>' + "" + '</td>')
+        html.append('<td>' + "" + '</td>')
+        html.append('     <td class="bl">&nbsp;</td>         ')
+        html.append('<td>' + "" + '</td>')
+        html.append('<td></td>')
+        html.append('     <td class="bl">&nbsp;</td>         ')
+        html.append('<td></td>')
+        html.append('<td></td>')
+        html.append('<td></td>')
+        html.append('</tr> \n')
+
+        lespttsfils3=Structure.objects.all().filter(parentid=pttfils2myid).order_by('name')
+        for pttfils3 in lespttsfils3:
+            pttfils3desc1  = unicode(pttfils3.name)+"++"+pttfils3.type if pttfils3.name else "nom_vide"
+            pttfils3myid = str(pttfils3.myid)
+            pttfils3label = unicode(pttfils3.label)
+
+            html.append('<tr onmouseover="cfover(this)" onmouseout="cfout(this)" class="thcc">')
+            html.append('<td class="tx"> <span class="traits"> &nbsp;&#9474;')
+            i=decalage+1
+            while i>0:
+                html.append(' &nbsp')
+                i-=1
+            html.append(' &#9492;</span>')
+            html.append('<!-- position:relative -->')
+            html.append('<a style=\'padding-top:120px;\' name="1977">')
+            html.append('<a class="cc info" href="">'+pttfils3desc1 + '<span>' + pttfils3label+'</span></a></td>')
+            html.append('     <td class="bl">&nbsp;</td>         ')
+            html.append('<td align="center"><a href="../depensefull/'+pereid+'/parcc/">'+ str(totaldepense(pttfils3))+'</a></td>')
+            html.append('<td></td>')
+            html.append('     <td class="bl">&nbsp;</td>         ')
+            html.append('<td>' + "" +'</td>')
+            html.append('<td></td>')
+            html.append('     <td class="bl">&nbsp;</td>         ')
+            html.append('<td>' + "" + '</td>')
+            html.append('<td>' + "" + '</td>')
+            html.append('     <td class="bl">&nbsp;</td>         ')
+            html.append('<td>' + "" + '</td>')
+            html.append('<td></td>')
+            html.append('     <td class="bl">&nbsp;</td>         ')
+            html.append('<td></td>')
+            html.append('<td></td>')
+            html.append('<td></td>')
+            html.append('</tr> \n')
+
+    return html
+
 
 
 
 
 #par CF/ CC/CP 
+@login_required
 def menu_list14tree(request, isexpanded=[]):
     photos=Structure.objects.all().filter(type=" cf",parentid="0").order_by('name') 
 
@@ -373,11 +415,7 @@ def menu_list14tree(request, isexpanded=[]):
             if "clicked" in key:
                 clickednode=value
         clickednode=clickednode.split("-")
-        print (clickednode[0])
-        print (clickednode[1])
-        print ('fin clickednode')
         clickedphoto = Structure.objects.get(myid=int(clickednode[0]))
-        print (clickedphoto.name)
         if int(clickednode[1]) == 1 :
             myid = clickedphoto.myid 
             if myid in isexpanded:
@@ -402,6 +440,12 @@ def menu_list14tree(request, isexpanded=[]):
                 isexpanded.remove(myid)
             else:
                 isexpanded.append(myid)
+        if int(clickednode[1]) == 6 :
+            myid = clickedphoto.myid
+            if myid in isexpanded:
+                isexpanded.remove(myid)
+            else:
+                isexpanded.append(myid)
 
     html = tableheader() 
     html2=[]
@@ -421,72 +465,71 @@ def menu_list14tree(request, isexpanded=[]):
     lastdesc2=0
     lastdesc1=0
 #-------------------------
-    print ("expanded")
-    print(isexpanded)
     #html.append('<ol class="tree">  ')
     passone = 1 
     for p in photos:     #step 1
-        desc1  = p.name if p.name else "nom_vide"
+        desc1  = unicode(p.name)+"++"+p.type if p.name else "nom_vide"
         myid = str(p.myid) if p.myid else "nom_vide"
+        theid = str(p.id) if p.id else "nom_vide"
         desc2  = str(p.myid) if p.myid else "nom_vide"
-        mylabel  = p.label if p.label else "nom_vide" 
+        mylabel  = unicode(p.label) if p.label else "nom_vide" 
         desc3  = "" 
         desc4  = ""
         descdate = desc4
         
         thetop=0
-        lenom = p.name
+        lenom = unicode(p.name)
 
         pkkey='<a href="../'+myid+'/edit/"</a>'+ lenom
         pluspng='/budgetweb/site_media/images/plus.png'
         moinspng = '/budgetweb/site_media/images/moins.png'
 
-        if desc1 != prevdesc1:
-            # il y a 13 colonnes
-            html.append('<tr onmouseover="cfover(this)" onmouseout="cfout(this)" class="thcf"> ')
-            html.append('<td class="tx"><span class="traits"></span> ')
-            if myid in isexpanded:
-                html.append('<input disabled type="hidden" name="clicked'+myid+str(-1)+'" value='+myid+str(-1)+'>')
-                html.append('<input type="image" id=\''+myid+str(-1)+'\' onclick=clickminus(this.id) ')
-                html.append(' src="'+moinspng+'" alt="save" value="save" class="pm" /></a>  ')
-            else:
-                html.append('<input disabled type="hidden" name="clicked'+myid+str(-1)+'" value='+myid+str(-1)+'>')
-                html.append('<input type="image" id=\''+myid+str(-1)+'\' onclick=clickminus(this.id) ')
-                html.append(' src="'+pluspng+'" alt="save" value="save" class="pm" /></a>  ')
+        # premier niveau - que des CF
+        # il y a 13 colonnes
+        html.append('<tr onmouseover="cfover(this)" onmouseout="cfout(this)" class="thcf"> ')
+        html.append('<td class="tx"><span class="traits"></span> ')
+        if myid in isexpanded:
+            html.append('<input disabled type="hidden" name="clicked'+myid+str(-1)+'" value='+myid+str(-1)+'>')
+            html.append('<input type="image" id=\''+myid+str(-1)+'\' onclick=clickminus(this.id) ')
+            html.append(' src="'+moinspng+'" alt="save" value="save" class="pm" /></a>  ')
+        else:
+            html.append('<input disabled type="hidden" name="clicked'+myid+str(-1)+'" value='+myid+str(-1)+'>')
+            html.append('<input type="image" id=\''+myid+str(-1)+'\' onclick=clickminus(this.id) ')
+            html.append(' src="'+pluspng+'" alt="save" value="save" class="pm" /></a>  ')
 
-            html.append('<!-- position:relative --> ')
-            html.append('<a style=\'padding-top:120px;\' name="966"> ')
-            html.append('<a class="cf info" href="">'+ desc1 + '<span>' + mylabel+'</span></a></td> ')
-            html.append('<td class="bl">&nbsp;</td> ')
-            html.append('<td class="mt"><a href="" class="cf">-&nbsp; &nbsp; &nbsp;</a></td> ')
-            html.append('<td class="mt"><a href="" class="cf">-&nbsp; &nbsp; &nbsp;</a></td> ')
-            html.append('<td class="bl">&nbsp;</td> ')
-            html.append('<td class="mt"><a href="" class="cf">-&nbsp; &nbsp; &nbsp;</a></td> ')
-            html.append('<td class="mt"><a href="" class="cf">-&nbsp; &nbsp; &nbsp;</a></td> ')
-            html.append('<td class="bl">&nbsp;</td> ')
-            html.append('<td class="mt"><a href="" class="cf">-&nbsp; &nbsp; &nbsp;</a></td> ')
-            html.append('<td class="mt"><a href="" class="cf">-&nbsp; &nbsp; &nbsp;</a></td> ')
-            html.append('<td class="bl">&nbsp;</td> ')
-            html.append('<td class="mt"><a href="" class="cf">-&nbsp; &nbsp; &nbsp;</a></td>')
-            html.append('<td class="mt"><a href="" class="cf">-&nbsp; &nbsp; &nbsp;</a></td>')
-            html.append('<td class="bl">&nbsp;</td>')
-            html.append('<td class="mt"><a href="" class="cf">-&nbsp; &nbsp; &nbsp;</a></td> ')
-            html.append('<td class="mt"><a href="" class="cf">-&nbsp; &nbsp; &nbsp;</a></td>')
-            html.append('<td class="mt"><a href="" class="cf">-&nbsp; &nbsp; &nbsp;</a></td>')
-            html.append('</tr>')
+        html.append('<!-- position:relative --> ')
+        html.append('<a style=\'padding-top:120px;\' name="966"> ')
+        html.append('<a class="cf info" href="">'+ desc1 + '<span>' + mylabel+'</span></a></td> ')
+        html.append('<td class="bl">&nbsp;</td> ')
+        html.append('<td class="mt"><a href="" class="cf">-&nbsp; &nbsp; &nbsp;</a></td> ')
+        html.append('<td class="mt"><a href="" class="cf">-&nbsp; &nbsp; &nbsp;</a></td> ')
+        html.append('<td class="bl">&nbsp;</td> ')
+        html.append('<td class="mt"><a href="" class="cf">-&nbsp; &nbsp; &nbsp;</a></td> ')
+        html.append('<td class="mt"><a href="" class="cf">-&nbsp; &nbsp; &nbsp;</a></td> ')
+        html.append('<td class="bl">&nbsp;</td> ')
+        html.append('<td class="mt"><a href="" class="cf">-&nbsp; &nbsp; &nbsp;</a></td> ')
+        html.append('<td class="mt"><a href="" class="cf">-&nbsp; &nbsp; &nbsp;</a></td> ')
+        html.append('<td class="bl">&nbsp;</td> ')
+        html.append('<td class="mt"><a href="" class="cf">-&nbsp; &nbsp; &nbsp;</a></td>')
+        html.append('<td class="mt"><a href="" class="cf">-&nbsp; &nbsp; &nbsp;</a></td>')
+        html.append('<td class="bl">&nbsp;</td>')
+        html.append('<td class="mt"><a href="" class="cf">-&nbsp; &nbsp; &nbsp;</a></td> ')
+        html.append('<td class="mt"><a href="" class="cf">-&nbsp; &nbsp; &nbsp;</a></td>')
+        html.append('<td class="mt"><a href="" class="cf">-&nbsp; &nbsp; &nbsp;</a></td>')
+        html.append('</tr>')
 
 
-            prevdesc1=desc1
-        print("myid in expanded or not : "+myid)
-        print (isexpanded)
         if myid in isexpanded: #step 2
                 #trouver les fils puis rebelote pour isexpanded.
-                print("cherchons les fils de "+myid)
-                lesfils=Structure.objects.all().filter(parentid=myid).order_by('name')
+                #lesfils=Structure.objects.all().filter(parentid=myid).filter(type=" cp").order_by('name')
+                htmllocal=htmlforcpcc(myid,theid,0)
+                html=html+htmllocal
+                lesfils=Structure.objects.all().filter(parentid=myid).filter(type=" cf").order_by('name')
                 for fils in lesfils:
-                    filsdesc1  = fils.name if fils.name else "nom_vide"
+                    filsdesc1  = unicode(fils.name)+'+'+fils.type if fils.name else "nom_vide"
                     filsmyid = fils.myid
-                    filslabel = fils.label
+                    filstheid = str(fils.id)
+                    filslabel = unicode(fils.label)
  
                     html.append('<tr onmouseover="cfover(this)" onmouseout="cfout(this)" class="thcp">')
                     html.append('<td class="tx"> <span class="traits"> &nbsp;&#9500;</span>')
@@ -523,13 +566,15 @@ def menu_list14tree(request, isexpanded=[]):
 
                     prevdesc2=filsmyid
 
-                    if filsmyid in isexpanded : #step3
-                        lespttsfils=Structure.objects.all().filter(parentid=filsmyid).order_by('name')
+                    if filsmyid in isexpanded : #step3   reste a gerer les CF 
+                        htmllocal=htmlforcpcc(filsmyid,filstheid,0)
+                        html=html+htmllocal
+                        lespttsfils=Structure.objects.all().filter(parentid=filsmyid).filter(type=" cf").order_by('name')   # traiter les cf et les cc differemment
                         for pttfils in lespttsfils:
-                            pttfilsdesc1  = pttfils.name if pttfils.name else "nom_vide"
+                            pttfilsdesc1  = unicode(pttfils.name)+"++"+pttfils.type if pttfils.name else "nom_vide"
                             pttfilsmyid = str(pttfils.myid)
                             pttfilsid = str(pttfils.id)
-                            pttfilslabel = pttfils.label
+                            pttfilslabel = unicode(pttfils.label)
 
                             # il y a 13 colonnes
                             html.append('<tr onmouseover="cfover(this)" onmouseout="cfout(this)" class="thcc">')
@@ -563,64 +608,38 @@ def menu_list14tree(request, isexpanded=[]):
                             html.append('<td></td>')
                             html.append('</tr> \n')
 
-                            prevdesc3 = desc3
 
                             if pttfilsmyid in isexpanded:
-                                lespttsfils2=Structure.objects.all().filter(parentid=pttfilsmyid).order_by('name')
+                                htmllocal=htmlforcpcc(pttfilsmyid,pttfilsid,2)
+                                html=html+htmllocal
+                                lespttsfils2=Structure.objects.all().filter(parentid=pttfilsmyid).filter(type=' cf').order_by('name')
                                 for pttfils2 in lespttsfils2:
-                                    pttfils2desc1  = pttfils2.name if pttfils2.name else "nom_vide"
+                                    pttfils2desc1  = unicode(pttfils2.name)+'++'+pttfils2.type if pttfils2.name else "nom_vide"
                                     pttfils2myid = str(pttfils2.myid)
-                                    pttfils2label= pttfils2.label
-                                    # il y a 13 colonnes
-                                    html.append('<tr onmouseover="cfover(this)" onmouseout="cfout(this)" class="thcc">')
-                                    html.append('<td class="tx"> <span class="traits"> &nbsp;&#9474; &nbsp; &nbsp;&#9492;</span>')
-                                    #if pttfils2myid in isexpanded:
-                                    #    html.append('<input disabled type="hidden" name="clicked'+pttfils2myid+str(-4)+'" value='+pttfils2myid+str(-4)+'>')
-                                    #    html.append('<input type="image" id=\''+pttfils2myid+str(-4)+'\' onclick=clickminus(this.id) ')
-                                    #    html.append(' src="'+moinspng+'" alt="save" value="save" class="pm" /></a>  ')
-                                    #else:
-                                    #html.append('<input disabled type="hidden" name="clicked'+pttfils2myid+str(-4)+'" value='+pttfils2myid+str(-4)+'>')
-                                    #html.append('<input type="image" id=\''+pttfils2myid+str(-4)+'\' onclick=clickminus(this.id) ')
-                                    #html.append(' src="'+pluspng+'" alt="save" value="save" class="pm" /></a>  ')
-                                    #
-                                    html.append('<!-- position:relative -->')
-                                    html.append('<a style=\'padding-top:120px;\' name="1977">')
-                                    html.append('<a class="cp info" href="">'+pttfils2desc1 + '<span>' + pttfils2label+'</span></a></td>')
-                                    html.append('     <td class="bl">&nbsp;</td>         ')
-                                    html.append('<td>'+""+'</td>')
-                                    html.append('<td align="center"><a href="../recettefull/'+pttfilsid+'/parcp/">'+str(totalrecette(pttfils2))+'</a></td>')
-                                    html.append('     <td class="bl">&nbsp;</td>         ')
-                                    html.append('<td>' + "" +'</td>')
-                                    html.append('<td></td>')
-                                    html.append('     <td class="bl">&nbsp;</td>         ')
-                                    html.append('<td>' + "" + '</td>')
-                                    html.append('<td>' + "" + '</td>')
-                                    html.append('     <td class="bl">&nbsp;</td>         ')
-                                    html.append('<td>' + "" + '</td>')
-                                    html.append('<td></td>')
-                                    html.append('     <td class="bl">&nbsp;</td>         ')
-                                    html.append('<td></td>')
-                                    html.append('<td></td>')
-                                    html.append('<td></td>')
-                                    html.append('</tr> \n')
-
-                                    prevdescdate=descdate
-
-                                    #if desc1 in isexpanded and desc2 in isexpanded and desc3 in isexpanded and descdate in isexpanded: 
-                                    # il y a 13 colonnes - ligne des donnees avec 4 indentations
-                                    lespttsfils3=Structure.objects.all().filter(parentid=pttfils2myid).order_by('name')
-                                    for pttfils3 in lespttsfils3:
-                                        pttfils3desc1  = pttfils3.name if pttfils3.name else "nom_vide"
-                                        pttfils3myid = str(pttfils3.myid)
-                                        pttfils3label = pttfils3.label
-
+                                    pttfils2theid = str(pttfils2.id)
+                                    pttfils2label= unicode(pttfils2.label)
+                                    if pttfils2.type == ' cc':
+                                        pass
+                                    elif pttfils2.type == ' cp':
+                                        pass #htmlforcpcc(pttfils2myid,pttfils2theid,1)
+                                    elif pttfils2.type == ' cf':
+#---------------------------------------------
+                                        # il y a 13 colonnes
                                         html.append('<tr onmouseover="cfover(this)" onmouseout="cfout(this)" class="thcc">')
-                                        html.append('<td class="tx"> <span class="traits"> &nbsp;&#9474; &nbsp &nbsp  &nbsp &#9492;</span>')
+                                        html.append('<td class="tx"> <span class="traits"> &nbsp;&#9474; &nbsp;&nbsp;&nbsp; &#9492; </span>')
+                                        if pttfils2myid in isexpanded:
+                                            html.append('<input disabled type="hidden" name="clicked'+pttfils2myid+str(-6)+'" value='+pttfils2myid+str(-6)+'>')
+                                            html.append('<input type="image" id=\''+pttfils2myid+str(-6)+'\' onclick=clickminus(this.id) ')
+                                            html.append(' src="'+moinspng+'" alt="save" value="save" class="pm" /></a>  ')
+                                        else:
+                                            html.append('<input disabled type="hidden" name="clicked'+pttfils2myid+str(-6)+'" value='+pttfils2myid+str(-6)+'>')
+                                            html.append('<input type="image" id=\''+pttfils2myid+str(-6)+'\' onclick=clickminus(this.id) ')
+                                            html.append(' src="'+pluspng+'" alt="save" value="save" class="pm" /></a>  ')
                                         html.append('<!-- position:relative -->')
-                                        html.append('<a style=\'padding-top:120px;\' name="1977">')
-                                        html.append('<a class="cc info" href="">'+pttfils3desc1 + '<span>' + pttfils3label+'</span></a></td>')
+                                        html.append('<a style=\'padding-top:120px;\' name="40726">')
+                                        html.append('<a class="cp info" href="">'+pttfils2desc1+ '<span>' + pttfils2label+'</span></a></td>')
                                         html.append('     <td class="bl">&nbsp;</td>         ')
-                                        html.append('<td align="center"><a href="../depensefull/'+pttfilsid+'/parcc/">'+ str(totaldepense(pttfils3))+'</a></td>')
+                                        html.append('<td>'+ "" +'</td>')
                                         html.append('<td></td>')
                                         html.append('     <td class="bl">&nbsp;</td>         ')
                                         html.append('<td>' + "" +'</td>')
@@ -636,6 +655,22 @@ def menu_list14tree(request, isexpanded=[]):
                                         html.append('<td></td>')
                                         html.append('<td></td>')
                                         html.append('</tr> \n')
+
+                                        if pttfils2myid in isexpanded:
+                                            htmllocal=htmlforcpcc(pttfils2myid,pttfils2theid,3)
+                                            html=html+htmllocal
+                                            #lespttsfils3=Structure.objects.all().filter(parentid=pttfils2myid).filter(type=' cp').order_by('name')
+                                            #print("nb pttspttsfils:"+str(lespttsfils3.count())+"pour myid"+str(pttfils2myid))
+                                            #for pttfils3 in lespttsfils3:
+                                            #    pttfils3myid = str(pttfils3.myid)
+                                            #    pttfils3theid = str(pttfils3.id)
+                                            #    htmlforcpcc(pttfils3myid,pttfils3theid,2)
+#-------------------------------------------------------------------------------
+
+
+
+                                    else:
+                                        print ('ERROR')
 
         html.append("\n")
         

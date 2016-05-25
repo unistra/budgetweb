@@ -5,14 +5,14 @@ from django.contrib import admin
 from .views import home
 from . import views
 from . import views2
-
+from . import views3
 
 admin.autodiscover()
 
 urlpatterns = [
     url(r'^search/$', views.search, name='search'),
-    url(r'^accounts/login/$', views.my_login, name='login'),
-    url(r'^accounts/logout/$', views.my_logout, name='logout'),
+    url(r'^accounts/login/$', 'django_cas.views.login'),
+    url(r'^accounts/logout/$', 'django_cas.views.logout'),
     # Examples:
     url(r'^$', home, name='home'),
     url(r'^index2/$', views.index2),
@@ -110,6 +110,7 @@ urlpatterns = [
     url(r'^ajax/more/$',views.ajax_more_todo1, name ="ajax_more_todo1"),
 # Presentation / Affichage
     url(r'^menu1/$', views2.menu_list14tree, name='menu1_list'),
+    url(r'^menu2/$', views3.menu_list15tree, name='menu2_list'),
 #Ajax recettes
     url(r'^ajax/ajax_recadd/(?P<pkstr1>[0-9]+)/$', views.ajax_recadd_todo1,name="ajax_recadd_todo1"),
     url(r'^ajax/ajax_recfindstruct_lev3/(?P<pkstr1>[0-9]+)/$', views.ajax_recfindstruct_lev3,name="ajax_recfindstruct_lev3"),

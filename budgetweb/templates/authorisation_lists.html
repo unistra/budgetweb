@@ -30,7 +30,7 @@
 {% for autorisation in Authorisations %}
 <TR>
        <TD>{{ autorisation.username }}</TD>
-       <TD>{{ autorisation.object }}</TD>
+       <TD>{{ autorisation.myobject }}</TD>
        <TD><a href="{% url 'authorisation_delete' pkauth=autorisation.pk %}">supprimer</a></TD>
 
 </TR>

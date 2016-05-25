@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django.db import models
 from django import forms
 
@@ -10,7 +12,7 @@ from datetime import datetime
 
 class Authorisation(models.Model):
     username = models.CharField(max_length=100)
-    object = models.CharField(max_length=100)
+    myobject = models.CharField(max_length=100)
 
 
 class PeriodeBudget(models.Model):

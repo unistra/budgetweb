@@ -4,7 +4,7 @@
 
 <br><br>
 {% with recettes|first as firstrec %}
-<a href="{% url 'menu1_list' %}"> Accueil > </a>
+<a href="{% url 'menu2_list' %}"> Accueil > </a>
 &nbsp&nbsp&nbsp
 <a class=info href=""> {{ firstrec.structlev1.name }} <span> {{ firstrec.structlev1.label }}</span></a> >
 &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
@@ -18,6 +18,19 @@
 <br>
 
 <br>
+<br><br>
+<a href="{% url 'menu2_list' %}"> Accueil > </a>
+&nbsp&nbsp&nbsp
+<a class=info href=""> {{ mastructurelev1.name }} <span> {{ mastructurelev1.label }}</span></a> >
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+<a class=info href=""> {{ mastructurelev2.name }} <span> {{ mastructrurelev2.label }} </span></a> >
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+<a class=info href="">{{ mastructurelev3.name }} <span> {{ mastructurelev3.label }} </span>></a>
+<br>
+<br>
+<b><span id="cc"> CC {{ mastructurelev3.label }} ></span></b>
+<br><br>
+
 <br>
 <a href="{% url 'recettefull_new2' %}" class="top-menu"> Nouvelle recette<span class="glyphicon glyphicon-plus"></span></a>
 <br>

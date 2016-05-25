@@ -123,7 +123,6 @@ MEDIA_URL = '/media/'
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
 STATIC_ROOT = normpath(join(SITE_ROOT, 'assets'))
-#PROJECT_ROOT ='/var/www/html/budgetweb/budgetweb'
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
 STATIC_URL = '/budgetweb/site_media/'
@@ -192,12 +191,18 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django_cas.middleware.CASMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
 )
 
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'django_cas.backends.CASBackend',
+)
 
 #####################
 # Url configuration #
@@ -230,7 +235,9 @@ DJANGO_APPS = (
     # 'django.contrib.admindocs',
 )
 
-THIRD_PARTY_APPS = ()
+THIRD_PARTY_APPS = (
+    'django_cas',
+)
 
 LOCAL_APPS = (
     'budgetweb',
@@ -299,3 +306,15 @@ LOGGING = {
         }
     }
 }
+
+
+#####################
+# cas configuration #
+#####################
+
+CAS_SERVER_URL = 'https://cas.unistra.fr/cas/login'
+CAS_LOGOUT_REQUEST_ALLOWED = ('cas1.u-strasbg.fr', 'cas2.u-strasbg.fr')
+CAS_USER_CREATION = True
+CAS_USERNAME_FORMAT = lambda username: username.lower()
+
+

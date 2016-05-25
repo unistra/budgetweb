@@ -16,7 +16,7 @@ class AuthorisationForm(forms.ModelForm):
 
     class Meta:
         model = Authorisation
-        fields = ( 'username' , 'object' )
+        fields = ( 'username' , 'myobject' )
 
 
 """ **************************
