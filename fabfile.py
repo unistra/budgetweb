@@ -17,12 +17,12 @@ env.application_name = 'budgetweb'   # name of webapp
 env.root_package_name = 'budgetweb'  # name of app in webapp
 
 env.remote_home = '/home/django'  # remote home root
-env.remote_python_version = ''  # python version
+env.remote_python_version = 3.4  # python version
 env.remote_virtualenv_root = join(env.remote_home, '.virtualenvs')  # venv root
 env.remote_virtualenv_dir = join(env.remote_virtualenv_root,
                                  env.application_name)  # venv for webapp dir
 # git repository url
-env.remote_repo_url = 'git@git.net:budgetweb.git'
+env.remote_repo_url = 'git@git.unistra.fr:di/budgetweb.git'
 env.local_tmp_dir = '/tmp'  # tmp dir
 env.remote_static_root = '/var/www/static/'  # root of static files
 env.locale = 'fr_FR.UTF-8'  # locale to use on remote
@@ -30,7 +30,7 @@ env.timezone = 'Europe/Paris'  # timezone for remote
 env.keep_releases = 2  # number of old releases to keep before cleaning
 env.extra_goals = ['preprod']  # add extra goal(s) to defaults (test,dev,prod)
 env.dipstrap_version = 'latest'
-env.verbose_output = False  # True for verbose output
+env.verbose_output = True  # True for verbose output
 
 # optional parameters
 
@@ -89,21 +89,21 @@ def dev():
 def test():
     """Define test stage"""
     env.roledefs = {
-        'web': ['budgetweb-test.net'],
-        'lb': ['lb.budgetweb-test.net'],
+        'web': ['django-test.u-strasbg.fr'],
+        'lb': ['django-test.u-strasbg.fr'],
     }
     # env.user = 'root'  # user for ssh
     env.backends = ['127.0.0.1']
-    env.server_name = 'budgetweb-test.net'
+    env.server_name = 'budgetweb-test.u-strasbg.fr'
     env.short_server_name = 'budgetweb-test'
     env.static_folder = '/site_media/'
     env.server_ip = ''
     env.no_shared_sessions = False
     env.server_ssl_on = True
-    env.path_to_cert = '/etc/ssl/certs/budgetweb.net.pem'
-    env.path_to_cert_key = '/etc/ssl/private/budgetweb.net.key'
+    env.path_to_cert = '/etc/ssl/certs/wildcard.u-strasbg.fr-cert.pem'
+    env.path_to_cert_key = '/etc/ssl/private/wildcard.u-strasbg.fr-key.pem'
     env.goal = 'test'
-    env.socket_port = ''
+    env.socket_port = '8037'
     env.socket_host = '127.0.0.1'
     env.map_settings = {}
     execute(build_env)
