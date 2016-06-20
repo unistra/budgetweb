@@ -7,11 +7,11 @@ from django.http import HttpResponse
 from django.middleware import csrf 
 import os
 from . import views
-from .forms import AuthorisationForm, CompteComptableForm , DomaineFonctionnelForm
-from .forms import OrigineFondsForm, StructureForm , PlanFinancementForm , DepenseForm
-from .models import Authorisation, CompteComptable , DomaineFonctionnel , PeriodeBudget
-from .models import OrigineFonds , Structure , PlanFinancement , Depense , DepenseFull , RecetteFull
-from .forms import DepenseForm2 , DepenseFullForm , RecetteFullForm , PeriodeBudgetForm
+from .forms import AuthorisationForm, NatureComptableForm , DomaineFonctionnelForm
+from .forms import StructureForm , PlanFinancementForm 
+from .models import Authorisation, NatureComptable , DomaineFonctionnel , PeriodeBudget
+from .models import Structure , PlanFinancement , DepenseFull , RecetteFull
+from .forms import DepenseFullForm , RecetteFullForm , PeriodeBudgetForm
 from django.template import RequestContext
 from decimal import *
 from django.contrib.auth.decorators import login_required

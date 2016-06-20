@@ -2,70 +2,23 @@
 
 {% block content %}
 
-<TABLE>
+<TABLE id="bbf">
 <CAPTION> Plan Financement </CAPTION>
-<thead>
-    <TH> Myid </TH>
-    <TH> Name </TH>
-    <TH> Eotp </TH>
-    <TH> Idabrege </TH>
-    <TH> creepar </TH>
-    <TH> creeDate </TH>
-    <TH> ModifPar </TH>
-    <TH> Modifdate </TH>
-    <TH> Dem </TH> 
-    <TH> Label </TH>
-    <TH> Type </TH>
-    <TH> Budget </TH>
-    <TH> Nomades </TH>
-    <TH> Refsifac </TH>
-    <TH> Refdfi </TH>
-    <TH> Societe </TH>
-    <TH> CC associé  </TH>
-    <TH> CP associé </TH>
-    <TH> responsable </TH>
-    <TH> donneur d'ordre </TH>
-    <TH> divirecette </TH>
-    <TH> status </TH>
-    <TH> cleregul </TH>
-    <TH> domainefonctionnel </TH>
-    <TH> Supprimer</TH>
-</thead>
-<tbody>
-<TR>
-       <TD> {{ reponse.myid }} </TD>
-       <TD> {{ reponse.name }}      </TD>
-       <TD> {{ reponse.eotp }}  </TD>
-       <TD> {{ reponse.idabrege }} </TD>
-       <TD> {{ reponse.creepar }} </TD>
-       <TD> {{ reponse.creedate }} </TD>
-       <TD> {{ reponse.modifpar }} </TD>
-       <TD> {{ reponse.modifdate }} </TD>
-       <TD> {{ reponse.dem }} </TD>
-       <TD> {{ reponse.label }}  </TD>
-       <TD> {{ reponse.type   }}  </TD>
-       <TD> {{ reponse.budget  }}  </TD>
-       <TD> {{ reponse.nomades   }}  </TD>
-       <TD> {{ reponse.refsifac  }}  </TD>
-       <TD> {{ reponse.refdfi }}  </TD>
-       <TD> {{ reponse.societe }}  </TD>
-       <TD> {{ reponse.ccassoc }}  </TD>
-       <TD> {{ reponse.cpassoc }}  </TD>
-       <TD> {{ reponse.responsable }}  </TD>
-       <TD> {{ reponse.dordre }}  </TD>
-       <TD> {{ reponse.divirecette }}  </TD>
-       <TD> {{ reponse.status }}  </TD>
-       <TD> {{ reponse.cleregul }}  </TD>
-       <TD> {{ reponse.domainefonc }}  </TD>
-       <TD><a href="{% url 'planfinancement_delete' pkpfi = reponse.pk %}">supprimer</a></TD>
+      <TABLE id="bbf">
 
-</TR>
-</tbody>
-<tfoot>
-     <tr><td> Total</td><td> {{ reponse.count }} entrees</td></tr>
-</tfoot>
+        {% for field in form %}
+          <tr>
+           <th> {{ field.label_tag }}</th>
+           <td> {{ field }} </td>
+           <td> {{ field.errors }} </td>
+          </tr>
+        {% endfor %}
+<tr>
+       <TD><a href="{% url 'planfinancement_delete' pkpfi = reponse.pk %}">supprimer</a></TD>
+</tr>
 </TABLE>
 
-       <TD><a href="{% url 'planfinancement_list'%}">Retour à la liste</a></TD>
+
+ <a href="{% url 'planfinancement_list'%}">Retour à la liste</a>
 
 {% endblock %}

@@ -45,16 +45,14 @@
 <CAPTION> Tableau des d&eacutepenses </CAPTION><!-- essai2-->
 <thead class="thcc">
 
+    <TH> Enveloppe </TH>
+    <TH> Désignation de la nature comptable </TH>
+    <TH> Code Nature comptable Secondaire </TH>
     <TH> Identifiant </TH>
-
-    <TH> Compte Budg.  </TH>  <!-- Compte Depense lev2-->
-    <TH> Chap.      </TH> <!--Compte Depense lev1-->
-    <TH> Dest. </TH>  <!--domaine fonctionnel -->
-    <TH> Masse </TH>
-    <TH> Origine des fonds   </TH>
-    <TH> Origine des fonds   </TH>
+    <TH> Domaine fonctionnel </TH> <!--domaine fonctionnel -->
 
     <TH> Pfi   </TH> <!--Plan Financement -->
+    <TH> Montant globalis&eacute</TH>
     <TH> Montant dc    </TH>
     <TH> Montant cp    </TH>
     <TH> Montant ae    </TH>
@@ -67,16 +65,13 @@
 <tbody>
 {% for depense in depenses %}
 <TR class="tdcc">
-       <TD><a href="{% url 'depensefull_detail2' pkdep=depense.pk %}"> {{ depense.myid    }} </a></TD>
-
-       <TD>{{ depense.cptdeplev2.ccname  }}</TD>
-       <TD>{{ depense.cptdeplev1.ccname  }}</TD>
-       <TD>{{ depense.domfonc.dfcode }}</TD>
-       <TD>{{ depense.domfonc.dfcode }} </TD>
-       <TD>{{ depense.orfonds.ofname }}</TD>
-       <TD>{{ depense.orfonds2.ofname }}</TD>
-
+       <TD> {{depense.cptdeplev1.enveloppe}} </TD>
+       <TD> {{depense.cptdeplev1.naturec_dep }} </TD>
+       <TD> {{depense.cptdeplev1.ncsecondairecode }} </TD>
+       <TD><a href="{% url 'depensefull_edit' pkdep=depense.pk %}"> {{ depense.myid    }} </a></TD>
+       <TD> {{depense.domfonc }} </TD>
        <TD>{{ depense.plfi.name    }}</TD>
+       <TD>{{ depense.montant }}</TD>
        <TD>{{ depense.montantdc }}</TD>
        <TD>{{ depense.montantcp }}</TD>
        <TD>{{ depense.montantae }}</TD>
@@ -90,8 +85,11 @@
 </tbody>
 <tfoot>
      <tr class="thcc">
-      <td> Total</td><td> {{ depenses.count }} entrees</td><td></td><td></td><td></td><td></td><td></td><td></td>
-      <td>{{totaldc.montantdc__sum}}</td><td>{{totalcp.montantcp__sum}}</td><td>{{totalae.montantae__sum}}</td>
+      <td> Total</td><td> {{ depenses.count }} entrees</td><td></td><td></td><td></td><td></td>
+      <td>{{total.montant__sum}}</td>
+      <td>{{totaldc.montantdc__sum}}</td>
+      <td>{{totalcp.montantcp__sum}}</td>
+      <td>{{totalae.montantae__sum}}</td>
       <td></td><td></td><td></td><td></td><td></td>
     </tr>
 </tfoot>

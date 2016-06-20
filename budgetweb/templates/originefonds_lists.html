@@ -17,31 +17,34 @@
 </form>
 
 <br>
+<a href="{% url 'originefonds_new' %}" class="top-menu"> Nouvelle origine fonds<span class="glyphicon glyphicon-plus"></span></a>
 <br>
 
-<TABLE>
+<TABLE id="bbf">
 <CAPTION> Tableau des origines des fonds </CAPTION>
 <thead>
-    <TH style="padding:0 15px 0 15px;"> Id </TH>
-    <TH style="padding:0 15px 0 15px;"> Id parent </TH>
-    <TH style="padding:0 15px 0 15px;"> Nom </TH>
-    <TH style="padding:0 15px 0 15px;"> Libellé </TH>
-    <TH style="padding:0 15px 0 15px;"> Type </TH>
-    <TH style="padding:0 15px 0 15px;"> Budget? </TH>
-    <TH style="padding:0 15px 0 15px;"> Nomades? </TH>
-    <TH style="padding:0 15px 0 15px;"> Supprimer </TH>
+    <TH> Id </TH>
+    <TH> Id parent </TH>
+    <TH> Nom </TH>
+    <TH> Libellé </TH>
+    <TH> Type </TH>
+    <TH> Budget? </TH>
+    <TH> Nomades? </TH>
+    <TH> Editer </TH>
+    <TH> Supprimer </TH>
 </thead>
 <tbody>
 {% for of in reponses %}
 <TR>
-       <TD style="padding:0 15px 0 15px;"> --{{ of.ofid }}-- </TD>
-       <TD style="padding:0 15px 0 15px;"> --{{ of.ofparent }}-- </TD>
-       <TD style="padding:0 15px 0 15px;"> {{ of.ofname }}</TD>
-       <TD style="padding:0 15px 0 15px;"> {{ of.oflabel }}</TD>
-       <TD style="padding:0 15px 0 15px;"> --{{ of.oftype }}-- </TD>
-       <TD style="padding:0 15px 0 15px;"> {{ of.ofbudget }}</TD>
-       <TD style="padding:0 15px 0 15px;"> {{ of.ofnomades }}</TD>
-       <TD style="padding:0 15px 0 15px;"><a href="{% url 'originefonds_delete' pkof=of.pk %}">supprimer</a></TD>
+       <TD> --{{ of.ofid }}-- </TD>
+       <TD> --{{ of.ofparent }}-- </TD>
+       <TD> {{ of.ofname }}</TD>
+       <TD> {{ of.oflabel }}</TD>
+       <TD> --{{ of.oftype }}-- </TD>
+       <TD> {{ of.ofbudget }}</TD>
+       <TD> {{ of.ofnomades }}</TD>
+       <TD><a href="{% url 'originefonds_edit' pkof=of.pk %}">Editer</a></TD>
+       <TD><a href="{% url 'originefonds_delete' pkof=of.pk %}">Supprimer</a></TD>
 
 </TR>
 {% endfor %}
@@ -52,7 +55,46 @@
 </TABLE>
 <br>
 <br>
-<a href="{% url 'originefonds_new' %}" class="top-menu"> Nouvelle origine fonds<span class="glyphicon glyphicon-plus"></span></a>
+<br>
+<br>
+<br>
+
+<br>
+{% regroup reponses2 by ofparent as of_list %}
+<ul>
+{% for theof in of_list %}
+<div class="container">
+  <a href="#bbf{{ forloop.counter0 }}" class="btn btn-info" data-toggle="collapse">{{ theof.grouper }}</a>
+  <div id="bbf{{ forloop.counter0 }}" class="collapse">
+   <TABLE id="bbf">
+       <CAPTION> Tableau des origines des fonds </CAPTION>
+          <thead>
+             <TH> Id </TH>
+             <TH> Id parent </TH>
+             <TH> Nom </TH>
+             <TH> Libellé </TH>
+             <TH> Type </TH>
+             <TH> Budget? </TH>
+             <TH> Nomades? </TH>
+          </thead>
+
+        {% for of in theof.list %}
+              <tr>
+                 <TD> --{{ of.ofid }}-- </TD>
+                  <TD> --{{ of.ofparent }}-- </TD>
+                  <TD> {{ of.ofname }}</TD>
+                  <TD> {{ of.oflabel }}</TD>
+                  <TD> --{{ of.oftype }}-- </TD>
+                  <TD> {{ of.ofbudget }}</TD>
+                  <TD> {{ of.ofnomades }}</TD>
+              </tr>
+        {% endfor %}
+     </TABLE>
+  </div>
+</div>
+{% endfor %}
+</ul>
+
 
 {% endblock %}
 

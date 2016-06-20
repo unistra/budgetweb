@@ -28,6 +28,36 @@ function populateselect3(){
 
 }
 
+function populatepfi(){
+        thechoice=$("#structlev3").find('option:selected').val();
+        mychoices=thechoice.split("-----")
+        mychoice=mychoices[0]
+        $.ajax({
+            url : "/ajax/ajax_add_eotp/"+mychoice+"/",
+            type:'GET',
+            success: function(data) {
+                $("#plfi").html('');
+                for( i = 0; i<data.length;i++){
+                    $("#plfi").append('<option value=' + data[i] + '>' + data[i] + '</option>');
+                }
+           }})
+}
+
+function populatecptdeplev1(){
+        thechoice=$("#plfi").find('option:selected').val();
+        mychoices=thechoice.split("-----")
+        mychoice=mychoices[0]
+        $.ajax({
+            url : "/ajax/ajax_add_enveloppe_depense/"+mychoice+"/",
+            type:'GET',
+            success: function(data) {
+                $("#cptdeplev1").html('');
+                for( i = 0; i<data.length;i++){
+                    $("#cptdeplev1").append('<option value=' + data[i] + '>' + data[i] + '</option>');
+                }
+           }})
+}
+
 
 $(document).ready(function() {
 
@@ -37,8 +67,7 @@ $(document).ready(function() {
     }
     populateselect2
     populateselect3
-
-
+    populatecptdeplev1
     //AJAX GET
      $('#structlev1').change(populateselect2
              )
@@ -47,18 +76,8 @@ $(document).ready(function() {
              )
 
 
-     $('#cptdeplev1').change(function(){
-        mychoice=$("#cptdeplev1").find('option:selected').val();
-        $.ajax({
-            url : "/ajax/ajax_add_cptdev_lev2/"+mychoice+"/",
-            type:'GET',
-            success: function(data) {
-                $("#cptdeplev2").html('');
-                for( i = 0; i<data.length;i++){
-                    $("#cptdeplev2").append('<option value=' + data[i] + '>' + data[i] + '</option>');
-                }
-           }})
-             })
+     $('#plfi').change(populatecptdeplev1
+             )
 
      $('#orfond').change(function(){
         mychoice=$("#orfond").find('option:selected').val();
@@ -73,7 +92,10 @@ $(document).ready(function() {
            }})
              })
 
+     $('#structlev3').change(populatepfi
+             )
 
+     $('#plfi').trigger("change")
     // CSRF code
 
   // FIN DU READY

@@ -5,7 +5,7 @@
 
 
 <form action="" method="POST">{% csrf_token %}
-<TABLE BORDER=1>
+<TABLE id="bbf">
    <TR><TD>Utilisateur </TD><TD>
             <input type="text" name="name"></TD>
    </TR>
@@ -19,7 +19,9 @@
 <br>
 <br>
 
-<TABLE>
+<a href="{% url 'authorisation_new' %}" class="top-menu"> Nouvelle autorisation<span class="glyphicon glyphicon-plus"></span></a>
+<br>
+<TABLE id="bbf">
 <CAPTION> Tableau des autorisations </CAPTION>
 <thead>
     <TH>Login de l'utilisateur</TH>
@@ -42,7 +44,6 @@
 </TABLE>
 <br>
 <br>
-<a href="{% url 'authorisation_new' %}" class="top-menu"> Nouvelle autorisation<span class="glyphicon glyphicon-plus"></span></a>
 
 {% endblock %}
 

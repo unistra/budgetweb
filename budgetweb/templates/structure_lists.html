@@ -5,11 +5,11 @@
 
 
 <form action="" method="POST">{% csrf_token %}
-<TABLE BORDER=1>
-   <TR><TD>Nom </TD><TD>
+<TABLE id="bbf">
+   <TR><TH>Nom </TH><TD>
             <input type="text" name="stname"></TD>
    </TR>
-   <TR><TD>Libellé </TD><TD>
+   <TR><TH>Libellé </TH><TD>
             <input type="text" name="stlabel"></TD>
    </TR>
        <input type="submit" value="chercher">
@@ -19,7 +19,7 @@
 <br>
 <br>
 
-<TABLE BORDER=1>
+<TABLE id="bbf">
 <CAPTION> Tableau des structures </CAPTION>
 <thead>
     <TH> Id app/ID </TH>
@@ -34,6 +34,7 @@
     <TH> Modifpar </TH>
     <TH> dfmc </TH>
     <TH> fdr </TH>
+    <TH> Editer </TH>
     <TH> Supprimer</TH>
 </thead>
 <tbody>
@@ -51,6 +52,7 @@
        <TD> {{ reponse.modifpar }}  </TD>
        <TD> {{ reponse.dfmc }}  </TD>
        <TD> {{ reponse.fdr }}  </TD>
+       <TD><a href="{% url 'structure_edit' pkst=reponse.pk %}">editer</a></TD>
        <TD><a href="{% url 'structure_delete' pkst=reponse.pk %}">supprimer</a></TD>
 </TR>
 {% endfor %}

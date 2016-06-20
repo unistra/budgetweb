@@ -40,21 +40,18 @@
 <CAPTION> Tableau des recettes</CAPTION>
 <thead class="thcp">
 
-    <TH> Identifiant </TH>
-
-    <TH> Compte Depense      </TH>
-    <TH> Compte Depense      </TH>
-    <TH> Domaine Fonctionnel </TH>
-
-    <TH> Origine des fonds   </TH>
-    <TH> Origine des fonds   </TH>
-
     <TH> Plan Financement    </TH>
+    <TH> Enveloppe </TH>
+    <TH> Code du fond </TH>
+    <TH> Nature de la recette </TH>
+    <TH> Compte Budg&eacutetaire recette </TH>
+    <TH> Code de la nature comptable secondaire </TH>
+    <TH> Identifiant </TH>
     <TH> P&eacuteriode Budget. </TH>
     <TH> Montant     </TH>
-    <TH> Montant AR  </TH>
     <TH> Montant RE  </TH>
-
+    <TH> Montant AR  </TH>
+    <TH> Montant DC  </TH>
     <TH> Commentaire </TH>
     <TH> Fichier   </TH>
     <TH> Créé par </TH>
@@ -64,29 +61,29 @@
 
 </thead>
 <tbody>
-{% for depense in recettes %}
+{% for recette in recettes %}
 <TR class="tdcp">
-       <TD><a href="{% url 'recettefull_detail2' pkrec=depense.pk %}">{{depense.id}} / {{depense.myid}} </a></TD>
 
-       <TD>{{ depense.cptdeplev1.ccname  }}</TD>
-       <TD>{{ depense.cptdeplev2.ccname  }}</TD>
-       <TD>{{ depense.domfonc.dfcode }}</TD>
-       <TD>{{ depense.orfonds.ofname }}</TD>
-       <TD>{{ depense.orfonds2.ofname }}</TD>
+       <TD>{{ recette.plfi }}</TD>
+       <TD>{{ recette.cptdeplev1.enveloppe  }}</TD>
+       <TD>{{ recette.cptdeplev1.fondbudget_recette.code  }}</TD>
+       <TD>{{ recette.cptdeplev1.naturec_dep }}</TD>
+       <TD>{{ recette.cptdeplev1.ccbd }}</TD>
+       <TD>{{ recette.cptdeplev1.ncsecondairecode }}</TD>
+       <TD><a href="{% url 'recettefull_edit2' pkrec=recette.pk %}">{{recette.id}} / {{recette.myid}} </a></TD>
+       <TD>{{ recette.periodebudget    }}</TD>
 
-       <TD>{{ depense.plfi    }}</TD>
-       <TD>{{ depense.periodebudget    }}</TD>
+       <TD>{{ recette.montant }}</TD>
+       <TD>{{ recette.montantre }}</TD>
+       <TD>{{ recette.montantar }}</TD>
+       <TD>{{ recette.montantdc }}</TD>
 
-       <TD>{{ depense.montant }}</TD>
-       <TD>{{ depense.montantar }}</TD>
-       <TD>{{ depense.montantre }}</TD>
-
-       <TD>{{ depense.commentaire }}</TD>
-       <TD>{{ depense.nom_des_fichiers }}</TD>
-       <TD>{{ depense.creepar }}</TD>
-       <TD>{{ depense.creele }}</TD>
-       <TD>{{ depense.modifiepar }}</TD>
-       <TD>{{ depense.modifiele }}</TD>
+       <TD>{{ recette.commentaire }}</TD>
+       <TD>{{ recette.nom_des_fichiers }}</TD>
+       <TD>{{ recette.creepar }}</TD>
+       <TD>{{ recette.creele }}</TD>
+       <TD>{{ recette.modifiepar }}</TD>
+       <TD>{{ recette.modifiele }}</TD>
 
 </TR>
 {% endfor %}

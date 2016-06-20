@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.utils import timezone
@@ -10,11 +9,13 @@ from os import listdir
 from os.path import isfile, join
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from .forms import AuthorisationForm, CompteComptableForm , DomaineFonctionnelForm 
-from .forms import OrigineFondsForm, StructureForm , PlanFinancementForm , DepenseForm
-from .models import Authorisation, CompteComptable , DomaineFonctionnel , PeriodeBudget
-from .models import OrigineFonds , Structure , PlanFinancement , Depense , DepenseFull , RecetteFull
-from .forms import DepenseForm2 , DepenseFullForm , RecetteFullForm , PeriodeBudgetForm
+from .forms import AuthorisationForm, NatureComptableForm , DomaineFonctionnelForm
+from .forms import StructureForm , PlanFinancementForm 
+from .models import Authorisation, NatureComptable , DomaineFonctionnel , PeriodeBudget,CompteBudget
+from .models import Structure , PlanFinancement , DepenseFull , RecetteFull
+from .forms import DepenseFullForm , RecetteFullForm , PeriodeBudgetForm , CompteBudgetForm
+from .models import ComptaNature,FondBudgetaire
+from .forms import ComptaNatureForm, FondBudgetaireForm
 import json
 from django.http import Http404,HttpResponse
 from django.db.models import Sum
@@ -28,21 +29,16 @@ from django.contrib.auth import views as auth_views
 from django.contrib.auth.models import Group
 #---------------------------------------------------------------------------------
 
-#@login_required(login_url='/accounts/login/')
-
 def search(request):
     pass
 
 #---------------------------------------
 
 
-
-
 #@login_required
 def home(request):
     return render_to_response('base.html')
 
-#emptygrid.html  notemptygrid2.html  notemptygrid3.html  notemptygrid.html
 
 def index2(request):
     return render(request, 'tests/emptygrid.html')
@@ -62,12 +58,15 @@ def index5(request):
     return render(request, 'tests/notemptygrid3.html')
 
 
-#"""------------------
-#class Authorisation(models.Model):
-#    username = models.CharField(max_length=100)
-#    object = models.CharField(max_length=100)
-#-----------------------------------------"""
+"""-------------------------------------------------
+ class Authorisation(models.Model):
 
+-----------------------------------------------------"""
+
+"""-------------------------------------------------
+Fonction qui affiche la liste des autorisations
+Le formulaire à un searchform pour restreindre l'affichage
+-------------------------------------------------"""
 def authorisation_list(request):
     if request.method== "POST":
         user = request.POST['name']
@@ -80,23 +79,31 @@ def authorisation_list(request):
             myauth=Authorisation.objects.filter(username__icontains = user)
         else:
             myauth=Authorisation.objects.filter(username__icontains = user).filter(myobject__icontains = obj)
-    else: 
+    else:
         myauth=Authorisation.objects.all()
 
     return render(request, 'authorisation_lists.html', {'Authorisations':myauth})
-	
 
+
+"""-------------------------------------------------
+Fonction qui renvoie la liste des autorisations pour un utilisateur
+-------------------------------------------------"""
 def authorisation_user(request,myuser=""):
     mytauth=Authorisation.objects.filter(username=myuser)
     return render(equest, 'authorisation_lists.html', {'Authorisation':myauth})
 
 
+"""-------------------------------------------------
+Fonction qui prend en parametres:
+un utilisateur précis
+un objet précis
+Fonction qui renvoie 0 si pas d'autorisation pour un objet
+-------------------------------------------------"""
 def is_authorised(myuser, myobject):
     # chercher les autorisations dans la table
     # si il y a * dans la table, ok tout
     # si il y a qqch* alors detailler
     # si autorisation exacte ok
-    #print ("called with :"+myuser+"::"+myobject)
     thecount1=Authorisation.objects.filter(username=myuser).filter(myobject='*').count()
     if thecount1 >0:
         return thecount1
@@ -111,7 +118,7 @@ def is_authorised(myuser, myobject):
         if thecount > 0:
             return thecount
         else:
-            #decouper 
+            #decouper
             i=0
             found=0
             while (i < len(myobject)) and (found == 0):
@@ -124,9 +131,12 @@ def is_authorised(myuser, myobject):
                         print('* match autorisation for '+ myuser +'::'+myobject+'::'+o.myobject+'::'+o.myobject[i:j])
                         return found
                 i+=1
-            return found 
+            return found
 
 
+"""-------------------------------------------------
+Effacer une autorisation dans la table des autorisations
+-------------------------------------------------"""
 def authorisation_delete(request,pkauth):
     myauth = get_object_or_404(Authorisation,pk=pkauth)
     if request.method== "POST":
@@ -135,19 +145,24 @@ def authorisation_delete(request,pkauth):
         if form.is_valid():
             myauth.delete()
             return redirect('authorisation_list')
+        else:
+            return render(request, 'authorisation_delete.html', {'form': form})
     else:
         form = AuthorisationForm(instance=myauth)
         return render(request, 'authorisation_delete.html', {'form': form})
 
 
-
-
+"""-------------------------------------------------
+Afficher une autorisation
+-------------------------------------------------"""
 def authorisation_detail(request,pkauth):
     myauth = get_object_or_404(Authorisation, pk=pkauth)
     return render(request, 'authorisation_detail.html', {'Authorisation':myauth})
 
 
-
+"""-------------------------------------------------
+Ajout d'une autorisation
+-------------------------------------------------"""
 def authorisation_new(request):
     if request.method == "POST":
         form = AuthorisationForm(request.POST)
@@ -164,6 +179,9 @@ def authorisation_new(request):
     return render(request, 'authorisation_new.html', {'form': form})
 
 
+"""-------------------------------------------------
+Import du fichier csv - séparateur ;
+-------------------------------------------------"""
 def authorisation_importcsv(request):
     if request.method == "POST":
         if request.POST.get("lechemin"):
@@ -178,17 +196,19 @@ def authorisation_importcsv(request):
                      ligne=ligne.split(";")
                      monauth.username=ligne[0]
                      monauth.myobject = ligne[1]
-                     monauth.save() 
-             lemessage=lemessage+ "  ok fichier "+ lechemin+ " importé "+ str(nblignes) +" lignes trouvées."  
+                     monauth.save()
+             lemessage=lemessage+ "  ok fichier "+ lechemin+ " importé "+ str(nblignes) +" lignes trouvées."
              fichier.close()
              return render(request,"authorisation_import.html",{'lemessage':lemessage})
         else:
              return render(request, 'authorisation_import.html', {'lechemin': "", 'lemessage':""})
-    else:
-        lechemin="vide2"
+
     return render(request, 'authorisation_import.html', {'lechemin': "", 'lemessage':""})
 
 
+"""-------------------------------------------------
+Vider la table des autorisations
+-------------------------------------------------"""
 def authorisation_deleteall(request):
     if request.method == "POST":
         html=[]
@@ -207,16 +227,15 @@ def authorisation_deleteall(request):
         return HttpResponse(html)
     else:
         nbauth=Authorisation.objects.count()
-        return render(request, 'authorisation_deleteall.html',{'nb':nbauth}) 
+        return render(request, 'authorisation_deleteall.html',{'nb':nbauth})
 
 
-# ------------------------------------------
+"""-------------------------------------------------
 #class PeriodeBudget(models.Model):
-#    name = models.CharField(max_length=20)
-#    label = models.CharField(max_length=100)
-#    annee = models.DateField(blank=True , null=True)
-#-------------------------------------------
-
+-------------------------------------------------"""
+"""-------------------------------------------------
+Créer un nouveau budget
+-------------------------------------------------"""
 def periodebudget_new(request):
     if request.method == "POST":
         form = PeriodeBudgetForm(request.POST)
@@ -225,12 +244,16 @@ def periodebudget_new(request):
             newbud.save()
             return redirect('periodebudget_list')
         else:
-            print ('form not valid')
+            return render(request, 'periodebudget_new.html', {'form': form})
     else:
         form = PeriodeBudgetForm()
     return render(request, 'periodebudget_new.html', {'form': form})
 
 
+"""-------------------------------------------------
+Affichage des éléments de la base budget
+avec un searchform pour restreindre l'affichage
+-------------------------------------------------"""
 def periodebudget_list(request):
     if request.method == "POST":
         ccname = request.POST['ccname']
@@ -249,87 +272,280 @@ def periodebudget_list(request):
     return render(request, 'periodebudget_lists.html', {'reponses':mycc})
 
 
+"""-------------------------------------------------
+Effacer un budget
+-------------------------------------------------"""
 def periodebudget_delete(request,pkpb):
-    mycc = get_object_or_404( CompteComptable,pk=pkpb )
+    mycc = get_object_or_404( Periodebudget,pk=pkpb )
     if request.method== "POST":
-        print(request.POST)
         form = PeriodebudgetForm(request.POST, instance=mycc)
         if form.is_valid():
             mycc.delete()
             return redirect('periodebudget_list')
+        else:
+            return render(request, 'periodebudget_delete.html', {'form': form})
     else:
         form = PeriodeBudgetForm( instance=mycc )
         return render(request, 'periodebudget_delete.html', {'form': form})
 
 
 def periodebudget_detail( request,pkpb ):
+    """-------------------------------------------------
+    Afficher une période de budget
+    -------------------------------------------------"""
     mycc = get_object_or_404( PeriodeBudget , pk=pkpb )
     return render(request, 'periodebudget_detail.html', {'reponse':mycc})
 
 
-
-""" ***********************************
-class CompteComptable(models.Model):
-    ccid = models.CharField(max_length=100)
-    ccparent = models.CharField(max_length=100)
-    ccname = models.CharField(max_length=100)
-    cclabel = models.CharField(max_length=100)
-    cctype = models.Charfield(max_length=100)
-    ccinput = models.CharField(max_length=100)
-    cctypectrl = models.CharField(max_length=100)
-*************************************** """
-
-def comptecomptable_new(request):
+def comptebudget_new(request):
+    """------------------------------------------------
+    new comptebudgetaire 
+    ------------------------------------------------"""
     if request.method == "POST":
-        form = CompteComptableForm(request.POST)
+        form = CompteBudgetForm(request.POST)
+        if form.is_valid():
+            newcb = form.save(commit=False)
+            newcb.save()
+            return redirect('comptebudget_list')
+    else:
+        form = CompteBudgetForm()
+    return render(request, 'comptebudget_new.html', {'form': form})
+
+
+def comptebudget_list(request):
+    """------------------------------------------------
+    list comptebudgetaire 
+    ------------------------------------------------"""
+    if request.method == "POST":
+        cclabel  = request.POST['cclabel']
+        if cclabel == "" :
+            mycc = CompteBudget.objects.all()
+        else:
+            mycc = CompteBudget.objects.filter( cclabel__icontains = cclabel )
+    else:
+        mycc = CompteBudget.objects.all()
+
+    return render(request, 'comptebudget_lists.html', {'reponses':mycc})
+
+
+def comptebudget_delete(request,pkcc):
+    """------------------------------------------------
+    delete comptebudgetaire 
+    ------------------------------------------------"""
+    mycc = get_object_or_404( CompteBudget,pk=pkcc )
+    if request.method== "POST":
+        print(request.POST)
+        form = CompteBudgetForm(request.POST, instance=mycc)
+        if form.is_valid():
+            mycc.delete()
+            return redirect('comptebudget_list')
+    else:
+        form = CompteBudgetForm( instance=mycc )
+        return render(request, 'comptebudget_delete.html', {'form': form})
+
+
+#ComptaNature,FondBudgetaire
+
+def comptanature_new(request):
+    """------------------------------------------------
+    new comptanature 
+    ------------------------------------------------"""
+    if request.method == "POST":
+        form = ComptaNatureForm(request.POST)
+        if form.is_valid():
+            newcb = form.save(commit=False)
+            newcb.save()
+            return redirect('comptanature_list')
+    else:
+        form = ComptaNatureForm()
+    return render(request, 'comptanature_new.html', {'form': form})
+
+
+def comptanature_edit(request,pk):
+    """------------------------------------------------------------------
+    Editer une comptanature
+    ------------------------------------------------------------------"""
+    myof = get_object_or_404( ComptaNature , pk=pk )
+    if request.method== "POST":
+        form = ComptaNatureForm(request.POST, instance=myof )
+        if form.is_valid():
+            myof.save()
+            return redirect('comptanature_list')
+    else:
+        form = ComptaNatureForm( instance=myof )
+    return render(request, 'comptanature_edit.html', {'form': form})
+
+
+def comptanature_list(request):
+    """------------------------------------------------
+    list comptanature 
+    ------------------------------------------------"""
+    if request.method == "POST":
+        cclabel  = request.POST['cclabel']
+        if cclabel == "" :
+            mycc = ComptaNature.objects.all()
+        else:
+            mycc = Comptanature.objects.filter( label__icontains = cclabel )
+    else:
+        mycc = ComptaNature.objects.all()
+
+    return render(request, 'comptanature_lists.html', {'reponses':mycc})
+
+
+def comptanature_delete(request,pkcb):
+    """------------------------------------------------
+    delete comptanature 
+    ------------------------------------------------"""
+    mycc = get_object_or_404( ComptaNature,pk=pkcb )
+    if request.method== "POST":
+        print(request.POST)
+        form = ComptaNatureForm(request.POST, instance=mycc)
+        if form.is_valid():
+            mycc.delete()
+            return redirect('comptanature_list')
+    else:
+        form = ComptaNatureForm( instance=mycc )
+        return render(request, 'comptanature_delete.html', {'form': form})
+
+
+#----------------
+def fondbudgetaire_new(request):
+    """------------------------------------------------
+    new fondbudgetaire 
+    ------------------------------------------------"""
+    if request.method == "POST":
+        form = FondBudgetaireForm(request.POST)
+        if form.is_valid():
+            newcb = form.save(commit=False)
+            newcb.save()
+            return redirect('fondbudgetaire_list')
+    else:
+        form = FondBudgetaireForm()
+    return render(request, 'fondbudgetaire_new.html', {'form': form})
+
+
+def fondbudgetaire_edit(request,pk):
+    """------------------------------------------------------------------
+    Editer un fond
+    ------------------------------------------------------------------"""
+    myof = get_object_or_404( FondBudgetaire , pk=pk )
+    if request.method== "POST":
+        form = FondBudgetaireForm(request.POST, instance=myof )
+        if form.is_valid():
+            myof.save()
+            return redirect('fondbudgetaire_list')
+    else:
+        form = FondBudgetaireForm( instance=myof )
+    return render(request, 'fondbudgetaire_edit.html', {'form': form})
+
+
+
+def fondbudgetaire_list(request):
+    """------------------------------------------------
+    list fondbudgetaire 
+    ------------------------------------------------"""
+    if request.method == "POST":
+        cclabel  = request.POST['cclabel']
+        if cclabel == "" :
+            mycc = FondBudgetaire.objects.all()
+        else:
+            mycc = FondBudgetaire.objects.filter( label__icontains = cclabel )
+    else:
+        mycc = FondBudgetaire.objects.all()
+
+    return render(request, 'fondbudgetaire_lists.html', {'reponses':mycc})
+
+
+def fondbudgetaire_delete(request,pkcb):
+    """------------------------------------------------
+    delete fondbudgetaire 
+    ------------------------------------------------"""
+    mycc = get_object_or_404( FondBudgetaire,pk=pkcb )
+    if request.method== "POST":
+        print(request.POST)
+        form = FondBudgetaireForm(request.POST, instance=mycc)
+        if form.is_valid():
+            mycc.delete()
+            return redirect('fondbudgetaire_list')
+    else:
+        form = FondBudgetaireForm( instance=mycc )
+        return render(request, 'fondbudgetaire_delete.html', {'form': form})
+
+
+
+#-----------------
+
+def naturecomptable_new(request):
+    """------------------------------------------------
+    new Nature comptable 
+    ------------------------------------------------"""
+    if request.method == "POST":
+        form = NatureComptableForm(request.POST)
         if form.is_valid():
             newcc = form.save(commit=False)
             newcc.save()
-            return redirect('comptecomptable_list')
+            return redirect('naturecomptable_list')
         else:
             print ('form not valid')
     else:
-        form = CompteComptableForm()
-    return render(request, 'comptecomptable_new.html', {'form': form})
+        form = NatureComptableForm()
+    return render(request, 'naturecomptable_new.html', {'form': form})
 
 
-def comptecomptable_list(request):
-    if request.method == "POST":
-        ccname = request.POST['ccname']
-        cclabel  = request.POST['cclabel']
-        if ccname == "" and cclabel == "" :
-            mycc = CompteComptable.objects.all()
-        elif cclabel == "" :
-            mycc = CompteComptable.objects.filter ( ccname__icontains = ccname )
-        elif ccname == "" :
-            mycc = CompteComptable.objects.filter ( cclabel__icontains = cclabel )
-        else:
-            mycc = CompteComptable.objects.filter( ccname__icontains = ccname ).filter( cclabel__icontains = cclabel )
+def naturecomptable_edit(request,pkcc):
+    """------------------------------------------------------------------
+    Editer une naturecomptable
+    ------------------------------------------------------------------"""
+    myof = get_object_or_404( NatureComptable , pk=pkcc )
+    if request.method== "POST":
+        form = NatureComptableForm(request.POST, instance=myof )
+        if form.is_valid():
+            myof.save()
+            return redirect('naturecomptable_list')
     else:
-        mycc = CompteComptable.objects.all()
+        form = NatureComptableForm( instance=myof )
+    return render(request, 'naturecomptable_edit.html', {'form': form})
 
-    return render(request, 'comptecomptable_lists.html', {'reponses':mycc})
+
+def naturecomptable_list(request):
+    """------------------------------------------------
+    Liste des natures comptables 
+    ------------------------------------------------"""
+
+    if request.method == "POST":
+        nature = request.POST['nature']
+        fond  = request.POST['fond']
+        if nature == "" and fond == "" :
+            mycc = NatureComptable.objects.all()
+        elif fond != "" :
+            mycc = NatureComptable.objects.filter (fondbudget_recette__code__icontains = fond )
+        else:
+            mycc = NatureComptable.objects.filter ( naturec_dep__code__icontains = nature )
+    else:
+        mycc = NatureComptable.objects.all()
+
+    return render(request, 'naturecomptable_lists.html', {'reponses':mycc})
 
 
-def comptecomptable_delete(request,pkcc):
-    mycc = get_object_or_404( CompteComptable,pk=pkcc )
+def naturecomptable_delete(request,pkcc):
+    mycc = get_object_or_404( NatureComptable,pk=pkcc )
     if request.method== "POST":
         print(request.POST)
-        form = CompteComptableForm(request.POST, instance=mycc)
+        form = NatureComptableForm(request.POST, instance=mycc)
         if form.is_valid():
             mycc.delete()
-            return redirect('comptecomptable_list')
+            return redirect('naturecomptable_list')
     else:
-        form = CompteComptableForm( instance=mycc )
-        return render(request, 'comptecomptable_delete.html', {'form': form})
+        form = NatureComptableForm( instance=mycc )
+        return render(request, 'naturecomptable_delete.html', {'form': form})
 
 
-def comptecomptable_detail( request,pkcc ):
-    mycc = get_object_or_404( CompteComptable , pk=pkcc )
-    return render(request, 'comptecomptable_detail.html', {'reponse':mycc})
+def naturecomptable_detail( request,pkcc ):
+    mycc = get_object_or_404( NatureComptable , pk=pkcc )
+    return render(request, 'naturecomptable_detail.html', {'reponse':mycc})
 
 
-def comptecomptable_importcsv(request):
+def naturecomptable_importcsv(request):
     if request.method == "POST":
         if request.POST.get("lechemin"):
              lemessage=""
@@ -339,46 +555,96 @@ def comptecomptable_importcsv(request):
              for ligne in fichier:
                  if ligne.strip():
                      nblignes = nblignes+1
-                     moncc = CompteComptable()
+                     moncc = NatureComptable()
                      ligne=ligne.split(";")
-                     moncc.ccid = ligne[0]
-                     moncc.ccparent = ligne[1]
-                     moncc.ccname = ligne[2]
-                     moncc.cclabel = ligne[3]
-                     moncc.cctype = ligne[4]
-                     moncc.ccinput = ligne[5]
-                     moncc.cctypectrl = ligne[1]
+                     if ligne[0] == 'PFI fléché' :
+                         moncc.pfifleche =True
+                     else:
+                         moncc.pfifleche =False
+                     moncc.ncenveloppe = ligne[1]
+                     moncc.nccode = ligne[2]
+                     moncc.nclabel = ligne[2]
+                     moncc.ncsecondairecode = ligne[3]
+
+                     ccbdcode = ligne[4]
+                     moncc.ccbd = CompteBudget.objects.get(code=ccbdcode) 
+                     if ligne[6] == 'non':
+                         moncc.decalagetresocpae = False
+                     else:
+                         moncc.decalagetresocpae = True  
+                     moncc.nctype = 'dep'
+
                      moncc.save()
              lemessage=lemessage+ "  ok fichier "+ lechemin+ " importé "+ str(nblignes) +" lignes trouvées."
              fichier.close()
-             return render(request,"comptecomptable_import.html",{'lemessage':lemessage})
+             return render(request,"naturecomptable_import.html",{'lemessage':lemessage})
         else:
-             return render(request, 'comptecomptable_import.html', {'lechemin': "", 'lemessage':""})
+             return render(request, 'naturecomptable_import.html', {'lechemin': "", 'lemessage':""})
     else:
         lechemin="vide2"
-    return render(request, 'comptecomptable_import.html', {'lechemin': "", 'lemessage':""})
+    return render(request, 'naturecomptable_import.html', {'lechemin': "", 'lemessage':""})
+
+
+def naturecomptable_recette__importcsv(request):
+    if request.method == "POST":
+        if request.POST.get("lechemin"):
+             lemessage=""
+             lechemin=request.POST.get("lechemin")
+             fichier = open(lechemin, "r")
+             nblignes=0
+             for ligne in fichier:
+                 if ligne.strip():
+                     nblignes = nblignes+1
+                     moncc = NatureComptable()
+                     ligne=ligne.split(";")
+                     if ligne[0] == 'PFI fléché' :
+                         moncc.pfifleche =True
+                     else:
+                         moncc.pfifleche =False
+                     moncc.ncenveloppe = ligne[1]
+                     moncc.nccode = ligne[2]
+                     moncc.nclabel = ligne[2]
+                     moncc.ncsecondairecode = ligne[3]
+                     
+                     ccbdcode = ligne[4]
+                     moncc.ccbd = CompteBudget.objects.get(code=ccbdcode) 
+                     if ligne[6] == 'non':
+                         moncc.decalagetresocpae = False 
+                     else:
+                         moncc.decalagetresocpae = True     
+                     moncc.nctype = 'rec'
+
+                     moncc.save()
+             lemessage=lemessage+ "  ok fichier "+ lechemin+ " importé "+ str(nblignes) +" lignes trouvées."
+             fichier.close()
+             return render(request,"naturecomptable_import.html",{'lemessage':lemessage})
+        else:
+             return render(request, 'naturecomptable_import.html', {'lechemin': "", 'lemessage':""})
+    else:
+        lechemin="vide2"
+    return render(request, 'naturecomptable_import.html', {'lechemin': "", 'lemessage':""})
 
 
 
-def comptecomptable_deleteall(request):
+def naturecomptable_deleteall(request):
     if request.method == "POST":
         html=[]
         html.append('Elements supprimes:')
-        html.append(CompteComptable.objects.count())
+        html.append(NatureComptable.objects.count())
         html.append('<br>')
         html.append('Suppression de tous les elements de la table des comptes comptables')
 
-        mycc = CompteComptable.objects.all()
+        mycc = NatureComptable.objects.all()
         for cc in mycc:
             cc.delete()
 
         html.append('Elements restants:')
-        html.append(CompteComptable.objects.count())
+        html.append(NatureComptable.objects.count())
         html.append('<br>')
         return HttpResponse(html)
     else:
-        nbcc = CompteComptable.objects.count()
-        return render(request, 'comptecomptable_deleteall.html',{'nb':nbcc})
+        nbcc = NatureComptable.objects.count()
+        return render(request, 'naturecomptable_deleteall.html',{'nb':nbcc})
 
 
 """ ********************************************
@@ -517,6 +783,21 @@ def originefonds_new(request):
     return render(request, 'originefonds_new.html', {'form': form})
 
 
+def originefonds_edit(request,pkof):
+    """------------------------------------------------------------------
+    Editer une Origne de Fonds - Raccourcis en fonds par la DFI 
+    ------------------------------------------------------------------"""
+    myof = get_object_or_404( OrigineFonds , pk=pkof )
+    if request.method== "POST":
+        form = OrigineFondsForm(request.POST, instance=myof )
+        if form.is_valid():
+            myof.save()
+            return redirect('originefonds_list')
+    else:
+        form = OrigineFondsForm( instance=myof )
+    return render(request, 'originefonds_edit.html', {'form': form})
+
+
 def originefonds_list(request):
     if request.method == "POST":
         oftype = request.POST['oftype']
@@ -532,15 +813,19 @@ def originefonds_list(request):
     else:
         myof = OrigineFonds.objects.all()
 
-    return render(request, 'originefonds_lists.html', {'reponses':myof})
+    myof2 = myof.order_by('ofparent')
+    return render(request, 'originefonds_lists.html', {'reponses':myof,'reponses2':myof2})
+
 
 def originefonds_delete(request,pkof):
-    myof = get_object_or_404( OrigineFonds , pk=pkdf )
+    myof = get_object_or_404( OrigineFonds , pk=pkof )
     if request.method== "POST":
         form = OrigineFondsForm(request.POST, instance=myof)
         if form.is_valid():
             myof.delete()
             return redirect('originefonds_list')
+        else:
+            return render(request, 'originefonds_delete.html', {'form': form})
     else:
         form = OrigineFondsForm( instance=myof )
         return render(request, 'originefonds_delete.html', {'form': form})
@@ -606,19 +891,11 @@ def originefonds_deleteall(request):
 
 """ ********************************************************************
 class Structure(models.Model):
-    myid = models.CharField(max_length=100)
-    type = models.CharField(max_length=100)
-    name = models.CharField(max_length=100)
-    label = models.CharField(max_length=100)
-    parentid = models.CharField(max_length=100)
-    ordre = models.CharField(max_length=100)
-    niv = models.CharField(max_length=100)
-    bloq = models.CharField(max_length=100)
-    modifdate = models.CharField(max_length=100)
-    modifpar = models.CharField(max_length=100)
-    dfmc = models.CharField(max_length=100)
-    fdr = models.CharField(max_length=100)
 ******************************************************************  """
+
+"""------------------------------------------------------------------
+creation d'une structure CF/CC/CP
+------------------------------------------------------------------"""
 def structure_new(request):
     if request.method == "POST":
         form = StructureForm(request.POST)
@@ -632,7 +909,9 @@ def structure_new(request):
         form = StructureForm()
     return render(request, 'structure_new.html', {'form': form})
 
-
+"""------------------------------------------------------------------
+Liste des structure CF/CC/CP
+------------------------------------------------------------------"""
 def structure_list(request):
     if request.method == "POST":
         stname = request.POST['stname']
@@ -651,6 +930,9 @@ def structure_list(request):
     return render(request, 'structure_lists.html', {'reponses':myst})
 
 
+"""------------------------------------------------------------------
+Effacer une structure CF/CC/CP
+------------------------------------------------------------------"""
 def structure_delete(request,pkst):
     myst = get_object_or_404( Structure , pk=pkst )
     if request.method== "POST":
@@ -663,11 +945,34 @@ def structure_delete(request,pkst):
         return render(request, 'structure_delete.html', {'form': form})
 
 
+"""------------------------------------------------------------------
+Editer une structure CF/CC/CP
+------------------------------------------------------------------"""
+def structure_edit(request,pkst):
+    myst = get_object_or_404( Structure , pk=pkst )
+    if request.method== "POST":
+        form = StructureForm(request.POST, instance=myst)
+        if form.is_valid():
+            myst.save()
+            return redirect('structure_list')
+    else:
+        form = StructureForm( instance=myst )
+    return render(request, 'structure_edit.html', {'form': form})
+
+
+
+"""------------------------------------------------------------------
+Affichage d'une structure CF/CC/CP
+------------------------------------------------------------------"""
 def structure_detail( request,pkst ):
     myst = get_object_or_404( Structure , pk=pkst )
     return render(request, 'structure_detail.html', {'reponse':myst})
 
 
+"""------------------------------------------------------------------
+Import de structures CF/CC/CP
+Format csv séparateur ;
+------------------------------------------------------------------"""
 def structure_importcsv(request):
     if request.method == "POST":
         if request.POST.get("lechemin"):
@@ -704,6 +1009,9 @@ def structure_importcsv(request):
     return render(request, 'structure_import.html', {'lechemin': "", 'lemessage':""})
 
 
+"""------------------------------------------------------------------
+Vider la table des structures CF/CC/CP
+------------------------------------------------------------------"""
 def structure_deleteall(request):
     if request.method == "POST":
         html=[]
@@ -725,27 +1033,14 @@ def structure_deleteall(request):
         return render(request, 'structure_deleteall.html',{'nb':nbst})
 
 
-""" ----------------------------------------------------------------
 
+""" ----------------------------------------------------------------
 class PlanFinancement(models.Model):
-    name = models.CharField(max_length=100)
-    label  = models.CharField(max_length=100)
-    type   = models.CharField(max_length=100)
-    budget = models.CharField(max_length=100)
-    nomades= models.CharField(max_length=100)
-    refsifac= models.CharField(max_length=100, default="")
-    refdfi  = models.CharField(max_length=100, default="")
-    societe = models.CharField(max_length=100, default="")
-    ccassoc = models.CharField(max_length=100, default="")
-    cpassoc = models.CharField(max_length=100, default="")
-    responsable = models.CharField(max_length=100, default="")
-    dordre = models.CharField(max_length=100, default="")
-    divirecette = models.CharField(max_length=100, default="")
-    status = models.CharField(max_length=100, default="")
-    cleregul = models.CharField(max_length=100, default="")
-    domainefonc = models.CharField(max_length=100, default="")
 --------------------------------------------------------------  """
 
+"""------------------------------------------------------------------
+creation d'un PFI
+------------------------------------------------------------------"""
 def planfinancement_new(request):
     if request.method == "POST":
         form = PlanFinancementForm(request.POST)
@@ -760,6 +1055,9 @@ def planfinancement_new(request):
     return render(request, 'planfinancement_new.html', {'form': form})
 
 
+"""------------------------------------------------------------------
+Liste des PFI
+------------------------------------------------------------------"""
 def planfinancement_list(request):
     if request.method == "POST":
         pfiname = request.POST['pfiname']
@@ -779,6 +1077,10 @@ def planfinancement_list(request):
 
 
 def planfinancement_delete(request,pkpfi):
+    """------------------------------------------------------------------
+    Effacer un PFI
+    ------------------------------------------------------------------"""
+
     mypfi = get_object_or_404( PlanFinancement , pk=pkpfi )
     if request.method== "POST":
         form = PlanFinancementForm(request.POST, instance=mypfi)
@@ -786,15 +1088,40 @@ def planfinancement_delete(request,pkpfi):
             mypfi.delete()
             return redirect('planfinancement_list')
     else:
-        form = PlanFinancementForm( instance=myst )
+        form = PlanFinancementForm( instance=mypfi )
         return render(request, 'planfinancement_delete.html', {'form': form})
 
 
+
+def planfinancement_edit(request,pkpfi):
+    """------------------------------------------------------------------
+    Editer un PFI
+    ------------------------------------------------------------------"""
+
+    mypfi = get_object_or_404( PlanFinancement , pk=pkpfi )
+    if request.method== "POST":
+        form = PlanFinancementForm(request.POST, instance=mypfi)
+        if form.is_valid():
+            mypfi.save()
+            return redirect('planfinancement_list')
+    else:
+        form = PlanFinancementForm( instance=mypfi )
+    return render(request, 'planfinancement_edit.html', {'form': form})
+
+
+
+"""------------------------------------------------------------------
+Afficher un PFI
+------------------------------------------------------------------"""
 def planfinancement_detail( request,pkpfi ):
     mypfi = get_object_or_404( PlanFinancement , pk=pkpfi )
-    return render(request, 'planfinancement_detail.html', {'reponse':mypfi})
+    form = PlanFinancementForm(instance=mypfi)
+    return render(request, 'planfinancement_detail.html', {'form':form})
 
 
+"""------------------------------------------------------------------
+Import csv des PFI -version abandonnée-
+------------------------------------------------------------------"""
 # ancienne version
 def planfinancement_importcsv_v1(request):
     if request.method == "POST":
@@ -836,10 +1163,12 @@ def planfinancement_importcsv_v1(request):
     return render(request, 'planfinancement_import.html', {'lechemin': "", 'lemessage':""})
 
 
-def planfinancement_importcsv(request):
+"""------------------------------------------------------------------
+Import des PFI - Version abandonnée
+------------------------------------------------------------------"""
+def planfinancement_importcsv2(request):
     if request.method == "POST":
         if request.POST.get("lechemin"):
-             lemessage=""
              lechemin=request.POST.get("lechemin")
              fichier = open(lechemin, "r")
              nblignes=0
@@ -863,7 +1192,8 @@ def planfinancement_importcsv(request):
                      monpfi.ccassoc = ligne[13]
                      monpfi.cpassoc = ligne[12]
                      monpfi.save()
-             lemessage=lemessage+ "  ok fichier "+ lechemin+ " importé "+ str(nblignes) +" lignes trouvées."
+             lemessage="ok fichier "+ lechemin+ " importé "
+             lemessage+=str(nblignes) +" lignes trouvées."
              fichier.close()
              return render(request,"planfinancement_import.html",{'lemessage':lemessage})
         else:
@@ -873,6 +1203,57 @@ def planfinancement_importcsv(request):
     return render(request, 'planfinancement_import.html', {'lechemin': "", 'lemessage':""})
 
 
+
+"""------------------------------------------------------------------
+Import des PFI - Version utilisée
+#nouveau format:Code eotp;PFI;Désignation Operation;Fleché;Pluriannuel;CF ;CP Dérivé;CC Dérivé;
+------------------------------------------------------------------"""
+@login_required
+def planfinancement_importcsv(request):
+    if request.method == "POST":
+        if request.POST.get("lechemin"):
+             lechemin=request.POST.get("lechemin")
+             fichier = open(lechemin, "r")
+             nblignes=0
+             for ligne in fichier:
+                 if ligne.strip():
+                     nblignes = nblignes+1
+                     monpfi = PlanFinancement()
+                     ligne = ligne.split(";")
+                     monpfi.myid = ligne[1]
+                     monpfi.name = ligne[2]
+                     monpfi.eotp = ligne[0]
+                     monpfi.creepar = request.user.username
+                     monpfi.modifiepar = request.user.username
+                     monpfi.societe = "ETAB"
+                     monpfi.cfassoc = ligne[5]
+                     monpfi.cpassoc = ligne[6]
+                     monpfi.ccassoc = ligne[7]
+                     if ligne[3] == "oui":
+                         monpfi.fleche = True
+                     else:
+                         monpfi.fleche=False
+
+                     if ligne[4] == "oui":
+                         monpfi.pluriannuel = True
+                     else:
+                         monpfi.pluriannuel=False
+
+                     monpfi.save()
+             lemessage="ok fichier "+ lechemin+ " importé "+ str(nblignes) +" lignes trouvées."
+             fichier.close()
+             return render(request,"planfinancement_import.html",{'lemessage':lemessage})
+        else:
+             return render(request, 'planfinancement_import.html', {'lechemin': "", 'lemessage':""})
+    else:
+        lechemin="vide2"
+    return render(request, 'planfinancement_import.html', {'lechemin': "", 'lemessage':""})
+
+
+
+"""------------------------------------------------------------------
+Vidage de la table des PFI
+------------------------------------------------------------------"""
 def planfinancement_deleteall(request):
     if request.method == "POST":
         html=[]
@@ -894,137 +1275,24 @@ def planfinancement_deleteall(request):
         return render(request, 'planfinancement_deleteall.html',{'nb':nbpfi})
 
 
-""" -----------------------------------------------------------------
-class Depense ( models.Model ):
-    myid = models.CharField(max_length=100)
-    struct = models.ForeignKey ('Structure',blank=True, null=True)
-    cptdep = models.ForeignKey ('CompteComptable', blank=True , null=True)
-    domfonc = models.ForeignKey ('DomaineFonctionnel' , blank = True , null = True )
-    orfonds = models.ForeignKey ( 'OrigineFonds' , blank = True , null = True ) 
-    plfi = models.ForeignKey ( 'PlanFinancement' , blank = True , null = True )
-    montant = models.CharField ( max_length = 100 )
-    commentaire = models.CharField (max_length = 100)
-
-------------------------------------------------------------------- """
-
-def depense_new(request):
-    if request.method == "POST":
-        form = DepenseForm(request.POST)
-        if form.is_valid():
-            newdepense = form.save(commit=False)
-            newdepense.save()
-            return redirect('depense_list')
-        else:
-            print ('form not valid')
-    else:
-        form = DepenseForm()
-    return render(request, 'depense_new.html', {'form': form})
+def liste_pfi_avec_depenses_recettes(request):
+    mypfi = PlanFinancement.objects.order_by('societe','cfassoc','ccassoc','cpassoc','myid')
+    mydepenses = DepenseFull.objects.all()
+    myrecettes = RecetteFull.objects.all()
+    return render(request, 'planfinancementavecdeprec_lists.html', {'reponses':mypfi,'depenses':mydepenses,'recettes':myrecettes})
 
 
-def depense_list(request):
-    if request.method == "POST":
-        depstruct = request.POST['depstruct']
-        depcomptcompt = request.POST['depcomptcompt']
-        if depstruct == "" and depcomptcompt == "" :
-            mydep = Depense.objects.all()
-        elif depstruct == "" :
-            mydep = Depense.objects.filter ( structure__icontains = depstruct )
-        elif depcomptcompt == "" :
-            mydep = Depense.objects.filter ( cptdep__icontains = depcomptcompt )
-        else:
-            mydep = Depense.objects.filter( structure__icontains = depstruct ).filter( cptdep__icontains = depcomptcompt )
-    else:
-        mydep = Depense.objects.all()
-
-    return render(request, 'depense_lists.html', {'depenses':mydep})
 
 
-def depense_delete(request,pkdep):
-    mydep = get_object_or_404( Depense , pk=pkdep )
-    if request.method== "POST":
-        form = DepenseForm(request.POST, instance=mydep)
-        if form.is_valid():
-            mydep.delete()
-            return redirect('depense_list')
-    else:
-        form = DepenseForm( instance=mydep )
-        return render(request, 'depense_delete.html', {'form': form})
-
-
-def depense_detail( request,pkdep ):
-    mydep = get_object_or_404( Depense , pk=pkdep )
-    return render(request, 'depense_detail.html', {'depense':mydep})
-
-
-def depense_importcsv(request):
-    if request.method == "POST":
-        if request.POST.get("lechemin"):
-             lemessage=""
-             lechemin=request.POST.get("lechemin")
-             fichier = open(lechemin, "r")
-             nblignes=0
-             for ligne in fichier:
-                 if ligne.strip():
-                     nblignes = nblignes+1
-                     madepense = Depense()
-                     ligne = ligne.split(";")
-                     madepense.myid = ligne[0]
-                     madepense.struct = ligne[1]
-                     madepense.cptdep = ligne[2]
-                     madepense.domfonc = ligne[3]
-                     madepense.orfonds = ligne[4]
-                     madepense.plfi = ligne[5]
-                     madepense.montant = ligne[6]
-                     madepense.commentaire = ligne[7]
-                     madepense.save()
-             lemessage=lemessage+ "  ok fichier "+ lechemin+ " importé "+ str(nblignes) +" lignes trouvées."
-             fichier.close()
-             return render(request,"depense_import.html",{'lemessage':lemessage})
-        else:
-             return render(request, 'depense_import.html', {'lechemin': "", 'lemessage':""})
-    else:
-        lechemin="vide2"
-    return render(request, 'depense_import.html', {'lechemin': "", 'lemessage':""})
-
-
-def depense_deleteall(request):
-    if request.method == "POST":
-        html=[]
-        html.append('Elements supprimes:')
-        html.append(Depense.objects.count())
-        html.append('<br>')
-        html.append('Suppression de tous les elements de la table des Depenses')
-
-        alldepenses = Depense.objects.all()
-        for depense in alldepenses:
-            depense.delete()
-
-        html.append('Elements restants:')
-        html.append(Depense.objects.count())
-        html.append('<br>')
-        return HttpResponse(html)
-    else:
-        nbdepense = Depense.objects.count()
-        return render(request, 'depense_deleteall.html',{'nb':nbdepense})
-
-#-----V2 de depenses
-def depense_new2(request):
-    if request.method == "POST":
-        form = DepenseForm2(request.POST)
-        if form.is_valid():
-            newdepense = form.save(commit=False)
-            newdepense.save()
-            return redirect('depense_list')
-        else:
-            print ('form not valid')
-    else:
-        form = DepenseForm2()
-    return render(request, 'depense_new.html', {'form': form})
 
 
 """ ----------------------------------------------------------------------------
-
+class depensefull
 -------------------------------------------------------------------------- """
+
+""" -----------------------------------------------------------------
+Création depenses dans le budget - non utilisé
+------------------------------------------------------------------- """
 @login_required
 def depensefull_new(request):
     if request.method == "POST":
@@ -1041,6 +1309,9 @@ def depensefull_new(request):
     return render(request, 'depensefull_new.html', {'form': form})
 
 
+""" -----------------------------------------------------------------
+Edition depenses dans le budget
+------------------------------------------------------------------- """
 def depensefull_edit(request,pkdep):
     mydep = get_object_or_404( DepenseFull , pk=pkdep )
     if request.method == "POST":
@@ -1049,7 +1320,9 @@ def depensefull_edit(request,pkdep):
             mydep = form.save(commit=False)
             mydep.modifiepar = request.user.username
             mydep.save()
-            return redirect('depensefull_list')
+            localpkcc=mydep.structlev3.pk
+            return redirect('depensefull_parcc',pkcc=localpkcc)
+
         else:
             print ('form not valid')
     else:
@@ -1057,37 +1330,40 @@ def depensefull_edit(request,pkdep):
     return render(request, 'depensefull_edit.html', {'form': form})
 
 
-
-
-
+""" -----------------------------------------------------------------
+En test - programme pour uploader des fichiers en Django
+------------------------------------------------------------------- """
 def handle_uploaded_file(f, filepathandname):
     with open(filepathandname, 'wb+') as destination:
         for chunk in f.chunks():
             destination.write(chunk)
 
 
+""" -----------------------------------------------------------------
+Création depenses dans le budget - en cours de tests
+Les structures sont classées par niveau .
+On commence par le niveau 0
+En dépenses on prend les types dep
+------------------------------------------------------------------- """
 @login_required
 def depensefull_new2(request):
 
     #desc11=Classification.objects.all().filter(type="1")
     structlev1s = Structure.objects.all().filter(type=" cf",parentid="0")
-    structlev2s = "" 
+    structlev2s = ""
 #Structure.objects.all().filter(type=" cc")
-    cptdeplev1s = CompteComptable.objects.all().filter(cctype="dep",ccparent="1")
-    cptdeplev2s = "" #CompteComptable.objects.all()
-    domfoncs = DomaineFonctionnel.objects.all().filter(dfgrpcumul='LOLF_CUMUL')
-#    orfonds = OrigineFonds.objects.all().filter(oftype="cc",ofparent="0" )
-    orfonds = OrigineFonds.objects.all().filter(oftype="cc",ofid="1" )
+    cptdeplev1s = "" #NatureComptable.objects.all().filter(nctype="dep")
+    domfoncs = DomaineFonctionnel.objects.all().order_by('dfcode') #filter(dfgrpcumul='LOLF_CUMUL')
 
-    plfis = PlanFinancement.objects.all()
+    plfis = "" #PlanFinancement.objects.all()
 
     budget = PeriodeBudget.objects.filter(bloque=False).first()
 # pour les autorisations creer un dico avec le sobjets
-    structlev1ok = [] 
+    structlev1ok = []
     for i in structlev1s:
         if is_authorised(request.user.username,i.name):
             structlev1ok.append(i)
- 
+
     structlev2ok = []
     for j in structlev2s:
         if is_authorised(request.user.username,j.name):
@@ -1100,47 +1376,59 @@ def depensefull_new2(request):
         struct2ref=request.POST.get("structlev2").split("-----")
         struct2id=struct2ref[0]
         struct2 = Structure.objects.filter(id=struct2id).first()
+
         struct3ref=request.POST.get("structlev3").split('-----')
         struct3id=struct3ref[0]
         struct3 = Structure.objects.filter(id=struct3id).first()
 
-        cptdev1 = CompteComptable.objects.filter(ccid=request.POST.get("cptdeplev1")).first()
-        cptdev2ref=request.POST.get("cptdeplev2").split('-----')
-        cptdev2id = cptdev2ref[0]
-        cptdev2 = CompteComptable.objects.filter(ccid=cptdev2id).first()
-        domfonc = DomaineFonctionnel.objects.filter(id=request.POST.get("domfonc")).first()
-        orfond = OrigineFonds.objects.filter(id=request.POST.get("orfond")).first()
-        orfond2 = OrigineFonds.objects.filter(id=request.POST.get("orfond2")).first()
+        cptdev1ref = request.POST.get("cptdeplev1").split('-----')
+        cptdev1id = cptdev1ref[0]
+        cptdev1 = NatureComptable.objects.filter(id=cptdev1id).first()
 
-        plfi = PlanFinancement.objects.filter(id=request.POST.get("plfi")).first()
+        domfonc = DomaineFonctionnel.objects.filter(id=request.POST.get("domfonc")).first()
+
+        plfiid=request.POST.get("plfi").split("--")[0]
+        plfi = PlanFinancement.objects.filter(id=plfiid).first()
+
+        if request.POST.get("montantdg"):
+            montantdg = request.POST.get("montantdg")
+        else:
+            montantdg = 0
 
         if request.POST.get("montantdc"):
             montantdc = request.POST.get("montantdc")
+        else:
+            montantdc = 0
+
         if request.POST.get("montantae"):
             montantae = request.POST.get("montantae")
+        else:
+            montantae =0
+
         if request.POST.get("montantcp"):
             montantcp = request.POST.get("montantcp")
+        else:
+            montantcp = 0
+
         if request.POST.get("dateae"):
             dateae = request.POST.get("dateae")
+        else:
+            dateae = "" 
 
         if request.POST.get("commentaire"):
             commentaire = request.POST.get("commentaire")
-        if request.POST.get("myid"):
-            myid = request.POST.get("myid")
+        else:
+            commentaire =""
 
         madepense = DepenseFull()
-        madepense.myid = "myid"
         madepense.structlev1 = struct1
         madepense.structlev2 = struct2
         madepense.structlev3 = struct3
         madepense.cptdeplev1 = cptdev1
-        madepense.cptdeplev2 = cptdev2
         madepense.domfonc = domfonc
-        madepense.orfonds = orfond
-        #madepense.orfonds2 = orfondi2
         madepense.plfi = plfi
-        madepense.montant=0.00
-        madepense.montantdc = montantdc   #montantdc
+        madepense.montant=montantdg
+        madepense.montantdc = montantdc 
         madepense.montantae = montantae
         madepense.dateae = dateae
         madepense.montantcp = montantcp
@@ -1160,25 +1448,112 @@ def depensefull_new2(request):
         madepense.save()
 
         localpkcc=madepense.structlev3.pk
-        # if form.is_valid():
-        #    newdepense = form.save(commit=False)
-        #   newdepense.save()
-        #  return redirect('depensefull_list')
-        # else:
-        #     print ('form not valid')
         return redirect('depensefull_parcc',pkcc=localpkcc)
 
     else:
-        print("autorisations pour : "+str(len(structlev1ok)))
-        return render(request, 'depensefull_new_v2.html', {'structlev1s': structlev1ok ,'structlev2s': structlev2ok,
-                                                           'cptdeplev1s': cptdeplev1s, 'cptdeplev2s':cptdeplev2s,
-                                                           'domfoncs': domfoncs , 'orfonds': orfonds,
-                                                           'plfis': plfis})
+        return render(request, 'depensefull_new_v2.html', {
+                                                       'structlev1s': structlev1ok ,
+                                                       'structlev2s': structlev2ok,
+                                                       'cptdeplev1s': cptdeplev1s,
+                                                       'domfoncs': domfoncs,
+                         })
+
+
+@login_required
+def depensefull_new_avec_pfi(request,struct3id,pfiid):
+    """---------------------------------------------
+    Avec le formulaire prérempli .
+    -----------------------------------------------"""
+
+    budget = PeriodeBudget.objects.filter(bloque=False).first()
+
+    if request.method == "POST":
+        struct1 = Structure.objects.filter(id=request.POST.get("structlev1")).first()
+        struct2ref=request.POST.get("structlev2").split("-----")
+        struct2id=struct2ref[0]
+        struct2 = Structure.objects.filter(id=struct2id).first()
+
+        struct3ref=request.POST.get("structlev3").split('-----')
+        struct3id=struct3ref[0]
+        struct3 = Structure.objects.filter(id=struct3id).first()
+
+        cptdev1ref = request.POST.get("cptdeplev1").split('-----')
+        cptdev1id = cptdev1ref[0]
+        cptdev1 = NatureComptable.objects.filter(id=cptdev1id).first()
+
+        domfonc = DomaineFonctionnel.objects.filter(id=request.POST.get("domfonc")).first()
+
+        plfiid=request.POST.get("plfi").split("--")[0]
+        plfi = PlanFinancement.objects.filter(id=plfiid).first()
+
+        if request.POST.get("montantdg"):
+            montantdg = request.POST.get("montantdg")
+
+        if request.POST.get("montantdc"):
+            montantdc = request.POST.get("montantdc")
+        if request.POST.get("montantae"):
+            montantae = request.POST.get("montantae")
+        if request.POST.get("montantcp"):
+            montantcp = request.POST.get("montantcp")
+        if request.POST.get("dateae"):
+            dateae = request.POST.get("dateae")
+
+        if request.POST.get("commentaire"):
+            commentaire = request.POST.get("commentaire")
+
+        madepense = DepenseFull()
+        madepense.structlev1 = struct1
+        madepense.structlev2 = struct2
+        madepense.structlev3 = struct3
+        madepense.cptdeplev1 = cptdev1
+        madepense.domfonc = domfonc
+        madepense.plfi = plfi
+        madepense.montant=montantdg
+        madepense.montantdc = montantdc
+        madepense.montantae = montantae
+        madepense.dateae = dateae
+        madepense.montantcp = montantcp
+        madepense.commentaire = commentaire
+        madepense.periodebudget = budget
+        #username = None
+        #if request.user.is_authenticated():
+        #    username = request.user.username
+        madepense.creepar = request.user.username
+        #madepense.creepar = username
+        madepense.modifiepar = request.user.username
+
+        #handle_uploaded_file(request.Files['file'],'/tmp/file1.txt')
+        #madepense.noms_des_fichiers=request.Files['file']
+        madepense.save()
+        madepense.myid = madepense.id
+        madepense.save()
+
+        localpkcc=madepense.structlev3.pk
+        return redirect('depensefull_parcc',pkcc=localpkcc)
+
+    else:
+        plfi = get_object_or_404(PlanFinancement,pk=pfiid)
+        struct3id=" "+struct3id
+        struct3 = get_object_or_404(Structure,name=struct3id,type=' cf')
+        print("struct2id: "+str(struct3.myid))
+        struct2 = get_object_or_404(Structure,myid=struct3.parentid)
+        struct1 = get_object_or_404(Structure,myid=struct2.parentid)
+
+        domfoncs = DomaineFonctionnel.objects.all().order_by('dfcode') #filter(dfgrpcumul='LOLF_CUMUL')
+
+        return render(request, 'depensefull_new_v3.html', {
+                                                       'struct1': struct1,
+                                                       'struct2': struct2,
+                                                       'struct3': struct3,
+                                                       'domfoncs': domfoncs,
+                                                       'plfin':plfi,
+                         })
 
 
 
-
-
+""" -----------------------------------------------------------------
+Liste des depenses dans le budget
+------------------------------------------------------------------- """
 def depensefull_list(request):
     if request.method == "POST":
         depstruct = request.POST['depstruct']
@@ -1197,19 +1572,26 @@ def depensefull_list(request):
     return render(request, 'depensefull_lists.html', {'depenses':mydep})
 
 
+""" -----------------------------------------------------------------
+Liste des depenses dans le budget associées à un CC
+------------------------------------------------------------------- """
 def depensefull_parcc(request,pkcc):
     madep=Structure.objects.get(id=pkcc)
     #parent1=Structure.objects.filter(myid=madep.parentid).first()
     #parent2=Structure.objects.filter(myid=parent1.id).first()
     mydep = DepenseFull.objects.filter (structlev3=madep).order_by('structlev1','structlev2','structlev3')
+    total = DepenseFull.objects.filter (structlev3=madep).aggregate(Sum('montant'))
     totaldc=DepenseFull.objects.filter (structlev3=madep).aggregate(Sum('montantdc'))
     totalcp=DepenseFull.objects.filter (structlev3=madep).aggregate(Sum('montantcp'))
     totalae=DepenseFull.objects.filter (structlev3=madep).aggregate(Sum('montantae'))
     lev2 = Structure.objects.get(myid=madep.parentid)
-    lev1 = Structure.objects.get(myid=lev2.parentid) 
-    return render(request, 'depensefullcc_lists.html', {'depenses':mydep, 'totaldc':totaldc, 'totalcp':totalcp,'totalae':totalae,'pkcc':pkcc,'mastructurelev1':lev1,'mastructurelev2':lev2,'mastructurelev3':madep})
+    lev1 = Structure.objects.get(myid=lev2.parentid)
+    return render(request, 'depensefullcc_lists.html', {'depenses':mydep, 'total':total , 'totaldc':totaldc, 'totalcp':totalcp,'totalae':totalae,'pkcc':pkcc,'mastructurelev1':lev1,'mastructurelev2':lev2,'mastructurelev3':madep})
 
 
+""" -----------------------------------------------------------------
+Liste des recettes dans le budget associées à un CP
+------------------------------------------------------------------- """
 def recettefull_parcp(request,pkcp):
     madep=Structure.objects.get(id=pkcp)
     #parent1=Structure.objects.filter(myid=madep.parentid).first()
@@ -1218,9 +1600,12 @@ def recettefull_parcp(request,pkcp):
     total=RecetteFull.objects.filter (structlev3=madep).aggregate(Sum('montant'))
     totalar=RecetteFull.objects.filter (structlev3=madep).aggregate(Sum('montantar'))
     totalre=RecetteFull.objects.filter (structlev3=madep).aggregate(Sum('montantre'))
+    totaldc=RecetteFull.objects.filter (structlev3=madep).aggregate(Sum('montantdc'))
     lev2 = Structure.objects.get(myid=madep.parentid)
     lev1 = Structure.objects.get(myid=lev2.parentid)
-    return render(request, 'recettefullcp_lists.html', {'recettes':myrec, 'total':total, 'totalar':totalar,'totalre':totalre,'pkcp':pkcp,'mastructurelev1':lev1,'mastructurelev2':lev2,'mastructurelev3':madep})
+    return render(request, 'recettefullcp_lists.html', {'recettes':myrec, 'total':total, 'totaldc':totaldc ,
+                                         'totalar':totalar,'totalre':totalre,'pkcp':pkcp,'mastructurelev1':lev1,
+                                         'mastructurelev2':lev2,'mastructurelev3':madep})
 
 
 
@@ -1312,9 +1697,55 @@ def depensefull_deleteall(request):
 # AJAX
 #--------------------------------------------------------
 
+def ajax_add_eotp(request,pkstr1):
+    if request.is_ajax():
+        myname=Structure.objects.get(id=pkstr1).name
+        myname=myname.strip()
+ 
+        planfi = PlanFinancement.objects.filter(cfassoc=myname,pluriannuel=False)
+        todo_items=[]
+
+        for s in planfi:
+            todo_items.append(str(s.id)+"-----"+str(s.name))
+        data = json.dumps(todo_items)
+        return HttpResponse(data, content_type='application/json')
+    else:
+        raise Http404
+
+
+#Pour les recettes
+def ajax_add_enveloppe(request,pkstr1):
+    recette='rec'
+    if request.is_ajax():
+        isfleche=PlanFinancement.objects.get(id=pkstr1).fleche
+        naturecompta = NatureComptable.objects.filter(pfifleche=isfleche,nctype=recette)
+        todo_items=[]
+        for s in naturecompta:
+            todo_items.append(str(s.id)+"-----"+str(s.enveloppe)+"-----"+str(s.fondbudget_recette))
+        data = json.dumps(todo_items)
+        return HttpResponse(data, content_type='application/json')
+    else:
+        raise Http404
+
+
+#Pour les depenses
+def ajax_add_enveloppe_depense(request,pkstr1):
+    #print ("calling_add_enveloppe pour::" + str(pkstr1))
+    depense='dep'
+    if request.is_ajax():
+        isfleche=PlanFinancement.objects.get(id=pkstr1).fleche
+        naturecompta = NatureComptable.objects.filter(pfifleche=isfleche,nctype=depense)
+        todo_items=[]
+        for s in naturecompta:
+            todo_items.append(str(s.id)+"-----"+str(s.enveloppe)+"-----"+str(s.naturec_dep))
+        data = json.dumps(todo_items)
+        return HttpResponse(data, content_type='application/json')
+    else:
+        raise Http404
+
+
 #Depenses Ajax find structure level 2 from level1
 def ajax_add_todo1(request,pkstr1):
-    print ("calling_add_todo1")
     if request.is_ajax():
         #print("called by ajax")
         myid=Structure.objects.get(id=pkstr1).myid
@@ -1372,14 +1803,13 @@ def ajax_findstruct_lev3(request,pkstr1):
     if request.is_ajax():
         #print("called by ajax")
         myid=Structure.objects.get(id=pkstr1).myid
-        print("recherche des fils de thekey:"+myid)
+        #print("recherche des fils de thekey:"+myid)
         struct2qset=Structure.objects.all().filter(parentid=myid)
         todo_items=[]
-        print("recherche des fils de thekey:"+myid+ " nb trouves:" + str(len(struct2qset)))
+        #print("recherche des fils de thekey:"+myid+ " nb trouves:" + str(len(struct2qset)))
         structlev3ok = []
         for j in struct2qset:
             if is_authorised(request.user.username,j.name):
-                print('testons1:' + request.user.username+"::"+j.name)
                 structlev3ok.append(j)
 
         for s in structlev3ok:
@@ -1405,7 +1835,7 @@ def ajax_recfindstruct_lev3(request,pkstr1):
         structlev3ok = []
         for j in struct2qset:
             if is_authorised(request.user.username,j.name):
-                print('testons:' + request.user.username+"::"+j.name)
+                #print('testons:' + request.user.username+"::"+j.name)
                 structlev3ok.append(j)
 
         for s in structlev3ok:
@@ -1422,7 +1852,7 @@ def ajax_add_cptdev_lev2(request,pkcpt):
     #print ("calling_add_cptdev")
     if request.is_ajax():
         #print("called by ajax cptdev")
-        struct2qset=CompteComptable.objects.all().filter(ccparent=pkcpt)
+        struct2qset=NatureComptable.objects.all().filter(ccparent=pkcpt)
         todo_items=[]
         for s in struct2qset:
             todo_items.append(str(s.ccid)+"-----"+str(s.ccname)+"-----"+str(s.cclabel))
@@ -1438,7 +1868,7 @@ def ajax_recadd_cptdev_lev2(request,pkcpt):
     #print ("calling_add_cptdev")
     if request.is_ajax():
         #print("called by ajax cptdev")
-        struct2qset=CompteComptable.objects.all().filter(ccparent=pkcpt)
+        struct2qset=NatureComptable.objects.all().filter(ccparent=pkcpt)
         todo_items=[]
         for s in struct2qset:
             todo_items.append(str(s.ccid)+"-----"+str(s.ccname)+"-----"+str(s.cclabel))
@@ -1500,29 +1930,6 @@ def ajax_more_todo1(request):
         raise Http404
 
 
-#""" -------------------------------------------
-#class RecetteFull ( models.Model ):
-#    myid = models.CharField(max_length=100)
-#    structlev1 = models.ForeignKey ('Structure',blank=True, null=True, related_name='structlev1')
-#    structlev2 = models.ForeignKey ('Structure',blank=True, null=True, related_name='structlev2')
-#    structlev3 = models.ForeignKey ('Structure',blank=True, null=True, related_name='structlev3')
-
-#    cptdeplev1 = models.ForeignKey ('CompteComptable', blank=True , null=True, related_name='cptdeplev1')
-#    cptdeplev2 = models.ForeignKey ('CompteComptable', blank=True , null=True, related_name='cptdeplev2')
-
-#    domfonc = models.ForeignKey ('DomaineFonctionnel' , blank = True , null = True )
-#    orfonds = models.ForeignKey ( 'OrigineFonds' , blank = True , null = True , related_name='orfonds')
-#    orfonds2 = models.ForeignKey ( 'OrigineFonds' , blank = True , null = True , related_name='orfonds2')
-#    plfi = models.ForeignKey ( 'PlanFinancement' , blank = True , null = True )
-#    montant = models.CharField ( max_length = 100 ,blank = True , null = True )
-    
-#    montantdc = models.DecimalField(max_digits=12, decimal_places=2 , blank = True , null = True )
-#    montantar = models.DecimalField(max_digits=12, decimal_places=2 , blank = True , null = True )
-#    montantre = models.DecimalField(max_digits=12, decimal_places=2 , blank = True , null = True )
-#    commentaire = models.CharField (max_length = 100 , blank=True , null = True)
-
-#    myfile = forms.FileField()
-
 #---------------------------------------------------------------------"""
 #---
 
@@ -1534,8 +1941,6 @@ def recettefull_new(request):
             newrecette.creepar = request.user.username
             newrecette.save()
             return redirect('recettefull_list')
-        else:
-            print ('form not valid')
     else:
         form = RecetteFullForm()
     return render(request, 'recettefull_new.html', {'form': form})
@@ -1549,8 +1954,6 @@ def recettefull_new3(request):
             newrecette.creepar = request.user.username
             newrecette.save()
             return redirect('recettefull_list')
-        else:
-            print ('form not valid')
     else:
         form = RecetteFullForm()
     return render(request, 'recettefull_new3.html', {'form': form})
@@ -1562,85 +1965,88 @@ def recettefull_new2(request):
     structlev1s = Structure.objects.all().filter(type=" cf",parentid="0")
     structlev2s = ""
 #Structure.objects.all().filter(type=" cc")
-    cptdeplev1s = CompteComptable.objects.all().filter(cctype="rec",ccparent="150")
+    cptdeplev1s = "" #NatureComptable.objects.all().filter(nctype="rec")
     cptdeplev2s = "" #CompteComptable.objects.all()
-    domfoncs = DomaineFonctionnel.objects.all() #.filter(dfgrpcumul='LOLF_CUMUL')
-    orfonds = OrigineFonds.objects.all().filter(oftype="cp",ofparent="0" )
-    plfis = PlanFinancement.objects.all()
+    domfoncs = "" #DomaineFonctionnel.objects.all() #.filter(dfgrpcumul='LOLF_CUMUL')
+    plfis = "" #PlanFinancement.objects.all()
     budget = PeriodeBudget.objects.all().filter(bloque=False).first()
 
     if request.method == "POST":
         struct1 = Structure.objects.filter(id=request.POST.get("structlev1")).first()
+
         struct2ref=request.POST.get("structlev2").split("-----")
         struct2id=struct2ref[0]
         struct2 = Structure.objects.filter(id=struct2id).first()
+
         struct3ref=request.POST.get("structlev3").split('-----')
         struct3id=struct3ref[0]
         struct3 = Structure.objects.filter(id=struct3id).first()
 
-        cptdev1 = CompteComptable.objects.filter(ccid=request.POST.get("cptdeplev1")).first()
-        cptdev2ref=request.POST.get("cptdeplev2").split('-----')
-        cptdev2id = cptdev2ref[0]
-        cptdev2 = CompteComptable.objects.filter(ccid=cptdev2id).first()
-        domfonc = DomaineFonctionnel.objects.filter(id=request.POST.get("domfonc")).first()
-        orfond = OrigineFonds.objects.filter(id=request.POST.get("orfond")).first()
-        orfond2 = OrigineFonds.objects.filter(id=request.POST.get("orfond2")).first()
 
-        plfi = PlanFinancement.objects.filter(id=request.POST.get("plfi")).first()
+        cptdev1ref = request.POST.get("cptdeplev1").split('-----')
+        cptdev1id = cptdev1ref[0]
+        cptdev1 = NatureComptable.objects.filter(id=cptdev1id).first()
+
+        domfonc = DomaineFonctionnel.objects.filter(id=request.POST.get("domfonc")).first()
+
+        plfiid=request.POST.get("plfi").split("--")[0]
+        plfi = PlanFinancement.objects.filter(id=plfiid).first()
+
+        #plfi = PlanFinancement.objects.filter(id=request.POST.get("plfi")).first()
 
         if request.POST.get("montant"):
             montant = request.POST.get("montant")
+        else:
+            montant = 0
+
+        if request.POST.get("montantdc"):
+            montantdc = request.POST.get("montantdc")
+        else:
+            montantdc = 0
+
         if request.POST.get("montantar"):
             montantar = request.POST.get("montantar")
+        else:
+            montantar = 0
+
         if request.POST.get("montantre"):
             montantre = request.POST.get("montantre")
+        else:
+            montantre = 0
 
         if request.POST.get("commentaire"):
             commentaire = request.POST.get("commentaire")
-        if request.POST.get("myid"):
-            myid = request.POST.get("myid")
+        else:
+            commentaire = ""
 
-        madepense = RecetteFull()
-        madepense.myid = "myid"
-        madepense.structlev1 = struct1
-        madepense.structlev2 = struct2
-        madepense.structlev3 = struct3
-        madepense.cptdeplev1 = cptdev1
-        madepense.cptdeplev2 = cptdev2
-        madepense.domfonc = domfonc
-        madepense.orfonds = orfond
-        #madepense.orfonds2 = orfondi2
-        madepense.plfi = plfi
-        madepense.montant = montant
-        #madepense.montantdc = montantdc
-        madepense.montantar = montantar
-        madepense.montantre = montantre
-        madepense.commentaire = commentaire
-        madepense.periodebudget=budget
-        #handle_uploaded_file(request.Files['file'],'/tmp/file1.txt')
-        #madepense.noms_des_fichiers=request.Files['file']
+        marecette = RecetteFull()
+        marecette.structlev1 = struct1
+        marecette.structlev2 = struct2
+        marecette.structlev3 = struct3
+        marecette.cptdeplev1 = cptdev1
 
-        #username = None
-        #if request.user.is_authenticated():
-        #    username = request.user.username
-        madepense.creepar = request.user.username
-        madepense.modifiepar = request.user.username
-        madepense.save()
-        madepense.myid = madepense.id
-        madepense.save()
-        localpkcp=madepense.structlev3.pk
-        # if form.is_valid():
-        #    newdepense = form.save(commit=False)
-        #   newdepense.save()
-        #  return redirect('depensefull_list')
-        # else:
-        #     print ('form not valid')
+        marecette.domfonc = domfonc
+        marecette.plfi = plfi
+        marecette.montant = montant
+        marecette.montantdc = montantdc
+        marecette.montantar = montantar
+        marecette.montantre = montantre
+        marecette.commentaire = commentaire
+        marecette.periodebudget=budget
+
+        marecette.creepar = request.user.username
+        marecette.modifiepar = request.user.username
+        marecette.save()
+        marecette.myid = marecette.id
+        marecette.save()
+        localpkcp=marecette.structlev3.pk
+
         return redirect('recettefull_parcp',pkcp=localpkcp)
 
     else:
         return render(request, 'recettefull_new_v2.html', {'structlev1s': structlev1s ,'structlev2s': structlev2s,
-                                                           'cptdeplev1s': cptdeplev1s, 'cptdeplev2s':cptdeplev2s,
-                                                           'domfoncs': domfoncs , 'orfonds': orfonds,
+                                                           'cptdeplev1s': cptdeplev1s,
+                                                           'domfoncs': domfoncs , 
                                                            'plfis': plfis})
 
 
@@ -1692,9 +2098,11 @@ def recettefull_detail( request,pkrec ):
     myrec = get_object_or_404( RecetteFull , pk=pkrec )
     return render(request, 'recettefull_detail.html', {'recette':myrec})
 
+
 def recettefull_detail2( request,pkrec ):
     myrec = get_object_or_404( RecetteFull , pk=pkrec )
     return render(request, 'recettefull_detail2.html', {'recette':myrec})
+
 
 
 def recettefull_deleteall(request):
@@ -1729,9 +2137,50 @@ def recettefull_edit(request,pkrec):
             return redirect('recettefull_list')
         else:
             print ('form not valid')
-    else:
-        form = RecetteFullForm( instance=myrec)
+    #else:
+    form = RecetteFullForm( instance=myrec)
     return render(request, 'recettefull_edit.html', {'form': form})
+
+
+def recettefull_edit2(request,pkrec):
+    myrec = get_object_or_404( RecetteFull , pk=pkrec )
+    if request.method == "POST":
+        #form = RecetteFullForm(request.POST,instance=myrec)
+        #if form.is_valid():
+        #    myrec = form.save(commit=False)
+        myrec.montant=request.POST['montant']
+        myrec.montantar=request.POST['montantar']
+        myrec.montantre=request.POST['montantre']
+        myrec.montantdc=request.POST['montantdc']
+        myrec.modifiepar = request.user.username
+        myrec.save()
+        #localpkcp=myrec.structlev3.pk
+        #return redirect('recettefull_parcp',pkcp=localpkcp)
+        return redirect('liste_pfi_avec_depenses_recettes')
+
+    #else:
+    form = RecetteFullForm( instance=myrec)
+    return render(request, 'recettefull_edit.html', {'form': form})
+
+
+
+def depensefull_edit2(request,pkdep):
+    mydep = get_object_or_404( DepenseFull , pk=pkdep )
+    if request.method == "POST":
+        mydep.montant=request.POST['montant']
+        mydep.montantdc=request.POST['montantdc']
+        mydep.montantcp=request.POST['montantcp']
+        mydep.montantae=request.POST['montantae']
+        mydep.modifiepar = request.user.username
+        mydep.save()
+        #localpkcp=myrec.structlev3.pk
+        #return redirect('recettefull_parcp',pkcp=localpkcp)
+        return redirect('liste_pfi_avec_depenses_recettes')
+
+    #else:
+    form = DepenseFullForm( instance=mydep)
+    return render(request, 'depensefull_edit.html', {'form': form})
+
 
 
 

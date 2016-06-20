@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Liste des Depenses</h1>
+<h1>Liste des p&eacuteriodes budg&eacutetaires</h1>
 
 
 <form action="" method="POST">{% csrf_token %}
-<TABLE BORDER=1>
+<TABLE id="bbf">
    <TR><TD> Période budgétaire </TD><TD>
             <input type="text" name="depstruct"></TD>
    </TR>
@@ -23,13 +23,13 @@
 <br>
 <br>
 
-<TABLE>
+<TABLE id="bbf">
 <CAPTION> Tableau des p&eacuteriode budg&eacuteaire </CAPTION>
 <thead>
-
+    <TH> ID </TH>
     <TH> Code </TH>
     <TH> Label   </TH>
-    <TH> P&eacuteriode      </TH>
+    <TH> P&eacuteriode  </TH>
     <TH> Bloqu&eacute O/N ( seule une période active) </TH>
 
     <TH> Supprimer</TH>
@@ -38,7 +38,7 @@
 {% for depense in reponses %}
 <TR>
        <TD><a href="{% url 'periodebudget_detail' pkpb=depense.pk %}"> {{ depense.id    }} </a></TD>
-       <TD>{{ depense.nom  }}</TD>
+       <TD>{{ depense.name  }}</TD>
        <TD>{{ depense.label  }}</TD>
        <TD>{{ depense.annee }}</TD>
        <TD>{{ depense.bloque }}</TD>
@@ -47,7 +47,7 @@
 {% endfor %}
 </tbody>
 <tfoot>
-     <tr><td> Total</td><td> {{ depenses.count }} entrees</td></tr>
+     <tr><td> Total</td><td> {{ reponses.count }} entrees</td></tr>
 </tfoot>
 </TABLE>
 <br>

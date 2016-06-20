@@ -28,13 +28,14 @@ urlpatterns = [
     url(r'^authorisation/(?P<pkauth>[0-9]+)/delete/$', views.authorisation_delete, name='authorisation_delete'),
     url(r'^authorisation/import/$', views.authorisation_importcsv,name='authorisation_importcsv'),
     url(r'^authorisation/deleteall/$', views.authorisation_deleteall, name='authorisation_deleteall'),
-# classe CompteComptable
-    url(r'^comptecomptable/new/$', views.comptecomptable_new, name='comptecomptable_new'),
-    url(r'^comptecomptable/$', views.comptecomptable_list,name='comptecomptable_list'),
-    url(r'^comptecomptable/(?P<pkcc>[0-9]+)/detail/$', views.comptecomptable_detail, name='comptecomptable_detail'),
-    url(r'^comptecomptable/(?P<pkcc>[0-9]+)/delete/$', views.comptecomptable_delete, name='comptecomptable_delete'),
-    url(r'^comptecomptable/import/$', views.comptecomptable_importcsv,name='comptecomptable_importcsv'),
-    url(r'^comptecomptable/deleteall/$', views.comptecomptable_deleteall, name='comptecomptable_deleteall'),
+# classe NatureComptable
+    url(r'^naturecomptable/new/$', views.naturecomptable_new, name='naturecomptable_new'),
+    url(r'^naturecomptable/$', views.naturecomptable_list,name='naturecomptable_list'),
+    url(r'^naturecomptable/(?P<pkcc>[0-9]+)/detail/$', views.naturecomptable_detail, name='naturecomptable_detail'),
+    url(r'^naturecomptable/(?P<pkcc>[0-9]+)/delete/$', views.naturecomptable_delete, name='naturecomptable_delete'),
+    url(r'^naturecomptable/(?P<pkcc>[0-9]+)/edit/$', views.naturecomptable_edit, name='naturecomptable_edit'),
+    url(r'^naturecomptable/import/$', views.naturecomptable_importcsv,name='naturecomptable_importcsv'),
+    url(r'^naturecomptable/deleteall/$', views.naturecomptable_deleteall, name='naturecomptable_deleteall'),
 # classe DomaineFonctionnel
     url(r'^domainefonctionnel/new/$', views.domainefonctionnel_new, name='domainefonctionnel_new'),
     url(r'^domainefonctionnel/$', views.domainefonctionnel_list,name='domainefonctionnel_list'),
@@ -42,37 +43,42 @@ urlpatterns = [
     url(r'^domainefonctionnel/(?P<pkdf>[0-9]+)/delete/$', views.domainefonctionnel_delete, name='domainefonctionnel_delete'),
     url(r'^domainefonctionnel/import/$', views.domainefonctionnel_importcsv,name='domainefonctionnel_importcsv'),
     url(r'^domainefonctionnel/deleteall/$', views.domainefonctionnel_deleteall, name='domainefonctionnel_deleteall'),
-# classe OrigineFonds
-    url(r'^originefonds/new/$', views.originefonds_new, name='originefonds_new'),
-    url(r'^originefonds/$', views.originefonds_list,name='originefonds_list'),
-    url(r'^originefonds/(?P<pkof>[0-9]+)/detail/$', views.originefonds_detail, name='originefonds_detail'),
-    url(r'^originefonds/(?P<pkof>[0-9]+)/delete/$', views.originefonds_delete, name='originefonds_delete'),
-    url(r'^originefonds/import/$', views.originefonds_importcsv,name='originefonds_importcsv'),
-    url(r'^originefonds/deleteall/$', views.originefonds_deleteall, name='originefonds_deleteall'),
+#Compte Budgetaire
+    url(r'^comptebudget/new/$', views.comptebudget_new, name='comptebudget_new'),
+    url(r'^comptebudget/$', views.comptebudget_list,name='comptebudget_list'),
+    url(r'^comptebudget/(?P<pkcb>[0-9]+)/delete/$', views.comptebudget_delete, name='comptebudget_delete'),
+#    url(r'^comptebudget/(?P<pk>[0-9]+)/edit/$', views.comptebudget_edit, name='comptebudget_edit'),
+#ComptaNature
+    url(r'^comptanature/new/$', views.comptanature_new, name='comptanature_new'),
+    url(r'^comptanature/$', views.comptanature_list,name='comptanature_list'),
+    url(r'^comptanature/(?P<pkcb>[0-9]+)/delete/$', views.comptanature_delete, name='comptanature_delete'),
+    url(r'^comptanature/(?P<pk>[0-9]+)/edit/$', views.comptanature_edit, name='comptanature_edit'),
+#FondBudgetaire
+    url(r'^fondbudgetaire/new/$', views.fondbudgetaire_new, name='fondbudgetaire_new'),
+    url(r'^fondbudgetaire/$', views.fondbudgetaire_list,name='fondbudgetaire_list'),
+    url(r'^fondbudgetaire/(?P<pkcb>[0-9]+)/delete/$', views.fondbudgetaire_delete, name='fondbudgetaire_delete'),
+    url(r'^fondbudgetaire/(?P<pk>[0-9]+)/edit/$', views.fondbudgetaire_edit, name='fondbudgetaire_edit'),
 # classe Structure
     url(r'^structure/new/$', views.structure_new, name='structure_new'),
     url(r'^structure/$', views.structure_list,name='structure_list'),
     url(r'^structure/(?P<pkst>[0-9]+)/detail/$', views.structure_detail, name='structure_detail'),
     url(r'^structure/(?P<pkst>[0-9]+)/delete/$', views.structure_delete, name='structure_delete'),
+    url(r'^structure/(?P<pkst>[0-9]+)/edit/$', views.structure_edit, name='structure_edit'),
     url(r'^structure/import/$', views.structure_importcsv,name='structure_importcsv'),
     url(r'^structure/deleteall/$', views.structure_deleteall, name='structure_deleteall'),
 # classe PlanFinancement
     url(r'^planfinancement/new/$', views.planfinancement_new, name='planfinancement_new'),
     url(r'^planfinancement/$', views.planfinancement_list,name='planfinancement_list'),
+    url(r'^planfinancementavecrecdep/$', views.liste_pfi_avec_depenses_recettes,name='liste_pfi_avec_depenses_recettes'),
     url(r'^planfinancement/(?P<pkpfi>[0-9]+)/detail/$', views.planfinancement_detail, name='planfinancement_detail'),
     url(r'^planfinancement/(?P<pkpfi>[0-9]+)/delete/$', views.planfinancement_delete, name='planfinancement_delete'),
+    url(r'^planfinancement/(?P<pkpfi>[0-9]+)/edit/$', views.planfinancement_edit, name='planfinancement_edit'),
     url(r'^planfinancement/import/$', views.planfinancement_importcsv,name='planfinancement_importcsv'),
     url(r'^planfinancement/deleteall/$', views.planfinancement_deleteall, name='planfinancement_deleteall'),
-# classe Depense
-    url(r'^depense/new/$', views.depense_new, name='depense_new'),
-    url(r'^depense/$', views.depense_list,name='depense_list'),
-    url(r'^depense/(?P<pkdep>[0-9]+)/detail/$', views.depense_detail, name='depense_detail'),
-    url(r'^depense/(?P<pkdep>[0-9]+)/delete/$', views.depense_delete, name='depense_delete'),
-    url(r'^depense/import/$', views.depense_importcsv,name='depense_importcsv'),
-    url(r'^depense/deleteall/$', views.depense_deleteall, name='depense_deleteall'),
 # class DepenseFull
     url(r'^depensefull/new/$', views.depensefull_new, name='depensefull_new'),
     url(r'^depensefull/new2/$', views.depensefull_new2, name='depensefull_new2'),
+    url(r'^depensefull/new_avec_pfi/(?P<struct3id>\w+)/(?P<pfiid>[0-9]+)$', views.depensefull_new_avec_pfi, name='depensefull_new_avec_pfi'),
     url(r'^depensefull/$', views.depensefull_list,name='depensefull_list'),
     url(r'^depensefull/regroup/$', views.depensefull_listregroup,name='depensefull_listregroup'),
     url(r'^depensefull/(?P<pkdep>[0-9]+)/detail/$', views.depensefull_detail, name='depensefull_detail'),
@@ -80,6 +86,7 @@ urlpatterns = [
     url(r'^depensefull/(?P<pkdep>[0-9]+)/delete/$', views.depensefull_delete, name='depensefull_delete'),
     url(r'^depensefull/(?P<pkdep>[0-9]+)/delete2/$', views.depensefull_delete2, name='depensefull_delete2'),
     url(r'^depensefull/(?P<pkdep>[0-9]+)/edit/$', views.depensefull_edit, name='depensefull_edit'),
+    url(r'^depensefull/(?P<pkdep>[0-9]+)/edit2/$', views.depensefull_edit2, name='depensefull_edit2'),
     url(r'^depensefull/deleteall/$', views.depensefull_deleteall, name='depensefull_deleteall'),
     url(r'^depensefull/(?P<pkcc>[0-9]+)/parcc/$', views.depensefull_parcc, name='depensefull_parcc'),
 # class RecetteFull
@@ -92,6 +99,7 @@ urlpatterns = [
     url(r'^recettefull/(?P<pkrec>[0-9]+)/delete/$', views.recettefull_delete, name='recettefull_delete'),
     url(r'^recettefull/(?P<pkrec>[0-9]+)/delete2/$', views.recettefull_delete2, name='recettefull_delete2'),
     url(r'^recettefull/(?P<pkrec>[0-9]+)/edit/$', views.recettefull_edit, name='recettefull_edit'),
+    url(r'^recettefull/(?P<pkrec>[0-9]+)/edit2/$', views.recettefull_edit2, name='recettefull_edit2'),
     url(r'^recettefull/deleteall/$', views.depensefull_deleteall, name='recettefull_deleteall'),
     url(r'^recettefull/(?P<pkcp>[0-9]+)/parcp/$', views.recettefull_parcp, name='recettefull_parcp'),
 # class PeriodeBudget
@@ -100,14 +108,13 @@ urlpatterns = [
     url(r'^periodebudget/(?P<pkpb>[0-9]+)/detail/$', views.periodebudget_detail, name='periodebudget_detail'),
     url(r'^periodebudget/(?P<pkpb>[0-9]+)/delete/$', views.periodebudget_delete, name='periodebudget_delete'),
 
-#classe Depense essais de selections
-    url(r'^depense/new2/$', views.depense_new2, name='depense_new2'),
 #Ajax depenses
     url(r'^ajax/ajax_add/(?P<pkstr1>[0-9]+)/$', views.ajax_add_todo1,name="ajax_add_todo1"),
     url(r'^ajax/ajax_findstruct_lev3/(?P<pkstr1>[0-9]+)/$', views.ajax_findstruct_lev3,name="ajax_findstruct_lev3"),
     url(r'^ajax/ajax_findorigfond_lev2/(?P<pkor>[0-9]+)/$', views.ajax_findorigfond_lev2,name="ajax_findorigfond_lev2"),
     url(r'^ajax/ajax_add_cptdev_lev2/(?P<pkcpt>[0-9]+)/$', views.ajax_add_cptdev_lev2,name="ajax_add_cptdev_lev2"),
     url(r'^ajax/more/$',views.ajax_more_todo1, name ="ajax_more_todo1"),
+    url(r'^ajax/ajax_add_enveloppe_depense/(?P<pkstr1>[0-9]+)/$', views.ajax_add_enveloppe_depense,name="ajax_add_enveloppe_depense"),
 # Presentation / Affichage
     url(r'^menu1/$', views2.menu_list14tree, name='menu1_list'),
     url(r'^menu2/$', views3.menu_list15tree, name='menu2_list'),
@@ -116,8 +123,9 @@ urlpatterns = [
     url(r'^ajax/ajax_recfindstruct_lev3/(?P<pkstr1>[0-9]+)/$', views.ajax_recfindstruct_lev3,name="ajax_recfindstruct_lev3"),
     url(r'^ajax/ajax_recfindorigfond_lev2/(?P<pkor>[0-9]+)/$', views.ajax_recfindorigfond_lev2,name="ajax_recfindorigfond_lev2"),
     url(r'^ajax/ajax_recadd_cptdev_lev2/(?P<pkcpt>[0-9]+)/$', views.ajax_recadd_cptdev_lev2,name="ajax_recadd_cptdev_lev2"),
-
-
+    url(r'^ajax/ajax_add_enveloppe/(?P<pkstr1>[0-9]+)/$', views.ajax_add_enveloppe,name="ajax_add_enveloppe"),
+#AJAX GENERAL
+    url(r'^ajax/ajax_add_eotp/(?P<pkstr1>[0-9]+)/$', views.ajax_add_eotp,name="ajax_add_eotp"),
     # url(r'^app/', include('apps.app.urls')),
 
     url(r'^admin/', include(admin.site.urls)),

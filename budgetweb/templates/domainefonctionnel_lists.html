@@ -19,27 +19,27 @@
 <br>
 <br>
 
-<TABLE>
+<TABLE id="bbf">
 <CAPTION> Domaine fonctionnel </CAPTION>
 <thead>
-    <TH style="padding:0 15px 0 15px;"> Id DF </TH>
-    <TH style="padding:0 15px 0 15px;"> Libellé </TH>
-    <TH style="padding:0 15px 0 15px;"> Cumul - Groupe </TH>
-    <TH style="padding:0 15px 0 15px;"> Groupe fonctionnel </TH>
-    <TH style="padding:0 15px 0 15px;"> Remarque </TH>
-    <TH style="padding:0 15px 0 15px;"> Description </TH>
-    <TH style="padding:0 15px 0 15px;"> Supprimer</TH>
+    <TH> Code </TH>
+    <TH> Libellé </TH>
+    <TH> Groupe pour les cumuls </TH>
+    <TH> Groupe fonctionnel </TH>
+    <TH> Remarque </TH>
+    <TH> Description </TH>
+    <TH> Supprimer</TH>
 </thead>
 <tbody>
 {% for reponse in reponses %}
 <TR>
-       <TD style="padding:0 15px 0 15px;"> {{ reponse.dfcode }}      </TD>
-       <TD style="padding:0 15px 0 15px;"> {{ reponse.dflabel }}  </TD>
-       <TD style="padding:0 15px 0 15px;"> {{ reponse.dfgrpcumul }}  </TD>
-       <TD style="padding:0 15px 0 15px;"> {{ reponse.dfgrpfonc  }}  </TD>
-       <TD style="padding:0 15px 0 15px;"> {{ reponse.dfrmq   }}  </TD>
-       <TD style="padding:0 15px 0 15px;"> {{ reponse.dfdesc  }}  </TD>
-       <TD style="padding:0 15px 0 15px;"><a href="{% url 'domainefonctionnel_delete' pkdf=reponse.pk %}">supprimer</a></TD>
+       <TD> {{ reponse.dfcode }}      </TD>
+       <TD> {{ reponse.dflabel }}  </TD>
+       <TD> {{ reponse.dfgrpcumul }}  </TD>
+       <TD> {{ reponse.dfgrpfonc  }}  </TD>
+       <TD> {{ reponse.dfrmq   }}  </TD>
+       <TD> {{ reponse.dfdesc  }}  </TD>
+       <TD><a href="{% url 'domainefonctionnel_delete' pkdf=reponse.pk %}">supprimer</a></TD>
 </TR>
 {% endfor %}
 </tbody>
@@ -49,7 +49,7 @@
 </TABLE>
 <br>
 <br>
-<a href="{% url 'domainefonctionnel_new' %}" class="top-menu"> Nouveau compte comptable <span class="glyphicon glyphicon-plus"></span></a>
+<a href="{% url 'domainefonctionnel_new' %}" class="top-menu"> Nouveau Domaine Fonctionnel<span class="glyphicon glyphicon-plus"></span></a>
 
 {% endblock %}
 

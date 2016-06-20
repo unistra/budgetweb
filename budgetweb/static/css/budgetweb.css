@@ -66,4 +66,27 @@ a.info:hover span{
         padding:1px;
 }
 
+#bbf {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 50%;
+}
+
+#bbf td, #bbf th {
+    border: 1px solid #ddd;
+    text-align: left;
+    padding: 8px;
+}
+
+#bbf tr:nth-child(even){background-color: #f2f2f2}
+
+#bbf tr:hover {background-color: #ddd;}
+
+#bbf th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    background-color: #5673C1;
+    color: white;
+    width: 300px;
+}
 

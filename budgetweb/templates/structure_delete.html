@@ -1,12 +1,23 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Supprimer une structure</h1>
+    Supprimer une structure
+
     <form method="POST" class="post-form">{% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="save btn btn-default" value="ok">Supprimer</button>
-        <a href="{% url 'structure_list' %}" class="btn btn-default">Cancel</a>
+      <TABLE id="bbf">
+        {% for field in form %}
+          <tr>
+           <th> {{ field.label_tag }}</th>
+           <td> {{ field }} </td>
+           <td> {{ field.errors }} </td>
+          </tr>
+        {% endfor %}
+      </TABLE>
+
+        <button type="submit" class="save btn btn-default">Supprimer</button>
     </form>
+
+    <a href="{% url 'structure_list' %}" class="btn btn-default">Annuler</a>
 <br>
 <br>
 
