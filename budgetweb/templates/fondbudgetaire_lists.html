@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Liste des fonds Budg&eacutetaires - Recettes</h1>
+
+
+<form action="" method="POST">{% csrf_token %}
+<TABLE BORDER=1>
+   <TR><TD>Libellé </TD><TD>
+            <input type="text" name="cclabel"></TD>
+   </TR>
+       <input type="submit" value="chercher">
+    </TABLE>
+</form>
+
+<br>
+<br>
+
+<TABLE id="bbf">
+<CAPTION> Tableau des fonds budg&eacutetaires </CAPTION>
+<thead>
+    <TH> Nom court</TH>
+    <TH> Libellé </TH>
+    <TH> Enveloppe </TH>
+    <TH> Editer </TH>
+    <TH> Supprimer</TH>
+</thead>
+<tbody>
+{% for reponse in reponses %}
+<TR>
+       <TD> {{ reponse.code }}      </TD>
+       <TD> {{ reponse.label }}  </TD>
+       <TD> {{ reponse.enveloppe }}  </TD>
+       <TD><a href="{% url 'fondbudgetaire_edit' pk=reponse.pk %}">Editer</a></TD>
+       <TD><a href="{% url 'fondbudgetaire_delete' pkcb=reponse.pk %}">supprimer</a></TD>
+
+</TR>
+{% endfor %}
+</tbody>
+<tfoot>
+     <tr><td> Total</td><td> {{ reponses.count }} entrees</td></tr>
+</tfoot>
+</TABLE>
+<br>
+<br>
+<a href="{% url 'fondbudgetaire_new' %}" class="top-menu"> Nouveau fond budg&eacutetaire <span class="glyphicon glyphicon-plus"></span></a>
+
+{% endblock %}
+
+

@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Affchage nature comptable</h1>
+    <form method="POST" class="post-form">{% csrf_token %}
+      <TABLE id="bbf">
+        {% for field in form %}
+          <tr>
+           <th> {{ field.label_tag }}</th>
+           <td> {{ field }} </td>
+           <td> {{ field.errors }} </td>
+          </tr>
+        {% endfor %}
+      </TABLE>
+
+    </form>
+    <TD><a href="{% url 'naturecomptable_list'%}">Retour à la liste</a></TD>
+
+
+{% endblock %}

@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Liste des natures comptables</h1>
+
+
+<form action="" method="POST">{% csrf_token %}
+<TABLE BORDER=1>
+   <TR><TD>Fond </TD><TD>
+            <input type="text" name="fond"></TD>
+   </TR>
+   <TR><TD>Nature comptable </TD><TD>
+            <input type="text" name="nature"></TD>
+   </TR>
+       <input type="submit" value="chercher">
+    </TABLE>
+</form>
+
+<br>
+<a href="{% url 'naturecomptable_new' %}" class="top-menu"> Nouvelle nature comptable <span class="glyphicon glyphicon-plus"></span></a>
+<br>
+
+<TABLE id="bbf">
+<CAPTION> Tableau des natures comptables </CAPTION>
+<thead>
+    <TH> Enveloppe</TH>
+    <TH> Fond (recette) </TH>
+    <TH> Nature comptable (d&eacutepense) </TH>
+    <TH> Nature comptable secondaire</TH>
+    <TH> PFI fl&eacutech&eacute O/N </TH>
+    <TH> Nature comptable secondaire </TH>
+    <TH> Compte budg&eacutetaire </TH>
+    <TH> Décalage trésorerie </TH>
+    <TH> Type Recette/D&eacutepense </TH>
+    <TH> Editer </TH>
+    <TH> Supprimer</TH>
+</thead>
+<tbody>
+{% for reponse in reponses %}
+<TR>
+       <TD> {{ reponse.enveloppe   }}  </TD>
+       <TD> {{ reponse.fondbudget_recette  }}  </TD>
+       <TD> {{ reponse.naturec_dep  }}  </TD>
+       <TD> {{ reponse.pfifleche }} </TD>
+       <TD> {{ reponse.ncsecondairecode }} </TD>
+       <TD> {{ reponse.ccbd  }}  </TD>
+       <TD> {{ reponse.decalagetresocpae }}  </TD>
+       <TD> {{ reponse.nctype  }}  </TD>
+       <TD><a href="{% url 'naturecomptable_edit' pkcc=reponse.pk %}">Editer</a></TD>
+       <TD><a href="{% url 'naturecomptable_delete' pkcc=reponse.pk %}">Supprimer</a></TD>
+
+</TR>
+{% endfor %}
+</tbody>
+<tfoot>
+     <tr><td> Total</td><td> {{ reponses.count }} entrees</td></tr>
+</tfoot>
+</TABLE>
+
+
+<br>
+<br>
+<a href="{% url 'naturecomptable_new' %}" class="top-menu"> Nouvelle nature comptable <span class="glyphicon glyphicon-plus"></span></a>
+<br>
+<br>
+# ----------------------------------------------#
+<br>
+{% regroup reponses by nctype as of_list %}
+<div class="panel-group" id="accordion">
+{% for theof in of_list %}
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#bbff{{ forloop.counter0 }}">
+        {{ theof.grouper }}
+        </a>
+      </h4>
+    </div>
+    <div id="bbff{{ forloop.counter0 }}" class="panel-collapse collapse">
+     <div class="panel-body">
+<TABLE id="bbf">
+<CAPTION> Tableau des natures comptables </CAPTION>
+<thead>
+    <TH> Enveloppe</TH>
+    <TH> Fond (recette) </TH>
+    <TH> Nature comptable(dépense) </TH>
+    <TH> PFI fl&eacutech&eacute O/N </TH>
+    <TH> Nature comptable secondaire </TH>
+    <TH> Compte budg&eacutetaire </TH>
+    <TH> Décalage trésorerie </TH>
+    <TH> Type Recette/D&eacutepense </TH>
+    <TH> Editer </TH>
+    <TH> Supprimer</TH>
+</thead>
+<tbody>
+
+        {% for of in theof.list %}
+<TR>
+       <TD> {{ of.enveloppe   }}  </TD>
+       <TD> {{ of.fondbudget_recette  }}  </TD>
+       <TD> {{ of.naturec_dep  }}  </TD>
+       <TD> {{ of.pfifleche }} </TD>
+       <TD> {{ of.ncsecondairecode }} </TD>
+       <TD> {{ of.ccbd  }}  </TD>
+       <TD> {{ of.decalagetresocpae }}  </TD>
+       <TD> {{ of.nctype  }}  </TD>
+       <TD><a href="{% url 'naturecomptable_edit' pkcc=of.pk %}">Editer</a></TD>
+       <TD><a href="{% url 'naturecomptable_delete' pkcc=of.pk %}">Supprimer</a></TD>
+</TR>
+
+        {% endfor %}
+     </TABLE>
+
+     </div>
+    </div>
+  </div>
+{% endfor %}
+</div>
+
+
+<br>
+<br>
+
+# ----------------------------------------------#
+<br>
+{% regroup reponses by ncsecondairecode as of_list %}
+<div class="panel-group" id="accordion2">
+{% for theof in of_list %}
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion2" href="#bbfff{{ forloop.counter0 }}">
+        {{ theof.grouper }}
+        </a>
+      </h4>
+    </div>
+    <div id="bbfff{{ forloop.counter0 }}" class="panel-collapse collapse">
+     <div class="panel-body">
+<TABLE id="bbf">
+<CAPTION> Tableau des natures comptables </CAPTION>
+<thead>
+    <TH> Enveloppe</TH>
+    <TH> Fond (recette) </TH>
+    <TH> Nature comptable(dépense) </TH>
+    <TH> PFI fl&eacutech&eacute O/N </TH>
+    <TH> Nature comptable secondaire </TH>
+    <TH> Compte budg&eacutetaire </TH>
+    <TH> Décalage trésorerie </TH>
+    <TH> Type Recette/D&eacutepense </TH>
+    <TH> Editer </TH>
+    <TH> Supprimer</TH>
+</thead>
+<tbody>
+
+    {% for of in theof.list %}
+       <TR>
+       <TD> {{ of.enveloppe   }}  </TD>
+       <TD> {{ of.fondbudget_recette  }}  </TD>
+       <TD> {{ of.naturec_dep  }}  </TD>
+       <TD> {{ of.pfifleche }} </TD>
+       <TD> {{ of.ncsecondairecode }} </TD>
+       <TD> {{ of.ccbd  }}  </TD>
+       <TD> {{ of.decalagetresocpae }}  </TD>
+       <TD> {{ of.nctype  }}  </TD>
+       <TD><a href="{% url 'naturecomptable_edit' pkcc=of.pk %}">Editer</a></TD>
+       <TD><a href="{% url 'naturecomptable_delete' pkcc=of.pk %}">Supprimer</a></TD>
+       </TR>
+     {% endfor %}
+   </TABLE>
+
+     </div>
+    </div>
+  </div>
+{% endfor %}
+</div>
+
+
+
+<br>
+<br>
+
+{% endblock %}
+
+

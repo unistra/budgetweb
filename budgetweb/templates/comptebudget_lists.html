@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Liste des natures comptables</h1>
+
+
+<form action="" method="POST">{% csrf_token %}
+<TABLE BORDER=1>
+   <TR><TD>Nom </TD><TD>
+            <input type="text" name="ccname"></TD>
+   </TR>
+   <TR><TD>Libellé </TD><TD>
+            <input type="text" name="cclabel"></TD>
+   </TR>
+       <input type="submit" value="chercher">
+    </TABLE>
+</form>
+
+<br>
+<br>
+
+<TABLE id="bbf">
+<CAPTION> Tableau des comptes budg&eacutetaires </CAPTION>
+<thead>
+    <TH> Nom court</TH>
+    <TH> Libellé </TH>
+    <TH> description </TH>
+    <TH> Supprimer</TH>
+</thead>
+<tbody>
+{% for reponse in reponses %}
+<TR>
+       <TD> {{ reponse.code }}      </TD>
+       <TD> {{ reponse.label }}  </TD>
+       <TD> {{ reponse.description   }}  </TD>
+       <TD><a href="{% url 'comptebudget_delete' pkcb=reponse.pk %}">supprimer</a></TD>
+
+</TR>
+{% endfor %}
+</tbody>
+<tfoot>
+     <tr><td> Total</td><td> {{ reponses.count }} entrees</td></tr>
+</tfoot>
+</TABLE>
+<br>
+<br>
+<a href="{% url 'comptebudget_new' %}" class="top-menu"> Nouveau compe budg&eacutetaire <span class="glyphicon glyphicon-plus"></span></a>
+
+{% endblock %}
+
+

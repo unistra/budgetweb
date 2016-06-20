@@ -1,0 +1,207 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+
+<br>
+<br>
+
+{% regroup reponses by societe as societe_list %}
+   <ul>
+      {% for thesociete in societe_list %}
+        <div class="container">
+          <a href="#bbf{{ forloop.counter0 }}" class="btn btn-info" data-toggle="collapse">{{ thesociete.grouper }}</a>
+           <div id="bbf{{ forloop.counter0 }}" class="collapse">
+
+                {% regroup thesociete.list by cfassoc as cfassoc_list %}
+                   <ul>
+                      {% for thecfassoc in cfassoc_list %}
+                         <div class="container">
+                           <a href="#bbfsoc{{ forloop.counter0 }}" class="btn btn-info" data-toggle="collapse">{{ thecfassoc.grouper }}</a>
+                             <div id="bbfsoc{{ forloop.counter0 }}" class="collapse">
+
+
+                     {% regroup thecfassoc.list by myid as pfi_list %}
+                        <ul>
+                           {% for thepfi in pfi_list %}
+                              <div class="container">
+                                <a href="#bbfpfi{{ thepfi.grouper }}{{ forloop.counter0 }}" class="btn btn-info" data-toggle="collapse">{{ thepfi.grouper }}</a>
+                                  <div id="bbfpfi{{ thepfi.grouper }}{{ forloop.counter0 }}" class="collapse">
+
+                               <TABLE id="bbf">
+                               <thead>
+                                 <TH> Myid pfi</TH>
+                                 <TH> Name </TH>
+                                 <TH> Eotp </TH>
+                                 <TH> Soci&eacutet&eacute </TH>
+                                 <TH> CF associ&eacute </TH>
+                                 <TH> CC associ&eacute  </TH>
+                                 <TH> CP associ&eacute </TH>
+                                 <TH> Fl&eacutech&eacute </TH>
+                                 <TH> Pluri-annuel </TH>
+                                 <TH> Montant </TH>
+                              </thead>
+                              <tbody>
+
+                               {% for reponse in thepfi.list %}
+                                <TR>
+                                   <TD> {{ reponse.myid }} </TD>
+                                   <TD> {{ reponse.name }}      </TD>
+                                   <TD> {{ reponse.eotp }}  </TD>
+                                   <TD> {{ reponse.societe }} </TD>
+                                   <TD> {{ reponse.cfassoc }}  </TD>
+                                   <TD> {{ reponse.ccassoc }}  </TD>
+                                   <TD> {{ reponse.cpassoc }}  </TD>
+                                   <TD> {{ reponse.fleche }}  </TD>
+                                   <TD> {{ reponse.pluriannuel }}  </TD>
+                                   <TD> {{ reponse.depensefull_set.montant }}  </TD>
+                               </TR>
+                               <br>
+                               <a href="{% url 'depensefull_new2' %}" class="top-menu"> Nouvelle d&eacutepense <span class="glyphicon glyphicon-plus"></span></a>
+                               <a href="{% url 'depensefull_new_avec_pfi' pfiid=reponse.id struct3id=reponse.cfassoc %}" class="top-menu"> Nouvelle d&eacutepense <span class="glyphicon glyphicon-plus"></span></a>
+                               <br>
+
+                                  {% if reponse.depensefull_set.all %}
+                                  <TABLE WIDTH=100% border=1>
+                                     <CAPTION> Tableau des d&eacutepenses </CAPTION><!-- essai2-->
+                                     <thead class="thcc">
+                                       <TH> Enveloppe </TH>
+                                       <TH> Désignation de la nature comptable </TH>
+                                       <TH> Code Nature comptable Secondaire </TH>
+                                       <TH> Identifiant </TH>
+                                       <TH> Domaine fonctionnel </TH> <!--domaine fonctionnel -->
+
+                                       <TH> Pfi   </TH> <!--Plan Financement -->
+                                       <TH> Montant globalis&eacute</TH>
+                                       <TH> Montant dc    </TH>
+                                       <TH> Montant cp    </TH>
+                                       <TH> Montant ae    </TH>
+                                       <TH> Commentaire </TH>
+                                       <TH> Créé par </TH>
+                                       <TH> Date de création </TH>
+                                       <TH> Modifié par </TH>
+                                       <TH> Date de modification</TH>
+                                     </thead>
+                                     <tbody>
+                                        {% for dep in reponse.depensefull_set.all %}
+                                           <TR class="tdcc">
+                                              <TD> {{dep.cptdeplev1.enveloppe}} </TD>
+                                              <TD> {{dep.cptdeplev1.naturec_dep }} </TD>
+                                              <TD> {{dep.cptdeplev1.ncsecondairecode }} </TD>
+                                              <TD><a href="{% url 'depensefull_edit2' pkdep=dep.pk %}"> {{ dep.myid    }} </a></TD>
+                                              <TD> {{dep.domfonc }} </TD>
+                                              <TD>{{ dep.plfi.name    }}</TD>
+                                              <TD>{{ dep.montant }}</TD>
+                                              <TD>{{ dep.montantdc }}</TD>
+                                              <TD>{{ dep.montantcp }}</TD>
+                                              <TD>{{ dep.montantae }}</TD>
+                                              <TD>{{ dep.commentaire }}</TD>
+                                              <TD>{{ dep.creepar }}</TD>
+                                              <TD>{{ dep.creele }}</TD>
+                                              <TD>{{ dep.modifiepar }}</TD>
+                                              <TD>{{ dep.modifiele }}</TD>
+                                           </TR>
+                                        {% endfor %}
+                                     </tbody>
+                                     <tfoot>
+                                     <tr><td> Total</td><td> {{ reponse.depensefull_set.count }} entrees</td></tr>
+                                     </tfoot>
+
+                                    </TABLE>
+                                    {% else %}
+                                         pas de d&eacutepenses sur ce PFI<br>
+                                    {% endif %}
+
+                                  <br>
+                                  <a href="{% url 'recettefull_new2' %}" class="top-menu"> Nouvelle recette<span class="glyphicon glyphicon-plus"></span></a>
+                                  <br>
+                                  {% if reponse.recettefull_set.all %}
+
+                                     <TABLE WIDTH=100% border=1>
+                                      <CAPTION> Tableau des recettes</CAPTION>
+                                       <thead class="thcp">
+
+                                       <TH> Enveloppe </TH>
+                                       <TH> Code du fond </TH>
+                                       <TH> Nature de la recette </TH>
+                                       <TH> Compte Budg&eacutetaire recette </TH>
+                                       <TH> Code de la nature comptable secondaire </TH>
+                                       <TH> Identifiant </TH>
+                                       <TH> P&eacuteriode Budget. </TH>
+                                       <TH> Montant     </TH>
+                                       <TH> Montant RE  </TH>
+                                       <TH> Montant AR  </TH>
+                                       <TH> Montant DC  </TH>
+                                       <TH> Commentaire </TH>
+                                       <TH> Fichier   </TH>
+                                       <TH> Créé par </TH>
+                                       <TH> Date de création </TH>
+                                       <TH> Modifié par </TH>
+                                       <TH> Date de modification</TH>
+                                      </thead>
+                                      <tbody>
+
+                                      {% for recette in reponse.recettefull_set.all %}
+                                          <TR class="tdcp">
+
+                                          <TD>{{ recette.cptdeplev1.enveloppe  }}</TD>
+                                          <TD>{{ recette.cptdeplev1.fondbudget_recette.code  }}</TD>
+                                          <TD>{{ recette.cptdeplev1.naturec_dep }}</TD>
+                                          <TD>{{ recette.cptdeplev1.ccbd }}</TD>
+                                          <TD>{{ recette.cptdeplev1.ncsecondairecode }}</TD>
+                                          <TD><a href="{% url 'recettefull_edit2' pkrec=recette.pk %}">{{recette.id}} / {{recette.myid}} </a></TD>
+                                          <TD>{{ recette.periodebudget    }}</TD>
+
+                                          <TD>{{ recette.montant }}</TD>
+                                          <TD>{{ recette.montantre }}</TD>
+                                          <TD>{{ recette.montantar }}</TD>
+                                          <TD>{{ recette.montantdc }}</TD>
+
+                                          <TD>{{ recette.commentaire }}</TD>
+                                          <TD>{{ recette.nom_des_fichiers }}</TD>
+                                          <TD>{{ recette.creepar }}</TD>
+                                          <TD>{{ recette.creele }}</TD>
+                                          <TD>{{ recette.modifiepar }}</TD>
+                                          <TD>{{ recette.modifiele }}</TD>
+                                          </TR>
+                                     {% endfor %}
+                                     </tbody>
+                                    <tfoot>
+                                     <tr><td> Total</td><td> {{ reponse.recettefull_set.count }} entrees</td></tr>
+                                     </tfoot>
+
+
+
+                                  {% else %}
+                                         pas de recettes sur ce PFI
+                                  {% endif %}
+
+                             </tbody>
+                            </TABLE>
+
+
+{% endfor %}
+ 
+                      </div>
+                      </div>
+                      {% endfor %}
+                      </ul>
+
+                   </div>
+                   </div>
+                   {% endfor %}
+                   </ul>
+
+</div>
+</div>
+{% endfor %}
+</ul>
+
+
+<br>
+<br>
+
+{% endblock %}
+
+

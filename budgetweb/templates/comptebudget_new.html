@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Nouveau compte budg&eacutetaire</h1>
+    <form method="POST" class="post-form">{% csrf_token %}
+      <TABLE id="bbf">
+        {% for field in form %}
+          <tr>
+           <th> {{ field.label_tag }}</th>
+           <td> {{ field }} </td>
+           <td> {{ field.errors }} </td>
+          </tr>
+        {% endfor %}
+      </TABLE>
+
+        <button type="submit" class="save btn btn-default">Save</button>
+    </form>
+
+{% endblock %}
