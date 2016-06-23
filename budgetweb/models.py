@@ -126,6 +126,9 @@ class Structure(models.Model):
     label = models.CharField(max_length=100,verbose_name=u'Libellé long')
     parentid = models.CharField(max_length=100,
                       verbose_name=u'Code de la structure père')
+    parent = models.ForeignKey ('Structure', blank=True ,
+                        null=True, related_name='fils')
+
     ordre = models.CharField(max_length=100,verbose_name=u'Ordre')
     niv = models.CharField(max_length=100,verbose_name=u'Niveau')
     bloq = models.CharField(max_length=100,verbose_name=u'Bloqué')

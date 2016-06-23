@@ -15,49 +15,39 @@
 
   <TR><th> Structure niveau 1</th><TD>
        <select name="structlev1" id="structlev1">
-            {% for struct in structlev1s %}
-               <option value="{{struct.id}}">{{struct.name}} -- {{struct.label}}</option>
-            {% endfor %}
+               <option value="{{struct1.id}}">{{struct1.name}} -- {{struct1.label}}</option>
        </select>
   </TD></TR>
 
 
   <TR><th> Structure niveau 2</th><TD>
        <select name="structlev2" id="structlev2">
-            {% for struct in structlev2s %}
-               <option value="{{struct.id}}">{{struct.name}} -- {{struct.label}}</option>
-            {% endfor %}
+               <option value="{{struct2.id}}">{{struct2.name}} -- {{struct2.label}}</option>
        </select>
   </TD></TR>
 
   <TR><th> Structure niveau 3</th><TD>
        <select name="structlev3" id="structlev3">
-            {% for struct in structlev3s %}
-               <option value="{{struct.id}}">{{struct.name}} -- {{struct.label}}</option>
-            {% endfor %}
+               <option value="{{struct3.id}}">{{struct3.name}} -- {{struct3.label}}</option>
        </select>
   </TD></TR>
 
   <TR><th> Plan de financement </th><TD>
        <select name="plfi" id="plfi">
-            {% for pl in plfis %}
-               <option value="{{pl.id}}">{{pl.name}} -- {{pl.eotp}} -- {{pl.label}} </option>
-            {% endfor %}
+               <option value="{{plfin.id}}">{{plfin.name}} -- {{plfin.eotp}} -- {{plfin.myid}} </option>
        </select>
   </TD></TR>
 
   <TR><th> type d'enveloppe de recettes </th><TD>
        <select name="cptdeplev1type" id="cptdeplev1type">
+        <option> choisissez une enveloppe</option>
        </select>
   </TD></TR>
 
   <TR><th> Enveloppe </th><TD>
        <select name="cptdeplev1" id="cptdeplev1">
-            {% for cptdep in cptdeplev1s %}
-               <option value="{{cptdep.id}}">{{cptdep.enveloppe}} -- {{cptdep.fondbudget_recette}} -- {{cptdep.ccbd}}</option>
-            {% endfor %}
        </select>
-      <p id="displaycompte"> hello</p>
+      <p id="displaycompte"> </p> 
   </TD></TR> 
 
   <TR><th> Domaine fonctionnel </th><TD>

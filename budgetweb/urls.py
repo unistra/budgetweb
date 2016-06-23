@@ -93,6 +93,7 @@ urlpatterns = [
     url(r'^recettefull/new/$', views.recettefull_new, name='recettefull_new'),
     url(r'^recettefull/new2/$', views.recettefull_new2, name='recettefull_new2'),
     url(r'^recettefull/new3/$', views.recettefull_new3, name='recettefull_new3'),
+    url(r'^recettefull/new_avec_pfi/(?P<struct3id>\w+)/(?P<pfiid>[0-9]+)$', views.recettefull_new_avec_pfi, name='recettefull_new_avec_pfi'),
     url(r'^recettefull/$', views.recettefull_list,name='recettefull_list'),
     url(r'^recettefull/(?P<pkrec>[0-9]+)/detail/$', views.recettefull_detail, name='recettefull_detail'),
     url(r'^recettefull/(?P<pkrec>[0-9]+)/detail2/$', views.recettefull_detail2, name='recettefull_detail2'),
@@ -114,7 +115,9 @@ urlpatterns = [
     url(r'^ajax/ajax_findorigfond_lev2/(?P<pkor>[0-9]+)/$', views.ajax_findorigfond_lev2,name="ajax_findorigfond_lev2"),
     url(r'^ajax/ajax_add_cptdev_lev2/(?P<pkcpt>[0-9]+)/$', views.ajax_add_cptdev_lev2,name="ajax_add_cptdev_lev2"),
     url(r'^ajax/more/$',views.ajax_more_todo1, name ="ajax_more_todo1"),
-    url(r'^ajax/ajax_add_enveloppe_depense/(?P<pkstr1>[0-9]+)/$', views.ajax_add_enveloppe_depense,name="ajax_add_enveloppe_depense"),
+    url(r'^ajax/ajax_add_enveloppe_depense/(?P<pkstr1>[0-9]+)/(?P<lenveloppe>\w+)/$', views.ajax_add_enveloppe_depense,name="ajax_add_enveloppe_depense"),
+    url(r'^ajax/ajax_add_enveloppetype_depense/(?P<pkstr1>[0-9]+)/$', views.ajax_add_enveloppetype_depense,name="ajax_add_enveloppetype_depense"),
+    url(r'^ajax/ajax_get_enveloppe_decalage/(?P<pkstr1>[0-9]+)/$', views.ajax_get_enveloppe_decalage ,name="ajax_get_enveloppe_decalage"),
 # Presentation / Affichage
     url(r'^menu1/$', views2.menu_list14tree, name='menu1_list'),
     url(r'^menu2/$', views3.menu_list15tree, name='menu2_list'),
@@ -123,7 +126,10 @@ urlpatterns = [
     url(r'^ajax/ajax_recfindstruct_lev3/(?P<pkstr1>[0-9]+)/$', views.ajax_recfindstruct_lev3,name="ajax_recfindstruct_lev3"),
     url(r'^ajax/ajax_recfindorigfond_lev2/(?P<pkor>[0-9]+)/$', views.ajax_recfindorigfond_lev2,name="ajax_recfindorigfond_lev2"),
     url(r'^ajax/ajax_recadd_cptdev_lev2/(?P<pkcpt>[0-9]+)/$', views.ajax_recadd_cptdev_lev2,name="ajax_recadd_cptdev_lev2"),
-    url(r'^ajax/ajax_add_enveloppe/(?P<pkstr1>[0-9]+)/$', views.ajax_add_enveloppe,name="ajax_add_enveloppe"),
+    url(r'^ajax/ajax_add_enveloppe/(?P<pkstr1>[0-9]+)/(?P<lenveloppe>\w+)/$', views.ajax_add_enveloppe,name="ajax_add_enveloppe"),
+    url(r'^ajax/ajax_add_enveloppetype/(?P<pkstr1>[0-9]+)/$', views.ajax_add_enveloppetype,name="ajax_add_enveloppetype"),
+    url(r'^ajax/ajax_recette_displaycompte/(?P<pkstr1>[0-9]+)/$', views.ajax_recette_displaycompte ,name="ajax_recette_displaycompte"),
+
 #AJAX GENERAL
     url(r'^ajax/ajax_add_eotp/(?P<pkstr1>[0-9]+)/$', views.ajax_add_eotp,name="ajax_add_eotp"),
     # url(r'^app/', include('apps.app.urls')),

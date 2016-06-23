@@ -1358,7 +1358,7 @@ def depensefull_new2(request):
     plfis = "" #PlanFinancement.objects.all()
 
     budget = PeriodeBudget.objects.filter(bloque=False).first()
-# pour les autorisations creer un dico avec le sobjets
+# pour les autorisations creer un dico avec les objets
     structlev1ok = []
     for i in structlev1s:
         if is_authorised(request.user.username,i.name):
@@ -1486,20 +1486,31 @@ def depensefull_new_avec_pfi(request,struct3id,pfiid):
         plfiid=request.POST.get("plfi").split("--")[0]
         plfi = PlanFinancement.objects.filter(id=plfiid).first()
 
-        if request.POST.get("montantdg"):
-            montantdg = request.POST.get("montantdg")
 
         if request.POST.get("montantdc"):
             montantdc = request.POST.get("montantdc")
+        else:
+            montantdc = 0
+
         if request.POST.get("montantae"):
             montantae = request.POST.get("montantae")
+        else:
+            montantae = 0
+
         if request.POST.get("montantcp"):
             montantcp = request.POST.get("montantcp")
+        else:
+            montantcp = 0
+
         if request.POST.get("dateae"):
             dateae = request.POST.get("dateae")
+        else:
+            dateae = ""
 
         if request.POST.get("commentaire"):
             commentaire = request.POST.get("commentaire")
+        else:
+            commentaire = ""
 
         madepense = DepenseFull()
         madepense.structlev1 = struct1
@@ -1508,7 +1519,6 @@ def depensefull_new_avec_pfi(request,struct3id,pfiid):
         madepense.cptdeplev1 = cptdev1
         madepense.domfonc = domfonc
         madepense.plfi = plfi
-        madepense.montant=montantdg
         madepense.montantdc = montantdc
         madepense.montantae = montantae
         madepense.dateae = dateae
@@ -1529,13 +1539,12 @@ def depensefull_new_avec_pfi(request,struct3id,pfiid):
         madepense.save()
 
         localpkcc=madepense.structlev3.pk
-        return redirect('depensefull_parcc',pkcc=localpkcc)
-
+        #return redirect('depensefull_parcc',pkcc=localpkcc)
+        return redirect('liste_pfi_avec_depenses_recettes')
     else:
         plfi = get_object_or_404(PlanFinancement,pk=pfiid)
         struct3id=" "+struct3id
         struct3 = get_object_or_404(Structure,name=struct3id,type=' cf')
-        print("struct2id: "+str(struct3.myid))
         struct2 = get_object_or_404(Structure,myid=struct3.parentid)
         struct1 = get_object_or_404(Structure,myid=struct2.parentid)
 
@@ -1548,6 +1557,92 @@ def depensefull_new_avec_pfi(request,struct3id,pfiid):
                                                        'domfoncs': domfoncs,
                                                        'plfin':plfi,
                          })
+
+
+
+@login_required
+def recettefull_new_avec_pfi(request,struct3id,pfiid):
+    """---------------------------------------------
+    Avec le formulaire prérempli .
+    -----------------------------------------------"""
+
+    budget = PeriodeBudget.objects.filter(bloque=False).first()
+
+    if request.method == "POST":
+        struct1 = Structure.objects.filter(id=request.POST.get("structlev1")).first()
+        struct2ref=request.POST.get("structlev2").split("-----")
+        struct2id=struct2ref[0]
+        struct2 = Structure.objects.filter(id=struct2id).first()
+        struct3ref=request.POST.get("structlev3").split('-----')
+        struct3id=struct3ref[0]
+        struct3 = Structure.objects.filter(id=struct3id).first()
+
+        cptdev1ref = request.POST.get("cptdeplev1").split('-----')
+        cptdev1id = cptdev1ref[0]
+        cptdev1 = NatureComptable.objects.filter(id=cptdev1id).first()
+
+        plfiid=request.POST.get("plfi").split("--")[0]
+        plfi = PlanFinancement.objects.filter(id=plfiid).first()
+
+        if request.POST.get("montantdc"):
+            montantdc = request.POST.get("montantdc")
+        else:
+            montantdc = 0
+
+        if request.POST.get("montantar"):
+            montantar = request.POST.get("montantar")
+        else:
+            montantar = 0
+
+        if request.POST.get("montantre"):
+            montantre = request.POST.get("montantre")
+        else:
+            montantre = 0
+
+        if request.POST.get("commentaire"):
+            commentaire = request.POST.get("commentaire")
+        else:
+            commentaire = ""
+
+        marecette = RecetteFull()
+        marecette.structlev1 = struct1
+        marecette.structlev2 = struct2
+        marecette.structlev3 = struct3
+        marecette.cptdeplev1 = cptdev1
+
+        marecette.plfi = plfi
+        marecette.montantdc = montantdc
+        marecette.montantar = montantar
+        marecette.montantre = montantre
+        marecette.commentaire = commentaire
+        marecette.periodebudget=budget
+
+        marecette.creepar = request.user.username
+        marecette.modifiepar = request.user.username
+        marecette.save()
+        marecette.myid = marecette.id
+        marecette.save()
+        localpkcp=marecette.structlev3.pk
+        #return redirect('recettefull_parcp',pkcp=localpkcp)
+        return redirect('liste_pfi_avec_depenses_recettes')
+    else:
+        plfi = get_object_or_404(PlanFinancement,pk=pfiid)
+        struct3id=" "+struct3id
+        struct3 = get_object_or_404(Structure,name=struct3id,type=' cf')
+        #print("struct2id: "+str(struct3.myid))
+        struct2 = get_object_or_404(Structure,myid=struct3.parentid)
+        struct1 = get_object_or_404(Structure,myid=struct2.parentid)
+
+        #domfoncs = DomaineFonctionnel.objects.all().order_by('dfcode') #filter(dfgrpcumul='LOLF_CUMUL')
+        # le fond est calcule a partir de l enveloppe = nature comptable
+        return render(request, 'recettefull_new_v3.html', {
+                                                       'struct1': struct1,
+                                                       'struct2': struct2,
+                                                       'struct3': struct3,
+                                                       'plfin':plfi,
+                         })
+
+
 
 
 
@@ -1714,14 +1809,45 @@ def ajax_add_eotp(request,pkstr1):
 
 
 #Pour les recettes
-def ajax_add_enveloppe(request,pkstr1):
+def ajax_add_enveloppe(request,pkstr1,lenveloppe):
+    recette='rec'
+    if request.is_ajax():
+        isfleche=PlanFinancement.objects.get(id=pkstr1).fleche
+        naturecompta = NatureComptable.objects.filter(pfifleche=isfleche,nctype=recette,enveloppe=lenveloppe)
+        todo_items=[]
+        for s in naturecompta:
+            todo_items.append(str(s.id)+"-----"+str(s.enveloppe)+"-----"+str(s.fondbudget_recette)+"-----"+str(s.ccbd))
+        data = json.dumps(todo_items)
+        return HttpResponse(data, content_type='application/json')
+    else:
+        raise Http404
+
+#pour les depenses
+def ajax_recette_displaycompte(request,pkstr1):
+    if request.is_ajax():
+        naturecompta = NatureComptable.objects.get(id=pkstr1)
+        todo_items=[]
+        todo_items.append(str(naturecompta.ccbd))
+
+        data = json.dumps(todo_items)
+        return HttpResponse(data, content_type='application/json')
+    else:
+        raise Http404
+
+
+
+
+#Pour les recettes
+def ajax_add_enveloppetype(request,pkstr1):
     recette='rec'
     if request.is_ajax():
         isfleche=PlanFinancement.objects.get(id=pkstr1).fleche
         naturecompta = NatureComptable.objects.filter(pfifleche=isfleche,nctype=recette)
         todo_items=[]
         for s in naturecompta:
-            todo_items.append(str(s.id)+"-----"+str(s.enveloppe)+"-----"+str(s.fondbudget_recette))
+            if not (s.enveloppe in todo_items ):
+                      todo_items.append(str(s.enveloppe))
+
         data = json.dumps(todo_items)
         return HttpResponse(data, content_type='application/json')
     else:
@@ -1729,15 +1855,46 @@ def ajax_add_enveloppe(request,pkstr1):
 
 
 #Pour les depenses
-def ajax_add_enveloppe_depense(request,pkstr1):
-    #print ("calling_add_enveloppe pour::" + str(pkstr1))
+def ajax_add_enveloppetype_depense(request,pkstr1):
     depense='dep'
     if request.is_ajax():
         isfleche=PlanFinancement.objects.get(id=pkstr1).fleche
         naturecompta = NatureComptable.objects.filter(pfifleche=isfleche,nctype=depense)
         todo_items=[]
         for s in naturecompta:
-            todo_items.append(str(s.id)+"-----"+str(s.enveloppe)+"-----"+str(s.naturec_dep))
+            if not (s.enveloppe in todo_items ):
+                      todo_items.append(str(s.enveloppe))
+        data = json.dumps(todo_items)
+        return HttpResponse(data, content_type='application/json')
+    else:
+        raise Http404
+
+def ajax_add_enveloppe_depense(request,pkstr1,lenveloppe):
+    #print ("calling_add_enveloppe pour::" + str(pkstr1))
+    depense='dep'
+    if request.is_ajax():
+        isfleche=PlanFinancement.objects.get(id=pkstr1).fleche
+        naturecompta = NatureComptable.objects.filter(pfifleche=isfleche,nctype=depense,enveloppe=lenveloppe)
+        todo_items=[]
+        for s in naturecompta:
+            todo_items.append(str(s.id)+"-----"+str(s.enveloppe)+"-----"+str(s.naturec_dep)+str(s.ccbd))
+        data = json.dumps(todo_items)
+        return HttpResponse(data, content_type='application/json')
+    else:
+        raise Http404
+
+#Pour les depenses
+def ajax_get_enveloppe_decalage(request,pkstr1):
+    depense='dep'
+    print("go")
+    if request.is_ajax():
+        naturec=NatureComptable.objects.get(id=pkstr1)
+        print("Nature C: "+ str(naturec))
+        print(str(naturec.decalagetresocpae))
+        decalageyesno=str(naturec.decalagetresocpae)
+        print("on decale ou pas:" + decalageyesno)
+        todo_items=[]
+        todo_items.append(decalageyesno)
         data = json.dumps(todo_items)
         return HttpResponse(data, content_type='application/json')
     else:
@@ -1750,7 +1907,8 @@ def ajax_add_todo1(request,pkstr1):
         #print("called by ajax")
         myid=Structure.objects.get(id=pkstr1).myid
         #print("thekey:"+myid)
-        struct2qset=Structure.objects.all().filter(parentid=myid)
+        struct2qset=Structure.objects.all().filter(parentid=myid).order_by('name')
+
         structlev2ok = []
         for j in struct2qset:
             if is_authorised(request.user.username,j.name):
@@ -1772,15 +1930,10 @@ def ajax_add_todo1(request,pkstr1):
 
 #Recettes Ajax find structure level 2 from level1
 def ajax_recadd_todo1(request,pkstr1):
-    #print ("calling_add_todo1")
     if request.is_ajax():
         myid=Structure.objects.get(id=pkstr1).myid
-        #print("thekey:"+myid)
-        struct2qset=Structure.objects.all().filter(parentid=myid)
+        struct2qset=Structure.objects.all().filter(parentid=myid).order_by('name')
         todo_items=[]
-        #todo_items=['test 1', 'test 2',]
-        #todo_items.append('toto')
-        #print('username:'+request.user.username)
         structlev2ok = []
         for j in struct2qset:
             if is_authorised(request.user.username,j.name):
@@ -1788,9 +1941,7 @@ def ajax_recadd_todo1(request,pkstr1):
 
         for s in structlev2ok:
             todo_items.append(str(s.id)+"-----"+str(s.name)+"-----"+str(s.label))
-        #print(todo_items)
         data = json.dumps(todo_items)
-        #data=json.dumps(struct2qset)
         return HttpResponse(data, content_type='application/json')
     else:
         raise Http404
@@ -1804,7 +1955,7 @@ def ajax_findstruct_lev3(request,pkstr1):
         #print("called by ajax")
         myid=Structure.objects.get(id=pkstr1).myid
         #print("recherche des fils de thekey:"+myid)
-        struct2qset=Structure.objects.all().filter(parentid=myid)
+        struct2qset=Structure.objects.all().filter(parentid=myid).order_by('name')
         todo_items=[]
         #print("recherche des fils de thekey:"+myid+ " nb trouves:" + str(len(struct2qset)))
         structlev3ok = []
@@ -1827,7 +1978,7 @@ def ajax_recfindstruct_lev3(request,pkstr1):
         #print("called by ajax")
         myid=Structure.objects.get(id=pkstr1).myid
         #print("thekey:"+myid)
-        struct2qset=Structure.objects.all().filter(parentid=myid)
+        struct2qset=Structure.objects.all().filter(parentid=myid).order_by('name')
         todo_items=[]
         #todo_items=['test 1', 'test 2',]
         #todo_items.append('toto')
@@ -1961,38 +2112,29 @@ def recettefull_new3(request):
 
 def recettefull_new2(request):
 
-    #desc11=Classification.objects.all().filter(type="1")
     structlev1s = Structure.objects.all().filter(type=" cf",parentid="0")
     structlev2s = ""
-#Structure.objects.all().filter(type=" cc")
-    cptdeplev1s = "" #NatureComptable.objects.all().filter(nctype="rec")
-    cptdeplev2s = "" #CompteComptable.objects.all()
-    domfoncs = "" #DomaineFonctionnel.objects.all() #.filter(dfgrpcumul='LOLF_CUMUL')
-    plfis = "" #PlanFinancement.objects.all()
+    cptdeplev1s = "" 
+    cptdeplev2s = ""
+    domfoncs = ""
+    plfis = "" 
     budget = PeriodeBudget.objects.all().filter(bloque=False).first()
 
     if request.method == "POST":
         struct1 = Structure.objects.filter(id=request.POST.get("structlev1")).first()
-
         struct2ref=request.POST.get("structlev2").split("-----")
         struct2id=struct2ref[0]
         struct2 = Structure.objects.filter(id=struct2id).first()
-
         struct3ref=request.POST.get("structlev3").split('-----')
         struct3id=struct3ref[0]
         struct3 = Structure.objects.filter(id=struct3id).first()
-
 
         cptdev1ref = request.POST.get("cptdeplev1").split('-----')
         cptdev1id = cptdev1ref[0]
         cptdev1 = NatureComptable.objects.filter(id=cptdev1id).first()
 
-        domfonc = DomaineFonctionnel.objects.filter(id=request.POST.get("domfonc")).first()
-
         plfiid=request.POST.get("plfi").split("--")[0]
         plfi = PlanFinancement.objects.filter(id=plfiid).first()
-
-        #plfi = PlanFinancement.objects.filter(id=request.POST.get("plfi")).first()
 
         if request.POST.get("montant"):
             montant = request.POST.get("montant")
@@ -2025,9 +2167,7 @@ def recettefull_new2(request):
         marecette.structlev3 = struct3
         marecette.cptdeplev1 = cptdev1
 
-        marecette.domfonc = domfonc
         marecette.plfi = plfi
-        marecette.montant = montant
         marecette.montantdc = montantdc
         marecette.montantar = montantar
         marecette.montantre = montantre
@@ -2042,7 +2182,6 @@ def recettefull_new2(request):
         localpkcp=marecette.structlev3.pk
 
         return redirect('recettefull_parcp',pkcp=localpkcp)
-
     else:
         return render(request, 'recettefull_new_v2.html', {'structlev1s': structlev1s ,'structlev2s': structlev2s,
                                                            'cptdeplev1s': cptdeplev1s,

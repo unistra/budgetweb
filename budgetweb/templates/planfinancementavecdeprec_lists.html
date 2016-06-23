@@ -68,15 +68,14 @@
                                      <thead class="thcc">
                                        <TH> Enveloppe </TH>
                                        <TH> Désignation de la nature comptable </TH>
-                                       <TH> Code Nature comptable Secondaire </TH>
+                                       <TH> Compte budg&eacutetaire</TH>
+                                       <TH> Libell&eacute </TH>
                                        <TH> Identifiant </TH>
                                        <TH> Domaine fonctionnel </TH> <!--domaine fonctionnel -->
 
-                                       <TH> Pfi   </TH> <!--Plan Financement -->
-                                       <TH> Montant globalis&eacute</TH>
-                                       <TH> Montant dc    </TH>
                                        <TH> Montant cp    </TH>
                                        <TH> Montant ae    </TH>
+                                       <TH> Montant dc    </TH>
                                        <TH> Commentaire </TH>
                                        <TH> Créé par </TH>
                                        <TH> Date de création </TH>
@@ -88,14 +87,13 @@
                                            <TR class="tdcc">
                                               <TD> {{dep.cptdeplev1.enveloppe}} </TD>
                                               <TD> {{dep.cptdeplev1.naturec_dep }} </TD>
-                                              <TD> {{dep.cptdeplev1.ncsecondairecode }} </TD>
+                                              <TD> {{dep.cptdeplev1.ccbd.code }} </TD>
+                                              <TD> {{dep.cptdeplev1.ccbd.label }} </TD>
                                               <TD><a href="{% url 'depensefull_edit2' pkdep=dep.pk %}"> {{ dep.myid    }} </a></TD>
                                               <TD> {{dep.domfonc }} </TD>
-                                              <TD>{{ dep.plfi.name    }}</TD>
-                                              <TD>{{ dep.montant }}</TD>
-                                              <TD>{{ dep.montantdc }}</TD>
                                               <TD>{{ dep.montantcp }}</TD>
                                               <TD>{{ dep.montantae }}</TD>
+                                              <TD>{{ dep.montantdc }}</TD>
                                               <TD>{{ dep.commentaire }}</TD>
                                               <TD>{{ dep.creepar }}</TD>
                                               <TD>{{ dep.creele }}</TD>
@@ -115,6 +113,7 @@
 
                                   <br>
                                   <a href="{% url 'recettefull_new2' %}" class="top-menu"> Nouvelle recette<span class="glyphicon glyphicon-plus"></span></a>
+                                  <a href="{% url 'recettefull_new_avec_pfi' pfiid=reponse.id struct3id=reponse.cfassoc %}" class="top-menu"> Nouvelle recette <span class="glyphicon glyphicon-plus"></span></a>
                                   <br>
                                   {% if reponse.recettefull_set.all %}
 
@@ -128,8 +127,6 @@
                                        <TH> Compte Budg&eacutetaire recette </TH>
                                        <TH> Code de la nature comptable secondaire </TH>
                                        <TH> Identifiant </TH>
-                                       <TH> P&eacuteriode Budget. </TH>
-                                       <TH> Montant     </TH>
                                        <TH> Montant RE  </TH>
                                        <TH> Montant AR  </TH>
                                        <TH> Montant DC  </TH>
@@ -151,9 +148,7 @@
                                           <TD>{{ recette.cptdeplev1.ccbd }}</TD>
                                           <TD>{{ recette.cptdeplev1.ncsecondairecode }}</TD>
                                           <TD><a href="{% url 'recettefull_edit2' pkrec=recette.pk %}">{{recette.id}} / {{recette.myid}} </a></TD>
-                                          <TD>{{ recette.periodebudget    }}</TD>
 
-                                          <TD>{{ recette.montant }}</TD>
                                           <TD>{{ recette.montantre }}</TD>
                                           <TD>{{ recette.montantar }}</TD>
                                           <TD>{{ recette.montantdc }}</TD>

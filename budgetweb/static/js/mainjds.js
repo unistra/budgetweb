@@ -6,8 +6,14 @@ function populateselect2(){
             success: function(data) {
                 $("#structlev2").html('');
                 $("#structlev3").html('');
+                var monsplit;
+                var mylabel;
+                var myseparator;
+                myseparator="-----"
                 for( i = 0; i<data.length;i++){
-                    $("#structlev2").append('<option value=' + data[i] + '>' + data[i] + '</option>');
+                    monsplit = data[i].split(myseparator)
+                    mylabel = monsplit[1]+myseparator+monsplit[2]
+                    $("#structlev2").append('<option value=' + monsplit[0] + '>' + mylabel + '</option>');
                 }
            }})
            }
@@ -21,12 +27,19 @@ function populateselect3(){
             type:'GET',
             success: function(data) {
                 $("#structlev3").html('');
+                var monsplit;
+                var mylabel;
+                var myseparator;
+                myseparator="-----"
                 for( i = 0; i<data.length;i++){
-                    $("#structlev3").append('<option value=' + data[i] + '>' + data[i] + '</option>');
+                    monsplit = data[i].split(myseparator)
+                    mylabel = monsplit[1]+myseparator+monsplit[2]
+                    $("#structlev3").append('<option value=' + monsplit[0] + '>' + mylabel + '</option>');
                 }
            }})
 
 }
+
 
 function populatepfi(){
         thechoice=$("#structlev3").find('option:selected').val();
@@ -37,26 +50,82 @@ function populatepfi(){
             type:'GET',
             success: function(data) {
                 $("#plfi").html('');
+                var monsplit;
+                var mylabel;
+                var myseparator;
+                myseparator="-----"
                 for( i = 0; i<data.length;i++){
-                    $("#plfi").append('<option value=' + data[i] + '>' + data[i] + '</option>');
+                    monsplit = data[i].split(myseparator)
+                    mylabel = monsplit[1]
+                    $("#plfi").append('<option value=' + monsplit[0] + '>' + mylabel + '</option>');
                 }
            }})
 }
+
 
 function populatecptdeplev1(){
         thechoice=$("#plfi").find('option:selected').val();
         mychoices=thechoice.split("-----")
         mychoice=mychoices[0]
+
+        thechosenenveloppe=$("#cptdeplev1type").find('option:selected').val();
+
         $.ajax({
-            url : "/ajax/ajax_add_enveloppe_depense/"+mychoice+"/",
+            url : "/ajax/ajax_add_enveloppe_depense/"+mychoice+"/"+thechosenenveloppe+"/",
             type:'GET',
             success: function(data) {
                 $("#cptdeplev1").html('');
+                var monsplit;
+                var mylabel;
+                var myseparator;
+                myseparator="-----"
                 for( i = 0; i<data.length;i++){
-                    $("#cptdeplev1").append('<option value=' + data[i] + '>' + data[i] + '</option>');
+                    monsplit = data[i].split(myseparator)
+                    mylabel = monsplit[1]+myseparator+monsplit[2]
+                    $("#cptdeplev1").append('<option value=' + monsplit[0] + '>' + mylabel + '</option>');
                 }
            }})
 }
+
+
+function populatecptdeplev1type(){
+        thechoice=$("#plfi").find('option:selected').val();
+        mychoices=thechoice.split("-----")
+        mychoice=mychoices[0]
+        $.ajax({
+            url : "/ajax/ajax_add_enveloppetype_depense/"+mychoice+"/",
+            type:'GET',
+            success: function(data) {
+                $("#cptdeplev1").html('');
+                $("#cptdeplev1type").html('');
+                $("#displaycompte").html('');
+
+                for( i = 0; i<data.length;i++){
+                    if ( i==0 ) {$("#cptdeplev1type").append('<option value=' + data[i] + ' selected >' + data[i] + '</option>');}
+                           else {$("#cptdeplev1type").append('<option value=' + data[i] + '>' + data[i] + '</option>');}
+                }
+           }})
+}
+
+
+function changingdecalagetresocpae(){
+        thechoice=$("#cptdeplev1").find('option:selected').val();
+        $.ajax({
+            url : "/ajax/ajax_get_enveloppe_decalage/"+thechoice+"/",
+            type:'GET',
+            success: function(data) {
+                $("#decalagetresocpae").html('');
+    
+                if ( data[0] == "False" ) {
+                    $("#decalagetresocpae").html('');
+                    $("#decalagetresocpae").append('<option value="Oui"> Oui </option>');
+                    $("#decalagetresocpae").append('<option value="Non" selected="selected"> Non </option>');
+                    alert("Le décalage de trésorerie n'est pas autorisé pour cette nature comptable !")
+                }
+           }})
+
+}
+
 
 
 $(document).ready(function() {
@@ -67,35 +136,34 @@ $(document).ready(function() {
     }
     populateselect2
     populateselect3
+    populatecptdeplev1type
     populatecptdeplev1
     //AJAX GET
+
+     $('#decalagetresocpae').change(
+                 changingdecalagetresocpae
+             )
+
      $('#structlev1').change(populateselect2
              )
 
      $('#structlev2').change(populateselect3
              )
 
-
-     $('#plfi').change(populatecptdeplev1
-             )
-
-     $('#orfond').change(function(){
-        mychoice=$("#orfond").find('option:selected').val();
-        $.ajax({
-            url : "/ajax/ajax_findorigfond_lev2/"+mychoice+"/",
-            type:'GET',
-            success: function(data) {
-                $("#orfond2").html('');
-                for( i = 0; i<data.length;i++){
-                    $("#orfond2").append('<option value=' + data[i] + '>' + data[i] + '</option>');
-                }
-           }})
-             })
-
      $('#structlev3').change(populatepfi
              )
 
+
+     $('#plfi').change(populatecptdeplev1type
+             )
+
+     $('#cptdeplev1type').change(populatecptdeplev1
+             )
+
      $('#plfi').trigger("change")
+     $('#cptdeplev1type').trigger("change")
+     $('#cptdeplev1').trigger("change")
+
     // CSRF code
 
   // FIN DU READY

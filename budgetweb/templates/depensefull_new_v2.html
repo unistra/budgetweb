@@ -16,7 +16,7 @@
   <TR><th> Structure niveau 1</th><TD>
        <select name="structlev1" id="structlev1">
             {% for struct in structlev1s %}
-               <option value="{{struct.id}}">{{struct.id}} -- {{struct.name}} -- {{struct.label}}</option>
+               <option value="{{struct.id}}">{{struct.name}} -- {{struct.label}}</option>
             {% endfor %}
        </select>
   </TD></TR>
@@ -46,7 +46,17 @@
        </select>
   </TD></TR>
 
+  <TR><th> Fond </th><TD>
+       <select name="fond" id="fond" readonly>
+               <option value="NA"> NA </option>
+       </select>
+  </TD></TR>
 
+  <TR><th> type d'enveloppe de d&eacutepenses </th><TD>
+       <select name="cptdeplev1type" id="cptdeplev1type">
+               <option value="">  </option>
+       </select>
+  </TD></TR>
 
   <TR><th> Enveloppe de d&eacutepenses </th><TD>
        <select name="cptdeplev1" id="cptdeplev1">
@@ -56,9 +66,8 @@
        </select>
   </TD></TR> 
 
-  <TR>
 
-  <th> Domaine Fonctionnel</th><TD>
+  <TR><th> Domaine Fonctionnel</th><TD>
        <select name="domfonc" id="domfonc">
             {% for domfonc in domfoncs %}
                <option value="{{domfonc.id}}">{{domfonc.dfcode}} -- {{domfonc.dflabel}} </option>
@@ -66,11 +75,18 @@
        </select>
   </TD></TR> 
 
-  <TR><th> Montant globalis&eacute </th><TD><input type="text" name="montantdg" id="montantdg" ></TD></TR>
-  <TR><th> Montant droit constat&eacute </th><TD><input type="text" name="montantdc" id="montantdc" ></TD></TR>
+  <TR><TH> D&eacutecalage de tr&eacutesorerie (ae<>cp) </TH><TD>
+       <select name="decalagetresocpae" id="decalagetresocpae">
+               <option value="Non" selected="selected"> Non </option>
+               <option value="Oui"> Oui </option>
+       </select>
+  </TD></TR>
+
+
   <TR><th> Montant cr&eacutedit de paiementp </th><TD><input type="text" name="montantcp" id="montantcp" ></TD></TR>
   <TR><th> date de l'engagement </th><TD><input type="text" name="dateae" id="dateae" ></TD></TR>
   <TR><th> Montant de l'engagement </th><TD><input type="text" name="montantae" id="montantae" ></TD></TR>
+  <TR><th> Montant droit constat&eacute </th><TD><input type="text" name="montantdc" id="montantdc" ></TD></TR>
   <TR><th> Commentaire </th><TD><input type="text" name="commentaire" id="commentaire" ></TD></TR>
   <TR><th> URL vers le fichier </th> <TD><INPUT type="text" name="nom_des_fichiers"></TD></TR>
 
