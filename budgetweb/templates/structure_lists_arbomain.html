@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Liste des structures</h1>
+
+
+<br>
+<ul>
+
+{%for reponse in reponses %} 
+    {%include "tree_view_template.html" %}
+{%endfor%}
+</ul>
+
+
+
+<br>
+<a href="{% url 'structure_new' %}" class="top-menu"> Nouvelle structure<span class="glyphicon glyphicon-plus"></span></a>
+
+{% endblock %}
+
+
