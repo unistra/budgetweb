@@ -127,7 +127,7 @@ class Structure(models.Model):
     parentid = models.CharField(max_length=100,
                       verbose_name=u'Code de la structure père')
     parent = models.ForeignKey ('Structure', blank=True ,
-                        null=True, related_name='fils')
+                        null=True, related_name='fils',verbose_name=u'Lien direct vers la structure parent')
 
     ordre = models.CharField(max_length=100,verbose_name=u'Ordre')
     niv = models.CharField(max_length=100,verbose_name=u'Niveau')
@@ -137,6 +137,8 @@ class Structure(models.Model):
     modifpar = models.CharField(max_length=100,verbose_name=u'Modifié par')
     dfmc = models.CharField(max_length=100,verbose_name=u'DFMC')
     fdr = models.CharField(max_length=100,verbose_name=u'FDR')
+
+    class Meta: ordering = ['name']
 
     def __str__(self):
         return (self.name + " -- " + self.label)
@@ -171,6 +173,10 @@ class PlanFinancement(models.Model):
     fleche = models.BooleanField(default=False,verbose_name=u'Fléché oui/non')
     pluriannuel = models.BooleanField(default=False,
                         verbose_name=u'Pluriannuel oui/non')
+
+    cfassoclink = models.ForeignKey('Structure', blank=True ,
+                        null=True,verbose_name=u'Lien direct vers le CF')
+ 
 
     def __str__(self):
         return ("PFI:"+self.myid + " -- Eotp:" + self.eotp)

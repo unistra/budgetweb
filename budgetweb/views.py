@@ -930,6 +930,12 @@ def structure_list(request):
     return render(request, 'structure_lists.html', {'reponses':myst})
 
 
+def structure_list2(request):
+    myst = Structure.objects.filter(parent=None)
+
+    return render(request, 'structure_lists_arbomain.html', {'reponses':myst})
+
+
 """------------------------------------------------------------------
 Effacer une structure CF/CC/CP
 ------------------------------------------------------------------"""
@@ -1033,6 +1039,14 @@ def structure_deleteall(request):
         return render(request, 'structure_deleteall.html',{'nb':nbst})
 
 
+
+def structure_set_parent(request):
+    mystructures = Structure.objects.all()
+    for child in mystructures:
+        child.parent=Structure.objects.filter(myid=child.parentid).first()
+        child.save()
+
+    return render(request, 'structure_lists.html', {'reponses':mystructures})
 
 """ ----------------------------------------------------------------
 class PlanFinancement(models.Model):

@@ -64,7 +64,7 @@ class StructureForm( forms.ModelForm ):
     class Meta:
         model = Structure
         fields = ( 'myid' , 'type' , 'name' , 'label' , 'parentid' , 'ordre' , 'niv' ,
-                   'bloq' , 'modifdate' , 'modifpar' , 'dfmc' , 'fdr' )
+                   'bloq' , 'modifdate' , 'modifpar' , 'dfmc' , 'fdr', 'parent' )
 
 
 class StructureFormcc( forms.ModelForm ):
@@ -87,7 +87,7 @@ class PlanFinancementForm( forms.ModelForm ):
     class Meta:
         model = PlanFinancement
         fields = ( 'myid' , 'name' , 'eotp', 'creepar' , 'modifiepar' , 
-                   'societe' , 'cfassoc' , 'ccassoc' , 'cpassoc' , 'fleche' , 'pluriannuel')
+                   'societe' , 'cfassoc' , 'ccassoc' , 'cpassoc' , 'fleche' , 'pluriannuel', 'cfassoclink')
 
         widgets = {
             'name': forms.Textarea(attrs={'cols': 40, 'rows': 2}),

@@ -61,11 +61,13 @@ urlpatterns = [
 # classe Structure
     url(r'^structure/new/$', views.structure_new, name='structure_new'),
     url(r'^structure/$', views.structure_list,name='structure_list'),
+    url(r'^structure/list2$', views.structure_list2,name='structure_list2'),
     url(r'^structure/(?P<pkst>[0-9]+)/detail/$', views.structure_detail, name='structure_detail'),
     url(r'^structure/(?P<pkst>[0-9]+)/delete/$', views.structure_delete, name='structure_delete'),
     url(r'^structure/(?P<pkst>[0-9]+)/edit/$', views.structure_edit, name='structure_edit'),
     url(r'^structure/import/$', views.structure_importcsv,name='structure_importcsv'),
     url(r'^structure/deleteall/$', views.structure_deleteall, name='structure_deleteall'),
+    url(r'^structure/set_parent/$', views.structure_set_parent, name='structure_set_parent'),
 # classe PlanFinancement
     url(r'^planfinancement/new/$', views.planfinancement_new, name='planfinancement_new'),
     url(r'^planfinancement/$', views.planfinancement_list,name='planfinancement_list'),
