@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block head-javascript %}
+<script src="{% static 'js/jquery.formset.js' %}"></script>
+
+{% endblock %}
+
+
+{% block content %}
+<br>
+<br>
+
+
+{% if messages %}
+    {% for message in messages %}
+        <p>{{ message }}</p>
+    {% endfor %}
+{% endif %}
+
+<br>
+<br>
+<table>
+  <TR><th> P&eacuteriode budget : </th>
+      <td>
+         <table border = 5 bordercolor=blue>
+          <tr>
+           <td>{{ mybudget }}
+           </td>
+          </tr>
+         </table>
+       </td>
+   </tr>
+
+
+  <TR><th> Nouvelle d&eacutepense sur la structure : </th>
+      <TD>{%if mystructure.parent %}
+             {%with node=mystructure template_name="structure_tree_view_template.html" %}
+               {%include "structure_tree_view_template.html" %}
+             {% endwith %}
+          {%endif%}
+      </TD>
+    {% if structure.name.errors %}
+      <TD>
+        {% for error in structure.name.errors %}
+            {{ error|escape }}
+        {% endfor %}
+      </TD>
+    {% endif %}
+   </TR>
+  <TR><th> Nom du PFI : </th>
+      <td>
+         <table border = 5 bordercolor=blue>
+          <tr>
+           <td>{{ myplfi.name }}
+           </td>
+           {% if mypfi.name.errors %}
+             <td>{% for error in myplfi.name.errors %}
+                      {{ error|escape }}
+                 {% endfor %} </td>
+           {% endif %}
+          </tr>
+         </table>
+      </td>
+  </TR>
+</table>
+<br><br>
+{{depensefull_formset.errors}}
+<br>
+<!-- debut  de la table pour le formulaire --!>
+<table border = 5 bordercolor=blue style="background-color:#EEFFEE">
+
+<form style="background-color:#EEFFEE" method="post">
+    {% csrf_token %}
+
+    {{ depensefull_formset.management_form }}
+
+    {% for depensefull_form in depensefull_formset %}
+            {{depensefull_form.id}}
+        <br>
+        <tr><td>
+        <div class="depense-formset">
+            {{ depensefull_form.myid }}
+            {% if depensefull_form.myid.errors %}
+                {% for error in depensefull_form.myid.errors %}
+                    {{ error|escape }}
+                {% endfor %}
+            {% endif %}
+
+            {{ depensefull_form.cptdeplev1 }}
+            {% if depensefull_form.cptdeplev1.errors %}
+                {% for error in depensefull_form.cptdeplev1.errors %}
+                    {{ error|escape }}
+                {% endfor %}
+            {% endif %}
+
+            {{ depensefull_form.domfonc }}
+            {% if depensefull_form.domfonc.errors %}
+                {% for error in depensefull_form.domfonc.errors %}
+                    {{ error|escape }}
+                {% endfor %}
+            {% endif %}
+
+            {{ depensefull_form.montantdc }}
+            {% if depensefull_form.montantdc.errors %}
+                {% for error in depensefull_form.montantdc.errors %}
+                    {{ error|escape }}
+                {% endfor %}
+            {% endif %}
+
+            {{ depensefull_form.montantcp }}
+            {% if depensefull_form.montantcp.errors %}
+                {% for error in depensefull_form.montantcp.errors %}
+                    {{ error|escape }}
+                {% endfor %}
+            {% endif %}
+
+            {{ depensefull_form.montantae }}
+            {% if depensefull_form.montantae.errors %}
+                {% for error in depensefull_form.montantae.errors %}
+                    {{ error|escape }}
+                {% endfor %}
+            {% endif %}
+
+            {{ depensefull_form.dateae }}
+            {% if depensefull_form.dateae.errors %}
+                {% for error in depensefull_form.dateae.errors %}
+                    {{ error|escape }}
+                {% endfor %}
+            {% endif %}
+
+            {{ depensefull_form.commentaire }}
+            {% if depensefull_form.commentaire.errors %}
+                {% for error in depensefull_form.commentaire.errors %}
+                    {{ error|escape }}
+                {% endfor %}
+            {% endif %}
+
+            {{ depensefull_form.myfile }}
+            {% if depensefull_form.myfile.errors %}
+                {% for error in depensefull_form.myfile.errors %}
+                    {{ error|escape }}
+                {% endfor %}
+            {% endif %}
+
+            <!--- traitement des erreurs---!>
+                    {% for field in depensefull_form.fields %}
+                         {% if field.errors %}
+                            {% for error in field.errors %}
+                               {{ error|escape }}
+                            {% endfor %}
+                         {% endif %}
+                    {% endfor %}
+
+        </div>
+        <br>
+        </td></tr>
+    {% endfor %}
+
+<tr><td>
+<br>
+    {% if depensefull_formset.non_form_errors %}
+        {% for error in depensefull_formset.non_form_errors %}
+            {{ error|escape }}
+        {% endfor %}
+    <br>
+    {% endif %}
+</td></tr><tr><td>
+    <input type="submit" value="Enregistrer" class="save btn btn-default">
+</form>
+
+
+
+<!-- fin de la table pour le formulaire --!>
+</td></tr>
+</table>
+<!-- Include formset plugin - including jQuery dependency -->
+<script>
+    $('.depense-formset').formset({
+                                   addText: 'Ajouter',
+                                   deleteText: 'Supprimer'
+                                });
+</script>
+
+
+<br>
+<br>
+
+{% endblock %}
+
