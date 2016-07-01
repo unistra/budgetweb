@@ -38,16 +38,13 @@
     {% endif %}
    </TR>
   <tr><th> Nom du PFI : </th>
-      <td>
-         <table border = 5 bordercolor=blue>
-          <tr>
-           <td><p id="plfi">{{ myplfi.name }}</p>
-           </td>
+      <td><table border = 5 bordercolor=blue>
+          <tr><td><p id="plfi">{{ myplfi.name }}</p></td>
            {% if mypfi.name.errors %}
              <td>{% for error in myplfi.name.errors %}{{ error|escape }}{% endfor %} </td>
            {% endif %}
          </table>
-        </td>
+      </td>
   </tr>
 
 </table>
@@ -59,68 +56,53 @@
 
 <br>
 <!-- debut  de la table pour le formulaire --!>
-<table border = 5 bordercolor=blue style="background-color:#775500">
+<table border = 5 bordercolor=blue style="background-color:#FFFAEE">
 
-<form style="background-color:#775500" method="post">
+<form style="background-color:#FFFAEE" method="post">
     {% csrf_token %}
-
     {{ recettefull_formset.management_form }}
-
     {% for recettefull_form in recettefull_formset %}
             {{recettefull_form.id}}
-        <br>
         <tr><td>
         <div class="recette-formset">
-            {{ recettefull_form.myid }}
-            {% if recettefull_form.myid.errors %}
-                {% for error in recettefull_form.myid.errors %}
-                    {{ error|escape }}
-                {% endfor %}
-            {% endif %}
             
-            {{recettefull_form.cptdeplev1}}
+            {{recettefull_form.cptdeplev1.label_tag}} {{recettefull_form.cptdeplev1}}
             {% if recettefull_form.cptdeplev1.errors %}
                 {% for error in recettefull_form.cptdeplev1.errors %}
                     {{ error|escape }}
                 {% endfor %}
             {% endif %}
 
-            {{ recettefull_form.domfonc.label_tag }}{{ recettefull_form.domfonc }}
-            {% if recettefull_form.domfonc.errors %}
-                {% for error in recettefull_form.domfonc.errors %}
-                    {{ error|escape }}
-                {% endfor %}
-            {% endif %}
 
-            {{ recettefull_form.montantdc }}
+            {{ recettefull_form.montantdc.label_tag }}{{ recettefull_form.montantdc }}
             {% if recettefull_form.montantdc.errors %}
                 {% for error in recettefull_form.montantdc.errors %}
                     {{ error|escape }}
                 {% endfor %}
             {% endif %}
 
-            {{ recettefull_form.montantar }}
+            {{ recettefull_form.montantar.label_tag }} {{ recettefull_form.montantar }}
             {% if recettefull_form.montantar.errors %}
                 {% for error in recettefull_form.montantar.errors %}
                     {{ error|escape }}
                 {% endfor %}
             {% endif %}
 
-            {{ recettefull_form.montantre }}
+            {{ recettefull_form.montantre.label_tag }} {{ recettefull_form.montantre }}
             {% if recettefull_form.montantre.errors %}
                 {% for error in recettefull_form.montantre.errors %}
                     {{ error|escape }}
                 {% endfor %}
             {% endif %}
 
-            {{ reecttefull_form.commentaire }}
+            {{ recettefull_form.commentaire.label_tag }} {{ recettefull_form.commentaire }}
             {% if recettefull_form.commentaire.errors %}
                 {% for error in recettefull_form.commentaire.errors %}
                     {{ error|escape }}
                 {% endfor %}
             {% endif %}
 
-            {{ recettefull_form.myfile }}
+            {{ recettefull_form.myfile.label_tag }} {{ recettefull_form.myfile }}
             {% if recettefull_form.myfile.errors %}
                 {% for error in recettefull_form.myfile.errors %}
                     {{ error|escape }}

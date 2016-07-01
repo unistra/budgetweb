@@ -52,8 +52,7 @@
       <td>
          <table border = 5 bordercolor=blue>
           <tr>
-           <td>{{ myplfi.name }}
-           </td>
+           <td>{{ myplfi.name }}</td>
            {% if mypfi.name.errors %}
              <td>{% for error in myplfi.name.errors %}
                       {{ error|escape }}
@@ -64,79 +63,72 @@
       </td>
   </TR>
 </table>
-<br><br>
-{{depensefull_formset.errors}}
 <br>
+{%if depensefull_formset.errors %}
+    {{depensefull_formset.errors}}
+    <br>
+{%endif %}
 <!-- debut  de la table pour le formulaire --!>
 <table border = 5 bordercolor=blue style="background-color:#EEFFEE">
 
 <form style="background-color:#EEFFEE" method="post">
     {% csrf_token %}
-
     {{ depensefull_formset.management_form }}
-
     {% for depensefull_form in depensefull_formset %}
             {{depensefull_form.id}}
-        <br>
         <tr><td>
         <div class="depense-formset">
-            {{ depensefull_form.myid }}
-            {% if depensefull_form.myid.errors %}
-                {% for error in depensefull_form.myid.errors %}
-                    {{ error|escape }}
-                {% endfor %}
-            {% endif %}
 
-            {{ depensefull_form.cptdeplev1 }}
+            {{ depensefull_form.cptdeplev1.label_tag }}{{ depensefull_form.cptdeplev1 }}
             {% if depensefull_form.cptdeplev1.errors %}
                 {% for error in depensefull_form.cptdeplev1.errors %}
                     {{ error|escape }}
                 {% endfor %}
             {% endif %}
 
-            {{ depensefull_form.domfonc }}
+            {{ depensefull_form.domfonc.label_tag }} {{ depensefull_form.domfonc }}
             {% if depensefull_form.domfonc.errors %}
                 {% for error in depensefull_form.domfonc.errors %}
                     {{ error|escape }}
                 {% endfor %}
             {% endif %}
 
-            {{ depensefull_form.montantdc }}
+            {{ depensefull_form.montantdc.label_tag }}{{ depensefull_form.montantdc }}
             {% if depensefull_form.montantdc.errors %}
                 {% for error in depensefull_form.montantdc.errors %}
                     {{ error|escape }}
                 {% endfor %}
             {% endif %}
 
-            {{ depensefull_form.montantcp }}
+            {{ depensefull_form.montantcp.label_tag }}{{ depensefull_form.montantcp }}
             {% if depensefull_form.montantcp.errors %}
                 {% for error in depensefull_form.montantcp.errors %}
                     {{ error|escape }}
                 {% endfor %}
             {% endif %}
 
-            {{ depensefull_form.montantae }}
+            {{ depensefull_form.montantae.label_tag }}{{ depensefull_form.montantae }}
             {% if depensefull_form.montantae.errors %}
                 {% for error in depensefull_form.montantae.errors %}
                     {{ error|escape }}
                 {% endfor %}
             {% endif %}
 
-            {{ depensefull_form.dateae }}
+            {{ depensefull_form.dateae.label_tag }} {{ depensefull_form.dateae }}
             {% if depensefull_form.dateae.errors %}
                 {% for error in depensefull_form.dateae.errors %}
                     {{ error|escape }}
                 {% endfor %}
             {% endif %}
 
-            {{ depensefull_form.commentaire }}
+            {{ depensefull_form.commentaire.label_tag }}{{ depensefull_form.commentaire }}
             {% if depensefull_form.commentaire.errors %}
                 {% for error in depensefull_form.commentaire.errors %}
                     {{ error|escape }}
                 {% endfor %}
             {% endif %}
 
-            {{ depensefull_form.myfile }}
+            {{ depensefull_form.myfile.label_tag }}{{ depensefull_form.myfile }}
             {% if depensefull_form.myfile.errors %}
                 {% for error in depensefull_form.myfile.errors %}
                     {{ error|escape }}

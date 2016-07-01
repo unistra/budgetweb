@@ -14,6 +14,8 @@ from .forms import StructureForm , PlanFinancementForm
 from .models import Authorisation, NatureComptable , DomaineFonctionnel , PeriodeBudget,CompteBudget
 from .models import Structure , PlanFinancement , DepenseFull , RecetteFull
 from .forms import DepenseFullForm , RecetteFullForm , PeriodeBudgetForm , CompteBudgetForm
+from .forms import RecetteFullFormPfifleche, RecetteFullFormPfinonfleche
+from .forms import DepenseFullFormPfifleche, DepenseFullFormPfinonfleche
 from .models import ComptaNature,FondBudgetaire
 from .forms import ComptaNatureForm, FondBudgetaireForm
 import json
@@ -27,6 +29,12 @@ from django.contrib.auth import logout
 from django.contrib.auth import views as auth_views
 
 from django.contrib.auth.models import Group
+from django.forms.formsets import formset_factory
+from .forms import BaseDepenseFullFormSet, BaseRecetteFullFormSet
+from django.contrib import messages
+from django.core.urlresolvers import reverse
+from django.db import IntegrityError, transaction
+from django.forms.models import modelformset_factory
 #---------------------------------------------------------------------------------
 
 def search(request):
@@ -57,6 +65,9 @@ def index4(request):
 def index5(request):
     return render(request, 'tests/notemptygrid3.html')
 
+
+def current_budget():
+    return PeriodeBudget.objects.filter(bloque=False).first() if PeriodeBudget.objects.filter(bloque=False).first() else 'Pas de période de budget ouverte'
 
 """-------------------------------------------------
  class Authorisation(models.Model):
@@ -1304,23 +1315,6 @@ def liste_pfi_avec_depenses_recettes(request):
 class depensefull
 -------------------------------------------------------------------------- """
 
-""" -----------------------------------------------------------------
-Création depenses dans le budget - non utilisé
-------------------------------------------------------------------- """
-@login_required
-def depensefull_new(request):
-    if request.method == "POST":
-        form = DepenseFullForm(request.POST)
-        if form.is_valid():
-            newdepense = form.save(commit=False)
-            newdepense.creepar = request.user.username
-            newdepense.save()
-            return redirect('depensefull_list')
-        else:
-            print ('form not valid')
-    else:
-        form = DepenseFullForm()
-    return render(request, 'depensefull_new.html', {'form': form})
 
 
 """ -----------------------------------------------------------------
@@ -1344,134 +1338,13 @@ def depensefull_edit(request,pkdep):
     return render(request, 'depensefull_edit.html', {'form': form})
 
 
-""" -----------------------------------------------------------------
-En test - programme pour uploader des fichiers en Django
-------------------------------------------------------------------- """
-def handle_uploaded_file(f, filepathandname):
-    with open(filepathandname, 'wb+') as destination:
-        for chunk in f.chunks():
-            destination.write(chunk)
-
 
 """ -----------------------------------------------------------------
 Création depenses dans le budget - en cours de tests
-Les structures sont classées par niveau .
-On commence par le niveau 0
+Les structures sont classées les unes par rapport aux autres : Un CF depend
+d un autre CF - jusqu au CF Racine
 En dépenses on prend les types dep
 ------------------------------------------------------------------- """
-@login_required
-def depensefull_new2(request):
-
-    #desc11=Classification.objects.all().filter(type="1")
-    structlev1s = Structure.objects.all().filter(type=" cf",parentid="0")
-    structlev2s = ""
-#Structure.objects.all().filter(type=" cc")
-    cptdeplev1s = "" #NatureComptable.objects.all().filter(nctype="dep")
-    domfoncs = DomaineFonctionnel.objects.all().order_by('dfcode') #filter(dfgrpcumul='LOLF_CUMUL')
-
-    plfis = "" #PlanFinancement.objects.all()
-
-    budget = PeriodeBudget.objects.filter(bloque=False).first()
-# pour les autorisations creer un dico avec les objets
-    structlev1ok = []
-    for i in structlev1s:
-        if is_authorised(request.user.username,i.name):
-            structlev1ok.append(i)
-
-    structlev2ok = []
-    for j in structlev2s:
-        if is_authorised(request.user.username,j.name):
-            structlev2ok.append(i)
-       #else:
-        #    structlev1pok.append(i)
-
-    if request.method == "POST":
-        struct1 = Structure.objects.filter(id=request.POST.get("structlev1")).first()
-        struct2ref=request.POST.get("structlev2").split("-----")
-        struct2id=struct2ref[0]
-        struct2 = Structure.objects.filter(id=struct2id).first()
-
-        struct3ref=request.POST.get("structlev3").split('-----')
-        struct3id=struct3ref[0]
-        struct3 = Structure.objects.filter(id=struct3id).first()
-
-        cptdev1ref = request.POST.get("cptdeplev1").split('-----')
-        cptdev1id = cptdev1ref[0]
-        cptdev1 = NatureComptable.objects.filter(id=cptdev1id).first()
-
-        domfonc = DomaineFonctionnel.objects.filter(id=request.POST.get("domfonc")).first()
-
-        plfiid=request.POST.get("plfi").split("--")[0]
-        plfi = PlanFinancement.objects.filter(id=plfiid).first()
-
-        if request.POST.get("montantdg"):
-            montantdg = request.POST.get("montantdg")
-        else:
-            montantdg = 0
-
-        if request.POST.get("montantdc"):
-            montantdc = request.POST.get("montantdc")
-        else:
-            montantdc = 0
-
-        if request.POST.get("montantae"):
-            montantae = request.POST.get("montantae")
-        else:
-            montantae =0
-
-        if request.POST.get("montantcp"):
-            montantcp = request.POST.get("montantcp")
-        else:
-            montantcp = 0
-
-        if request.POST.get("dateae"):
-            dateae = request.POST.get("dateae")
-        else:
-            dateae = "" 
-
-        if request.POST.get("commentaire"):
-            commentaire = request.POST.get("commentaire")
-        else:
-            commentaire =""
-
-        madepense = DepenseFull()
-        madepense.structlev1 = struct1
-        madepense.structlev2 = struct2
-        madepense.structlev3 = struct3
-        madepense.cptdeplev1 = cptdev1
-        madepense.domfonc = domfonc
-        madepense.plfi = plfi
-        madepense.montant=montantdg
-        madepense.montantdc = montantdc 
-        madepense.montantae = montantae
-        madepense.dateae = dateae
-        madepense.montantcp = montantcp
-        madepense.commentaire = commentaire
-        madepense.periodebudget = budget
-        #username = None
-        #if request.user.is_authenticated():
-        #    username = request.user.username
-        madepense.creepar = request.user.username
-        #madepense.creepar = username
-        madepense.modifiepar = request.user.username
-
-        #handle_uploaded_file(request.Files['file'],'/tmp/file1.txt')
-        #madepense.noms_des_fichiers=request.Files['file']
-        madepense.save()
-        madepense.myid = madepense.id
-        madepense.save()
-
-        localpkcc=madepense.structlev3.pk
-        return redirect('depensefull_parcc',pkcc=localpkcc)
-
-    else:
-        return render(request, 'depensefull_new_v2.html', {
-                                                       'structlev1s': structlev1ok ,
-                                                       'structlev2s': structlev2ok,
-                                                       'cptdeplev1s': cptdeplev1s,
-                                                       'domfoncs': domfoncs,
-                         })
-
 
 @login_required
 def depensefull_new_avec_pfi(request,struct3id,pfiid):
@@ -1480,81 +1353,51 @@ def depensefull_new_avec_pfi(request,struct3id,pfiid):
     -----------------------------------------------"""
 
     budget = PeriodeBudget.objects.filter(bloque=False).first()
-
+    error = ''
     if request.method == "POST":
-        struct1 = Structure.objects.filter(id=request.POST.get("structlev1")).first()
-        struct2ref=request.POST.get("structlev2").split("-----")
-        struct2id=struct2ref[0]
-        struct2 = Structure.objects.filter(id=struct2id).first()
+        #struct1 = Structure.objects.filter(id=request.POST.get("structlev1")).first()
+        #struct2 = Structure.objects.filter(id=request.POST.get("structlev2")).first()
+        struct3 = Structure.objects.filter(id=request.POST.get("structlev3")).first()
 
-        struct3ref=request.POST.get("structlev3").split('-----')
-        struct3id=struct3ref[0]
-        struct3 = Structure.objects.filter(id=struct3id).first()
+        cptdev1 = NatureComptable.objects.filter(id=request.POST.get("cptdeplev1")).first()
 
-        cptdev1ref = request.POST.get("cptdeplev1").split('-----')
-        cptdev1id = cptdev1ref[0]
-        cptdev1 = NatureComptable.objects.filter(id=cptdev1id).first()
-
-        domfonc = DomaineFonctionnel.objects.filter(id=request.POST.get("domfonc")).first()
-
-        plfiid=request.POST.get("plfi").split("--")[0]
-        plfi = PlanFinancement.objects.filter(id=plfiid).first()
-
-
-        if request.POST.get("montantdc"):
-            montantdc = request.POST.get("montantdc")
+        if cptdev1 == None:
+            error = error + 'Veuillez choisir une enveloppe valide'
         else:
-            montantdc = 0
+            domfonc = DomaineFonctionnel.objects.filter(id=request.POST.get("domfonc")).first()
 
-        if request.POST.get("montantae"):
-            montantae = request.POST.get("montantae")
-        else:
-            montantae = 0
+            plfi = PlanFinancement.objects.filter(id=request.POST.get("plfi")).first()
 
-        if request.POST.get("montantcp"):
-            montantcp = request.POST.get("montantcp")
-        else:
-            montantcp = 0
+            montantdc = request.POST.get("montantdc") if request.POST.get("montantdc") else 0
+            montantae = request.POST.get("montantae") if request.POST.get("montantae") else 0
+            montantcp = request.POST.get("montantcp") if request.POST.get("montantcp") else 0
+            dateae = request.POST.get("dateae") if request.POST.get("dateae") else ''
+            myfile=request.POST.get("myfile") if request.POST.get("myfile") else ''
+            commentaire = request.POST.get("commentaire") if request.POST.get("commentaire") else ''
 
-        if request.POST.get("dateae"):
-            dateae = request.POST.get("dateae")
-        else:
-            dateae = ""
+            madepense = DepenseFull()
+            #madepense.structlev1 = struct1
+            #madepense.structlev2 = struct2
+            madepense.structlev3 = struct3
+            madepense.cptdeplev1 = cptdev1
+            madepense.domfonc = domfonc
+            madepense.plfi = plfi
+            madepense.montantdc = montantdc
+            madepense.montantae = montantae
+            madepense.dateae = dateae
+            madepense.montantcp = montantcp
+            madepense.commentaire = commentaire
+            madepense.myfile=myfile
+            madepense.periodebudget = budget
+            madepense.creepar = request.user.username
+            madepense.modifiepar = request.user.username
 
-        if request.POST.get("commentaire"):
-            commentaire = request.POST.get("commentaire")
-        else:
-            commentaire = ""
+            madepense.save()
+            madepense.myid = madepense.id
+            madepense.save()
 
-        madepense = DepenseFull()
-        madepense.structlev1 = struct1
-        madepense.structlev2 = struct2
-        madepense.structlev3 = struct3
-        madepense.cptdeplev1 = cptdev1
-        madepense.domfonc = domfonc
-        madepense.plfi = plfi
-        madepense.montantdc = montantdc
-        madepense.montantae = montantae
-        madepense.dateae = dateae
-        madepense.montantcp = montantcp
-        madepense.commentaire = commentaire
-        madepense.periodebudget = budget
-        #username = None
-        #if request.user.is_authenticated():
-        #    username = request.user.username
-        madepense.creepar = request.user.username
-        #madepense.creepar = username
-        madepense.modifiepar = request.user.username
-
-        #handle_uploaded_file(request.Files['file'],'/tmp/file1.txt')
-        #madepense.noms_des_fichiers=request.Files['file']
-        madepense.save()
-        madepense.myid = madepense.id
-        madepense.save()
-
-        localpkcc=madepense.structlev3.pk
-        #return redirect('depensefull_parcc',pkcc=localpkcc)
-        return redirect('liste_pfi_avec_depenses_recettes')
+            localpkcc=madepense.structlev3.pk
+            return redirect('liste_pfi_avec_depenses_recettes')
     else:
         plfi = get_object_or_404(PlanFinancement,pk=pfiid)
         struct3id=" "+struct3id
@@ -1564,96 +1407,149 @@ def depensefull_new_avec_pfi(request,struct3id,pfiid):
 
         domfoncs = DomaineFonctionnel.objects.all().order_by('dfcode') #filter(dfgrpcumul='LOLF_CUMUL')
 
-        return render(request, 'depensefull_new_v3.html', {
+    return render(request, 'depensefull_new_v3.html', {
                                                        'struct1': struct1,
                                                        'struct2': struct2,
                                                        'struct3': struct3,
                                                        'domfoncs': domfoncs,
                                                        'plfin':plfi,
+                                                       'error':error,
                          })
 
 
-
 @login_required
-def recettefull_new_avec_pfi(request,struct3id,pfiid):
+def depensefull_new_avec_pfi_cflink(request,struct3id,pfiid):
     """---------------------------------------------
     Avec le formulaire prérempli .
     -----------------------------------------------"""
 
     budget = PeriodeBudget.objects.filter(bloque=False).first()
+    plfi = get_object_or_404(PlanFinancement,pk=pfiid)
+    struct3 = get_object_or_404(Structure,id=struct3id)
+    domfoncs = DomaineFonctionnel.objects.all().order_by('dfcode') #filter(dfgrpcumul='LOLF_CUMUL')
 
+    error = ''
     if request.method == "POST":
-        struct1 = Structure.objects.filter(id=request.POST.get("structlev1")).first()
-        struct2ref=request.POST.get("structlev2").split("-----")
-        struct2id=struct2ref[0]
-        struct2 = Structure.objects.filter(id=struct2id).first()
-        struct3ref=request.POST.get("structlev3").split('-----')
-        struct3id=struct3ref[0]
-        struct3 = Structure.objects.filter(id=struct3id).first()
+        #struct3 = Structure.objects.filter(id=request.POST.get("structlev3")).first()
 
-        cptdev1ref = request.POST.get("cptdeplev1").split('-----')
-        cptdev1id = cptdev1ref[0]
-        cptdev1 = NatureComptable.objects.filter(id=cptdev1id).first()
+        domfonc = DomaineFonctionnel.objects.filter(id=request.POST.get("domfonc")).first()
 
-        plfiid=request.POST.get("plfi").split("--")[0]
+        cptdev1 = NatureComptable.objects.filter(id=request.POST.get("cptdeplev1")).first()
+        if cptdev1 == None :
+            error = error + 'Veuillez choisir un type d enveloppe et une enveloppe valide'
+        elif not (request.POST.get("dateae")):
+            error = error + 'Veuillez saisir une date d engagement'
+        elif not (request.POST.get("montantdc")):
+            error = error + 'Veuillez saisir un montant DC'
+        elif not (request.POST.get("montantae")):
+            error = error + 'Veuillez saisir le montant de l engagement'
+        elif not (request.POST.get("montantcp")):
+            error = error + 'Veuillez saisir le montant du credit de paiement'
+
+
+        else:
+            domfonc = DomaineFonctionnel.objects.filter(id=request.POST.get("domfonc")).first()
+
+            plfi = PlanFinancement.objects.filter(id=request.POST.get("plfi")).first()
+
+            montantdc = request.POST.get("montantdc") if request.POST.get("montantdc") else 0
+            montantae = request.POST.get("montantae") if request.POST.get("montantae") else 0
+            montantcp = request.POST.get("montantcp") if request.POST.get("montantcp") else 0
+            dateae = request.POST.get("dateae") if request.POST.get("dateae") else ''
+            commentaire = request.POST.get("commentaire") if request.POST.get("commentaire") else ''
+            myfile = request.POST.get("myfile") if request.POST.get("myfile") else ''
+
+            madepense = DepenseFull()
+            madepense.structlev3 = struct3
+            madepense.cptdeplev1 = cptdev1
+            madepense.domfonc = domfonc
+            madepense.plfi = plfi
+            madepense.montantdc = montantdc
+            madepense.montantae = montantae
+            madepense.dateae = dateae
+            madepense.montantcp = montantcp
+            madepense.commentaire = commentaire
+            madepense.myfile = myfile
+            madepense.periodebudget = budget
+            madepense.creepar = request.user.username
+            madepense.modifiepar = request.user.username
+
+            madepense.save()
+            madepense.myid = madepense.id
+            madepense.save()
+
+            localpkcc=madepense.structlev3.pk
+            return redirect('liste_pfi_avec_depenses_recettes')
+
+    return render(request, 'depensefull_new_v3.html', {
+                                                       'struct3': struct3,
+                                                       'domfoncs': domfoncs,
+                                                       'plfin':plfi,
+                                                       'error':error,
+                         })
+
+
+
+@login_required
+def recettefull_new_avec_pfi_cflink(request,struct3id,pfiid):
+    """---------------------------------------------
+    Avec le formulaire prérempli .
+    -----------------------------------------------"""
+
+    budget = PeriodeBudget.objects.filter(bloque=False).first()
+    error = ''
+    if request.method == "POST":
+        struct3 = Structure.objects.filter(id=request.POST.get("structlev3")).first()
+
+        cptdev1 = NatureComptable.objects.filter(id=request.POST.get("cptdeplev1")).first()
+
+        plfiid=request.POST.get("plfi")
         plfi = PlanFinancement.objects.filter(id=plfiid).first()
+        if plfi == None:
+            error = 'Veuillez selectionner un  pfi'
+        elif (cptdev1 == None):
+            error = error + u'Veuillez saisir un type d enveloppe et une enveloppe'
+        elif not (request.POST.get("montantdc")):
+            error = error + u'Veuillez saisir un montant en droit constate'
+        elif not (request.POST.get("montantar")):
+            error = error + u'Veuillez saisir un montant AR'
+        elif not (request.POST.get("montantre")):
+            error = error + u'Veuillez saisir un montant RE'
 
-        if request.POST.get("montantdc"):
-            montantdc = request.POST.get("montantdc")
         else:
-            montantdc = 0
+            montantdc = request.POST.get("montantdc") if request.POST.get("montantdc") else 0
+            montantar = request.POST.get("montantar") if request.POST.get("montantar") else 0
+            montantre = request.POST.get("montantre") if request.POST.get("montantre") else 0
+            commentaire = request.POST.get("commentaire") if request.POST.get("commentaire") else ''
 
-        if request.POST.get("montantar"):
-            montantar = request.POST.get("montantar")
-        else:
-            montantar = 0
+            marecette = RecetteFull()
+            marecette.structlev3 = struct3
+            marecette.cptdeplev1 = cptdev1
 
-        if request.POST.get("montantre"):
-            montantre = request.POST.get("montantre")
-        else:
-            montantre = 0
+            marecette.plfi = plfi
+            marecette.montantdc = montantdc
+            marecette.montantar = montantar
+            marecette.montantre = montantre
+            marecette.commentaire = commentaire
+            marecette.periodebudget=budget
 
-        if request.POST.get("commentaire"):
-            commentaire = request.POST.get("commentaire")
-        else:
-            commentaire = ""
-
-        marecette = RecetteFull()
-        marecette.structlev1 = struct1
-        marecette.structlev2 = struct2
-        marecette.structlev3 = struct3
-        marecette.cptdeplev1 = cptdev1
-
-        marecette.plfi = plfi
-        marecette.montantdc = montantdc
-        marecette.montantar = montantar
-        marecette.montantre = montantre
-        marecette.commentaire = commentaire
-        marecette.periodebudget=budget
-
-        marecette.creepar = request.user.username
-        marecette.modifiepar = request.user.username
-        marecette.save()
-        marecette.myid = marecette.id
-        marecette.save()
-        localpkcp=marecette.structlev3.pk
-        #return redirect('recettefull_parcp',pkcp=localpkcp)
-        return redirect('liste_pfi_avec_depenses_recettes')
+            marecette.creepar = request.user.username
+            marecette.modifiepar = request.user.username
+            marecette.save()
+            marecette.myid = marecette.id
+            marecette.save()
+            localpkcp=marecette.structlev3.pk
+            return redirect('liste_pfi_avec_depenses_recettes')
     else:
         plfi = get_object_or_404(PlanFinancement,pk=pfiid)
-        struct3id=" "+struct3id
-        struct3 = get_object_or_404(Structure,name=struct3id,type=' cf')
-        #print("struct2id: "+str(struct3.myid))
-        struct2 = get_object_or_404(Structure,myid=struct3.parentid)
-        struct1 = get_object_or_404(Structure,myid=struct2.parentid)
+        struct3 = get_object_or_404(Structure,id=struct3id,type=' cf')
 
         #domfoncs = DomaineFonctionnel.objects.all().order_by('dfcode') #filter(dfgrpcumul='LOLF_CUMUL')
         # le fond est calcule a partir de l enveloppe = nature comptable
-        return render(request, 'recettefull_new_v3.html', {
-                                                       'struct1': struct1,
-                                                       'struct2': struct2,
+    return render(request, 'recettefull_new_v3.html', {
                                                        'struct3': struct3,
                                                        'plfin':plfi,
+                                                       'error':error,
                          })
 
 
@@ -1668,15 +1564,15 @@ def depensefull_list(request):
         depstruct = request.POST['depstruct']
         depcomptcompt = request.POST['depcomptcompt']
         if depstruct == "" and depcomptcompt == "" :
-            mydep = DepenseFull.objects.all().order_by('structlev1','structlev2','structlev3')
+            mydep = DepenseFull.objects.all().order_by('structlev3')
         elif depstruct == "" :
-            mydep = DepenseFull.objects.filter ( structure__icontains = depstruct ).order_by('structlev1','structlev2','structlev3')
+            mydep = DepenseFull.objects.filter ( structure__icontains = depstruct ).order_by('structlev3')
         elif depcomptcompt == "" :
-            mydep = DepenseFull.objects.filter ( cptdeplev1__icontains = depcomptcompt ).order_by('structlev1','structlev2','structlev3')
+            mydep = DepenseFull.objects.filter ( cptdeplev1__icontains = depcomptcompt ).order_by('structlev3')
         else:
-            mydep = DepenseFull.objects.filter( structure__icontains = depstruct ).filter( cptdeplev1__icontains = depcomptcompt ).order_by('structlev1','structlev2','structlev3')
+            mydep = DepenseFull.objects.filter( structure__icontains = depstruct ).filter( cptdeplev1__icontains = depcomptcompt ).order_by('structlev3')
     else:
-        mydep = DepenseFull.objects.all().order_by('structlev1','structlev2','structlev3')
+        mydep = DepenseFull.objects.all().order_by('structlev3')
 
     return render(request, 'depensefull_lists.html', {'depenses':mydep})
 
@@ -1686,9 +1582,7 @@ Liste des depenses dans le budget associées à un CC
 ------------------------------------------------------------------- """
 def depensefull_parcc(request,pkcc):
     madep=Structure.objects.get(id=pkcc)
-    #parent1=Structure.objects.filter(myid=madep.parentid).first()
-    #parent2=Structure.objects.filter(myid=parent1.id).first()
-    mydep = DepenseFull.objects.filter (structlev3=madep).order_by('structlev1','structlev2','structlev3')
+    mydep = DepenseFull.objects.filter (structlev3=madep).order_by('structlev3')
     total = DepenseFull.objects.filter (structlev3=madep).aggregate(Sum('montant'))
     totaldc=DepenseFull.objects.filter (structlev3=madep).aggregate(Sum('montantdc'))
     totalcp=DepenseFull.objects.filter (structlev3=madep).aggregate(Sum('montantcp'))
@@ -1703,18 +1597,14 @@ Liste des recettes dans le budget associées à un CP
 ------------------------------------------------------------------- """
 def recettefull_parcp(request,pkcp):
     madep=Structure.objects.get(id=pkcp)
-    #parent1=Structure.objects.filter(myid=madep.parentid).first()
-    #parent2=Structure.objects.filter(myid=parent1.id).first()
-    myrec = RecetteFull.objects.filter (structlev3=madep).order_by('structlev1','structlev2','structlev3')
+    myrec = RecetteFull.objects.filter (structlev3=madep).order_by('structlev3')
     total=RecetteFull.objects.filter (structlev3=madep).aggregate(Sum('montant'))
     totalar=RecetteFull.objects.filter (structlev3=madep).aggregate(Sum('montantar'))
     totalre=RecetteFull.objects.filter (structlev3=madep).aggregate(Sum('montantre'))
     totaldc=RecetteFull.objects.filter (structlev3=madep).aggregate(Sum('montantdc'))
-    lev2 = Structure.objects.get(myid=madep.parentid)
-    lev1 = Structure.objects.get(myid=lev2.parentid)
     return render(request, 'recettefullcp_lists.html', {'recettes':myrec, 'total':total, 'totaldc':totaldc ,
-                                         'totalar':totalar,'totalre':totalre,'pkcp':pkcp,'mastructurelev1':lev1,
-                                         'mastructurelev2':lev2,'mastructurelev3':madep})
+                                         'totalar':totalar,'totalre':totalre,'pkcp':pkcp,
+                                         'mastructurelev3':madep})
 
 
 
@@ -1723,15 +1613,15 @@ def depensefull_listregroup(request):
         depstruct = request.POST['depstruct']
         depcomptcompt = request.POST['depcomptcompt']
         if depstruct == "" and depcomptcompt == "" :
-            mydep = DepenseFull.objects.all().order_by('structlev1','structlev2','structlev3')
+            mydep = DepenseFull.objects.all().order_by('structlev3')
         elif depstruct == "" :
-            mydep = DepenseFull.objects.filter ( structure__icontains = depstruct ).order_by('structlev1','structlev2','structlev3')
+            mydep = DepenseFull.objects.filter ( structure__icontains = depstruct ).order_by('structlev3')
         elif depcomptcompt == "" :
-            mydep = DepenseFull.objects.filter ( cptdeplev1__icontains = depcomptcompt ).order_by('structlev1','structlev2','structlev3')
+            mydep = DepenseFull.objects.filter ( cptdeplev1__icontains = depcomptcompt ).order_by('structlev3')
         else:
-            mydep = DepenseFull.objects.filter( structure__icontains = depstruct ).filter( cptdeplev1__icontains = depcomptcompt ).order_by('structlev1','structlev2','structlev3')
+            mydep = DepenseFull.objects.filter( structure__icontains = depstruct ).filter( cptdeplev1__icontains = depcomptcompt ).order_by('structlev3')
     else:
-        mydep = DepenseFull.objects.all().order_by('structlev1','structlev2','structlev3')
+        mydep = DepenseFull.objects.all().order_by('structlev3')
 
     return render(request, 'depensefull_listsregroup.html', {'depenses':mydep})
 
@@ -1750,10 +1640,10 @@ def total1(self):
 def depensefull_delete(request,pkdep):
     mydep = get_object_or_404( DepenseFull , pk=pkdep )
     if request.method== "POST":
-        form = DepenseForm(request.POST, instance=mydep)
-        if form.is_valid():
-            mydep.delete()
-            return redirect('depensefull_list')
+        form = DepenseFullForm(request.POST, instance=mydep)
+        #if form.is_valid():
+        mydep.delete()
+        return redirect('depensefull_list')
     else:
         form = DepenseFullForm( instance=mydep )
         return render(request, 'depensefull_delete.html', {'form': form})
@@ -1762,10 +1652,11 @@ def depensefull_delete2(request,pkdep):
     mydep = get_object_or_404( DepenseFull , pk=pkdep )
     if request.method== "POST":
         localpkcc=mydep.structlev3.pk
-        form = DepenseForm(request.POST, instance=mydep)
-        if form.is_valid():
-            mydep.delete()
-            return redirect('depensefull_parcc', pkcc=localpkcc )
+        form = DepenseFullForm(request.POST, instance=mydep)
+        #if form.is_valid():
+        mydep.delete()
+            #return redirect('depensefull_parcc', pkcc=localpkcc )
+        return redirect('liste_pfi_avec_depenses_recettes')
     else:
         form = DepenseFullForm( instance=mydep )
         return render(request, 'depensefull_delete2.html', {'form': form})
@@ -1918,9 +1809,7 @@ def ajax_get_enveloppe_decalage(request,pkstr1):
 #Depenses Ajax find structure level 2 from level1
 def ajax_add_todo1(request,pkstr1):
     if request.is_ajax():
-        #print("called by ajax")
         myid=Structure.objects.get(id=pkstr1).myid
-        #print("thekey:"+myid)
         struct2qset=Structure.objects.all().filter(parentid=myid).order_by('name')
 
         structlev2ok = []
@@ -1930,13 +1819,10 @@ def ajax_add_todo1(request,pkstr1):
 
 
         todo_items=[]
-        #todo_items=['test 1', 'test 2',]
-        #todo_items.append('toto')
         for s in structlev2ok:
             todo_items.append(str(s.id)+"-----"+str(s.name)+"-----"+str(s.label))
         print(todo_items)
         data = json.dumps(todo_items)
-        #data=json.dumps(struct2qset)
         return HttpResponse(data, content_type='application/json')
     else:
         raise Http404
@@ -1964,14 +1850,10 @@ def ajax_recadd_todo1(request,pkstr1):
 
 #Depenses ajax find struct level3 from level2
 def ajax_findstruct_lev3(request,pkstr1):
-    #print ("calling_add_todo1")
     if request.is_ajax():
-        #print("called by ajax")
         myid=Structure.objects.get(id=pkstr1).myid
-        #print("recherche des fils de thekey:"+myid)
         struct2qset=Structure.objects.all().filter(parentid=myid).order_by('name')
         todo_items=[]
-        #print("recherche des fils de thekey:"+myid+ " nb trouves:" + str(len(struct2qset)))
         structlev3ok = []
         for j in struct2qset:
             if is_authorised(request.user.username,j.name):
@@ -1979,7 +1861,6 @@ def ajax_findstruct_lev3(request,pkstr1):
 
         for s in structlev3ok:
             todo_items.append(str(s.id)+"-----"+str(s.name)+"-----"+str(s.label))
-        #print(todo_items)
         data = json.dumps(todo_items)
         return HttpResponse(data, content_type='application/json')
     else:
@@ -1987,20 +1868,14 @@ def ajax_findstruct_lev3(request,pkstr1):
 
 #Recettes ajax find struct level3 from level2
 def ajax_recfindstruct_lev3(request,pkstr1):
-    #print ("calling_add_todo1")
     if request.is_ajax():
-        #print("called by ajax")
         myid=Structure.objects.get(id=pkstr1).myid
-        #print("thekey:"+myid)
         struct2qset=Structure.objects.all().filter(parentid=myid).order_by('name')
         todo_items=[]
-        #todo_items=['test 1', 'test 2',]
-        #todo_items.append('toto')
 
         structlev3ok = []
         for j in struct2qset:
             if is_authorised(request.user.username,j.name):
-                #print('testons:' + request.user.username+"::"+j.name)
                 structlev3ok.append(j)
 
         for s in structlev3ok:
@@ -2014,14 +1889,11 @@ def ajax_recfindstruct_lev3(request,pkstr1):
 
 #Depenses ajax_add_cptdev_lev2
 def ajax_add_cptdev_lev2(request,pkcpt):
-    #print ("calling_add_cptdev")
     if request.is_ajax():
-        #print("called by ajax cptdev")
         struct2qset=NatureComptable.objects.all().filter(ccparent=pkcpt)
         todo_items=[]
         for s in struct2qset:
             todo_items.append(str(s.ccid)+"-----"+str(s.ccname)+"-----"+str(s.cclabel))
-        #print(todo_items)
         data = json.dumps(todo_items)
         return HttpResponse(data, content_type='application/json')
     else:
@@ -2030,14 +1902,11 @@ def ajax_add_cptdev_lev2(request,pkcpt):
 
 #Recettes ajax_add_cptdev_lev2
 def ajax_recadd_cptdev_lev2(request,pkcpt):
-    #print ("calling_add_cptdev")
     if request.is_ajax():
-        #print("called by ajax cptdev")
         struct2qset=NatureComptable.objects.all().filter(ccparent=pkcpt)
         todo_items=[]
         for s in struct2qset:
             todo_items.append(str(s.ccid)+"-----"+str(s.ccname)+"-----"+str(s.cclabel))
-        #print(todo_items)
         data = json.dumps(todo_items)
         return HttpResponse(data, content_type='application/json')
     else:
@@ -2046,9 +1915,7 @@ def ajax_recadd_cptdev_lev2(request,pkcpt):
 
 #Depenses ajax find origine des fonds
 def ajax_findorigfond_lev2(request,pkor):
-    #print ("calling_findorigfond")
     ofid=OrigineFonds.objects.get(id=pkor).ofid
-    #print ("ofid :"+str(ofid))
     if request.is_ajax():
         qset=OrigineFonds.objects.all().filter(ofparent=ofid)
         todo_items=[]
@@ -2061,9 +1928,7 @@ def ajax_findorigfond_lev2(request,pkor):
 
 #Recettes ajax find origine des fonds
 def ajax_recfindorigfond_lev2(request,pkor):
-    #print ("calling_findorigfond")
     ofid=OrigineFonds.objects.get(id=pkor).ofid
-    #print ("ofid :"+str(ofid))
     if request.is_ajax():
         qset=OrigineFonds.objects.all().filter(ofparent=ofid)
         todo_items=[]
@@ -2098,18 +1963,6 @@ def ajax_more_todo1(request):
 #---------------------------------------------------------------------"""
 #---
 
-def recettefull_new(request):
-    if request.method == "POST":
-        form = RecetteFullForm(request.POST)
-        if form.is_valid():
-            newrecette = form.save(commit=False)
-            newrecette.creepar = request.user.username
-            newrecette.save()
-            return redirect('recettefull_list')
-    else:
-        form = RecetteFullForm()
-    return render(request, 'recettefull_new.html', {'form': form})
-
 
 def recettefull_new3(request):
     if request.method == "POST":
@@ -2122,85 +1975,6 @@ def recettefull_new3(request):
     else:
         form = RecetteFullForm()
     return render(request, 'recettefull_new3.html', {'form': form})
-
-
-def recettefull_new2(request):
-
-    structlev1s = Structure.objects.all().filter(type=" cf",parentid="0")
-    structlev2s = ""
-    cptdeplev1s = "" 
-    cptdeplev2s = ""
-    domfoncs = ""
-    plfis = "" 
-    budget = PeriodeBudget.objects.all().filter(bloque=False).first()
-
-    if request.method == "POST":
-        struct1 = Structure.objects.filter(id=request.POST.get("structlev1")).first()
-        struct2ref=request.POST.get("structlev2").split("-----")
-        struct2id=struct2ref[0]
-        struct2 = Structure.objects.filter(id=struct2id).first()
-        struct3ref=request.POST.get("structlev3").split('-----')
-        struct3id=struct3ref[0]
-        struct3 = Structure.objects.filter(id=struct3id).first()
-
-        cptdev1ref = request.POST.get("cptdeplev1").split('-----')
-        cptdev1id = cptdev1ref[0]
-        cptdev1 = NatureComptable.objects.filter(id=cptdev1id).first()
-
-        plfiid=request.POST.get("plfi").split("--")[0]
-        plfi = PlanFinancement.objects.filter(id=plfiid).first()
-
-        if request.POST.get("montant"):
-            montant = request.POST.get("montant")
-        else:
-            montant = 0
-
-        if request.POST.get("montantdc"):
-            montantdc = request.POST.get("montantdc")
-        else:
-            montantdc = 0
-
-        if request.POST.get("montantar"):
-            montantar = request.POST.get("montantar")
-        else:
-            montantar = 0
-
-        if request.POST.get("montantre"):
-            montantre = request.POST.get("montantre")
-        else:
-            montantre = 0
-
-        if request.POST.get("commentaire"):
-            commentaire = request.POST.get("commentaire")
-        else:
-            commentaire = ""
-
-        marecette = RecetteFull()
-        marecette.structlev1 = struct1
-        marecette.structlev2 = struct2
-        marecette.structlev3 = struct3
-        marecette.cptdeplev1 = cptdev1
-
-        marecette.plfi = plfi
-        marecette.montantdc = montantdc
-        marecette.montantar = montantar
-        marecette.montantre = montantre
-        marecette.commentaire = commentaire
-        marecette.periodebudget=budget
-
-        marecette.creepar = request.user.username
-        marecette.modifiepar = request.user.username
-        marecette.save()
-        marecette.myid = marecette.id
-        marecette.save()
-        localpkcp=marecette.structlev3.pk
-
-        return redirect('recettefull_parcp',pkcp=localpkcp)
-    else:
-        return render(request, 'recettefull_new_v2.html', {'structlev1s': structlev1s ,'structlev2s': structlev2s,
-                                                           'cptdeplev1s': cptdeplev1s,
-                                                           'domfoncs': domfoncs , 
-                                                           'plfis': plfis})
 
 
 def recettefull_list(request):
@@ -2320,10 +2094,11 @@ def recettefull_edit2(request,pkrec):
 def depensefull_edit2(request,pkdep):
     mydep = get_object_or_404( DepenseFull , pk=pkdep )
     if request.method == "POST":
-        mydep.montant=request.POST['montant']
-        mydep.montantdc=request.POST['montantdc']
-        mydep.montantcp=request.POST['montantcp']
-        mydep.montantae=request.POST['montantae']
+        mydep.montantdc = request.POST['montantdc'] if request.POST['montantdc'] else 0
+        mydep.montantcp = request.POST['montantcp'] if request.POST['montantcp'] else 0
+        mydep.montantae = request.POST['montantae'] if request.POST['montantae'] else 0
+        mydep.myfile = request.POST['myfile'] if request.POST['myfile'] else ''
+        mydep.commentaire = request.POST['commentaire'] if request.POST['commentaire'] else ''
         mydep.modifiepar = request.user.username
         mydep.save()
         #localpkcp=myrec.structlev3.pk
@@ -2336,4 +2111,117 @@ def depensefull_edit2(request,pkdep):
 
 
 
+def baseformsetdepensefullavec_pfi_cflink(request,struct3id,pfiid):
 
+    isfleche=PlanFinancement.objects.get(id=pfiid).fleche
+
+    if isfleche :
+        DepenseFullFormSet = modelformset_factory(DepenseFull, form=DepenseFullFormPfifleche, formset=BaseDepenseFullFormSet,exclude=[],extra=3)
+    else:
+        DepenseFullFormSet = modelformset_factory(DepenseFull, form=DepenseFullFormPfinonfleche, formset=BaseDepenseFullFormSet,exclude=[],extra=3)
+
+    budget=current_budget()
+    initial=''
+    depense='dep'
+    depensesdupfi = DepenseFull.objects.filter(plfi_id=pfiid,periodebudget=budget)
+
+    if request.method == 'POST':
+        myformset = DepenseFullFormSet(request.POST)
+        if myformset.is_valid():
+            instances = myformset.save()
+            for dep in depensesdupfi:
+                if not( dep in instances) :
+                    dep.delete()
+                 
+            for instance in instances:
+                if not instance.creepar :
+                     instance.creepar=request.user.username
+                instance.modifiepar=request.user.username
+                instance.structlev3 = get_object_or_404( Structure , pk=struct3id )
+                instance.plfi = get_object_or_404( PlanFinancement , pk=pfiid )
+                instance.periodebudget = budget
+                instance.save()
+                instance.myid=instance.id
+                instance.save()
+
+            return redirect('liste_pfi_avec_depenses_recettes')
+        else:
+            depensefull_formset = myformset
+
+    else:
+        depensefull_formset = DepenseFullFormSet(initial=initial,
+                                           queryset=DepenseFull.objects.filter(plfi_id=pfiid,periodebudget=budget))
+
+    plfi = get_object_or_404(PlanFinancement,pk=pfiid)
+    struct3 =  get_object_or_404(Structure,id=struct3id)
+    domfoncs = DomaineFonctionnel.objects.all().order_by('dfcode')
+    isfleche=PlanFinancement.objects.get(id=pfiid).fleche
+    naturecompta = NatureComptable.objects.filter(pfifleche=isfleche,nctype=depense)
+
+    context = {
+               'depensefull_formset': depensefull_formset,
+               'myplfi': plfi,
+               'mybudget':budget,
+               'mystructure':struct3,
+               'domfoncs':domfoncs,
+        }
+
+    return render(request, 'depensefull_formset.html',context)
+
+
+
+def baseformsetrecettefullavec_pfi_cflink(request,struct3id,pfiid):
+
+    isfleche=PlanFinancement.objects.get(id=pfiid).fleche
+
+    if isfleche : 
+        RecetteFullFormSet = modelformset_factory(RecetteFull, form=RecetteFullFormPfifleche, formset=BaseRecetteFullFormSet,exclude=[],extra=3)
+    else:
+        RecetteFullFormSet = modelformset_factory(RecetteFull, form=RecetteFullFormPfinonfleche, formset=BaseRecetteFullFormSet,exclude=[],extra=3)
+
+
+    budget=current_budget()
+    initial=''
+    recettesdupfi = RecetteFull.objects.filter(plfi_id=pfiid,periodebudget=budget)
+
+    if request.method == 'POST':
+        myformset = RecetteFullFormSet(request.POST)
+        if myformset.is_valid():
+            instances = myformset.save()
+            for rec in recettesdupfi:
+                if not( rec in instances) :
+                    rec.delete()
+
+            for instance in instances:
+                if not instance.creepar :
+                     instance.creepar=request.user.username
+                instance.modifiepar=request.user.username
+                instance.structlev3 = get_object_or_404( Structure , pk=struct3id )
+                instance.plfi = get_object_or_404( PlanFinancement , pk=pfiid )
+                instance.periodebudget = budget
+                instance.save()
+                instance.myid=instance.id
+                instance.save()
+
+            return redirect('liste_pfi_avec_depenses_recettes')
+        else:
+            recettefull_formset = myformset
+
+    else:
+        recettefull_formset = RecetteFullFormSet(initial=initial,
+                                           queryset=RecetteFull.objects.filter(plfi_id=pfiid,periodebudget=budget))
+
+    plfi = get_object_or_404(PlanFinancement,pk=pfiid)
+    struct3 =  get_object_or_404(Structure,id=struct3id)
+    domfoncs = DomaineFonctionnel.objects.all().order_by('dfcode')
+
+    context = {
+               'recettefull_formset': recettefull_formset,
+               'myplfi': plfi,
+               'mybudget':budget,
+               'mystructure':struct3,
+               'domfoncs':domfoncs,
+        }
+
+    return render(request, 'recettefull_formset.html',context)
+ 

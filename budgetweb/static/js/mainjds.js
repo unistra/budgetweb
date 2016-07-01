@@ -69,12 +69,13 @@ function populatecptdeplev1(){
         mychoice=mychoices[0]
 
         thechosenenveloppe=$("#cptdeplev1type").find('option:selected').val();
+        $("#cptdeplev1").html('');
+        $("#cptdeplev1").append('<option value="0"> Choisissez une enveloppe</option>');
 
         $.ajax({
             url : "/ajax/ajax_add_enveloppe_depense/"+mychoice+"/"+thechosenenveloppe+"/",
             type:'GET',
             success: function(data) {
-                $("#cptdeplev1").html('');
                 var monsplit;
                 var mylabel;
                 var myseparator;
@@ -85,6 +86,7 @@ function populatecptdeplev1(){
                     $("#cptdeplev1").append('<option value=' + monsplit[0] + '>' + mylabel + '</option>');
                 }
            }})
+          $("#cptdeplev1").trigger("change");
 }
 
 
@@ -92,19 +94,20 @@ function populatecptdeplev1type(){
         thechoice=$("#plfi").find('option:selected').val();
         mychoices=thechoice.split("-----")
         mychoice=mychoices[0]
+        $("#cptdeplev1type").html('');
+        $("#cptdeplev1type").append('<option value="0"> Choisissez un type d enveloppe</option>');
+
         $.ajax({
             url : "/ajax/ajax_add_enveloppetype_depense/"+mychoice+"/",
             type:'GET',
             success: function(data) {
-                $("#cptdeplev1").html('');
-                $("#cptdeplev1type").html('');
-                $("#displaycompte").html('');
-
                 for( i = 0; i<data.length;i++){
-                    if ( i==0 ) {$("#cptdeplev1type").append('<option value=' + data[i] + ' selected >' + data[i] + '</option>');}
-                           else {$("#cptdeplev1type").append('<option value=' + data[i] + '>' + data[i] + '</option>');}
+                    $("#cptdeplev1type").append('<option value=' + data[i] + '>' + data[i] + '</option>');
                 }
            }})
+           $("#cptdeplev1").html('');
+           $("#displaycompte").html('');
+           $("#cptdeplev1type").trigger("change");
 }
 
 

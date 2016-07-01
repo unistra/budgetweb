@@ -120,7 +120,7 @@ class DomaineFonctionnel(models.Model):
 Gestion de la hiérarchie des Objets CF/CP/CC. En cours de précisions
 ----------------------------------------------------------------"""
 class Structure(models.Model):
-    myid = models.CharField(max_length=100,verbose_name=u'Code')
+    myid = models.CharField(max_length=100, default='',blank=True,verbose_name=u'Code')
     type = models.CharField(max_length=100,verbose_name=u'Type')
     name = models.CharField(max_length=100,verbose_name=u'Libellé court')
     label = models.CharField(max_length=100,verbose_name=u'Libellé long')
@@ -132,11 +132,12 @@ class Structure(models.Model):
     ordre = models.CharField(max_length=100,verbose_name=u'Ordre')
     niv = models.CharField(max_length=100,verbose_name=u'Niveau')
     bloq = models.CharField(max_length=100,verbose_name=u'Bloqué')
-    modifdate = models.CharField(max_length=100,
-                      verbose_name=u'Date de modification')
+    modifdate = models.CharField(max_length=100,default="", verbose_name=u'Date de modification')
     modifpar = models.CharField(max_length=100,verbose_name=u'Modifié par')
     dfmc = models.CharField(max_length=100,verbose_name=u'DFMC')
     fdr = models.CharField(max_length=100,verbose_name=u'FDR')
+    ccassoc = models.CharField(max_length=100,blank=True , null = True,default="",verbose_name=u'CC associé')
+    cpassoc = models.CharField(max_length=100,blank=True , null = True,default="",verbose_name=u'CP associé')
 
     class Meta: ordering = ['name']
 
@@ -150,7 +151,7 @@ Gestion des Plans de financement. En cours de précisions
 #myid : code court pour l operation
 #name : designation de l operation
 class PlanFinancement(models.Model):
-    myid = models.CharField(max_length=100,verbose_name=u'Code court')
+    myid = models.CharField(max_length=100, default='',blank=True,verbose_name=u'Code court')
     name = models.CharField(max_length=100,verbose_name=u'Libellé')
     eotp = models.CharField(max_length=100,
                         verbose_name=u'Code court de l\'eotp')
@@ -161,7 +162,7 @@ class PlanFinancement(models.Model):
     modifiele = models.DateTimeField(auto_now = True, blank=True,
                         verbose_name=u'Date de modification')
     modifiepar= models.CharField (max_length = 100 , blank=True , null = True,
-                        verbose_name=u'Date de modification')
+                        verbose_name=u'Modification par')
     societe = models.CharField(max_length=100, default="",
                         verbose_name=u'Société')
     cfassoc = models.CharField(max_length=100,default="",
@@ -176,7 +177,8 @@ class PlanFinancement(models.Model):
 
     cfassoclink = models.ForeignKey('Structure', blank=True ,
                         null=True,verbose_name=u'Lien direct vers le CF')
- 
+
+    class Meta: ordering = ['name'] 
 
     def __str__(self):
         return ("PFI:"+self.myid + " -- Eotp:" + self.eotp)
@@ -187,13 +189,9 @@ class PlanFinancement(models.Model):
 Gestion des Depenses. En cours de précisions
 ----------------------------------------------"""
 class DepenseFull ( models.Model ):
-    myid = models.CharField(max_length=100)
-    structlev1 = models.ForeignKey ('Structure',blank=True, null=True,
-                        related_name='structlev1')
-    structlev2 = models.ForeignKey ('Structure',blank=True, null=True,
-                        related_name='structlev2')
+    myid = models.CharField(max_length=100, default='',blank=True)
     structlev3 = models.ForeignKey ('Structure',blank=True, null=True,
-                        related_name='structlev3')
+                        related_name='depensestructlev3')
 
     cptdeplev1 = models.ForeignKey ('NatureComptable', blank=True , null=True,
                         related_name='depenses',verbose_name='Nature comptable')
@@ -212,12 +210,12 @@ class DepenseFull ( models.Model ):
                         blank = True , null = True )
     dateae = models.DateField( blank = True , null = True )
     commentaire = models.CharField (max_length = 100 , blank=True , null = True)
-    myfile =models.TextField(validators=[URLValidator()])
+    myfile =models.TextField(validators=[URLValidator()],blank=True)
     periodebudget = models.ForeignKey ('PeriodeBudget', blank=True ,
                         null=True, related_name='periodebudget1')
     creele = models.DateTimeField(auto_now_add = True,blank=True)
     creepar = models.CharField (max_length = 100 , blank=True , null = True)
-    modifiele = models.DateTimeField(auto_now = True, blank=True)
+    modifiele = models.DateTimeField(auto_now = True, blank=True, verbose_name=u'Date de modification')
     modifiepar= models.CharField (max_length = 100 , blank=True , null = True)
 
 
@@ -226,11 +224,7 @@ class DepenseFull ( models.Model ):
 Gestion des Recettes. En cours de précisions
 ----------------------------------------------"""
 class RecetteFull ( models.Model ):
-    myid = models.CharField(max_length=100)
-    structlev1 = models.ForeignKey ('Structure',blank=True, null=True,
-                       related_name='recstructlev1')
-    structlev2 = models.ForeignKey ('Structure',blank=True, null=True,
-                       related_name='recstructlev2')
+    myid = models.CharField(max_length=100, default='',blank=True)
     structlev3 = models.ForeignKey ('Structure',blank=True, null=True,
                        related_name='recstructlev3')
 
@@ -252,13 +246,12 @@ class RecetteFull ( models.Model ):
 
     commentaire = models.CharField (max_length = 100 , blank=True , null = True)
 
-#    myfile = forms.FileField()
-    myfile =models.TextField(validators=[URLValidator()])
+    myfile =models.TextField(validators=[URLValidator()],blank=True)
     periodebudget = models.ForeignKey ('PeriodeBudget', blank=True , null=True,
                        related_name='periodebudget2')
     creele = models.DateTimeField(auto_now_add = True, blank =True)
     creepar = models.CharField (max_length = 100 , blank=True , null = True)
-    modifiele = models.DateTimeField(auto_now = True,blank=True)
+    modifiele = models.DateTimeField(auto_now = True,blank=True, verbose_name=u'Date de modification')
     modifiepar= models.CharField (max_length = 100 , blank=True , null = True)
 
 

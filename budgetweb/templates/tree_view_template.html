@@ -6,8 +6,8 @@
                      {% regroup reponse.planfinancement_set.all by myid as pfi_list %}
                            {% for thepfi in pfi_list %}
                               <div class="container">
-                                <a href="#bbfpfi{{ thepfi.grouper }}{{ forloop.counter0 }}" class="btn btn-info" data-toggle="collapse">{{ thepfi.grouper }}</a>
-                                  <div id="bbfpfi{{ thepfi.grouper }}{{ forloop.counter0 }}" class="collapse">
+                                <a href="#bbfpfi{{reponse.id}}{{ thepfi.grouper }}{{ forloop.counter0 }}" class="btn btn-info" data-toggle="collapse">{{ thepfi.grouper }}</a>
+                                  <div id="bbfpfi{{reponse.id}}{{ thepfi.grouper }}{{ forloop.counter0 }}" class="collapse">
 
                                <TABLE id="bbf">
                                <thead>
@@ -39,8 +39,7 @@
                                    <TD> {{ reponse.depensefull_set.montant }}  </TD>
                                </TR>
                                <br>
-                               <a href="{% url 'depensefull_new2' %}" class="top-menu"> Nouvelle d&eacutepense <span class="glyphicon glyphicon-plus"></span></a>
-                               <a href="{% url 'depensefull_new_avec_pfi' pfiid=reponse.id struct3id=reponse.cfassoc %}" class="top-menu"> Nouvelle d&eacutepense <span class="glyphicon glyphicon-plus"></span></a>
+                               <a href="{% url 'depensefull_new_avec_pfi_cflink' pfiid=reponse.id struct3id=reponse.cfassoclink.id %}" class="top-menu"> Nouvelle d&eacutepense <span class="glyphicon glyphicon-plus"></span></a>
                                <br>
 
                                   {% if reponse.depensefull_set.all %}
@@ -93,8 +92,7 @@
                                     {% endif %}
 
                                   <br>
-                                  <a href="{% url 'recettefull_new2' %}" class="top-menu"> Nouvelle recette<span class="glyphicon glyphicon-plus"></span></a>
-                                  <a href="{% url 'recettefull_new_avec_pfi' pfiid=reponse.id struct3id=reponse.cfassoc %}" class="top-menu"> Nouvelle recette <span class="glyphicon glyphicon-plus"></span></a>
+                                  <a href="{% url 'recettefull_new_avec_pfi_cflink' pfiid=reponse.id struct3id=reponse.cfassoclink.id %}" class="top-menu"> Nouvelle recette <span class="glyphicon glyphicon-plus"></span></a>
                                   <br>
                                   {% if reponse.recettefull_set.all %}
 
@@ -166,9 +164,11 @@
 
     {%if reponse.fils.all %}
          {%for ch in reponse.fils.all %}
-              {%with reponse=ch template_name="tree_view_template.html" %}
-                   {%include template_name%}
-              {%endwith%}
+             {% if ch.type == " cf" %}
+                {%with reponse=ch template_name="tree_view_template.html" %}
+                     {%include template_name%}
+                {%endwith%}
+             {% endif %}
          {%endfor%}
          </ul>
     {%else%}

@@ -74,41 +74,38 @@ function populatecptdeplev1(){
         //mychoices=thechoice.split("-----")
         //mychoice=mychoices[0]
         thechosenenveloppe=$("#cptdeplev1type").find('option:selected').val();
+        $("#cptdeplev1").html('');
+        $("#cptdeplev1").append('<option value="0"> Choisissez une enveloppe</option>');
 
         $.ajax({
             url : "/ajax/ajax_add_enveloppe/"+thechoice+"/"+thechosenenveloppe+"/",
             type:'GET',
             success: function(data) {
-                $("#cptdeplev1").html('');
                 var monsplit;
                 var mylabel;
                 var myseparator;
                 myseparator="-----"
-
                 for( i = 0; i<data.length;i++){
                     monsplit = data[i].split(myseparator)
                     mylabel = monsplit[1]+myseparator+monsplit[2]
-                    if (i==0) {
-                            $("#cptdeplev1").append('<option value=' + monsplit[0] + ' selected="selected" >' + mylabel + '</option>');
-                             } else {
-                            $("#cptdeplev1").append('<option value=' + monsplit[0] + '>' + mylabel + '</option>');
-                         }
+                    $("#cptdeplev1").append('<option value=' + monsplit[0] + '>' + mylabel + '</option>');
                 }
            }})
            //$("#cptdeplev1").selectedIndex=0;
           $("#cptdeplev1").trigger("change"); 
 }
 
+
 function populatecptdeplev1type(){
         thechoice=$("#plfi").find('option:selected').val();
         //mychoices=thechoice.split("-----")
         //mychoice=mychoices[0]
         $("#cptdeplev1type").html('');
+        $("#cptdeplev1type").append('<option value="0"> Choisissez un type d enveloppe</option>');
         $.ajax({
             url : "/ajax/ajax_add_enveloppetype/"+thechoice+"/",
             type:'GET',
             success: function(data) {
-                $("#cptdeplev1type").append('<option> Choisissez une enveloppe</option>');
                 for( i = 0; i<data.length;i++){
                                  $("#cptdeplev1type").append('<option value=' + data[i] + '>' + data[i] + '</option>');
                 }
