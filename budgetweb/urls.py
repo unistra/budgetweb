@@ -15,11 +15,6 @@ urlpatterns = [
     url(r'^accounts/logout/$', 'django_cas.views.logout'),
     # Examples:
     url(r'^$', home, name='home'),
-    url(r'^index2/$', views.index2),
-    url(r'^index3/$', views.index3),
-    url(r'^index3b/$', views.index3b),
-    url(r'^index4/$', views.index4),
-    url(r'^index5/$', views.index5),
 # classe Authorisation
     url(r'^authorisation/new/$', views.authorisation_new, name='authorisation_new'),
     url(r'^authorisation/$', views.authorisation_list,name='authorisation_list'),

@@ -48,24 +48,6 @@ def home(request):
     return render_to_response('base.html')
 
 
-def index2(request):
-    return render(request, 'tests/emptygrid.html')
-
-
-def index3(request):
-    return render(request, 'tests/notemptygrid.html')
-
-def index3b(request):
-    return render(request, 'tests/notemptygrid-b.html')
-
-
-def index4(request):
-    return render(request, 'tests/notemptygrid2.html')
-
-def index5(request):
-    return render(request, 'tests/notemptygrid3.html')
-
-
 def current_budget():
     return PeriodeBudget.objects.filter(bloque=False).first() if PeriodeBudget.objects.filter(bloque=False).first() else 'Pas de période de budget ouverte'
 
@@ -76,8 +58,9 @@ def current_budget():
 
 """-------------------------------------------------
 Fonction qui affiche la liste des autorisations
-Le formulaire à un searchform pour restreindre l'affichage
+Le formulaire à un searchform pour restreindre l affichage
 -------------------------------------------------"""
+@login_required
 def authorisation_list(request):
     if request.method== "POST":
         user = request.POST['name']
@@ -99,6 +82,7 @@ def authorisation_list(request):
 """-------------------------------------------------
 Fonction qui renvoie la liste des autorisations pour un utilisateur
 -------------------------------------------------"""
+@login_required
 def authorisation_user(request,myuser=""):
     mytauth=Authorisation.objects.filter(username=myuser)
     return render(equest, 'authorisation_lists.html', {'Authorisation':myauth})
@@ -110,6 +94,7 @@ un utilisateur précis
 un objet précis
 Fonction qui renvoie 0 si pas d'autorisation pour un objet
 -------------------------------------------------"""
+@login_required
 def is_authorised(myuser, myobject):
     # chercher les autorisations dans la table
     # si il y a * dans la table, ok tout
@@ -148,6 +133,7 @@ def is_authorised(myuser, myobject):
 """-------------------------------------------------
 Effacer une autorisation dans la table des autorisations
 -------------------------------------------------"""
+@login_required
 def authorisation_delete(request,pkauth):
     myauth = get_object_or_404(Authorisation,pk=pkauth)
     if request.method== "POST":
@@ -166,6 +152,7 @@ def authorisation_delete(request,pkauth):
 """-------------------------------------------------
 Afficher une autorisation
 -------------------------------------------------"""
+@login_required
 def authorisation_detail(request,pkauth):
     myauth = get_object_or_404(Authorisation, pk=pkauth)
     return render(request, 'authorisation_detail.html', {'Authorisation':myauth})
@@ -174,6 +161,7 @@ def authorisation_detail(request,pkauth):
 """-------------------------------------------------
 Ajout d'une autorisation
 -------------------------------------------------"""
+@login_required
 def authorisation_new(request):
     if request.method == "POST":
         form = AuthorisationForm(request.POST)
@@ -193,6 +181,7 @@ def authorisation_new(request):
 """-------------------------------------------------
 Import du fichier csv - séparateur ;
 -------------------------------------------------"""
+@login_required
 def authorisation_importcsv(request):
     if request.method == "POST":
         if request.POST.get("lechemin"):
@@ -220,6 +209,7 @@ def authorisation_importcsv(request):
 """-------------------------------------------------
 Vider la table des autorisations
 -------------------------------------------------"""
+@login_required
 def authorisation_deleteall(request):
     if request.method == "POST":
         html=[]
@@ -247,6 +237,7 @@ def authorisation_deleteall(request):
 """-------------------------------------------------
 Créer un nouveau budget
 -------------------------------------------------"""
+@login_required
 def periodebudget_new(request):
     if request.method == "POST":
         form = PeriodeBudgetForm(request.POST)
@@ -265,6 +256,7 @@ def periodebudget_new(request):
 Affichage des éléments de la base budget
 avec un searchform pour restreindre l'affichage
 -------------------------------------------------"""
+@login_required
 def periodebudget_list(request):
     if request.method == "POST":
         ccname = request.POST['ccname']
@@ -286,6 +278,7 @@ def periodebudget_list(request):
 """-------------------------------------------------
 Effacer un budget
 -------------------------------------------------"""
+@login_required
 def periodebudget_delete(request,pkpb):
     mycc = get_object_or_404( Periodebudget,pk=pkpb )
     if request.method== "POST":
@@ -299,7 +292,7 @@ def periodebudget_delete(request,pkpb):
         form = PeriodeBudgetForm( instance=mycc )
         return render(request, 'periodebudget_delete.html', {'form': form})
 
-
+@login_required
 def periodebudget_detail( request,pkpb ):
     """-------------------------------------------------
     Afficher une période de budget
@@ -308,6 +301,7 @@ def periodebudget_detail( request,pkpb ):
     return render(request, 'periodebudget_detail.html', {'reponse':mycc})
 
 
+@login_required
 def comptebudget_new(request):
     """------------------------------------------------
     new comptebudgetaire 
@@ -323,6 +317,7 @@ def comptebudget_new(request):
     return render(request, 'comptebudget_new.html', {'form': form})
 
 
+@login_required
 def comptebudget_list(request):
     """------------------------------------------------
     list comptebudgetaire 
@@ -339,6 +334,7 @@ def comptebudget_list(request):
     return render(request, 'comptebudget_lists.html', {'reponses':mycc})
 
 
+@login_required
 def comptebudget_delete(request,pkcc):
     """------------------------------------------------
     delete comptebudgetaire 
@@ -355,8 +351,7 @@ def comptebudget_delete(request,pkcc):
         return render(request, 'comptebudget_delete.html', {'form': form})
 
 
-#ComptaNature,FondBudgetaire
-
+@login_required
 def comptanature_new(request):
     """------------------------------------------------
     new comptanature 
@@ -372,6 +367,7 @@ def comptanature_new(request):
     return render(request, 'comptanature_new.html', {'form': form})
 
 
+@login_required
 def comptanature_edit(request,pk):
     """------------------------------------------------------------------
     Editer une comptanature
@@ -387,6 +383,7 @@ def comptanature_edit(request,pk):
     return render(request, 'comptanature_edit.html', {'form': form})
 
 
+@login_required
 def comptanature_list(request):
     """------------------------------------------------
     list comptanature 
@@ -403,6 +400,7 @@ def comptanature_list(request):
     return render(request, 'comptanature_lists.html', {'reponses':mycc})
 
 
+@login_required
 def comptanature_delete(request,pkcb):
     """------------------------------------------------
     delete comptanature 
@@ -420,6 +418,7 @@ def comptanature_delete(request,pkcb):
 
 
 #----------------
+@login_required
 def fondbudgetaire_new(request):
     """------------------------------------------------
     new fondbudgetaire 
@@ -435,6 +434,7 @@ def fondbudgetaire_new(request):
     return render(request, 'fondbudgetaire_new.html', {'form': form})
 
 
+@login_required
 def fondbudgetaire_edit(request,pk):
     """------------------------------------------------------------------
     Editer un fond
@@ -450,7 +450,7 @@ def fondbudgetaire_edit(request,pk):
     return render(request, 'fondbudgetaire_edit.html', {'form': form})
 
 
-
+@login_required
 def fondbudgetaire_list(request):
     """------------------------------------------------
     list fondbudgetaire 
@@ -467,6 +467,7 @@ def fondbudgetaire_list(request):
     return render(request, 'fondbudgetaire_lists.html', {'reponses':mycc})
 
 
+@login_required
 def fondbudgetaire_delete(request,pkcb):
     """------------------------------------------------
     delete fondbudgetaire 
@@ -486,6 +487,7 @@ def fondbudgetaire_delete(request,pkcb):
 
 #-----------------
 
+@login_required
 def naturecomptable_new(request):
     """------------------------------------------------
     new Nature comptable 
@@ -503,6 +505,7 @@ def naturecomptable_new(request):
     return render(request, 'naturecomptable_new.html', {'form': form})
 
 
+@login_required
 def naturecomptable_edit(request,pkcc):
     """------------------------------------------------------------------
     Editer une naturecomptable
@@ -518,6 +521,7 @@ def naturecomptable_edit(request,pkcc):
     return render(request, 'naturecomptable_edit.html', {'form': form})
 
 
+@login_required
 def naturecomptable_list(request):
     """------------------------------------------------
     Liste des natures comptables 
@@ -538,6 +542,7 @@ def naturecomptable_list(request):
     return render(request, 'naturecomptable_lists.html', {'reponses':mycc})
 
 
+@login_required
 def naturecomptable_delete(request,pkcc):
     mycc = get_object_or_404( NatureComptable,pk=pkcc )
     if request.method== "POST":
@@ -551,11 +556,13 @@ def naturecomptable_delete(request,pkcc):
         return render(request, 'naturecomptable_delete.html', {'form': form})
 
 
+@login_required
 def naturecomptable_detail( request,pkcc ):
     mycc = get_object_or_404( NatureComptable , pk=pkcc )
     return render(request, 'naturecomptable_detail.html', {'reponse':mycc})
 
 
+@login_required
 def naturecomptable_importcsv(request):
     if request.method == "POST":
         if request.POST.get("lechemin"):
@@ -596,6 +603,7 @@ def naturecomptable_importcsv(request):
     return render(request, 'naturecomptable_import.html', {'lechemin': "", 'lemessage':""})
 
 
+@login_required
 def naturecomptable_recette__importcsv(request):
     if request.method == "POST":
         if request.POST.get("lechemin"):
@@ -636,7 +644,7 @@ def naturecomptable_recette__importcsv(request):
     return render(request, 'naturecomptable_import.html', {'lechemin': "", 'lemessage':""})
 
 
-
+@login_required
 def naturecomptable_deleteall(request):
     if request.method == "POST":
         html=[]
@@ -667,7 +675,7 @@ class DomaineFonctionnel(models.Model):
     dfrmq = models.CharField(max_length=100, default="")
     dfdesc = models.CharField(max_length=100, default="")
 ************************************************ """
-
+@login_required
 def domainefonctionnel_new(request):
     if request.method == "POST":
         form = DomaineFonctionnelForm(request.POST)
@@ -682,6 +690,7 @@ def domainefonctionnel_new(request):
     return render(request, 'domainefonctionnel_new.html', {'form': form})
 
 
+@login_required
 def domainefonctionnel_list(request):
     if request.method == "POST":
         dfcode = request.POST['dfcode']
@@ -700,6 +709,7 @@ def domainefonctionnel_list(request):
     return render(request, 'domainefonctionnel_lists.html', {'reponses':mydf})
 
 
+@login_required
 def domainefonctionnel_delete(request,pkdf):
     mydf = get_object_or_404( DomaineFonctionnel,pk=pkdf )
     if request.method== "POST":
@@ -713,11 +723,13 @@ def domainefonctionnel_delete(request,pkdf):
         return render(request, 'domainefonctionnel_delete.html', {'form': form})
 
 
+@login_required
 def domainefonctionnel_detail( request,pkdf ):
     mydf = get_object_or_404( DomaineFonctionnel , pk=pkdf )
     return render(request, 'domainefonctionnel_detail.html', {'reponse':mydf})
 
 
+@login_required
 def domainefonctionnel_importcsv(request):
     if request.method == "POST":
         if request.POST.get("lechemin"):
@@ -747,6 +759,7 @@ def domainefonctionnel_importcsv(request):
     return render(request, 'domainefonctionnel_import.html', {'lechemin': "", 'lemessage':""})
 
 
+@login_required
 def domainefonctionnel_deleteall(request):
     if request.method == "POST":
         html=[]
@@ -769,144 +782,14 @@ def domainefonctionnel_deleteall(request):
 
 
 
-"""  ******************************************************
-class OrigineFonds(models.Model):
-    ofid = models.CharField(max_length=100)
-    ofparent = models.CharField(max_length=100)
-    ofname = models.CharField(max_length=100)
-    oflabel = models.CharField(max_length=100)
-    oftype = models.CharField(max_length=100)
-    ofbudget = models.CharField(max_length=100)
-    ofnomades = models.CharField(max_length=100)
-****************************************************** """
-
-def originefonds_new(request):
-    if request.method == "POST":
-        form = OrigineFondsForm(request.POST)
-        if form.is_valid():
-            newof = form.save(commit=False)
-            newof.save()
-            return redirect('originefonds_list')
-        else:
-            print ('form not valid')
-    else:
-        form = OrigineFondsForm()
-    return render(request, 'originefonds_new.html', {'form': form})
-
-
-def originefonds_edit(request,pkof):
-    """------------------------------------------------------------------
-    Editer une Origne de Fonds - Raccourcis en fonds par la DFI 
-    ------------------------------------------------------------------"""
-    myof = get_object_or_404( OrigineFonds , pk=pkof )
-    if request.method== "POST":
-        form = OrigineFondsForm(request.POST, instance=myof )
-        if form.is_valid():
-            myof.save()
-            return redirect('originefonds_list')
-    else:
-        form = OrigineFondsForm( instance=myof )
-    return render(request, 'originefonds_edit.html', {'form': form})
-
-
-def originefonds_list(request):
-    if request.method == "POST":
-        oftype = request.POST['oftype']
-        oflabel  = request.POST['oflabel']
-        if oftype == "" and oflabel == "" :
-            myof = OrigineFonds.objects.all()
-        elif oflabel == "" :
-            myof = OrigineFonds.objects.filter ( oftype__icontains = oftype )
-        elif oftype == "" :
-            myof = OrigineFonds.objects.filter ( oflabel__icontains = oflabel )
-        else:
-            myof = OrigineFonds.objects.filter( oftype__icontains = oftype ).filter( oflabel__icontains = oflabel )
-    else:
-        myof = OrigineFonds.objects.all()
-
-    myof2 = myof.order_by('ofparent')
-    return render(request, 'originefonds_lists.html', {'reponses':myof,'reponses2':myof2})
-
-
-def originefonds_delete(request,pkof):
-    myof = get_object_or_404( OrigineFonds , pk=pkof )
-    if request.method== "POST":
-        form = OrigineFondsForm(request.POST, instance=myof)
-        if form.is_valid():
-            myof.delete()
-            return redirect('originefonds_list')
-        else:
-            return render(request, 'originefonds_delete.html', {'form': form})
-    else:
-        form = OrigineFondsForm( instance=myof )
-        return render(request, 'originefonds_delete.html', {'form': form})
-
-
-def originefonds_detail( request,pkof ):
-    myof = get_object_or_404( OrigineFonds , pk=pkof )
-    return render(request, 'originefonds_detail.html', {'reponse':myof})
-
-
-def originefonds_importcsv(request):
-    if request.method == "POST":
-        if request.POST.get("lechemin"):
-             lemessage=""
-             lechemin=request.POST.get("lechemin")
-             fichier = open(lechemin, "r")
-             nblignes=0
-             for ligne in fichier:
-                 if ligne.strip():
-                     nblignes = nblignes+1
-                     monof = OrigineFonds()
-                     ligne=ligne.split(";")
-                     monof.ofid = ligne[0]
-                     monof.ofparent = ligne[1]
-                     monof.ofname = ligne[2]
-                     monof.oflabel = ligne[3]
-                     monof.oftype = ligne[4]
-                     monof.ofbudget = ligne[5]
-                     monof.ofnomades = ligne[6]
-
-                     monof.save()
-             lemessage=lemessage+ "  ok fichier "+ lechemin+ " importé "+ str(nblignes) +" lignes trouvées."
-             fichier.close()
-             return render(request,"originefonds_import.html",{'lemessage':lemessage})
-        else:
-             return render(request, 'originefonds_import.html', {'lechemin': "", 'lemessage':""})
-    else:
-        lechemin="vide2"
-    return render(request, 'originefonds_import.html', {'lechemin': "", 'lemessage':""})
-
-
-def originefonds_deleteall(request):
-    if request.method == "POST":
-        html=[]
-        html.append('Elements supprimes:')
-        html.append(OrigineFonds.objects.count())
-        html.append('<br>')
-        html.append('Suppression de tous les elements de la table des origines des fonds')
-
-        myof = OrigineFonds.objects.all()
-        for of in myof:
-            of.delete()
-
-        html.append('Elements restants:')
-        html.append(OrigineFonds.objects.count())
-        html.append('<br>')
-        return HttpResponse(html)
-    else:
-        nbdf = OrigineFonds.objects.count()
-        return render(request, 'originefonds_deleteall.html',{'nb':nbof})
-
-
-
 """ ********************************************************************
 class Structure(models.Model):
 ******************************************************************  """
 
 """------------------------------------------------------------------
-creation d'une structure CF/CC/CP
+creation d une structure CF/CC/CP
 ------------------------------------------------------------------"""
+@login_required
 def structure_new(request):
     if request.method == "POST":
         form = StructureForm(request.POST)
@@ -923,6 +806,7 @@ def structure_new(request):
 """------------------------------------------------------------------
 Liste des structure CF/CC/CP
 ------------------------------------------------------------------"""
+@login_required
 def structure_list(request):
     if request.method == "POST":
         stname = request.POST['stname']
@@ -950,6 +834,7 @@ def structure_list2(request):
 """------------------------------------------------------------------
 Effacer une structure CF/CC/CP
 ------------------------------------------------------------------"""
+@login_required
 def structure_delete(request,pkst):
     myst = get_object_or_404( Structure , pk=pkst )
     if request.method== "POST":
@@ -965,6 +850,7 @@ def structure_delete(request,pkst):
 """------------------------------------------------------------------
 Editer une structure CF/CC/CP
 ------------------------------------------------------------------"""
+@login_required
 def structure_edit(request,pkst):
     myst = get_object_or_404( Structure , pk=pkst )
     if request.method== "POST":
@@ -981,6 +867,7 @@ def structure_edit(request,pkst):
 """------------------------------------------------------------------
 Affichage d'une structure CF/CC/CP
 ------------------------------------------------------------------"""
+@login_required
 def structure_detail( request,pkst ):
     myst = get_object_or_404( Structure , pk=pkst )
     return render(request, 'structure_detail.html', {'reponse':myst})
@@ -990,6 +877,7 @@ def structure_detail( request,pkst ):
 Import de structures CF/CC/CP
 Format csv séparateur ;
 ------------------------------------------------------------------"""
+@login_required
 def structure_importcsv(request):
     if request.method == "POST":
         if request.POST.get("lechemin"):
@@ -1029,6 +917,7 @@ def structure_importcsv(request):
 """------------------------------------------------------------------
 Vider la table des structures CF/CC/CP
 ------------------------------------------------------------------"""
+@login_required
 def structure_deleteall(request):
     if request.method == "POST":
         html=[]
@@ -1050,7 +939,7 @@ def structure_deleteall(request):
         return render(request, 'structure_deleteall.html',{'nb':nbst})
 
 
-
+@login_required
 def structure_set_parent(request):
     mystructures = Structure.objects.all()
     for child in mystructures:
@@ -1064,8 +953,9 @@ class PlanFinancement(models.Model):
 --------------------------------------------------------------  """
 
 """------------------------------------------------------------------
-creation d'un PFI
+creation d un PFI
 ------------------------------------------------------------------"""
+@login_required
 def planfinancement_new(request):
     if request.method == "POST":
         form = PlanFinancementForm(request.POST)
@@ -1083,6 +973,7 @@ def planfinancement_new(request):
 """------------------------------------------------------------------
 Liste des PFI
 ------------------------------------------------------------------"""
+@login_required
 def planfinancement_list(request):
     if request.method == "POST":
         pfiname = request.POST['pfiname']
@@ -1101,6 +992,7 @@ def planfinancement_list(request):
     return render(request, 'planfinancement_lists.html', {'reponses':mypfi})
 
 
+@login_required
 def planfinancement_delete(request,pkpfi):
     """------------------------------------------------------------------
     Effacer un PFI
@@ -1117,7 +1009,7 @@ def planfinancement_delete(request,pkpfi):
         return render(request, 'planfinancement_delete.html', {'form': form})
 
 
-
+@login_required
 def planfinancement_edit(request,pkpfi):
     """------------------------------------------------------------------
     Editer un PFI
@@ -1138,6 +1030,7 @@ def planfinancement_edit(request,pkpfi):
 """------------------------------------------------------------------
 Afficher un PFI
 ------------------------------------------------------------------"""
+@login_required
 def planfinancement_detail( request,pkpfi ):
     mypfi = get_object_or_404( PlanFinancement , pk=pkpfi )
     form = PlanFinancementForm(instance=mypfi)
@@ -1148,6 +1041,7 @@ def planfinancement_detail( request,pkpfi ):
 Import csv des PFI -version abandonnée-
 ------------------------------------------------------------------"""
 # ancienne version
+@login_required
 def planfinancement_importcsv_v1(request):
     if request.method == "POST":
         if request.POST.get("lechemin"):
@@ -1191,6 +1085,7 @@ def planfinancement_importcsv_v1(request):
 """------------------------------------------------------------------
 Import des PFI - Version abandonnée
 ------------------------------------------------------------------"""
+@login_required
 def planfinancement_importcsv2(request):
     if request.method == "POST":
         if request.POST.get("lechemin"):
@@ -1279,6 +1174,7 @@ def planfinancement_importcsv(request):
 """------------------------------------------------------------------
 Vidage de la table des PFI
 ------------------------------------------------------------------"""
+@login_required
 def planfinancement_deleteall(request):
     if request.method == "POST":
         html=[]
@@ -1300,6 +1196,7 @@ def planfinancement_deleteall(request):
         return render(request, 'planfinancement_deleteall.html',{'nb':nbpfi})
 
 
+@login_required
 def liste_pfi_avec_depenses_recettes(request):
     mypfi = PlanFinancement.objects.order_by('societe','cfassoc','ccassoc','cpassoc','myid')
     mydepenses = DepenseFull.objects.all()
@@ -1320,6 +1217,7 @@ class depensefull
 """ -----------------------------------------------------------------
 Edition depenses dans le budget
 ------------------------------------------------------------------- """
+@login_required
 def depensefull_edit(request,pkdep):
     mydep = get_object_or_404( DepenseFull , pk=pkdep )
     if request.method == "POST":
@@ -1554,11 +1452,10 @@ def recettefull_new_avec_pfi_cflink(request,struct3id,pfiid):
 
 
 
-
-
 """ -----------------------------------------------------------------
 Liste des depenses dans le budget
 ------------------------------------------------------------------- """
+@login_required
 def depensefull_list(request):
     if request.method == "POST":
         depstruct = request.POST['depstruct']
@@ -1580,6 +1477,7 @@ def depensefull_list(request):
 """ -----------------------------------------------------------------
 Liste des depenses dans le budget associées à un CC
 ------------------------------------------------------------------- """
+@login_required
 def depensefull_parcc(request,pkcc):
     madep=Structure.objects.get(id=pkcc)
     mydep = DepenseFull.objects.filter (structlev3=madep).order_by('structlev3')
@@ -1595,6 +1493,7 @@ def depensefull_parcc(request,pkcc):
 """ -----------------------------------------------------------------
 Liste des recettes dans le budget associées à un CP
 ------------------------------------------------------------------- """
+@login_required
 def recettefull_parcp(request,pkcp):
     madep=Structure.objects.get(id=pkcp)
     myrec = RecetteFull.objects.filter (structlev3=madep).order_by('structlev3')
@@ -1605,7 +1504,6 @@ def recettefull_parcp(request,pkcp):
     return render(request, 'recettefullcp_lists.html', {'recettes':myrec, 'total':total, 'totaldc':totaldc ,
                                          'totalar':totalar,'totalre':totalre,'pkcp':pkcp,
                                          'mastructurelev3':madep})
-
 
 
 def depensefull_listregroup(request):
@@ -1636,7 +1534,7 @@ def total1(self):
 
 
 
-
+@login_required
 def depensefull_delete(request,pkdep):
     mydep = get_object_or_404( DepenseFull , pk=pkdep )
     if request.method== "POST":
@@ -1648,6 +1546,8 @@ def depensefull_delete(request,pkdep):
         form = DepenseFullForm( instance=mydep )
         return render(request, 'depensefull_delete.html', {'form': form})
 
+
+@login_required
 def depensefull_delete2(request,pkdep):
     mydep = get_object_or_404( DepenseFull , pk=pkdep )
     if request.method== "POST":
@@ -1662,15 +1562,19 @@ def depensefull_delete2(request,pkdep):
         return render(request, 'depensefull_delete2.html', {'form': form})
 
 
+@login_required
 def depensefull_detail( request,pkdep ):
     mydep = get_object_or_404( DepenseFull , pk=pkdep )
     return render(request, 'depensefull_detail.html', {'depense':mydep})
 
+
+@login_required
 def depensefull_detail2( request,pkdep):
     mydep = get_object_or_404( DepenseFull , pk=pkdep )
     return render(request, 'depensefull_detail2.html', {'depense':mydep})
 
 
+@login_required
 def depensefull_deleteall(request):
     if request.method == "POST":
         html=[]
@@ -1964,6 +1868,7 @@ def ajax_more_todo1(request):
 #---
 
 
+@login_required
 def recettefull_new3(request):
     if request.method == "POST":
         form = RecetteFullForm(request.POST)
@@ -1977,6 +1882,7 @@ def recettefull_new3(request):
     return render(request, 'recettefull_new3.html', {'form': form})
 
 
+@login_required
 def recettefull_list(request):
     if request.method == "POST":
         depstruct = request.POST['depstruct']
@@ -1995,6 +1901,7 @@ def recettefull_list(request):
     return render(request, 'recettefull_lists.html', {'recettes':mydep})
 
 
+@login_required
 def recettefull_delete(request,pkrec):
     myrec = get_object_or_404( RecetteFull , pk=pkrec )
     if request.method== "POST":
@@ -2007,6 +1914,7 @@ def recettefull_delete(request,pkrec):
         return render(request, 'recettefull_delete.html', {'form': form})
 
 
+@login_required
 def recettefull_delete2(request,pkrec):
     myrec = get_object_or_404( RecetteFull , pk=pkrec )
     if request.method== "POST":
@@ -2053,6 +1961,7 @@ def recettefull_deleteall(request):
         return render(request, 'recette_deleteall.html',{'nb':nbrecette})
 
 
+@login_required
 def recettefull_edit(request,pkrec):
     myrec = get_object_or_404( RecetteFull , pk=pkrec )
     if request.method == "POST":
@@ -2069,16 +1978,18 @@ def recettefull_edit(request,pkrec):
     return render(request, 'recettefull_edit.html', {'form': form})
 
 
+@login_required
 def recettefull_edit2(request,pkrec):
     myrec = get_object_or_404( RecetteFull , pk=pkrec )
     if request.method == "POST":
         #form = RecetteFullForm(request.POST,instance=myrec)
         #if form.is_valid():
         #    myrec = form.save(commit=False)
-        myrec.montant=request.POST['montant']
-        myrec.montantar=request.POST['montantar']
-        myrec.montantre=request.POST['montantre']
-        myrec.montantdc=request.POST['montantdc']
+        myrec.montantar=request.POST['montantar'] if request.POST['montantar'] else 0
+        myrec.montantre=request.POST['montantre'] if request.POST['montantre'] else 0
+        myrec.montantdc=request.POST['montantdc'] if request.POST['montantdc'] else 0
+        myrec.myfile = request.POST['myfile'] if request.POST['myfile'] else ''
+        myrec.commentaire = request.POST['commentaire'] if request.POST['commentaire'] else ''
         myrec.modifiepar = request.user.username
         myrec.save()
         #localpkcp=myrec.structlev3.pk
@@ -2090,7 +2001,7 @@ def recettefull_edit2(request,pkrec):
     return render(request, 'recettefull_edit.html', {'form': form})
 
 
-
+@login_required
 def depensefull_edit2(request,pkdep):
     mydep = get_object_or_404( DepenseFull , pk=pkdep )
     if request.method == "POST":
@@ -2110,7 +2021,7 @@ def depensefull_edit2(request,pkdep):
     return render(request, 'depensefull_edit.html', {'form': form})
 
 
-
+@login_required
 def baseformsetdepensefullavec_pfi_cflink(request,struct3id,pfiid):
 
     isfleche=PlanFinancement.objects.get(id=pfiid).fleche
@@ -2169,7 +2080,7 @@ def baseformsetdepensefullavec_pfi_cflink(request,struct3id,pfiid):
     return render(request, 'depensefull_formset.html',context)
 
 
-
+@login_required
 def baseformsetrecettefullavec_pfi_cflink(request,struct3id,pfiid):
 
     isfleche=PlanFinancement.objects.get(id=pfiid).fleche
