@@ -127,7 +127,7 @@
 
                                        <TH> Enveloppe </TH>
                                        <TH> Code du fond </TH>
-                                       <TH> Nature de la recette </TH>
+                                       <TH> Désignation du fond</TH>
                                        <TH> Compte Budg&eacutetaire recette </TH>
                                        <TH> Code de la nature comptable secondaire </TH>
                                        <TH> Identifiant </TH>
@@ -148,7 +148,7 @@
 
                                           <TD>{{ recette.cptdeplev1.enveloppe  }}</TD>
                                           <TD>{{ recette.cptdeplev1.fondbudget_recette.code  }}</TD>
-                                          <TD>{{ recette.cptdeplev1.naturec_dep }}</TD>
+                                          <TD>{{ recette.cptdeplev1.fondbudget_recette.label }}</TD>
                                           <TD>{{ recette.cptdeplev1.ccbd }}</TD>
                                           <TD>{{ recette.cptdeplev1.ncsecondairecode }}</TD>
                                           <TD><a href="{% url 'recettefull_edit2' pkrec=recette.pk %}">{{recette.id}} / {{recette.myid}} </a></TD>
