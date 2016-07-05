@@ -35,6 +35,7 @@ urlpatterns = [
     url(r'^domainefonctionnel/new/$', views.domainefonctionnel_new, name='domainefonctionnel_new'),
     url(r'^domainefonctionnel/$', views.domainefonctionnel_list,name='domainefonctionnel_list'),
     url(r'^domainefonctionnel/(?P<pkdf>[0-9]+)/detail/$', views.domainefonctionnel_detail, name='domainefonctionnel_detail'),
+    url(r'^domainefonctionnel/(?P<pkdf>[0-9]+)/edit/$', views.domainefonctionnel_edit, name='domainefonctionnel_edit'),
     url(r'^domainefonctionnel/(?P<pkdf>[0-9]+)/delete/$', views.domainefonctionnel_delete, name='domainefonctionnel_delete'),
     url(r'^domainefonctionnel/import/$', views.domainefonctionnel_importcsv,name='domainefonctionnel_importcsv'),
     url(r'^domainefonctionnel/deleteall/$', views.domainefonctionnel_deleteall, name='domainefonctionnel_deleteall'),

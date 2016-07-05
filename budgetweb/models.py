@@ -9,6 +9,7 @@ from django.core.validators import URLValidator
 
 from django.db.models import Q
 from datetime import datetime
+from django.core.exceptions import ValidationError
 
 
 """----------------------------------------------
@@ -88,7 +89,7 @@ class NatureComptable(models.Model):
 #         verbose_name=u'Libellé court nature comptable secondaire',default="")
 
     def __str__(self):
-        if self.fondbudget_recette== None:
+        if self.nctype == 'dep':
             return (self.enveloppe +" -- "+ self.naturec_dep.code)
         else:
             return (self.enveloppe +" -- "+ self.fondbudget_recette.code)
@@ -99,17 +100,17 @@ class NatureComptable(models.Model):
 Gestion des domaines fonctionnels. En cours de précisions
 ----------------------------------------------"""
 class DomaineFonctionnel(models.Model):
-    dfcode = models.CharField(max_length=100, default="", verbose_name=u'Code')
+    dfcode = models.CharField(max_length=100, default="", verbose_name=u'Code',unique=True)
     dflabel = models.CharField(max_length=100, default="",
-                verbose_name=u'Libellé')
+                verbose_name=u'Libellé',unique=True)
     dfgrpcumul = models.CharField(max_length=100, default="",
-                verbose_name=u'Groupe de cumul')
+                verbose_name=u'Groupe de cumul',blank=True)
     dfgrpfonc = models.CharField(max_length=100, default="",
-                verbose_name=u'Groupe fonctionnel')
+                verbose_name=u'Groupe fonctionnel',blank=True)
     dfrmq = models.CharField(max_length=100, default="",
-                verbose_name='Remarque')
+                verbose_name='Remarque',blank=True)
     dfdesc = models.CharField(max_length=100, default="",
-                verbose_name='Description')
+                verbose_name='Description',blank=True)
 
     def __str__(self):
         return (self.dfcode + " -- " + self.dflabel)
@@ -190,16 +191,14 @@ Gestion des Depenses. En cours de précisions
 ----------------------------------------------"""
 class DepenseFull ( models.Model ):
     myid = models.CharField(max_length=100, default='',blank=True)
-    structlev3 = models.ForeignKey ('Structure',blank=True, null=True,
-                        related_name='depensestructlev3')
-
+    structlev3 = models.ForeignKey ('Structure',related_name='depensestructlev3',verbose_name=u'Structure-CF')
     cptdeplev1 = models.ForeignKey ('NatureComptable', blank=True , null=True,
-                        related_name='depenses',verbose_name='Nature comptable')
+                        related_name='depenses',verbose_name=u'Nature comptable')
 
     domfonc = models.ForeignKey ('DomaineFonctionnel' , blank = True ,
-                        null = True )
+                        null = True,verbose_name=u'Domaine fonctionnel' )
 
-    plfi = models.ForeignKey ( 'PlanFinancement' , blank = True , null = True )
+    plfi = models.ForeignKey ( 'PlanFinancement' ,verbose_name=u'Programme de financement' )
 
     montant = models.CharField ( max_length = 100 ,blank = True , null = True )
     montantdc = models.DecimalField(max_digits=12, decimal_places=2 ,
@@ -210,7 +209,7 @@ class DepenseFull ( models.Model ):
                         blank = True , null = True )
     dateae = models.DateField( blank = True , null = True )
     commentaire = models.CharField (max_length = 100 , blank=True , null = True)
-    myfile =models.TextField(validators=[URLValidator()],blank=True)
+    myfile =models.TextField(validators=[URLValidator()],blank=True, verbose_name=u'Lien vers un fichier')
     periodebudget = models.ForeignKey ('PeriodeBudget', blank=True ,
                         null=True, related_name='periodebudget1')
     creele = models.DateTimeField(auto_now_add = True,blank=True)
@@ -219,6 +218,19 @@ class DepenseFull ( models.Model ):
     modifiepar= models.CharField (max_length = 100 , blank=True , null = True)
 
 
+    def clean(self):
+        montantae=self.montantae
+        montantcp=self.montantcp
+        decalagetreso =self.cptdeplev1.decalagetresocpae
+        if decalagetreso == False:
+            if montantae != montantcp:
+                raise ValidationError({'montantae':u'Pas de décalage de trésorerie sur cette nature comptable.Veuillez vous assurrer que montantae=montantcp.'} )
+
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super(DepenseFull, self).save(*args, **kwargs)
+
 
 """----------------------------------------------
 Gestion des Recettes. En cours de précisions
@@ -226,14 +238,14 @@ Gestion des Recettes. En cours de précisions
 class RecetteFull ( models.Model ):
     myid = models.CharField(max_length=100, default='',blank=True)
     structlev3 = models.ForeignKey ('Structure',blank=True, null=True,
-                       related_name='recstructlev3')
+                       related_name='recstructlev3',verbose_name=u'Structure-CF')
 
     cptdeplev1 = models.ForeignKey ('NatureComptable', blank=True , null=True,
-                       related_name='recettes',verbose_name='Nature comptable')
+                       related_name='recettes',verbose_name=u'Nature comptable')
 
     domfonc = models.ForeignKey ('DomaineFonctionnel' , blank = True ,
-                       null = True )
-    plfi = models.ForeignKey ( 'PlanFinancement' , blank = True , null = True )
+                       null = True ,verbose_name=u'Domaine fonctionnel')
+    plfi = models.ForeignKey ( 'PlanFinancement' , blank = True , null = True,verbose_name=u'Programme de financement' )
 
     montant = models.DecimalField(max_digits=12, decimal_places=2 ,
                        blank = True , null = True )
@@ -246,7 +258,7 @@ class RecetteFull ( models.Model ):
 
     commentaire = models.CharField (max_length = 100 , blank=True , null = True)
 
-    myfile =models.TextField(validators=[URLValidator()],blank=True)
+    myfile =models.TextField(validators=[URLValidator()],blank=True,verbose_name=u'Lien vers un fichier')
     periodebudget = models.ForeignKey ('PeriodeBudget', blank=True , null=True,
                        related_name='periodebudget2')
     creele = models.DateTimeField(auto_now_add = True, blank =True)

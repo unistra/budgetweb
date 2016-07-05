@@ -15,7 +15,7 @@ from .models import Authorisation, NatureComptable , DomaineFonctionnel , Period
 from .models import Structure , PlanFinancement , DepenseFull , RecetteFull
 from .forms import DepenseFullForm , RecetteFullForm , PeriodeBudgetForm , CompteBudgetForm
 from .forms import RecetteFullFormPfifleche, RecetteFullFormPfinonfleche
-from .forms import DepenseFullFormPfifleche, DepenseFullFormPfinonfleche
+from .forms import DepenseFullFormPfifleche, DepenseFullFormPfinonfleche,DepenseFullFormRestrict
 from .models import ComptaNature,FondBudgetaire
 from .forms import ComptaNatureForm, FondBudgetaireForm
 import json
@@ -35,6 +35,8 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.db import IntegrityError, transaction
 from django.forms.models import modelformset_factory
+from django.core.exceptions import ValidationError
+
 #---------------------------------------------------------------------------------
 
 def search(request):
@@ -668,12 +670,6 @@ def naturecomptable_deleteall(request):
 
 """ ********************************************
 class DomaineFonctionnel(models.Model):
-    dfcode = models.CharField(max_length=100, default="")
-    dflabel = models.CharField(max_length=100, default="")
-    dfgrpcumul = models.CharField(max_length=100, default="")
-    dfgrpfonc = models.CharField(max_length=100, default="")
-    dfrmq = models.CharField(max_length=100, default="")
-    dfdesc = models.CharField(max_length=100, default="")
 ************************************************ """
 @login_required
 def domainefonctionnel_new(request):
@@ -713,7 +709,6 @@ def domainefonctionnel_list(request):
 def domainefonctionnel_delete(request,pkdf):
     mydf = get_object_or_404( DomaineFonctionnel,pk=pkdf )
     if request.method== "POST":
-        print(request.POST)
         form = DomaineFonctionnelForm(request.POST, instance=mydf)
         if form.is_valid():
             mydf.delete()
@@ -721,6 +716,19 @@ def domainefonctionnel_delete(request,pkdf):
     else:
         form = DomaineFonctionnelForm( instance=mydf )
         return render(request, 'domainefonctionnel_delete.html', {'form': form})
+
+
+@login_required
+def domainefonctionnel_edit(request,pkdf):
+    mydf = get_object_or_404( DomaineFonctionnel,pk=pkdf )
+    if request.method== "POST":
+        form = DomaineFonctionnelForm(request.POST, instance=mydf)
+        if form.is_valid():
+            mydf.save()
+            return redirect('domainefonctionnel_list')
+    else:
+        form = DomaineFonctionnelForm( instance=mydf )
+        return render(request, 'domainefonctionnel_edit.html', {'form': form})
 
 
 @login_required
@@ -1249,9 +1257,9 @@ def depensefull_new_avec_pfi(request,struct3id,pfiid):
     """---------------------------------------------
     Avec le formulaire prérempli .
     -----------------------------------------------"""
-
     budget = PeriodeBudget.objects.filter(bloque=False).first()
     error = ''
+
     if request.method == "POST":
         #struct1 = Structure.objects.filter(id=request.POST.get("structlev1")).first()
         #struct2 = Structure.objects.filter(id=request.POST.get("structlev2")).first()
@@ -1263,7 +1271,6 @@ def depensefull_new_avec_pfi(request,struct3id,pfiid):
             error = error + 'Veuillez choisir une enveloppe valide'
         else:
             domfonc = DomaineFonctionnel.objects.filter(id=request.POST.get("domfonc")).first()
-
             plfi = PlanFinancement.objects.filter(id=request.POST.get("plfi")).first()
 
             montantdc = request.POST.get("montantdc") if request.POST.get("montantdc") else 0
@@ -1328,7 +1335,6 @@ def depensefull_new_avec_pfi_cflink(request,struct3id,pfiid):
 
     error = ''
     if request.method == "POST":
-        #struct3 = Structure.objects.filter(id=request.POST.get("structlev3")).first()
 
         domfonc = DomaineFonctionnel.objects.filter(id=request.POST.get("domfonc")).first()
 
@@ -1400,6 +1406,7 @@ def recettefull_new_avec_pfi_cflink(request,struct3id,pfiid):
         struct3 = Structure.objects.filter(id=request.POST.get("structlev3")).first()
 
         cptdev1 = NatureComptable.objects.filter(id=request.POST.get("cptdeplev1")).first()
+        df_rec_na= DomaineFonctionnel.objects.filter(dfcode='NA').first()
 
         plfiid=request.POST.get("plfi")
         plfi = PlanFinancement.objects.filter(id=plfiid).first()
@@ -1423,7 +1430,7 @@ def recettefull_new_avec_pfi_cflink(request,struct3id,pfiid):
             marecette = RecetteFull()
             marecette.structlev3 = struct3
             marecette.cptdeplev1 = cptdev1
-
+            marecette.domfonc = df_rec_na
             marecette.plfi = plfi
             marecette.montantdc = montantdc
             marecette.montantar = montantar
@@ -1873,8 +1880,10 @@ def recettefull_new3(request):
     if request.method == "POST":
         form = RecetteFullForm(request.POST)
         if form.is_valid():
+            df_rec_na= DomaineFonctionnel.objects.filter(dfcode='NA').first()
             newrecette = form.save(commit=False)
             newrecette.creepar = request.user.username
+            newrecette.domfonc=df_rec_na
             newrecette.save()
             return redirect('recettefull_list')
     else:
@@ -1964,11 +1973,13 @@ def recettefull_deleteall(request):
 @login_required
 def recettefull_edit(request,pkrec):
     myrec = get_object_or_404( RecetteFull , pk=pkrec )
+    df_rec_na= DomaineFonctionnel.objects.filter(dfcode='NA').first()
     if request.method == "POST":
         form = RecetteFullForm(request.POST,instance=myrec)
         if form.is_valid():
             myrec = form.save(commit=False)
             myrec.modifiepar = request.user.username
+            myrec.domfonc=df_rec_na
             myrec.save()
             return redirect('recettefull_list')
         else:
@@ -1981,6 +1992,7 @@ def recettefull_edit(request,pkrec):
 @login_required
 def recettefull_edit2(request,pkrec):
     myrec = get_object_or_404( RecetteFull , pk=pkrec )
+    df_rec_na= DomaineFonctionnel.objects.filter(dfcode='NA').first()
     if request.method == "POST":
         #form = RecetteFullForm(request.POST,instance=myrec)
         #if form.is_valid():
@@ -1991,6 +2003,7 @@ def recettefull_edit2(request,pkrec):
         myrec.myfile = request.POST['myfile'] if request.POST['myfile'] else ''
         myrec.commentaire = request.POST['commentaire'] if request.POST['commentaire'] else ''
         myrec.modifiepar = request.user.username
+        myrec.domfonc = df_rec_na
         myrec.save()
         #localpkcp=myrec.structlev3.pk
         #return redirect('recettefull_parcp',pkcp=localpkcp)
@@ -2005,19 +2018,23 @@ def recettefull_edit2(request,pkrec):
 def depensefull_edit2(request,pkdep):
     mydep = get_object_or_404( DepenseFull , pk=pkdep )
     if request.method == "POST":
-        mydep.montantdc = request.POST['montantdc'] if request.POST['montantdc'] else 0
-        mydep.montantcp = request.POST['montantcp'] if request.POST['montantcp'] else 0
-        mydep.montantae = request.POST['montantae'] if request.POST['montantae'] else 0
-        mydep.myfile = request.POST['myfile'] if request.POST['myfile'] else ''
-        mydep.commentaire = request.POST['commentaire'] if request.POST['commentaire'] else ''
-        mydep.modifiepar = request.user.username
-        mydep.save()
-        #localpkcp=myrec.structlev3.pk
-        #return redirect('recettefull_parcp',pkcp=localpkcp)
-        return redirect('liste_pfi_avec_depenses_recettes')
-
-    #else:
-    form = DepenseFullForm( instance=mydep)
+        form = DepenseFullFormRestrict(request.POST,instance=mydep)
+        if form.is_valid():
+            mydep=form.save(commit=False)
+            mydep.montantdc = request.POST['montantdc'] if request.POST['montantdc'] else 0
+            mydep.montantcp = request.POST['montantcp'] if request.POST['montantcp'] else 0
+            mydep.montantae = request.POST['montantae'] if request.POST['montantae'] else 0
+            mydep.myfile = request.POST['myfile'] if request.POST['myfile'] else ''
+            mydep.commentaire = request.POST['commentaire'] if request.POST['commentaire'] else ''
+            mydep.modifiepar = request.user.username
+            mydep.save()
+            return redirect('liste_pfi_avec_depenses_recettes')
+        else:
+            print(form)
+            #form = DepenseFullForm( instance=mydep)
+            return render(request, 'depensefull_edit.html', {'form': form})
+    else:
+        form = DepenseFullFormRestrict( instance=mydep)
     return render(request, 'depensefull_edit.html', {'form': form})
 
 
@@ -2090,7 +2107,7 @@ def baseformsetrecettefullavec_pfi_cflink(request,struct3id,pfiid):
     else:
         RecetteFullFormSet = modelformset_factory(RecetteFull, form=RecetteFullFormPfinonfleche, formset=BaseRecetteFullFormSet,exclude=[],extra=3)
 
-
+    df_rec_na= DomaineFonctionnel.objects.filter(dfcode='NA').first()
     budget=current_budget()
     initial=''
     recettesdupfi = RecetteFull.objects.filter(plfi_id=pfiid,periodebudget=budget)
@@ -2110,6 +2127,7 @@ def baseformsetrecettefullavec_pfi_cflink(request,struct3id,pfiid):
                 instance.structlev3 = get_object_or_404( Structure , pk=struct3id )
                 instance.plfi = get_object_or_404( PlanFinancement , pk=pfiid )
                 instance.periodebudget = budget
+                instance.domfonc = df_rec_na
                 instance.save()
                 instance.myid=instance.id
                 instance.save()
@@ -2124,7 +2142,7 @@ def baseformsetrecettefullavec_pfi_cflink(request,struct3id,pfiid):
 
     plfi = get_object_or_404(PlanFinancement,pk=pfiid)
     struct3 =  get_object_or_404(Structure,id=struct3id)
-    domfoncs = DomaineFonctionnel.objects.all().order_by('dfcode')
+    domfoncs = DomaineFonctionnel.objects.filter(dfcode='NA')
 
     context = {
                'recettefull_formset': recettefull_formset,

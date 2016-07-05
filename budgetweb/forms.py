@@ -127,8 +127,8 @@ class DepenseFullForm ( forms.ModelForm ):
             self.fields['myid'].widget.attrs['readonly'] = True
             self.fields['myid'].widget.attrs['disabled'] = 'disabled'
             self.fields['periodebudget'].widget.attrs['readonly'] = True
-            self.fields['domfonc'].widget.attrs['readonly'] = True
-            self.fields['domfonc'].widget.attrs['disabled'] = 'disabled'
+            #self.fields['domfonc'].widget.attrs['readonly'] = True
+            #self.fields['domfonc'].widget.attrs['disabled'] = 'disabled'
             self.fields['periodebudget'].widget.attrs['disabled'] = 'disabled'
 
 
@@ -138,6 +138,32 @@ class DepenseFullForm ( forms.ModelForm ):
             return instance.myid
         else:
             return self.cleaned_data['myid']
+
+
+class DepenseFullFormRestrict ( forms.ModelForm ):
+
+    class Meta:
+        model = DepenseFull
+        fields = ( 'id','structlev3' , 'cptdeplev1', 'domfonc' ,
+                   'plfi' , 'montantdc', 'montantcp' , 'montantae' ,'dateae', 'commentaire' , 'myfile' )
+
+        widgets = {
+            'myfile': forms.Textarea(attrs={'cols': 40, 'rows': 2}),
+        }
+
+
+    def __init__(self,*args,**kwargs):
+        super (DepenseFullFormRestrict,self ).__init__(*args,**kwargs)
+        instance = getattr(self, 'instance', None)
+        #pas de modification sur ces champs
+        self.fields['cptdeplev1'].queryset = NatureComptable.objects.filter(id=instance.cptdeplev1.id)
+        self.fields['structlev3'].queryset = Structure.objects.filter(id=instance.structlev3.id)
+        self.fields['plfi'].queryset = PlanFinancement.objects.filter(id=instance.plfi.id)
+        #-----
+
+
+
+
 
 
 class DepenseFullFormPfifleche ( forms.ModelForm ):
@@ -242,7 +268,8 @@ class RecetteFullForm ( forms.ModelForm ):
     def __init__(self,*args,**kwargs):
         super (RecetteFullForm,self ).__init__(*args,**kwargs) # populates the post
         self.fields['cptdeplev1'].queryset = NatureComptable.objects.filter(nctype='rec')
-
+        #en recette le DF = NA
+        self.fields['domfonc'].queryset = DomaineFonctionnel.objects.filter(dfcode='NA')
         instance = getattr(self, 'instance', None)
         #pas de modification sur ces champs
         # en recette domfonc=NA toujours
@@ -278,6 +305,7 @@ class RecetteFullFormPfifleche ( forms.ModelForm ):
     def __init__(self,*args,**kwargs):
         super (RecetteFullFormPfifleche,self ).__init__(*args,**kwargs) # populates the post
         self.fields['cptdeplev1'].queryset = NatureComptable.objects.filter(nctype='rec',pfifleche=True)
+        self.fields['domfonc'].queryset = DomaineFonctionnel.objects.filter(dfcode='NA')
 
         instance = getattr(self, 'instance', None)
         #pas de modification sur ces champs
@@ -314,6 +342,7 @@ class RecetteFullFormPfinonfleche ( forms.ModelForm ):
     def __init__(self,*args,**kwargs):
         super (RecetteFullFormPfinonfleche,self ).__init__(*args,**kwargs) # populates the post
         self.fields['cptdeplev1'].queryset = NatureComptable.objects.filter(nctype='rec',pfifleche=False)
+        self.fields['domfonc'].queryset = DomaineFonctionnel.objects.filter(dfcode='NA')
 
         instance = getattr(self, 'instance', None)
         #pas de modification sur ces champs

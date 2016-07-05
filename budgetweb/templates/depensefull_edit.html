@@ -1,9 +1,11 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Edition d'une d&eacutepense</h1>
+
     <form method="POST" class="post-form">{% csrf_token %}
+
        <TABLE id="bbf">
+         <caption> Edition d'une d&eacutepense </caption>
         {% for field in form %}
           <tr>
              <th> {{ field.label_tag }}</th>
@@ -12,7 +14,9 @@
           </tr>
         {% endfor %}
        </TABLE>
+
     <button type="submit" class="save btn btn-default">Save</button>
     </form>
+
 {% endblock %}
 

@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Edition d'une recette</h1>
     <form method="POST" class="post-form">{% csrf_token %}
        <TABLE id="bbf">
+          <caption>Edition d'une recette</caption>
         {% for field in form %}
           <tr>
            <th> {{ field.label_tag }}</th>

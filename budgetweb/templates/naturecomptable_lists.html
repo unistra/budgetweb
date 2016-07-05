@@ -4,65 +4,7 @@
 <h1>Liste des natures comptables</h1>
 
 
-<form action="" method="POST">{% csrf_token %}
-<TABLE BORDER=1>
-   <TR><TD>Fond </TD><TD>
-            <input type="text" name="fond"></TD>
-   </TR>
-   <TR><TD>Nature comptable </TD><TD>
-            <input type="text" name="nature"></TD>
-   </TR>
-       <input type="submit" value="chercher">
-    </TABLE>
-</form>
-
-<br>
-<a href="{% url 'naturecomptable_new' %}" class="top-menu"> Nouvelle nature comptable <span class="glyphicon glyphicon-plus"></span></a>
-<br>
-
-<TABLE id="bbf">
-<CAPTION> Tableau des natures comptables </CAPTION>
-<thead>
-    <TH> Enveloppe</TH>
-    <TH> Fond (recette) </TH>
-    <TH> Nature comptable (d&eacutepense) </TH>
-    <TH> PFI fl&eacutech&eacute O/N </TH>
-    <TH> Nature comptable secondaire </TH>
-    <TH> Compte budg&eacutetaire </TH>
-    <TH> Décalage trésorerie </TH>
-    <TH> Type Recette/D&eacutepense </TH>
-    <TH> Editer </TH>
-    <TH> Supprimer</TH>
-</thead>
-<tbody>
-{% for reponse in reponses %}
-<TR>
-       <TD> {{ reponse.enveloppe   }}  </TD>
-       <TD> {{ reponse.fondbudget_recette  }}  </TD>
-       <TD> {{ reponse.naturec_dep  }}  </TD>
-       <TD> {{ reponse.pfifleche }} </TD>
-       <TD> {{ reponse.ncsecondairecode }} </TD>
-       <TD> {{ reponse.ccbd  }}  </TD>
-       <TD> {{ reponse.decalagetresocpae }}  </TD>
-       <TD> {{ reponse.nctype  }}  </TD>
-       <TD><a href="{% url 'naturecomptable_edit' pkcc=reponse.pk %}">Editer</a></TD>
-       <TD><a href="{% url 'naturecomptable_delete' pkcc=reponse.pk %}">Supprimer</a></TD>
-
-</TR>
-{% endfor %}
-</tbody>
-<tfoot>
-     <tr><td> Total</td><td> {{ reponses.count }} entrees</td></tr>
-</tfoot>
-</TABLE>
-
-
-<br>
-<br>
-<a href="{% url 'naturecomptable_new' %}" class="top-menu"> Nouvelle nature comptable <span class="glyphicon glyphicon-plus"></span></a>
-<br>
-<br>
-# ----------------------------------------------#
+<hl>
 <br>
 {% regroup reponses by nctype as of_list %}
 <div class="panel-group" id="accordion">
@@ -121,7 +63,12 @@
 <br>
 <br>
 
+
+<hl>
+<a href="{% url 'naturecomptable_new' %}" class="top-menu"> Nouvelle nature comptable <span class="glyphicon glyphicon-plus"></span></a>
+<br>
 # ----------------------------------------------#
+
 <br>
 {% regroup reponses by ncsecondairecode as of_list %}
 <div class="panel-group" id="accordion2">

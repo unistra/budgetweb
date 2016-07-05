@@ -28,6 +28,7 @@
     <TH> Groupe fonctionnel </TH>
     <TH> Remarque </TH>
     <TH> Description </TH>
+    <TH> Editer </TH>
     <TH> Supprimer</TH>
 </thead>
 <tbody>
@@ -39,6 +40,7 @@
        <TD> {{ reponse.dfgrpfonc  }}  </TD>
        <TD> {{ reponse.dfrmq   }}  </TD>
        <TD> {{ reponse.dfdesc  }}  </TD>
+       <TD><a href="{% url 'domainefonctionnel_edit' pkdf=reponse.pk %}">Editer</a></TD>
        <TD><a href="{% url 'domainefonctionnel_delete' pkdf=reponse.pk %}">supprimer</a></TD>
 </TR>
 {% endfor %}
