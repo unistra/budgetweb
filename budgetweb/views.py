@@ -1075,8 +1075,8 @@ def planfinancement_importcsv(request):
                      nblignes = nblignes+1
                      monpfi = PlanFinancement()
                      ligne = ligne.split(";")
-                     monpfi.name = ligne[0]
-                     monpfi.label = ligne[1]
+                     monpfi.myid = ligne[0]
+                     monpfi.name = ligne[1]
                      monpfi.eotp = ligne[2]
                      monpfi.societe = ligne[3]
                      monpfi.cfassoc = ligne[4]
