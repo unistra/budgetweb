@@ -1077,21 +1077,14 @@ def planfinancement_importcsv_v1(request):
                      ligne = ligne.split(";")
                      monpfi.name = ligne[0]
                      monpfi.label = ligne[1]
-                     monpfi.type = ligne[2]
-                     monpfi.budget = ligne[3]
-                     monpfi.nomades = ligne[4]
-                     monpfi.refsifac = ligne[5]
-                     monpfi.refdfi = ligne[6]
-                     monpfi.societe = ligne[7]
-                     monpfi.ccassoc = ligne[8]
-                     monpfi.cpassoc = ligne[9]
-                     monpfi.responsable = ligne[10]
-                     monpfi.dordre = ligne[11]
-                     monpfi.divirecette = ligne[12]
+                     monpfi.eotp = ligne[2]
+                     monpfi.societe = ligne[3]
+                     monpfi.cfassoc = ligne[4]
+                     monpfi.ccassoc = ligne[5]
+                     monpfi.cpassoc = ligne[6]
+                     monpfi.fleche = ligne[7]
+                     monpfi.pluriannuel = ligne[8]
                      monpfi.status = ligne[13]
-                     #-- 3 champs libres
-                     monpfi.cleregul = ligne[17]
-                     monpfi.domainefonc = ligne[18]
                      monpfi.save()
              lemessage=lemessage+ "  ok fichier "+ lechemin+ " importé "+ str(nblignes) +" lignes trouvées."
              fichier.close()
