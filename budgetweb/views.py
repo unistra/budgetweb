@@ -1063,7 +1063,7 @@ Import csv des PFI -version abandonnée-
 ------------------------------------------------------------------"""
 # ancienne version
 @login_required
-def planfinancement_importcsv_v1(request):
+def planfinancement_importcsv(request):
     if request.method == "POST":
         if request.POST.get("lechemin"):
              lemessage=""
@@ -1143,7 +1143,7 @@ Import des PFI - Version utilisée
 #nouveau format:Code eotp;PFI;Désignation Operation;Fleché;Pluriannuel;CF ;CP Dérivé;CC Dérivé;
 ------------------------------------------------------------------"""
 @login_required
-def planfinancement_importcsv(request):
+def planfinancement_importcsvautre(request):
     if request.method == "POST":
         if request.POST.get("lechemin"):
              lechemin=request.POST.get("lechemin")
