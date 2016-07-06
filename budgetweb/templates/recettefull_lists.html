@@ -43,6 +43,7 @@
 
     <TH> Commentaire </TH>
     <TH> Fichier   </TH>
+    <TH> Editer </TH>
     <TH> Supprimer</TH>
 </thead>
 <tbody>
@@ -66,7 +67,7 @@
 
        <TD>{{ depense.commentaire }}</TD>
        <TD>{{ depense.nom_des_fichiers }}</TD>
-
+       <TD><a href="{% url 'recettefull_edit2' pkrec=depense.pk %}">editer</a></TD>
        <TD><a href="{% url 'recettefull_delete' pkrec=depense.pk %}">supprimer</a></TD>
 </TR>
 {% endfor %}

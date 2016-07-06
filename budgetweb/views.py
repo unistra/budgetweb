@@ -14,8 +14,8 @@ from .forms import StructureForm , PlanFinancementForm
 from .models import Authorisation, NatureComptable , DomaineFonctionnel , PeriodeBudget,CompteBudget
 from .models import Structure , PlanFinancement , DepenseFull , RecetteFull
 from .forms import DepenseFullForm , RecetteFullForm , PeriodeBudgetForm , CompteBudgetForm
-from .forms import RecetteFullFormPfifleche, RecetteFullFormPfinonfleche
-from .forms import DepenseFullFormPfifleche, DepenseFullFormPfinonfleche,DepenseFullFormRestrict
+from .forms import RecetteFullFormPfifleche, RecetteFullFormPfinonfleche, RecetteFullFormRestrict
+from .forms import DepenseFullFormPfifleche, DepenseFullFormPfinonfleche, DepenseFullFormRestrict
 from .models import ComptaNature,FondBudgetaire
 from .forms import ComptaNatureForm, FondBudgetaireForm
 import json
@@ -1994,24 +1994,21 @@ def recettefull_edit2(request,pkrec):
     myrec = get_object_or_404( RecetteFull , pk=pkrec )
     df_rec_na= DomaineFonctionnel.objects.filter(dfcode='NA').first()
     if request.method == "POST":
-        #form = RecetteFullForm(request.POST,instance=myrec)
-        #if form.is_valid():
-        #    myrec = form.save(commit=False)
-        myrec.montantar=request.POST['montantar'] if request.POST['montantar'] else 0
-        myrec.montantre=request.POST['montantre'] if request.POST['montantre'] else 0
-        myrec.montantdc=request.POST['montantdc'] if request.POST['montantdc'] else 0
-        myrec.myfile = request.POST['myfile'] if request.POST['myfile'] else ''
-        myrec.commentaire = request.POST['commentaire'] if request.POST['commentaire'] else ''
-        myrec.modifiepar = request.user.username
-        myrec.domfonc = df_rec_na
-        myrec.save()
-        #localpkcp=myrec.structlev3.pk
-        #return redirect('recettefull_parcp',pkcp=localpkcp)
-        return redirect('liste_pfi_avec_depenses_recettes')
-
-    #else:
-    form = RecetteFullForm( instance=myrec)
-    return render(request, 'recettefull_edit.html', {'form': form})
+        form = RecetteFullFormRestrict(request.POST,instance=myrec)
+        if form.is_valid():
+            myrec = form.save(commit=False)
+            myrec.montantar=request.POST['montantar'] if request.POST['montantar'] else 0
+            myrec.montantre=request.POST['montantre'] if request.POST['montantre'] else 0
+            myrec.montantdc=request.POST['montantdc'] if request.POST['montantdc'] else 0
+            myrec.myfile = request.POST['myfile'] if request.POST['myfile'] else ''
+            myrec.commentaire = request.POST['commentaire'] if request.POST['commentaire'] else ''
+            myrec.modifiepar = request.user.username
+            myrec.domfonc = df_rec_na
+            myrec.save()
+            return redirect('liste_pfi_avec_depenses_recettes')
+    else:
+        form = RecetteFullFormRestrict( instance=myrec)
+    return render(request, 'recettefull_edit.html', {'form': form, 'structure':myrec.structlev3})
 
 
 @login_required
@@ -2029,13 +2026,9 @@ def depensefull_edit2(request,pkdep):
             mydep.modifiepar = request.user.username
             mydep.save()
             return redirect('liste_pfi_avec_depenses_recettes')
-        else:
-            print(form)
-            #form = DepenseFullForm( instance=mydep)
-            return render(request, 'depensefull_edit.html', {'form': form})
     else:
         form = DepenseFullFormRestrict( instance=mydep)
-    return render(request, 'depensefull_edit.html', {'form': form})
+    return render(request, 'depensefull_edit.html', {'form': form, 'structure':mydep.structlev3})
 
 
 @login_required

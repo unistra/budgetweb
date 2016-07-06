@@ -290,6 +290,27 @@ class RecetteFullForm ( forms.ModelForm ):
             self.fields['periodebudget'].widget.attrs['disabled'] = 'disabled'
 
 
+class RecetteFullFormRestrict ( forms.ModelForm ):
+
+    class Meta:
+        model = RecetteFull
+        fields = ( 'structlev3' , 'cptdeplev1' , 'domfonc' ,
+                   'plfi' , 'montantar', 'montantre' ,'montantdc', 'commentaire' ,'myfile' )
+
+        widgets = {
+            'myfile': forms.Textarea(attrs={'cols': 40, 'rows': 2}),
+        }
+
+    def __init__(self,*args,**kwargs):
+        super (RecetteFullFormRestrict,self ).__init__(*args,**kwargs)
+        instance = getattr(self, 'instance', None)
+        df_rec_na_set= DomaineFonctionnel.objects.filter(dfcode='NA')
+        #pas de modification sur ces champs
+        self.fields['cptdeplev1'].queryset = NatureComptable.objects.filter(id=instance.cptdeplev1.id)
+        self.fields['structlev3'].queryset = Structure.objects.filter(id=instance.structlev3.id)
+        self.fields['plfi'].queryset = PlanFinancement.objects.filter(id=instance.plfi.id)
+        self.fields['domfonc'].queryset = DomaineFonctionnel.objects.filter(dfcode='NA') #DomaineFonctionnel.objects.filter(id=instance.plfi.id)
+
 
 class RecetteFullFormPfifleche ( forms.ModelForm ):
 

@@ -237,15 +237,10 @@ Gestion des Recettes. En cours de précisions
 ----------------------------------------------"""
 class RecetteFull ( models.Model ):
     myid = models.CharField(max_length=100, default='',blank=True)
-    structlev3 = models.ForeignKey ('Structure',blank=True, null=True,
-                       related_name='recstructlev3',verbose_name=u'Structure-CF')
-
-    cptdeplev1 = models.ForeignKey ('NatureComptable', blank=True , null=True,
-                       related_name='recettes',verbose_name=u'Nature comptable')
-
-    domfonc = models.ForeignKey ('DomaineFonctionnel' , blank = True ,
-                       null = True ,verbose_name=u'Domaine fonctionnel')
-    plfi = models.ForeignKey ( 'PlanFinancement' , blank = True , null = True,verbose_name=u'Programme de financement' )
+    structlev3 = models.ForeignKey ('Structure',related_name='recstructlev3',verbose_name=u'Structure-CF')
+    cptdeplev1 = models.ForeignKey ('NatureComptable',related_name='recettes',verbose_name=u'Nature comptable')
+    domfonc = models.ForeignKey ('DomaineFonctionnel', verbose_name=u'Domaine fonctionnel')
+    plfi = models.ForeignKey ( 'PlanFinancement', verbose_name=u'Programme de financement' )
 
     montant = models.DecimalField(max_digits=12, decimal_places=2 ,
                        blank = True , null = True )
