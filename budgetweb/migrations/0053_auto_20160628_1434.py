@@ -36,9 +36,4 @@ class Migration(migrations.Migration):
             name='modifiele',
             field=models.DateTimeField(auto_now=True, verbose_name='Date de modification'),
         ),
-        migrations.AlterField(
-            model_name='structure',
-            name='modifdate',
-            field=models.DateTimeField(auto_now=True, verbose_name='Date de modification'),
-        ),
     ]
