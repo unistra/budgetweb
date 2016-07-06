@@ -95,7 +95,9 @@ class PlanFinancementForm( forms.ModelForm ):
             'name': forms.Textarea(attrs={'cols': 40, 'rows': 2}),
         }
 
-
+    def __init__(self,*args,**kwargs):
+        super (PlanFinancementForm,self ).__init__(*args,**kwargs) # populates the post
+        self.fields['cfassoclink'].queryset = Structure.objects.filter(type=' cf').order_by('name')
 
 class DepenseFullForm ( forms.ModelForm ):
 
