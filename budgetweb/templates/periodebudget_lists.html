@@ -31,7 +31,7 @@
     <TH> Label   </TH>
     <TH> P&eacuteriode  </TH>
     <TH> Bloqu&eacute O/N ( seule une période active) </TH>
-
+    <TH> Editer</TH>
     <TH> Supprimer</TH>
 </thead>
 <tbody>
@@ -42,6 +42,7 @@
        <TD>{{ depense.label  }}</TD>
        <TD>{{ depense.annee }}</TD>
        <TD>{{ depense.bloque }}</TD>
+       <TD><a href="{% url 'periodebudget_edit' pkpb=depense.pk %}">editer</a></TD>
        <TD><a href="{% url 'periodebudget_delete' pkpb=depense.pk %}">supprimer</a></TD>
 </TR>
 {% endfor %}

@@ -103,6 +103,7 @@ urlpatterns = [
     url(r'^periodebudget/$', views.periodebudget_list,name='periodebudget_list'),
     url(r'^periodebudget/(?P<pkpb>[0-9]+)/detail/$', views.periodebudget_detail, name='periodebudget_detail'),
     url(r'^periodebudget/(?P<pkpb>[0-9]+)/delete/$', views.periodebudget_delete, name='periodebudget_delete'),
+    url(r'^periodebudget/(?P<pkpb>[0-9]+)/edit/$', views.periodebudget_edit, name='periodebudget_edit'),
 
 #Ajax depenses
     url(r'^ajax/ajax_add/(?P<pkstr1>[0-9]+)/$', views.ajax_add_todo1,name="ajax_add_todo1"),

@@ -282,17 +282,16 @@ Effacer un budget
 -------------------------------------------------"""
 @login_required
 def periodebudget_delete(request,pkpb):
-    mycc = get_object_or_404( Periodebudget,pk=pkpb )
+    mycc = get_object_or_404( PeriodeBudget,pk=pkpb )
     if request.method== "POST":
-        form = PeriodebudgetForm(request.POST, instance=mycc)
+        form = PeriodeBudgetForm(request.POST, instance=mycc)
         if form.is_valid():
             mycc.delete()
             return redirect('periodebudget_list')
-        else:
-            return render(request, 'periodebudget_delete.html', {'form': form})
     else:
         form = PeriodeBudgetForm( instance=mycc )
-        return render(request, 'periodebudget_delete.html', {'form': form})
+    return render(request, 'periodebudget_delete.html', {'form': form})
+
 
 @login_required
 def periodebudget_detail( request,pkpb ):
@@ -301,6 +300,20 @@ def periodebudget_detail( request,pkpb ):
     -------------------------------------------------"""
     mycc = get_object_or_404( PeriodeBudget , pk=pkpb )
     return render(request, 'periodebudget_detail.html', {'reponse':mycc})
+
+
+@login_required
+def periodebudget_edit(request,pkpb):
+    mycc = get_object_or_404( PeriodeBudget,pk=pkpb )
+    if request.method== "POST":
+        form = PeriodeBudgetForm(request.POST, instance=mycc)
+        if form.is_valid():
+            mycc.save()
+            return redirect('periodebudget_list')
+    else:
+        form = PeriodeBudgetForm( instance=mycc )
+    return render(request, 'periodebudget_edit.html', {'form': form})
+
 
 
 @login_required
