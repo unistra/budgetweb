@@ -4,8 +4,6 @@ from django.contrib import admin
 
 from .views import home
 from . import views
-from . import views2
-from . import views3
 
 admin.autodiscover()
 
@@ -115,9 +113,6 @@ urlpatterns = [
     url(r'^ajax/ajax_add_enveloppe_depense/(?P<pkstr1>[0-9]+)/(?P<lenveloppe>\w+)/$', views.ajax_add_enveloppe_depense,name="ajax_add_enveloppe_depense"),
     url(r'^ajax/ajax_add_enveloppetype_depense/(?P<pkstr1>[0-9]+)/$', views.ajax_add_enveloppetype_depense,name="ajax_add_enveloppetype_depense"),
     url(r'^ajax/ajax_get_enveloppe_decalage/(?P<pkstr1>[0-9]+)/$', views.ajax_get_enveloppe_decalage ,name="ajax_get_enveloppe_decalage"),
-# Presentation / Affichage
-    url(r'^menu1/$', views2.menu_list14tree, name='menu1_list'),
-    url(r'^menu2/$', views3.menu_list15tree, name='menu2_list'),
 #Ajax recettes
     url(r'^ajax/ajax_recadd/(?P<pkstr1>[0-9]+)/$', views.ajax_recadd_todo1,name="ajax_recadd_todo1"),
     url(r'^ajax/ajax_recfindstruct_lev3/(?P<pkstr1>[0-9]+)/$', views.ajax_recfindstruct_lev3,name="ajax_recfindstruct_lev3"),
