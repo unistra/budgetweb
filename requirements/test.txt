@@ -1,3 +1,5 @@
 -r common.txt
 chaussette
 waitress
+psycopg2
+

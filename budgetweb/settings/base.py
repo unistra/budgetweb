@@ -125,7 +125,7 @@ MEDIA_URL = '/media/'
 STATIC_ROOT = normpath(join(SITE_ROOT, 'assets'))
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
-STATIC_URL = '/budgetweb/site_media/'
+STATIC_URL = '/site_media/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
