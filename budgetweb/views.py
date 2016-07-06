@@ -1084,7 +1084,6 @@ def planfinancement_importcsv(request):
                      monpfi.cpassoc = ligne[6]
                      monpfi.fleche = ligne[7]
                      monpfi.pluriannuel = ligne[8]
-                     monpfi.status = ligne[13]
                      monpfi.save()
              lemessage=lemessage+ "  ok fichier "+ lechemin+ " importé "+ str(nblignes) +" lignes trouvées."
              fichier.close()
@@ -1096,50 +1095,9 @@ def planfinancement_importcsv(request):
     return render(request, 'planfinancement_import.html', {'lechemin': "", 'lemessage':""})
 
 
-"""------------------------------------------------------------------
-Import des PFI - Version abandonnée
-------------------------------------------------------------------"""
-@login_required
-def planfinancement_importcsv2(request):
-    if request.method == "POST":
-        if request.POST.get("lechemin"):
-             lechemin=request.POST.get("lechemin")
-             fichier = open(lechemin, "r")
-             nblignes=0
-             for ligne in fichier:
-                 if ligne.strip():
-                     nblignes = nblignes+1
-                     monpfi = PlanFinancement()
-                     ligne = ligne.split(";")
-                     monpfi.myid = ligne[0]
-                     monpfi.name = ligne[1]
-                     monpfi.eotp = ligne[2]
-                     monpfi.label = ligne[3]
-                     monpfi.idabrege = ligne[4]
-                     monpfi.creepar = ligne[5]
-                     monpfi.creedate = ligne[6]
-                     monpfi.modifpar = ligne[7]
-                     monpfi.modifdate = ligne[8]
-                     monpfi.responsable = ligne[9]
-                     monpfi.dem = ligne[10]
-                     monpfi.societe = ligne[11]
-                     monpfi.ccassoc = ligne[13]
-                     monpfi.cpassoc = ligne[12]
-                     monpfi.save()
-             lemessage="ok fichier "+ lechemin+ " importé "
-             lemessage+=str(nblignes) +" lignes trouvées."
-             fichier.close()
-             return render(request,"planfinancement_import.html",{'lemessage':lemessage})
-        else:
-             return render(request, 'planfinancement_import.html', {'lechemin': "", 'lemessage':""})
-    else:
-        lechemin="vide2"
-    return render(request, 'planfinancement_import.html', {'lechemin': "", 'lemessage':""})
-
-
 
 """------------------------------------------------------------------
-Import des PFI - Version utilisée
+Import des PFI - Version B utilisée
 #nouveau format:Code eotp;PFI;Désignation Operation;Fleché;Pluriannuel;CF ;CP Dérivé;CC Dérivé;
 ------------------------------------------------------------------"""
 @login_required
