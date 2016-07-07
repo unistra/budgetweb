@@ -41,8 +41,8 @@ Gestion des Comptes budgétaires
 ----------------------------------------------"""
 class CompteBudget(models.Model):
     code = models.CharField(max_length=20, verbose_name=u'Code')
-    label = models.CharField(max_length=100,blank=True,default="",verbose_name=u'Libellé')
-    description = models.CharField(max_length=100,blank=True,default="",verbose_name=u'Description')
+    label = models.CharField(max_length=150,blank=True,default="",verbose_name=u'Libellé')
+    description = models.CharField(max_length=150,blank=True,default="",verbose_name=u'Description')
 
     def __str__(self):
         return (self.code +'::'+self.label)
@@ -221,10 +221,20 @@ class DepenseFull ( models.Model ):
     def clean(self):
         montantae=self.montantae
         montantcp=self.montantcp
-        decalagetreso =self.cptdeplev1.decalagetresocpae
-        if decalagetreso == False:
-            if montantae != montantcp:
-                raise ValidationError({'montantae':u'Pas de décalage de trésorerie sur cette nature comptable.Veuillez vous assurrer que montantae=montantcp.'} )
+
+        if self.structlev3 :
+            pass
+        else:
+            raise ValidationError({'structlev3':u'Veuillez choisir la structure'} )
+        if not self.plfi :
+            raise ValidationError({'plfi':u'Veuillez choisir le PFI'} )
+        if self.cptdeplev1 :
+            decalagetreso =self.cptdeplev1.decalagetresocpae
+            if decalagetreso == False:
+                if montantae != montantcp:
+                    raise ValidationError({'montantae':u'Pas de décalage de trésorerie sur cette nature comptable.Veuillez vous assurrer que montantae=montantcp.'} )
+        else:
+            raise ValidationError({'cptdeplev1':u'Veuillez saisir la nature comptable'} )
 
 
     def save(self, *args, **kwargs):
@@ -260,6 +270,14 @@ class RecetteFull ( models.Model ):
     creepar = models.CharField (max_length = 100 , blank=True , null = True)
     modifiele = models.DateTimeField(auto_now = True,blank=True, verbose_name=u'Date de modification')
     modifiepar= models.CharField (max_length = 100 , blank=True , null = True)
+
+    def clean (self):
+        pass
+
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super(RecetteFull, self).save(*args, **kwargs)
 
 
 

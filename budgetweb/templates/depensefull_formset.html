@@ -78,7 +78,7 @@
             {{depensefull_form.id}}
         <tr><td>
         <div class="depense-formset">
-
+            {{ depensefull_form.structlev3}}{{ depensefull_form.plfi}}
             {{ depensefull_form.cptdeplev1.label_tag }}{{ depensefull_form.cptdeplev1 }}
             {% if depensefull_form.cptdeplev1.errors %}
                 {% for error in depensefull_form.cptdeplev1.errors %}

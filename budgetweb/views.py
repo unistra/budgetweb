@@ -982,6 +982,7 @@ def planfinancement_new(request):
         form = PlanFinancementForm(request.POST)
         if form.is_valid():
             newpfi = form.save(commit=False)
+            newpfi.creepar = request.user.username
             newpfi.save()
             return redirect('planfinancement_list')
         else:
@@ -1040,6 +1041,7 @@ def planfinancement_edit(request,pkpfi):
     if request.method== "POST":
         form = PlanFinancementForm(request.POST, instance=mypfi)
         if form.is_valid():
+            mypfi.modifiepar = request.user.username
             mypfi.save()
             return redirect('planfinancement_list')
     else:
@@ -1999,20 +2001,25 @@ def depensefull_edit2(request,pkdep):
 def baseformsetdepensefullavec_pfi_cflink(request,struct3id,pfiid):
 
     isfleche=PlanFinancement.objects.get(id=pfiid).fleche
+    initial=''#{'structlev3': struct3id,'plfi': pfiid}
 
     if isfleche :
-        DepenseFullFormSet = modelformset_factory(DepenseFull, form=DepenseFullFormPfifleche, formset=BaseDepenseFullFormSet,exclude=[],extra=3)
+        DepenseFullFormSet = modelformset_factory(DepenseFull, form=DepenseFullFormPfifleche,formset=BaseDepenseFullFormSet,exclude=[],extra=3)
+        DepenseFullFormSet.form.base_fields['structlev3'].queryset = Structure.objects.filter(pk=struct3id)
+        DepenseFullFormSet.form.base_fields['plfi'].queryset = PlanFinancement.objects.filter(pk=pfiid)
     else:
-        DepenseFullFormSet = modelformset_factory(DepenseFull, form=DepenseFullFormPfinonfleche, formset=BaseDepenseFullFormSet,exclude=[],extra=3)
+        DepenseFullFormSet = modelformset_factory(DepenseFull, form=DepenseFullFormPfinonfleche,formset=BaseDepenseFullFormSet,exclude=[],extra=3)
+        DepenseFullFormSet.form.base_fields['structlev3'].queryset = Structure.objects.filter(pk=struct3id)
+        DepenseFullFormSet.form.base_fields['plfi'].queryset = PlanFinancement.objects.filter(pk=pfiid)
 
     budget=current_budget()
-    initial=''
     depense='dep'
     depensesdupfi = DepenseFull.objects.filter(plfi_id=pfiid,periodebudget=budget)
 
     if request.method == 'POST':
         myformset = DepenseFullFormSet(request.POST)
         if myformset.is_valid():
+            #formset.deleted_objects
             instances = myformset.save()
             for dep in depensesdupfi:
                 if not( dep in instances) :
@@ -2061,8 +2068,13 @@ def baseformsetrecettefullavec_pfi_cflink(request,struct3id,pfiid):
 
     if isfleche : 
         RecetteFullFormSet = modelformset_factory(RecetteFull, form=RecetteFullFormPfifleche, formset=BaseRecetteFullFormSet,exclude=[],extra=3)
+        RecetteFullFormSet.form.base_fields['structlev3'].queryset = Structure.objects.filter(pk=struct3id)
+        RecetteFullFormSet.form.base_fields['plfi'].queryset = PlanFinancement.objects.filter(pk=pfiid)
+
     else:
         RecetteFullFormSet = modelformset_factory(RecetteFull, form=RecetteFullFormPfinonfleche, formset=BaseRecetteFullFormSet,exclude=[],extra=3)
+        RecetteFullFormSet.form.base_fields['structlev3'].queryset = Structure.objects.filter(pk=struct3id)
+        RecetteFullFormSet.form.base_fields['plfi'].queryset = PlanFinancement.objects.filter(pk=pfiid)
 
     df_rec_na= DomaineFonctionnel.objects.filter(dfcode='NA').first()
     budget=current_budget()

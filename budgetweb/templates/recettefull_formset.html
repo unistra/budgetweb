@@ -65,7 +65,29 @@
             {{recettefull_form.id}}
         <tr><td>
         <div class="recette-formset">
-            
+
+            {{ recettefull_form.structlev3}}
+            {% if recettefull_form.structlev3.errors %}
+                {% for error in recettefull_form.structlev3.errors %}
+                    {{ error|escape }}
+                {% endfor %}
+            {% endif %}
+
+           {{ recettefull_form.plfi}} 
+            {% if recettefull_form.plfi.errors %}
+                {% for error in recettefull_form.plfi.errors %}
+                    {{ error|escape }}
+                {% endfor %}
+            {% endif %}
+
+            {{ recettefull_form.domfonc}}
+            {% if recettefull_form.domfonc.errors %}
+                {% for error in recettefull_form.domfonc.errors %}
+                    {{ error|escape }}
+                {% endfor %}
+            {% endif %}
+
+
             {{recettefull_form.cptdeplev1.label_tag}} {{recettefull_form.cptdeplev1}}
             {% if recettefull_form.cptdeplev1.errors %}
                 {% for error in recettefull_form.cptdeplev1.errors %}

@@ -187,14 +187,21 @@ class DepenseFullFormPfifleche ( forms.ModelForm ):
         #-----
         instance = getattr(self, 'instance', None)
         #pas de modification sur ces champs
+        #self.fields['cptdeplev1'].queryset = NatureComptable.objects.filter(id=instance.cptdeplev1.id)
+        #self.fields['structlev3'].queryset = Structure.objects.filter(id=instance.structlev3.id)
+        #self.fields['plfi'].queryset = PlanFinancement.objects.filter(id=instance.plfi.id)
+
+        #pas de modification sur ces champs
         # la periode de budget est calculee automatiquement 
         if instance and instance.pk:
-            self.fields['structlev3'].widget.attrs['readonly'] = True
-            self.fields['structlev3'].widget.attrs['disabled'] = 'disabled'
+            self.fields['structlev3'].queryset = Structure.objects.filter(id=instance.structlev3.id)
+            self.fields['plfi'].queryset = PlanFinancement.objects.filter(id=instance.plfi.id)
+            #self.fields['structlev3'].widget.attrs['readonly'] = True
+            #self.fields['structlev3'].widget.attrs['disabled'] = 'disabled'
             #self.fields['cptdeplev1'].widget.attrs['readonly'] = True
             #self.fields['cptdeplev1'].widget.attrs['disabled'] = 'disabled'
-            self.fields['plfi'].widget.attrs['readonly'] = True
-            self.fields['plfi'].widget.attrs['disabled'] = 'disabled'
+            #self.fields['plfi'].widget.attrs['readonly'] = True
+            #self.fields['plfi'].widget.attrs['disabled'] = 'disabled'
             self.fields['myid'].widget.attrs['readonly'] = True
             self.fields['myid'].widget.attrs['disabled'] = 'disabled'
             self.fields['periodebudget'].widget.attrs['readonly'] = True
@@ -231,14 +238,22 @@ class DepenseFullFormPfinonfleche ( forms.ModelForm ):
         #-----
         instance = getattr(self, 'instance', None)
         #pas de modification sur ces champs
+        #self.fields['cptdeplev1'].queryset = NatureComptable.objects.filter(id=instance.cptdeplev1.id)
+        #self.fields['structlev3'].queryset = Structure.objects.filter(id=instance.structlev3.id)
+        #self.fields['plfi'].queryset = PlanFinancement.objects.filter(id=instance.plfi.id)
+
+        #pas de modification sur ces champs
         # la periode de budget est calculee automatiquement 
         if instance and instance.pk:
-            self.fields['structlev3'].widget.attrs['readonly'] = True
-            self.fields['structlev3'].widget.attrs['disabled'] = 'disabled'
+            self.fields['structlev3'].queryset = Structure.objects.filter(id=instance.structlev3.id)
+            self.fields['plfi'].queryset = PlanFinancement.objects.filter(id=instance.plfi.id)
+
+            #self.fields['structlev3'].widget.attrs['readonly'] = True
+            #self.fields['structlev3'].widget.attrs['disabled'] = 'disabled'
             #self.fields['cptdeplev1'].widget.attrs['readonly'] = True
             #self.fields['cptdeplev1'].widget.attrs['disabled'] = 'disabled'
-            self.fields['plfi'].widget.attrs['readonly'] = True
-            self.fields['plfi'].widget.attrs['disabled'] = 'disabled'
+            #self.fields['plfi'].widget.attrs['readonly'] = True
+            #self.fields['plfi'].widget.attrs['disabled'] = 'disabled'
             self.fields['myid'].widget.attrs['readonly'] = True
             self.fields['myid'].widget.attrs['disabled'] = 'disabled'
             self.fields['periodebudget'].widget.attrs['readonly'] = True
@@ -330,23 +345,28 @@ class RecetteFullFormPfifleche ( forms.ModelForm ):
         self.fields['cptdeplev1'].queryset = NatureComptable.objects.filter(nctype='rec',pfifleche=True)
         self.fields['domfonc'].queryset = DomaineFonctionnel.objects.filter(dfcode='NA')
 
+
         instance = getattr(self, 'instance', None)
         #pas de modification sur ces champs
         # en recette domfonc=NA toujours
         # la periode de budget est calculee automatiquement 
         if instance and instance.pk:
-            self.fields['structlev3'].widget.attrs['readonly'] = True
-            self.fields['structlev3'].widget.attrs['disabled'] = 'disabled'
+            self.fields['structlev3'].queryset = Structure.objects.filter(id=instance.structlev3.id)
+            self.fields['plfi'].queryset = PlanFinancement.objects.filter(id=instance.plfi.id)
+            #self.fields['domfonc'].queryset = DomaineFonctionnel.objects.filter(id=instance.plfi.id)
+            self.fields['cptdeplev1'].queryset = NatureComptable.objects.filter(id=instance.cptdeplev1.id)
+            #self.fields['structlev3'].widget.attrs['readonly'] = True
+            #self.fields['structlev3'].widget.attrs['disabled'] = 'disabled'
             #self.fields['cptdeplev1'].widget.attrs['readonly'] = True
             #self.fields['cptdeplev1'].widget.attrs['disabled'] = 'disabled'
-            self.fields['plfi'].widget.attrs['readonly'] = True
-            self.fields['plfi'].widget.attrs['disabled'] = 'disabled'
+            #self.fields['plfi'].widget.attrs['readonly'] = True
+            #self.fields['plfi'].widget.attrs['disabled'] = 'disabled'
             #self.fields['myid'].widget.attrs['readonly'] = True
             #self.fields['myid'].widget.attrs['disabled'] = 'disabled'
 
             self.fields['periodebudget'].widget.attrs['readonly'] = True
-            self.fields['domfonc'].widget.attrs['readonly'] = True
-            self.fields['domfonc'].widget.attrs['disabled'] = 'disabled'
+            #self.fields['domfonc'].widget.attrs['readonly'] = True
+            #self.fields['domfonc'].widget.attrs['disabled'] = 'disabled'
             self.fields['periodebudget'].widget.attrs['disabled'] = 'disabled'
 
 
@@ -361,29 +381,35 @@ class RecetteFullFormPfinonfleche ( forms.ModelForm ):
             'myfile': forms.Textarea(attrs={'cols': 40, 'rows': 2}),
         }
 
-
     def __init__(self,*args,**kwargs):
         super (RecetteFullFormPfinonfleche,self ).__init__(*args,**kwargs) # populates the post
         self.fields['cptdeplev1'].queryset = NatureComptable.objects.filter(nctype='rec',pfifleche=False)
         self.fields['domfonc'].queryset = DomaineFonctionnel.objects.filter(dfcode='NA')
+        instance = getattr(self, 'instance', None)
+        #pas de modification sur ces champs
+        #self.fields['cptdeplev1'].queryset = NatureComptable.objects.filter(id=instance.cptdeplev1.id)
 
         instance = getattr(self, 'instance', None)
         #pas de modification sur ces champs
         # en recette domfonc=NA toujours
         # la periode de budget est calculee automatiquement 
         if instance and instance.pk:
-            self.fields['structlev3'].widget.attrs['readonly'] = True
-            self.fields['structlev3'].widget.attrs['disabled'] = 'disabled'
+            self.fields['structlev3'].queryset = Structure.objects.filter(id=instance.structlev3.id)
+            self.fields['plfi'].queryset = PlanFinancement.objects.filter(id=instance.plfi.id)
+
+            self.fields['cptdeplev1'].queryset = NatureComptable.objects.filter(id=instance.cptdeplev1.id)
+            #self.fields['structlev3'].widget.attrs['readonly'] = True
+            #self.fields['structlev3'].widget.attrs['disabled'] = 'disabled'
             #self.fields['cptdeplev1'].widget.attrs['readonly'] = True
             #self.fields['cptdeplev1'].widget.attrs['disabled'] = 'disabled'
-            self.fields['plfi'].widget.attrs['readonly'] = True
-            self.fields['plfi'].widget.attrs['disabled'] = 'disabled'
+            #self.fields['plfi'].widget.attrs['readonly'] = True
+            #self.fields['plfi'].widget.attrs['disabled'] = 'disabled'
             #self.fields['myid'].widget.attrs['readonly'] = True
             #self.fields['myid'].widget.attrs['disabled'] = 'disabled'
 
             self.fields['periodebudget'].widget.attrs['readonly'] = True
-            self.fields['domfonc'].widget.attrs['readonly'] = True
-            self.fields['domfonc'].widget.attrs['disabled'] = 'disabled'
+            #self.fields['domfonc'].widget.attrs['readonly'] = True
+            #self.fields['domfonc'].widget.attrs['disabled'] = 'disabled'
             self.fields['periodebudget'].widget.attrs['disabled'] = 'disabled'
 
 
