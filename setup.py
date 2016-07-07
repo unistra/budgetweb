@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#
+
 import os
 from setuptools import setup
 from setuptools import find_packages
@@ -30,7 +30,7 @@ recursive_requirements('requirements.txt', libraries, dependency_links)
 
 setup(
     name='budgetweb',
-    version='0.1',
+    version='0.1.0',
     packages=find_packages(),
     install_requires=libraries,
     dependency_links=dependency_links,
