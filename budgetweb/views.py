@@ -4,7 +4,7 @@ from django.template import RequestContext
 from django.utils import timezone
 from datetime import datetime
 from django.shortcuts import render, get_object_or_404, redirect
-import os,time
+import os,time,datetime
 from os import listdir
 from os.path import isfile, join
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -1225,7 +1225,6 @@ def depensefull_new_avec_pfi(request,struct3id,pfiid):
     -----------------------------------------------"""
     budget = PeriodeBudget.objects.filter(bloque=False).first()
     error = ''
-
     if request.method == "POST":
         #struct1 = Structure.objects.filter(id=request.POST.get("structlev1")).first()
         #struct2 = Structure.objects.filter(id=request.POST.get("structlev2")).first()
@@ -1242,7 +1241,8 @@ def depensefull_new_avec_pfi(request,struct3id,pfiid):
             montantdc = request.POST.get("montantdc") if request.POST.get("montantdc") else 0
             montantae = request.POST.get("montantae") if request.POST.get("montantae") else 0
             montantcp = request.POST.get("montantcp") if request.POST.get("montantcp") else 0
-            dateae = request.POST.get("dateae") if request.POST.get("dateae") else ''
+            string_date=request.POST.get("dateae")
+            dateae = datetime.datetime.strptime(string_date, "DD-MM-YYYY") if request.POST.get("dateae") else ''
             myfile=request.POST.get("myfile") if request.POST.get("myfile") else ''
             commentaire = request.POST.get("commentaire") if request.POST.get("commentaire") else ''
 
@@ -1301,23 +1301,34 @@ def depensefull_new_avec_pfi_cflink(request,struct3id,pfiid):
 
     error = ''
     if request.method == "POST":
-
         domfonc = DomaineFonctionnel.objects.filter(id=request.POST.get("domfonc")).first()
 
         cptdev1 = NatureComptable.objects.filter(id=request.POST.get("cptdeplev1")).first()
         if cptdev1 == None :
             error = error + 'Veuillez choisir un type d enveloppe et une enveloppe valide'
-        elif not (request.POST.get("dateae")):
-            error = error + 'Veuillez saisir une date d engagement'
         elif not (request.POST.get("montantdc")):
             error = error + 'Veuillez saisir un montant DC'
-        elif not (request.POST.get("montantae")):
-            error = error + 'Veuillez saisir le montant de l engagement'
         elif not (request.POST.get("montantcp")):
             error = error + 'Veuillez saisir le montant du credit de paiement'
 
-
         else:
+            string_date=request.POST.get("dateae") 
+
+            if string_date == '':
+                dateae=None
+            else:
+                if string_date == '':
+                    dateae=None
+                else:
+                    try:
+                        dateae = datetime.datetime.strptime(string_date, '%d-%m-%Y')
+                    except ValueError:
+                        return render(request, 'depensefull_new_v3.html', {'struct3': struct3,
+                                                       'domfoncs': domfoncs,
+                                                       'plfin':plfi,
+                                                       'error':error,})
+
+
             domfonc = DomaineFonctionnel.objects.filter(id=request.POST.get("domfonc")).first()
 
             plfi = PlanFinancement.objects.filter(id=request.POST.get("plfi")).first()
@@ -1325,7 +1336,15 @@ def depensefull_new_avec_pfi_cflink(request,struct3id,pfiid):
             montantdc = request.POST.get("montantdc") if request.POST.get("montantdc") else 0
             montantae = request.POST.get("montantae") if request.POST.get("montantae") else 0
             montantcp = request.POST.get("montantcp") if request.POST.get("montantcp") else 0
-            dateae = request.POST.get("dateae") if request.POST.get("dateae") else ''
+
+            domfonc = DomaineFonctionnel.objects.filter(id=request.POST.get("domfonc")).first()
+
+            plfi = PlanFinancement.objects.filter(id=request.POST.get("plfi")).first()
+
+            montantdc = request.POST.get("montantdc") if request.POST.get("montantdc") else 0
+            montantae = request.POST.get("montantae") if request.POST.get("montantae") else 0
+            montantcp = request.POST.get("montantcp") if request.POST.get("montantcp") else 0
+            
             commentaire = request.POST.get("commentaire") if request.POST.get("commentaire") else ''
             myfile = request.POST.get("myfile") if request.POST.get("myfile") else ''
 
@@ -1392,12 +1411,14 @@ def recettefull_new_avec_pfi_cflink(request,struct3id,pfiid):
             montantar = request.POST.get("montantar") if request.POST.get("montantar") else 0
             montantre = request.POST.get("montantre") if request.POST.get("montantre") else 0
             commentaire = request.POST.get("commentaire") if request.POST.get("commentaire") else ''
+            df_rec_na= DomaineFonctionnel.objects.filter(dfcode='NA').first()
 
             marecette = RecetteFull()
             marecette.structlev3 = struct3
             marecette.cptdeplev1 = cptdev1
             marecette.domfonc = df_rec_na
             marecette.plfi = plfi
+            marecette.domfonc=df_rec_na
             marecette.montantdc = montantdc
             marecette.montantar = montantar
             marecette.montantre = montantre
