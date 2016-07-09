@@ -1,19 +1,16 @@
 $(document).ready(function() {
-    $('.tree li:has(ul)').addClass('parent_li').find(' > span').attr('title', 'Collapse this branch');
+    $('.tree li:has(ul)').addClass('parent_li').find(' > span').attr('title', 'Ouvrir cette branche');
     $('span').unbind('click');
     $('.tree li.parent_li > span').on('click', function (e) {
         var children = $(this).parent('li.parent_li').find(' > ul > li');
         if (children.is(":visible")) {
             children.hide('fast');
-            $(this).attr('title', 'Expand this branch').find(' > i').addClass('icon-plus-sign').removeClass('icon-minus-sign');
+            $(this).attr('title', 'Expand this branch').find(' > i').addClass('glyphicon glyphicon-plus').removeClass('glyphicon glyphicon-minus');
         } else {
             children.show('fast');
-            $(this).attr('title', 'Collapse this branch').find(' > i').addClass('icon-minus-sign').removeClass('icon-plus-sign');
-
-
-            $('span').on('click', function (e) {
-                cf = $(this).attr('toto');
-                $.ajax({
+            $(this).attr('title', 'Collapse this branch').find(' > i').addClass('glyphicon glyphicon-minus').removeClass('glyphicon glyphicon-plus');
+            cf = $(this).attr('toto');
+            $.ajax({
                          url : window.location.href+"getsubtree/"+cf, // the endpoint,commonly same url
                          type : "GET", // http method
                          data : { }, // data sent with the post request
@@ -41,8 +38,6 @@ $(document).ready(function() {
                     }
                   }
             });
-            });
-
 
 
         }
