@@ -25,3 +25,7 @@ def do_dipstrap(parser, token):
 
 def dipstrap(path):
     return DipstrapNode.handle_simple(path)
+
+@register.filter('trim')
+def trim(value):
+    return value.strip()

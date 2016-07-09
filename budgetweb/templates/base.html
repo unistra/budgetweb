@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="{% static 'css/budgetweb.css' %}" type="text/css" title="no title" charset="utf-8" />
     <style>
      td { padding:0 15px 0 15px; }
-    </style> 
+    </style>
     <script src="{% dipstrap 'js/vendor/modernizr-2.6.2-respond-1.1.0.min.js' %}"></script>
     <script src="{% dipstrap 'js/vendor/jquery-1.11.0.min.js' %}"></script>
     <script src="{% dipstrap 'js/vendor/bootstrap.min.js' %}"></script>
@@ -43,8 +43,8 @@
                        <span class="caret"></span></a>
                        <ul class="dropdown-menu">
                           <li><a href="{% url 'liste_pfi_avec_depenses_recettes'%}">Menu PFI </a></li>
+                          <li><a href="{% url 'show_tree'%}">Menu PFI2</a></li>
                           <li><a href="{% url 'structure_list2'%}">Menu structures </a></li>
-
                           <li><a href="{% url 'authorisation_list'%}">Liste des -autorisations-</a></li>
                           <li><a href="{% url 'naturecomptable_list'%}">Liste des -natures comptables-</a></li>
                           <li><a href="{% url 'comptebudget_list'%}">Liste des -comptes budg&eacutetaires-</a></li>

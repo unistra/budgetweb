@@ -128,6 +128,10 @@ urlpatterns = [
     # url(r'^app/', include('apps.app.urls')),
 
     url(r'^admin/', include(admin.site.urls)),
+
+# Affichage
+    url(r'^showtree/$', views.show_tree, name="show_tree"),
+    url(r'^showtree/getsubtree/(?P<structid>\w+)$', views.show_sub_tree, name="show_sub_tree")
 ]
 
 # debug toolbar for dev

@@ -10,7 +10,7 @@ from os.path import isfile, join
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from .forms import AuthorisationForm, NatureComptableForm , DomaineFonctionnelForm
-from .forms import StructureForm , PlanFinancementForm 
+from .forms import StructureForm , PlanFinancementForm
 from .models import Authorisation, NatureComptable , DomaineFonctionnel , PeriodeBudget,CompteBudget
 from .models import Structure , PlanFinancement , DepenseFull , RecetteFull
 from .forms import DepenseFullForm , RecetteFullForm , PeriodeBudgetForm , CompteBudgetForm
@@ -37,6 +37,8 @@ from django.db import IntegrityError, transaction
 from django.forms.models import modelformset_factory
 from django.core.exceptions import ValidationError
 
+
+from budgetweb.libs.node import *
 #---------------------------------------------------------------------------------
 
 def search(request):
@@ -319,7 +321,7 @@ def periodebudget_edit(request,pkpb):
 @login_required
 def comptebudget_new(request):
     """------------------------------------------------
-    new comptebudgetaire 
+    new comptebudgetaire
     ------------------------------------------------"""
     if request.method == "POST":
         form = CompteBudgetForm(request.POST)
@@ -335,7 +337,7 @@ def comptebudget_new(request):
 @login_required
 def comptebudget_list(request):
     """------------------------------------------------
-    list comptebudgetaire 
+    list comptebudgetaire
     ------------------------------------------------"""
     if request.method == "POST":
         cclabel  = request.POST['cclabel']
@@ -352,7 +354,7 @@ def comptebudget_list(request):
 @login_required
 def comptebudget_delete(request,pkcc):
     """------------------------------------------------
-    delete comptebudgetaire 
+    delete comptebudgetaire
     ------------------------------------------------"""
     mycc = get_object_or_404( CompteBudget,pk=pkcc )
     if request.method== "POST":
@@ -369,7 +371,7 @@ def comptebudget_delete(request,pkcc):
 @login_required
 def comptanature_new(request):
     """------------------------------------------------
-    new comptanature 
+    new comptanature
     ------------------------------------------------"""
     if request.method == "POST":
         form = ComptaNatureForm(request.POST)
@@ -401,7 +403,7 @@ def comptanature_edit(request,pk):
 @login_required
 def comptanature_list(request):
     """------------------------------------------------
-    list comptanature 
+    list comptanature
     ------------------------------------------------"""
     if request.method == "POST":
         cclabel  = request.POST['cclabel']
@@ -418,7 +420,7 @@ def comptanature_list(request):
 @login_required
 def comptanature_delete(request,pkcb):
     """------------------------------------------------
-    delete comptanature 
+    delete comptanature
     ------------------------------------------------"""
     mycc = get_object_or_404( ComptaNature,pk=pkcb )
     if request.method== "POST":
@@ -436,7 +438,7 @@ def comptanature_delete(request,pkcb):
 @login_required
 def fondbudgetaire_new(request):
     """------------------------------------------------
-    new fondbudgetaire 
+    new fondbudgetaire
     ------------------------------------------------"""
     if request.method == "POST":
         form = FondBudgetaireForm(request.POST)
@@ -468,7 +470,7 @@ def fondbudgetaire_edit(request,pk):
 @login_required
 def fondbudgetaire_list(request):
     """------------------------------------------------
-    list fondbudgetaire 
+    list fondbudgetaire
     ------------------------------------------------"""
     if request.method == "POST":
         cclabel  = request.POST['cclabel']
@@ -485,7 +487,7 @@ def fondbudgetaire_list(request):
 @login_required
 def fondbudgetaire_delete(request,pkcb):
     """------------------------------------------------
-    delete fondbudgetaire 
+    delete fondbudgetaire
     ------------------------------------------------"""
     mycc = get_object_or_404( FondBudgetaire,pk=pkcb )
     if request.method== "POST":
@@ -505,7 +507,7 @@ def fondbudgetaire_delete(request,pkcb):
 @login_required
 def naturecomptable_new(request):
     """------------------------------------------------
-    new Nature comptable 
+    new Nature comptable
     ------------------------------------------------"""
     if request.method == "POST":
         form = NatureComptableForm(request.POST)
@@ -539,7 +541,7 @@ def naturecomptable_edit(request,pkcc):
 @login_required
 def naturecomptable_list(request):
     """------------------------------------------------
-    Liste des natures comptables 
+    Liste des natures comptables
     ------------------------------------------------"""
 
     if request.method == "POST":
@@ -600,11 +602,11 @@ def naturecomptable_importcsv(request):
                      moncc.ncsecondairecode = ligne[3]
 
                      ccbdcode = ligne[4]
-                     moncc.ccbd = CompteBudget.objects.get(code=ccbdcode) 
+                     moncc.ccbd = CompteBudget.objects.get(code=ccbdcode)
                      if ligne[6] == 'non':
                          moncc.decalagetresocpae = False
                      else:
-                         moncc.decalagetresocpae = True  
+                         moncc.decalagetresocpae = True
                      moncc.nctype = 'dep'
 
                      moncc.save()
@@ -639,13 +641,13 @@ def naturecomptable_recette__importcsv(request):
                      moncc.nccode = ligne[2]
                      moncc.nclabel = ligne[2]
                      moncc.ncsecondairecode = ligne[3]
-                     
+
                      ccbdcode = ligne[4]
-                     moncc.ccbd = CompteBudget.objects.get(code=ccbdcode) 
+                     moncc.ccbd = CompteBudget.objects.get(code=ccbdcode)
                      if ligne[6] == 'non':
-                         moncc.decalagetresocpae = False 
+                         moncc.decalagetresocpae = False
                      else:
-                         moncc.decalagetresocpae = True     
+                         moncc.decalagetresocpae = True
                      moncc.nctype = 'rec'
 
                      moncc.save()
@@ -1312,7 +1314,7 @@ def depensefull_new_avec_pfi_cflink(request,struct3id,pfiid):
             error = error + 'Veuillez saisir le montant du credit de paiement'
 
         else:
-            string_date=request.POST.get("dateae") 
+            string_date=request.POST.get("dateae")
 
             if string_date == '':
                 dateae=None
@@ -1344,7 +1346,7 @@ def depensefull_new_avec_pfi_cflink(request,struct3id,pfiid):
             montantdc = request.POST.get("montantdc") if request.POST.get("montantdc") else 0
             montantae = request.POST.get("montantae") if request.POST.get("montantae") else 0
             montantcp = request.POST.get("montantcp") if request.POST.get("montantcp") else 0
-            
+
             commentaire = request.POST.get("commentaire") if request.POST.get("commentaire") else ''
             myfile = request.POST.get("myfile") if request.POST.get("myfile") else ''
 
@@ -1599,7 +1601,7 @@ def ajax_add_eotp(request,pkstr1):
     if request.is_ajax():
         myname=Structure.objects.get(id=pkstr1).name
         myname=myname.strip()
- 
+
         planfi = PlanFinancement.objects.filter(cfassoc=myname,pluriannuel=False)
         todo_items=[]
 
@@ -2045,7 +2047,7 @@ def baseformsetdepensefullavec_pfi_cflink(request,struct3id,pfiid):
             for dep in depensesdupfi:
                 if not( dep in instances) :
                     dep.delete()
-                 
+
             for instance in instances:
                 if not instance.creepar :
                      instance.creepar=request.user.username
@@ -2087,7 +2089,7 @@ def baseformsetrecettefullavec_pfi_cflink(request,struct3id,pfiid):
 
     isfleche=PlanFinancement.objects.get(id=pfiid).fleche
 
-    if isfleche : 
+    if isfleche :
         RecetteFullFormSet = modelformset_factory(RecetteFull, form=RecetteFullFormPfifleche, formset=BaseRecetteFullFormSet,exclude=[],extra=3)
         RecetteFullFormSet.form.base_fields['structlev3'].queryset = Structure.objects.filter(pk=struct3id)
         RecetteFullFormSet.form.base_fields['plfi'].queryset = PlanFinancement.objects.filter(pk=pfiid)
@@ -2143,4 +2145,32 @@ def baseformsetrecettefullavec_pfi_cflink(request,struct3id,pfiid):
         }
 
     return render(request, 'recettefull_formset.html',context)
- 
+
+
+
+@login_required
+def show_tree(request):
+    listeCF = generateTree(request)
+    return render(request, 'showtree.html', { 'listeCF': listeCF})
+
+@login_required
+def show_sub_tree(request,structid):
+
+    # On récupère l'ID sur PAPA
+    structure = Structure.objects.filter(name=" "+structid.strip()).first()
+    print(structure.myid)
+
+    # On récupère la liste des CF fils.
+    listeCF = Structure.objects.filter(parentid=structure.myid,type=' cf')
+
+    # Et enfin on ajoute les PFI, si jamais il y en a.
+    listePFI = PlanFinancement.objects.filter(cfassoclink=structure.id).order_by('myid').values()
+    listePFI2 = []
+    for pfi in listePFI:
+        pfi['sommeDepenseAE'] = DepenseFull.objects.filter(plfi_id=pfi['id']).aggregate(somme=Sum('montantae'))
+        pfi['sommeDepenseCP'] = DepenseFull.objects.filter(plfi_id=pfi['id']).aggregate(somme=Sum('montantcp'))
+        pfi['sommeDepenseDC'] = DepenseFull.objects.filter(plfi_id=pfi['id']).aggregate(somme=Sum('montantdc'))
+        pfi['sommeRecetteAR'] = RecetteFull.objects.filter(plfi_id=pfi['id']).aggregate(somme=Sum('montantar'))
+        pfi['sommeRecetteRE'] = RecetteFull.objects.filter(plfi_id=pfi['id']).aggregate(somme=Sum('montantre'))
+        pfi['sommeRecetteDC'] = RecetteFull.objects.filter(plfi_id=pfi['id']).aggregate(somme=Sum('montantdc'))
+    return render(request, 'show_sub_tree.html', { 'listeCF': listeCF, 'listePFI' : listePFI})
