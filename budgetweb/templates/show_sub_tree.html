@@ -19,17 +19,22 @@
 {% for node in listePFI %}
    <li>
   	<span style="width:160px;" toto="{{ node.myid|trim }}">
-  		{{ node.myid|trim }} <a href="{% url 'baseformsetdepensefullavec_pfi_cflink' pfiid=node.id struct3id=node.cfassoclink_id %}">D</a>&nbsp;<a href="{% url 'baseformsetrecettefullavec_pfi_cflink' pfiid=node.id struct3id=node.cfassoclink_id %}">R</a>
-
+  		{{ node.myid|trim }}
+      {% if node.pluriannuel %}
+      <a href="{% url 'pluriannuel' pfiid=node.id %}">D.&amp; R.</a>&nbsp;
+      {% else %}
+        <a href="{% url 'baseformsetdepensefullavec_pfi_cflink' pfiid=node.id struct3id=node.cfassoclink_id %}">D</a>&nbsp;
+        <a href="{% url 'baseformsetrecettefullavec_pfi_cflink' pfiid=node.id struct3id=node.cfassoclink_id %}">R</a>
+      {% endif %}
   	</span>
+    <div class="showTree">{% if node.sommeRecetteDC.somme %}{{ node.sommeRecetteDC.somme }}{% else %}0{% endif %} &euro;</div>
+    <div class="showTree">{% if node.sommeRecetteRE.somme %}{{ node.sommeRecetteRE.somme }}{% else %}0{% endif %} &euro;</div>
+    <div class="showTree">{% if node.sommeRecetteAR.somme %}{{ node.sommeRecetteAR.somme }}{% else %}0{% endif %} &euro;</div>
+    <div class="showTree">&nbsp;</div>
+    <div class="showTree">{% if node.sommeDepenseDC.somme %}{{ node.sommeDepenseDC.somme }}{% else %}0{% endif %} &euro;</div>
+    <div class="showTree">{% if node.sommeDepenseCP.somme %}{{ node.sommeDepenseCP.somme }}{% else %}0{% endif %} &euro;</div>
     <div class="showTree">{% if node.sommeDepenseAE.somme %}{{ node.sommeDepenseAE.somme }}{% else %}0{% endif %} &euro;</div>
-  	<div class="showTree">{% if node.sommeDepenseCP.somme %}{{ node.sommeDepenseCP.somme }}{% else %}0{% endif %} &euro;</div>
-  	<div class="showTree">{% if node.sommeDepenseDC.somme %}{{ node.sommeDepenseDC.somme }}{% else %}0{% endif %} &euro;</div>
-  	<div class="showTree">&nbsp;</div>
-  	<div class="showTree">{% if node.sommeRecetteAR.somme %}{{ node.sommeRecetteAR.somme }}{% else %}0{% endif %} &euro;</div>
-  	<div class="showTree">{% if node.sommeRecetteRE.somme %}{{ node.sommeRecetteRE.somme }}{% else %}0{% endif %} &euro;</div>
-  	<div class="showTree">{% if node.sommeRecetteDC.somme %}{{ node.sommeRecetteDC.somme }}{% else %}0{% endif %} &euro;</div>
-    <ul id="{{ node.myid|trim }}"></ul>
+  	<ul id="{{ node.myid|trim }}"></ul>
   </li>
 {% endfor %}
 <script src="{% static 'js/budgetweb.js' %}"></script>

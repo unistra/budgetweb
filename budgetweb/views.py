@@ -2174,3 +2174,10 @@ def show_sub_tree(request,structid):
         pfi['sommeRecetteRE'] = RecetteFull.objects.filter(plfi_id=pfi['id']).aggregate(somme=Sum('montantre'))
         pfi['sommeRecetteDC'] = RecetteFull.objects.filter(plfi_id=pfi['id']).aggregate(somme=Sum('montantdc'))
     return render(request, 'show_sub_tree.html', { 'listeCF': listeCF, 'listePFI' : listePFI})
+
+
+@login_required
+def pluriannuel(request,pfiid):
+    pfi = PlanFinancement.objects.filter(pk=pfiid).first()
+    
+    return render(request, 'pluriannuel.html', { 'test' : "test", 'PFI': pfi})

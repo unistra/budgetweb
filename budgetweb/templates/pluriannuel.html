@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block head-additional %}
+	<link rel="stylesheet" href="{% static 'css/budgetweb.css' %}"/>
+{% endblock %}
+
+{% block content %}
+		<div class="col-md-12">
+<h2>PFI : {{ PFI.myid }} ({{ PFI.name}})</h2>
+
+</div>
+{% endblock %}
+{% block foot-javascript %}
+<script src="{% static 'js/budgetweb.js' %}"></script>
+{% endblock %}

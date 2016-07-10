@@ -131,9 +131,11 @@ urlpatterns = [
 
 # Affichage
     url(r'^showtree/$', views.show_tree, name="show_tree"),
-    url(r'^showtree/getsubtree/(?P<structid>\w+)$', views.show_sub_tree, name="show_sub_tree")
+# Affichage AJAX.
+    url(r'^showtree/getsubtree/(?P<structid>\w+)$', views.show_sub_tree, name="show_sub_tree"),
+# Pluriannuel
+    url(r'^pluriannuel/(?P<pfiid>\w+)$', views.pluriannuel, name="pluriannuel"),
 ]
-
 # debug toolbar for dev
 if settings.DEBUG and 'debug_toolbar'in settings.INSTALLED_APPS:
     import debug_toolbar
