@@ -39,6 +39,12 @@ from django.core.exceptions import ValidationError
 
 
 from budgetweb.libs.node import *
+
+# logging
+import logging
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
+
 #---------------------------------------------------------------------------------
 
 def search(request):
@@ -2158,7 +2164,7 @@ def show_sub_tree(request,structid):
 
     # On récupère l'ID sur PAPA
     structure = Structure.objects.filter(name=" "+structid.strip()).first()
-    #print(structure.myid)
+    logger.debug(structure.myid)
 
     # On récupère la liste des CF fils.
     listeCF = Structure.objects.filter(parentid=structure.myid,type=' cf')
