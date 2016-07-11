@@ -2158,7 +2158,7 @@ def show_sub_tree(request,structid):
 
     # On récupère l'ID sur PAPA
     structure = Structure.objects.filter(name=" "+structid.strip()).first()
-    print(structure.myid)
+    #print(structure.myid)
 
     # On récupère la liste des CF fils.
     listeCF = Structure.objects.filter(parentid=structure.myid,type=' cf')
@@ -2179,5 +2179,6 @@ def show_sub_tree(request,structid):
 @login_required
 def pluriannuel(request,pfiid):
     pfi = PlanFinancement.objects.filter(pk=pfiid).first()
-    
+
+
     return render(request, 'pluriannuel.html', { 'test' : "test", 'PFI': pfi})
