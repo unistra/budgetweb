@@ -2163,8 +2163,8 @@ def show_tree(request):
 def show_sub_tree(request,structid):
 
     # On récupère l'ID sur PAPA
-    structure = Structure.objects.filter(name=" "+structid.strip()).first()
-    logger.debug(structure.myid)
+    structure = Structure.objects.filter(name=" "+structid.strip(),type=' cf').first()
+    logger.info(structure.myid)
 
     # On récupère la liste des CF fils.
     listeCF = Structure.objects.filter(parentid=structure.myid,type=' cf')
