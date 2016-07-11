@@ -7,8 +7,32 @@
 
 {% block content %}
 		<div class="col-md-12">
-<h2>PFI : {{ PFI.myid }} ({{ PFI.name}})</h2>
 
+<fieldset>
+	<legend><h4>PFI : {{ PFI.myid }} ({{ PFI.name}})</h4></legend>
+	<form id="editPFI" name="editPFI" method="POST" class="post-form">
+			{% csrf_token %}
+			<input type="hidden" name="pk" value="{{ PFI.pk }}">
+			<div class="fieldWrapper">
+						<label for="{{ PFI.date_debut_tarif.id_for_label }}">Date de début du programme de financement :</label>
+						{{ formnew.date_debut_tarif }}
+			</div>
+			<div class="fieldWrapper">
+						<label for="{{ PFI.date_debut_tarif.id_for_label }}">Date de fin du programme de financement :</label>
+						{{ formnew.date_debut_tarif }}
+			</div>
+
+	</form>
+
+</fieldset>
+<fieldset>
+	<legend>Liste des dépenses</legend>
+
+</fieldset>
+<fieldset>
+	<legend>Liste des recettes</legend>
+
+</fieldset>
 </div>
 {% endblock %}
 {% block foot-javascript %}

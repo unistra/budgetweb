@@ -37,7 +37,7 @@ class PeriodeBudget(models.Model):
 
 
 """----------------------------------------------
-Gestion des Comptes budgétaires 
+Gestion des Comptes budgétaires
 ----------------------------------------------"""
 class CompteBudget(models.Model):
     code = models.CharField(max_length=20, verbose_name=u'Code')
@@ -175,11 +175,15 @@ class PlanFinancement(models.Model):
     fleche = models.BooleanField(default=False,verbose_name=u'Fléché oui/non')
     pluriannuel = models.BooleanField(default=False,
                         verbose_name=u'Pluriannuel oui/non')
+    cfassoclink = models.ForeignKey('Structure', blank=True, null=True,
+                                    verbose_name=u'Lien direct vers le CF')
+    date_debut = models.DateTimeField(help_text=u'Date de début du programme de financement',
+                                      verbose_name=u'Date de début', null=True, blank=True)
+    date_fin = models.DateTimeField(help_text=u'Date de fin du programme de financement',
+                                    verbose_name=u'Date de fin', null=True, blank=True)
 
-    cfassoclink = models.ForeignKey('Structure', blank=True ,
-                        null=True,verbose_name=u'Lien direct vers le CF')
 
-    class Meta: ordering = ['name'] 
+    class Meta: ordering = ['name']
 
     def __str__(self):
         return ("PFI:"+self.myid + " -- Eotp:" + self.eotp)
@@ -278,6 +282,3 @@ class RecetteFull ( models.Model ):
     def save(self, *args, **kwargs):
         self.full_clean()
         super(RecetteFull, self).save(*args, **kwargs)
-
-
-
