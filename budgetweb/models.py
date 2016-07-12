@@ -69,10 +69,10 @@ class NatureComptable(models.Model):
     enveloppe = models.CharField('Enveloppe', max_length=50, blank=True,
                                  default="")
     fondbudget_recette = models.ForeignKey('FondBudgetaire', default='',
-        blank=True, null=True, verbose_name=u'Fond budgetaire')
-    naturec_dep = models.ForeignKey('ComptaNature', default='', blank=True,
+        blank=models.ForeignKey('ComptaNature', default='', blank=True,
+        null=models.ForeignKey('ComptaNature', default='', blank=True,
         null=True, verbose_name=u'Nature comptable')
-    pfifleche = models.BooleanField('Utilisé avec un PFI fléché o/n:',
+    pfifleche = models.BooleanField(ver'Utilisé avec un PFI fléché o/n:',
                                     default=False)
     ncsecondairecode = models.CharField('Code nature comptable secondaire',
                                         max_length=100, default="")
@@ -96,10 +96,17 @@ class DomaineFonctionnel(models.Model):
     """
     Gestion des domaines fonctionnels. En cours de précisions
     """
-    code = models.CharField('Code', max_length=100, default="", unique=True)
-    label = models.CharField('Libellé', max_length=100, default="",
+    dfcode = models.CharField('Code', max_length=100, default="", unique=True)
+    dflabel = models.CharField('Libellé', max_length=100, default="",
                                unique=True)
-    is_active = models.BooleanField('Actif', default=True)
+    dfgrpcumul = models.CharField('Groupe de cumul', max_length=100,
+                                  default="", blank=True)
+    dfgrpfonc = models.CharField('Groupe fonctionnel', max_length=100,
+                                 default="", blank=True)
+    dfrmq = models.CharField('Remarque', max_length=100, default="",
+                             blank=True)
+    dfdesc = models.CharField('Description', max_length=100, default="",
+                              blank=True)
 
     def __str__(self):
         return '{0.dfcode} -- {0.dflabel}'.format(self)
@@ -107,7 +114,7 @@ class DomaineFonctionnel(models.Model):
 
 class Structure(models.Model):
     """
-    Gestion de la hiérarchie des Objets CF/CP/CC. En cours de précisions
+    Gestion de la hiérarchie des Objets CF. En cours de précisions
     """
     type = models.CharField('Type', max_length=100)
     code = models.CharField('Code', max_length=100, unique=True)
@@ -115,7 +122,7 @@ class Structure(models.Model):
     parent = models.ForeignKey('Structure', blank=True, null=True,
         related_name='fils',
         verbose_name=u'Lien direct vers la structure parent')
-    is_active = models.BooleanField('Actif', default=True)
+    is_active = models.BooleanField('Actif', max_length=100, default=True)
 
     class Meta:
         ordering = ['code']
@@ -167,97 +174,94 @@ class PlanFinancement(models.Model):
         return 'PFI : {0.myid} -- Eotp : {0.eotp}'.format(self)
 
 
-class DepenseFull(models.Model):
-    """
-    Gestion des Depenses. En cours de précisions
-    """
-    myid = models.CharField(max_length=100, default='', blank=True)
-    structlev3 = models.ForeignKey('Structure',
-        related_name='depensestructlev3', verbose_name=u'Structure-CF')
-    cptdeplev1 = models.ForeignKey('NatureComptable', blank=True, null=True,
-        related_name='depenses', verbose_name=u'Nature comptable')
-    domfonc = models.ForeignKey('DomaineFonctionnel', blank=True, null=True,
-        verbose_name=u'Domaine fonctionnel')
-    plfi = models.ForeignKey('PlanFinancement',
-                             verbose_name=u'Programme de financement')
-    montant = models.CharField(max_length=100, blank=True, null=True)
-    montantdc = models.DecimalField(max_digits=12, decimal_places=2,
-                        blank=True, null=True)
-    montantcp = models.DecimalField(max_digits=12, decimal_places=2,
-                        blank=True, null=True)
-    montantae = models.DecimalField(max_digits=12, decimal_places=2,
-                        blank=True, null=True)
-    dateae = models.DateField(blank=True, null=True)
-    commentaire = models.CharField(max_length=100, blank=True, null=True)
-    myfile = models.TextField('Lien vers un fichier',
-                              validators=[URLValidator()], blank=True)
+class Depense(models.Model):
+    pfi = models.ForeignKey('PlanFinancement',
+                            verbose_name='Programme de financement')
+    strcture = models.ForeignKey('Structure',
+                                 verbose_name='Centre financier')
+    montantDC = models.DecimalField(max_digits=12, decimal_places=2,
+                                    blank=True, null=True)
+    montantCP = models.DecimalField(verbose_name='Montant Crédit de Paiement'
+                                    max_digits=12, decimal_places=2,
+                                    blank=True, null=True)
+    montantAE = models.DecimalField(verbose_name='Montant Autorisation d\'Engagement'
+                                    max_digits=12, decimal_places=2,
+                                    blank=True, null=True)
+    fonds = models.CharField(max_lenth=100, default='NA')
+    domainefonctionnel = models.ForeignKey('DomaineFonctionnel',
+                                           verbose_name='Domaine fonctionnel')
+    naturecomptabledepense = models.ForeignKey('NatureComptableDepense',
+                                            verbose_name='Nature Comptable Dépense')
+    commentaire = models.TextField(blank=True, null=True)
+    lienpiecejointe = models.CharField(max_length=255,
+                                       verbose_name='Lien vers un fichier',
+                                       validators=[URLValidator()],
+                                       blank=True)
     periodebudget = models.ForeignKey('PeriodeBudget', blank=True, null=True,
-                                      related_name='periodebudget1')
+                                       related_name='periodebudget')
+    annee = models.PositiveIntegerField(verbose_name='Année de la saisie')
     creele = models.DateTimeField(auto_now_add=True, blank=True)
     creepar = models.CharField(max_length=100, blank=True, null=True)
-    modifiele = models.DateTimeField('Date de modification', auto_now=True,
+    modifiele = models.DateTimeField(verbose_name='Date de modification', auto_now=True,
                                      blank=True)
     modifiepar = models.CharField(max_length=100, blank=True, null=True)
 
-    def clean(self):
-        montantae = self.montantae
-        montantcp = self.montantcp
+    #def clean(self):
+    #    montantae = self.montantae
+    #    montantcp = self.montantcp
+    #
+    #    if self.structlev3:
+    #        pass
+    #    else:
+    #        raise ValidationError(
+    #            {'structlev3': u'Veuillez choisir la structure'})
+    #    if not self.plfi:
+    #        raise ValidationError({'plfi': u'Veuillez choisir le PFI'})
+    #    if self.cptdeplev1:
+    #        decalagetreso = self.cptdeplev1.decalagetresocpae
+    #        if decalagetreso == False:
+    #            if montantae != montantcp:
+    #                raise ValidationError({'montantae': u'Pas de décalage de trésorerie sur cette nature comptable.Veuillez vous assurrer que montantae=montantcp.'})
+    #    else:
+    #        raise ValidationError({'cptdeplev1': u'Veuillez saisir la nature comptable'})
+    #
+    #def save(self, *args, **kwargs):
+    #    self.full_clean()
+    #    super(DepenseFull, self).save(*args, **kwargs)
 
-        if self.structlev3:
-            pass
-        else:
-            raise ValidationError(
-                {'structlev3': u'Veuillez choisir la structure'})
-        if not self.plfi:
-            raise ValidationError({'plfi': u'Veuillez choisir le PFI'})
-        if self.cptdeplev1:
-            decalagetreso = self.cptdeplev1.decalagetresocpae
-            if decalagetreso == False:
-                if montantae != montantcp:
-                    raise ValidationError({'montantae': u'Pas de décalage de trésorerie sur cette nature comptable.Veuillez vous assurrer que montantae=montantcp.'})
-        else:
-            raise ValidationError({'cptdeplev1': u'Veuillez saisir la nature comptable'})
-
-    def save(self, *args, **kwargs):
-        self.full_clean()
-        super(DepenseFull, self).save(*args, **kwargs)
-
-
-class RecetteFull(models.Model):
-    """
-    Gestion des Recettes. En cours de précisions
-    """
-    myid = models.CharField(max_length=100, default='', blank=True)
-    structlev3 = models.ForeignKey('Structure', related_name='recstructlev3',
-                                   verbose_name=u'Structure-CF')
-    cptdeplev1 = models.ForeignKey('NatureComptable', related_name='recettes',
-                                   verbose_name=u'Nature comptable')
-    domfonc = models.ForeignKey('DomaineFonctionnel',
-                                verbose_name=u'Domaine fonctionnel')
-    plfi = models.ForeignKey('PlanFinancement',
-                              verbose_name=u'Programme de financement')
-    montant = models.DecimalField(max_digits=12, decimal_places=2,
-                       blank=True, null=True)
-    montantar = models.DecimalField(max_digits=12, decimal_places=2,
-                       blank=True, null=True)
-    montantre = models.DecimalField(max_digits=12, decimal_places=2,
-                       blank=True, null=True)
-    montantdc = models.DecimalField(max_digits=12, decimal_places=2,
-                       blank=True, null=True)
-    commentaire = models.CharField(max_length=100, blank=True, null=True)
-    myfile = models.TextField('Lien vers un fichier',
-                              validators=[URLValidator()], blank=True)
+class Recette(models.Model):
+    pfi = models.ForeignKey('PlanFinancement',
+                            verbose_name='Programme de financement')
+    strcture = models.ForeignKey('Structure',
+                                 verbose_name='Centre financier')
+    montantDC = models.DecimalField(max_digits=12, decimal_places=2,
+                                    blank=True, null=True)
+    montantRE = models.DecimalField(verbose_name='Montant Crédit de Paiement'
+                                    max_digits=12, decimal_places=2,
+                                    blank=True, null=True)
+    montantAR = models.DecimalField(verbose_name='Montant Autorisation d\'Engagement'
+                                    max_digits=12, decimal_places=2,
+                                    blank=True, null=True)
+    domainefonctionnel = models.CharField(max_lenth=100, default='NA')
+    naturecomptablerecette = models.ForeignKey('NatureComptableRecette',
+                                               verbose_name='Nature Comptable Recette')
+    commentaire = models.TextField(blank=True, null=True)
+    lienpiecejointe = models.CharField(max_length=255,
+                                       verbose_name='Lien vers un fichier',
+                                       validators=[URLValidator()],
+                                       blank=True)
     periodebudget = models.ForeignKey('PeriodeBudget', blank=True, null=True,
-                                      related_name='periodebudget2')
+                                       related_name='periodebudget')
+    annee = models.PositiveIntegerField(verbose_name='Année de la saisie')
     creele = models.DateTimeField(auto_now_add=True, blank=True)
     creepar = models.CharField(max_length=100, blank=True, null=True)
-    modifiele = models.DateTimeField('Date de modification', auto_now=True,
+    modifiele = models.DateTimeField(verbose_name='Date de modification', auto_now=True,
                                      blank=True)
     modifiepar = models.CharField(max_length=100, blank=True, null=True)
 
-    def clean(self):
-        pass
-
-    def save(self, *args, **kwargs):
-        self.full_clean()
-        super(RecetteFull, self).save(*args, **kwargs)
+    #def clean(self):
+    #    pass
+    #
+    #def save(self, *args, **kwargs):
+    #    self.full_clean()
+    #    super(RecetteFull, self).save(*args, **kwargs)
