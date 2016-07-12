@@ -2,8 +2,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
 from django.db import models
-from django.db.models import Q
-from django.utils import timezone
+from django.utils.translation import ugettext_lazy as _
 
 
 class Authorisation(models.Model):
@@ -21,11 +20,10 @@ class PeriodeBudget(models.Model):
     avec bloqué=False. Les dépenses et les recettes
     sont saisies pour une période
     """
-    name = models.CharField(max_length=20, verbose_name=u'Libellé court')
-    label = models.CharField(max_length=100, verbose_name=u'Libellé long')
-    annee = models.DateField(null=True, verbose_name=u'Année')
-    bloque = models.BooleanField(default=True,
-                                 verbose_name=u'Bloqué (False=Actif)')
+    name = models.CharField('Libellé court', max_length=20)
+    label = models.CharField('Libellé long', max_length=100)
+    annee = models.DateField('Année', null=True)
+    bloque = models.BooleanField('Bloqué (False=Actif)', default=True)
 
     def __str__(self):
         return '{0.name} -- {0.label} -- {0.annee.year}'.format(self)
@@ -35,35 +33,30 @@ class CompteBudget(models.Model):
     """
     Gestion des Comptes budgétaires
     """
-    code = models.CharField(max_length=20, verbose_name=u'Code')
-    label = models.CharField(max_length=150, blank=True, default="",
-                             verbose_name=u'Libellé')
-    description = models.CharField(max_length=150, blank=True, default="",
-                                   verbose_name=u'Description')
+    code = models.CharField('Code', max_length=20)
+    label = models.CharField('Libellé', max_length=150, blank=True, default="")
+    description = models.CharField('Description', max_length=150, blank=True,
+                                   default="")
 
     def __str__(self):
         return '{0.code} :: {0.label}'.format(self)
 
 
 class FondBudgetaire(models.Model):
-    code = models.CharField(max_length=100,
-            verbose_name=u'Code du Fond budgetaire')
-    label = models.CharField(max_length=100,
-            verbose_name=u'Libellé', default="")
-#    enveloppe = models.CharField(max_length=50, blank=True, default="",
-#                                 verbose_name=u'Enveloppe')
+    code = models.CharField('Code du Fond budgetaire', max_length=100)
+    label = models.CharField('Libellé', max_length=100, default="")
+#    enveloppe = models.CharField('Enveloppe', max_length=50, blank=True,
+#                                 default="")
 
     def __str__(self):
         return '{0.code} :: {0.label}'.format(self)
 
 
 class ComptaNature(models.Model):
-    code = models.CharField(max_length=100,
-            verbose_name=u'Code de la nature comptable')
-    label = models.CharField(max_length=100,
-            verbose_name=u'Libellé', default="")
-#    enveloppe = models.CharField(max_length=50, blank=True, default="",
-#                                 verbose_name=u'Enveloppe')
+    code = models.CharField('Code de la nature comptable', max_length=100)
+    label = models.CharField('Libellé', max_length=100, default="")
+#    enveloppe = models.CharField('Enveloppe', max_length=50, blank=True,
+#                                 default="")
 
     def __str__(self):
         return self.label
@@ -73,25 +66,25 @@ class NatureComptable(models.Model):
     """
     Gestion des natures comptables. En cours de précisions
     """
-    enveloppe = models.CharField(max_length=50, blank=True, default="",
-                                 verbose_name=u'Enveloppe')
+    enveloppe = models.CharField('Enveloppe', max_length=50, blank=True,
+                                 default="")
     fondbudget_recette = models.ForeignKey('FondBudgetaire', default='',
         blank=True, null=True, verbose_name=u'Fond budgetaire')
     naturec_dep = models.ForeignKey('ComptaNature', default='', blank=True,
         null=True, verbose_name=u'Nature comptable')
-    pfifleche = models.BooleanField(default=False,
-            verbose_name=u'Utilisé avec un PFI fléché o/n:')
-    ncsecondairecode = models.CharField(max_length=100,
-         verbose_name=u'Code nature comptable secondaire', default="")
+    pfifleche = models.BooleanField('Utilisé avec un PFI fléché o/n:',
+                                    default=False)
+    ncsecondairecode = models.CharField('Code nature comptable secondaire',
+                                        max_length=100, default="")
     ccbd = models.ForeignKey('CompteBudget', blank=True, default="",
                              verbose_name=u'Compte budgétaire')
-    decalagetresocpae = models.BooleanField(default=False,
-            verbose_name=u'Décalage de Trésorerie CP<>AE o/n:')
-    nctype = models.CharField(max_length=100,
-            verbose_name=u'Nature utilisée en recette ou en dépenses',
-            default="")
-#    ccnamesecond = models.CharField(max_length=100, default="",
-#         verbose_name=u'Libellé court nature comptable secondaire')
+    decalagetresocpae = models.BooleanField(
+        'Décalage de Trésorerie CP<>AE o/n:', default=False)
+    nctype = models.CharField('Nature utilisée en recette ou en dépenses',
+                              max_length=100, default="")
+#    ccnamesecond = models.CharField(
+#        'Libellé court nature comptable secondaire', max_length=100,
+#        default="")
 
     def __str__(self):
         return '{0.enveloppe} -- {1}'.format(
@@ -103,18 +96,17 @@ class DomaineFonctionnel(models.Model):
     """
     Gestion des domaines fonctionnels. En cours de précisions
     """
-    dfcode = models.CharField(max_length=100, default="", verbose_name=u'Code',
-                              unique=True)
-    dflabel = models.CharField(max_length=100, default="",
-                verbose_name=u'Libellé', unique=True)
-    dfgrpcumul = models.CharField(max_length=100, default="",
-                verbose_name=u'Groupe de cumul', blank=True)
-    dfgrpfonc = models.CharField(max_length=100, default="",
-                verbose_name=u'Groupe fonctionnel', blank=True)
-    dfrmq = models.CharField(max_length=100, default="",
-                verbose_name='Remarque', blank=True)
-    dfdesc = models.CharField(max_length=100, default="",
-                verbose_name='Description', blank=True)
+    dfcode = models.CharField('Code', max_length=100, default="", unique=True)
+    dflabel = models.CharField('Libellé', max_length=100, default="",
+                               unique=True)
+    dfgrpcumul = models.CharField('Groupe de cumul', max_length=100,
+                                  default="", blank=True)
+    dfgrpfonc = models.CharField('Groupe fonctionnel', max_length=100,
+                                 default="", blank=True)
+    dfrmq = models.CharField('Remarque', max_length=100, default="",
+                             blank=True)
+    dfdesc = models.CharField('Description', max_length=100, default="",
+                              blank=True)
 
     def __str__(self):
         return '{0.dfcode} -- {0.dflabel}'.format(self)
@@ -124,28 +116,26 @@ class Structure(models.Model):
     """
     Gestion de la hiérarchie des Objets CF/CP/CC. En cours de précisions
     """
-    myid = models.CharField(max_length=100, default='', blank=True,
-                            verbose_name=u'Code')
-    type = models.CharField(max_length=100, verbose_name=u'Type')
-    name = models.CharField(max_length=100, verbose_name=u'Libellé court')
-    label = models.CharField(max_length=100, verbose_name=u'Libellé long')
-    parentid = models.CharField(max_length=100,
-                      verbose_name=u'Code de la structure père')
+    myid = models.CharField('Code', max_length=100, default='', blank=True)
+    type = models.CharField('Type', max_length=100)
+    name = models.CharField('Libellé court', max_length=100)
+    label = models.CharField('Libellé long', max_length=100)
+    parentid = models.CharField('Code de la structure père', max_length=100)
     parent = models.ForeignKey('Structure', blank=True, null=True,
         related_name='fils',
         verbose_name=u'Lien direct vers la structure parent')
-    ordre = models.CharField(max_length=100, verbose_name=u'Ordre')
-    niv = models.CharField(max_length=100, verbose_name=u'Niveau')
-    bloq = models.CharField(max_length=100, verbose_name=u'Bloqué')
-    modifdate = models.CharField(max_length=100, default="",
-                                 verbose_name=u'Date de modification')
-    modifpar = models.CharField(max_length=100, verbose_name=u'Modifié par')
-    dfmc = models.CharField(max_length=100, verbose_name=u'DFMC')
-    fdr = models.CharField(max_length=100, verbose_name=u'FDR')
-    ccassoc = models.CharField(max_length=100, blank=True, null=True,
-                               default="", verbose_name=u'CC associé')
-    cpassoc = models.CharField(max_length=100, blank=True, null=True,
-                               default="", verbose_name=u'CP associé')
+    ordre = models.CharField('Ordre', max_length=100)
+    niv = models.CharField('Niveau', max_length=100)
+    bloq = models.CharField('Bloqué', max_length=100)
+    modifdate = models.CharField('Date de modification', max_length=100,
+                                 default="")
+    modifpar = models.CharField('Modifié par', max_length=100)
+    dfmc = models.CharField('DFMC', max_length=100)
+    fdr = models.CharField('FDR', max_length=100)
+    ccassoc = models.CharField('CC associé', max_length=100, blank=True,
+                               null=True, default="")
+    cpassoc = models.CharField('CP associé', max_length=100, blank=True,
+                               null=True, default="")
 
     class Meta:
         ordering = ['name']
@@ -160,38 +150,35 @@ class PlanFinancement(models.Model):
     """
     Gestion des Plans de financement. En cours de précisions
     """
-    myid = models.CharField(max_length=100, default='', blank=True,
-                            verbose_name=u'Code court')
-    name = models.CharField(max_length=100, verbose_name=u'Libellé')
-    eotp = models.CharField(max_length=100,
-                        verbose_name=u'Code court de l\'eotp')
-    creele = models.DateTimeField(auto_now_add=True, blank=True,
-                        verbose_name=u'Date de création')
-    creepar = models.CharField(max_length=100, blank=True, null=True,
-                        verbose_name=u'Créé par')
-    modifiele = models.DateTimeField(auto_now=True, blank=True,
-                        verbose_name=u'Date de modification')
-    modifiepar = models.CharField(max_length=100, blank=True, null=True,
-                        verbose_name=u'Modification par')
-    societe = models.CharField(max_length=100, default="",
-                        verbose_name=u'Société')
-    cfassoc = models.CharField(max_length=100, default="",
-                        verbose_name=u'Centre financier associé')
-    ccassoc = models.CharField(max_length=100, default="",
-                        verbose_name=u'Centre de coût associé')
-    cpassoc = models.CharField(max_length=100, default="",
-                        verbose_name=u'Centre de profit associé')
-    fleche = models.BooleanField(default=False, verbose_name=u'Fléché oui/non')
-    pluriannuel = models.BooleanField(default=False,
-                        verbose_name=u'Pluriannuel oui/non')
+    myid = models.CharField('Code court', max_length=100, default='',
+                            blank=True)
+    name = models.CharField('Libellé', max_length=100)
+    eotp = models.CharField("Code court de l'eotp", max_length=100)
+    creele = models.DateTimeField('Date de création', auto_now_add=True,
+                                  blank=True)
+    creepar = models.CharField('Créé par', max_length=100, blank=True,
+                               null=True)
+    modifiele = models.DateTimeField('Date de modification', auto_now=True,
+                                     blank=True)
+    modifiepar = models.CharField('Modification par', max_length=100,
+                                  blank=True, null=True)
+    societe = models.CharField('Société', max_length=100, default="")
+    cfassoc = models.CharField('Centre financier associé', max_length=100,
+                               default="")
+    ccassoc = models.CharField('Centre de coût associé', max_length=100,
+                               default="")
+    cpassoc = models.CharField('Centre de profit associé', max_length=100,
+                               default="")
+    fleche = models.BooleanField('Fléché oui/non', default=False)
+    pluriannuel = models.BooleanField('Pluriannuel oui/non', default=False)
     cfassoclink = models.ForeignKey('Structure', blank=True, null=True,
                                     verbose_name=u'Lien direct vers le CF')
     date_debut = models.DateTimeField(
-        help_text=u'Date de début du programme de financement',
-        verbose_name=u'Date de début', null=True, blank=True)
+        'Date de début', null=True, blank=True,
+        help_text=u'Date de début du programme de financement')
     date_fin = models.DateTimeField(
-        help_text=u'Date de fin du programme de financement',
-        verbose_name=u'Date de fin', null=True, blank=True)
+        'Date de fin', null=True, blank=True,
+        help_text=u'Date de fin du programme de financement')
 
     class Meta:
         ordering = ['name']
@@ -222,14 +209,14 @@ class DepenseFull(models.Model):
                         blank=True, null=True)
     dateae = models.DateField(blank=True, null=True)
     commentaire = models.CharField(max_length=100, blank=True, null=True)
-    myfile = models.TextField(validators=[URLValidator()], blank=True,
-                              verbose_name=u'Lien vers un fichier')
+    myfile = models.TextField('Lien vers un fichier',
+                              validators=[URLValidator()], blank=True)
     periodebudget = models.ForeignKey('PeriodeBudget', blank=True, null=True,
                                       related_name='periodebudget1')
     creele = models.DateTimeField(auto_now_add=True, blank=True)
     creepar = models.CharField(max_length=100, blank=True, null=True)
-    modifiele = models.DateTimeField(auto_now=True, blank=True,
-        verbose_name=u'Date de modification')
+    modifiele = models.DateTimeField('Date de modification', auto_now=True,
+                                     blank=True)
     modifiepar = models.CharField(max_length=100, blank=True, null=True)
 
     def clean(self):
@@ -278,14 +265,14 @@ class RecetteFull(models.Model):
     montantdc = models.DecimalField(max_digits=12, decimal_places=2,
                        blank=True, null=True)
     commentaire = models.CharField(max_length=100, blank=True, null=True)
-    myfile = models.TextField(validators=[URLValidator()], blank=True,
-                             verbose_name=u'Lien vers un fichier')
+    myfile = models.TextField('Lien vers un fichier',
+                              validators=[URLValidator()], blank=True)
     periodebudget = models.ForeignKey('PeriodeBudget', blank=True, null=True,
                                       related_name='periodebudget2')
     creele = models.DateTimeField(auto_now_add=True, blank=True)
     creepar = models.CharField(max_length=100, blank=True, null=True)
-    modifiele = models.DateTimeField(auto_now=True, blank=True,
-                                     verbose_name=u'Date de modification')
+    modifiele = models.DateTimeField('Date de modification', auto_now=True,
+                                     blank=True)
     modifiepar = models.CharField(max_length=100, blank=True, null=True)
 
     def clean(self):
