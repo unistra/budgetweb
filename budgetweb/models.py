@@ -116,32 +116,19 @@ class Structure(models.Model):
     """
     Gestion de la hiérarchie des Objets CF/CP/CC. En cours de précisions
     """
-    myid = models.CharField('Code', max_length=100, default='', blank=True)
     type = models.CharField('Type', max_length=100)
-    name = models.CharField('Libellé court', max_length=100)
-    label = models.CharField('Libellé long', max_length=100)
-    parentid = models.CharField('Code de la structure père', max_length=100)
+    code = models.CharField('Code', max_length=100, unique=True)
+    label = models.CharField('Libellé', max_length=100)
     parent = models.ForeignKey('Structure', blank=True, null=True,
         related_name='fils',
         verbose_name=u'Lien direct vers la structure parent')
-    ordre = models.CharField('Ordre', max_length=100)
-    niv = models.CharField('Niveau', max_length=100)
-    bloq = models.CharField('Bloqué', max_length=100)
-    modifdate = models.CharField('Date de modification', max_length=100,
-                                 default="")
-    modifpar = models.CharField('Modifié par', max_length=100)
-    dfmc = models.CharField('DFMC', max_length=100)
-    fdr = models.CharField('FDR', max_length=100)
-    ccassoc = models.CharField('CC associé', max_length=100, blank=True,
-                               null=True, default="")
-    cpassoc = models.CharField('CP associé', max_length=100, blank=True,
-                               null=True, default="")
+    is_active = models.BooleanField('Actif', max_length=100, default=True)
 
     class Meta:
-        ordering = ['name']
+        ordering = ['code']
 
     def __str__(self):
-        return '{0.name} -- {0.label}'.format(self)
+        return '{0.code} -- {0.label}'.format(self)
 
 
 #myid : code court pour l operation

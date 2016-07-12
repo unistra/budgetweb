@@ -1,4 +1,4 @@
-id; type; nom; detail; parent; ordre; niv; bloq; z;modi; modifpar; dfmc; fdr VALUES;
+id; type; nom; detail; parent; ordre; niv; bloq; z;modi; modifpar; dfmc; fdr;
 1; cf; HIS2; HIS-PILOTAGE ET LOGISTIQUE COMP;1046;0;3;0; import_initial_test_toma2011; 2016-03-30 16:49:23; 1900010199991231; 0.00; 0.00;
 2; cf; HIS3; HIS-FORMATION DIPLOMES NATIONAUX;1046;0;3;0; import_initial_test_toma2011; 2016-03-30 16:49:23; 1900010199991231; 0.00; 0.00;
 3; cf; HIS61; HIS-COLL EGYPTOLOGIE;1046;0;3;0; import_initial_test_toma2011; 2016-03-30 16:49:23; 1900010199991231; 0.00; 0.00;
