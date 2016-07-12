@@ -33,7 +33,7 @@ class PeriodeBudget(models.Model):
                    verbose_name=u'Bloqué (False=Actif)')
 
     def __str__(self):
-        return (self.name + " -- " + self.label + " -- " + str(self.annee.year))
+        return '{0.name} -- {0.label} -- {0.annee.year}'.format(self)
 
 
 """----------------------------------------------
@@ -45,7 +45,7 @@ class CompteBudget(models.Model):
     description = models.CharField(max_length=150,blank=True,default="",verbose_name=u'Description')
 
     def __str__(self):
-        return (self.code +'::'+self.label)
+        return '{0.code} :: {0.label}'.format(self)
 
 
 class FondBudgetaire(models.Model):
@@ -56,7 +56,7 @@ class FondBudgetaire(models.Model):
 #    enveloppe = models.CharField(max_length=50,blank=True,default="",verbose_name=u'Enveloppe')
 
     def __str__(self):
-        return (self.code +'::'+self.label)
+        return '{0.code} :: {0.label}'.format(self)
 
 
 class ComptaNature(models.Model):
@@ -67,7 +67,7 @@ class ComptaNature(models.Model):
 #    enveloppe = models.CharField(max_length=50,blank=True,default="",verbose_name=u'Enveloppe')
 
     def __str__(self):
-        return (self.label)
+        return self.label
 
 """----------------------------------------------
 Gestion des natures comptables. En cours de précisions
@@ -89,11 +89,9 @@ class NatureComptable(models.Model):
 #         verbose_name=u'Libellé court nature comptable secondaire',default="")
 
     def __str__(self):
-        if self.nctype == 'dep':
-            return (self.enveloppe +" -- "+ self.naturec_dep.code)
-        else:
-            return (self.enveloppe +" -- "+ self.fondbudget_recette.code)
-
+        return '{0.enveloppe} -- {1}'.format(
+            self, self.naturec_dep.code if self.nctype == 'dep'\
+                else self.fondbudget_recette.code)
 
 
 """----------------------------------------------
@@ -113,8 +111,7 @@ class DomaineFonctionnel(models.Model):
                 verbose_name='Description',blank=True)
 
     def __str__(self):
-        return (self.dfcode + " -- " + self.dflabel)
-
+        return '{0.dfcode} -- {0.dflabel}'.format(self)
 
 
 """--------------------------------------------------------------
@@ -140,10 +137,11 @@ class Structure(models.Model):
     ccassoc = models.CharField(max_length=100,blank=True , null = True,default="",verbose_name=u'CC associé')
     cpassoc = models.CharField(max_length=100,blank=True , null = True,default="",verbose_name=u'CP associé')
 
-    class Meta: ordering = ['name']
+    class Meta:
+        ordering = ['name']
 
     def __str__(self):
-        return (self.name + " -- " + self.label)
+        return '{0.name} -- {0.label}'.format(self)
 
 
 """----------------------------------------------
@@ -182,12 +180,11 @@ class PlanFinancement(models.Model):
     date_fin = models.DateTimeField(help_text=u'Date de fin du programme de financement',
                                     verbose_name=u'Date de fin', null=True, blank=True)
 
-
-    class Meta: ordering = ['name']
+    class Meta:
+        ordering = ['name']
 
     def __str__(self):
-        return ("PFI:"+self.myid + " -- Eotp:" + self.eotp)
-
+        return 'PFI : {0.myid} -- Eotp : {0.eotp}'.format(self)
 
 
 """----------------------------------------------
