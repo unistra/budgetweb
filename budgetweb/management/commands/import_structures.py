@@ -6,7 +6,7 @@ from budgetweb.models import Structure
 
 
 class Command(BaseCommand):
-    help = 'Import a csv file'
+    help = 'Import the structures from a csv file'
 
     def add_arguments(self, parser):
         parser.add_argument('filename', nargs='+')
@@ -50,7 +50,6 @@ class Command(BaseCommand):
                 iteration = 0
                 while structures and iteration < max_iterations:
                     treated = []
-                    print('SS : %s (%s)' % ([k for k in structures.keys()], len([k for k in structures.keys()])))
                     for code, structure in structures.items():
                         try:
                             parent = Structure.objects.get(code=structure['parent'])

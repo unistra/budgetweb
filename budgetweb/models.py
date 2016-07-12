@@ -96,17 +96,10 @@ class DomaineFonctionnel(models.Model):
     """
     Gestion des domaines fonctionnels. En cours de précisions
     """
-    dfcode = models.CharField('Code', max_length=100, default="", unique=True)
-    dflabel = models.CharField('Libellé', max_length=100, default="",
+    code = models.CharField('Code', max_length=100, default="", unique=True)
+    label = models.CharField('Libellé', max_length=100, default="",
                                unique=True)
-    dfgrpcumul = models.CharField('Groupe de cumul', max_length=100,
-                                  default="", blank=True)
-    dfgrpfonc = models.CharField('Groupe fonctionnel', max_length=100,
-                                 default="", blank=True)
-    dfrmq = models.CharField('Remarque', max_length=100, default="",
-                             blank=True)
-    dfdesc = models.CharField('Description', max_length=100, default="",
-                              blank=True)
+    is_active = models.BooleanField('Actif', default=True)
 
     def __str__(self):
         return '{0.dfcode} -- {0.dflabel}'.format(self)
@@ -122,7 +115,7 @@ class Structure(models.Model):
     parent = models.ForeignKey('Structure', blank=True, null=True,
         related_name='fils',
         verbose_name=u'Lien direct vers la structure parent')
-    is_active = models.BooleanField('Actif', max_length=100, default=True)
+    is_active = models.BooleanField('Actif', default=True)
 
     class Meta:
         ordering = ['code']

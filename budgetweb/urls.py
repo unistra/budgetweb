@@ -35,8 +35,8 @@ urlpatterns = [
 #    url(r'^domainefonctionnel/(?P<pkdf>[0-9]+)/detail/$', views.domainefonctionnel_detail, name='domainefonctionnel_detail'),
 #    url(r'^domainefonctionnel/(?P<pkdf>[0-9]+)/edit/$', views.domainefonctionnel_edit, name='domainefonctionnel_edit'),
 #    url(r'^domainefonctionnel/(?P<pkdf>[0-9]+)/delete/$', views.domainefonctionnel_delete, name='domainefonctionnel_delete'),
-    url(r'^domainefonctionnel/import/$', views.domainefonctionnel_importcsv,name='domainefonctionnel_importcsv'),
-    url(r'^domainefonctionnel/deleteall/$', views.domainefonctionnel_deleteall, name='domainefonctionnel_deleteall'),
+#    url(r'^domainefonctionnel/import/$', views.domainefonctionnel_importcsv,name='domainefonctionnel_importcsv'),
+#    url(r'^domainefonctionnel/deleteall/$', views.domainefonctionnel_deleteall, name='domainefonctionnel_deleteall'),
 ##Compte Budgetaire
 #    url(r'^comptebudget/new/$', views.comptebudget_new, name='comptebudget_new'),
     url(r'^comptebudget/$', views.comptebudget_list,name='comptebudget_list'),
