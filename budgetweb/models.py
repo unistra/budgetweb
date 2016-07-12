@@ -67,29 +67,16 @@ class PlanFinancement(models.Model):
     """
     Gestion des Plans de financement. En cours de précisions
     """
-    myid = models.CharField('Code court', max_length=100, default='',
-                            blank=True)
-    name = models.CharField('Libellé', max_length=100)
+    structure = models.ForeignKey('Structure',
+                                  verbose_name='Lien direct vers le CF')
+    code = models.CharField('Code du PFI', max_length=100, default='NA')
+    label = models.CharField('Libellé', max_length=100)
     eotp = models.CharField("Code court de l'eotp", max_length=100)
-    creele = models.DateTimeField('Date de création', auto_now_add=True,
-                                  blank=True)
-    creepar = models.CharField('Créé par', max_length=100, blank=True,
-                               null=True)
-    modifiele = models.DateTimeField('Date de modification', auto_now=True,
-                                     blank=True)
-    modifiepar = models.CharField('Modification par', max_length=100,
-                                  blank=True, null=True)
-    societe = models.CharField('Société', max_length=100, default="")
-    cfassoc = models.CharField('Centre financier associé', max_length=100,
-                               default="")
-    ccassoc = models.CharField('Centre de coût associé', max_length=100,
-                               default="")
-    cpassoc = models.CharField('Centre de profit associé', max_length=100,
-                               default="")
-    fleche = models.BooleanField('Fléché oui/non', default=False)
-    pluriannuel = models.BooleanField('Pluriannuel oui/non', default=False)
-    cfassoclink = models.ForeignKey('Structure', blank=True, null=True,
-                                    verbose_name=u'Lien direct vers le CF')
+    centrecoutderive = models.CharField('Centre de coût associé', max_length=100)
+    centreprofitderive = models.CharField('Centre de profit associé', max_length=100)
+    is_fleche = models.BooleanField('Fléché oui/non', default=False)
+    is_pluriannuel = models.BooleanField('Pluriannuel oui/non', default=False)
+    is_active = models.BooleanField('Actif', max_length=100, default=True)
     date_debut = models.DateTimeField(
         'Date de début', null=True, blank=True,
         help_text=u'Date de début du programme de financement')
@@ -98,10 +85,10 @@ class PlanFinancement(models.Model):
         help_text=u'Date de fin du programme de financement')
 
     class Meta:
-        ordering = ['name']
+        ordering = ['label']
 
     def __str__(self):
-        return 'PFI : {0.myid} -- Eotp : {0.eotp}'.format(self)
+        return str(code)
 
 class NatureComptableDepense(models.Model):
 

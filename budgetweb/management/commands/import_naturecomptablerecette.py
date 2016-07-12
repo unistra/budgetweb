@@ -6,7 +6,7 @@ from budgetweb.models import NatureComptableRecette
 
 
 class Command(BaseCommand):
-    help = 'Import the NatureComptableDepense from a csv file'
+    help = 'Import the NatureComptableRecette from a csv file'
 
     def add_arguments(self, parser):
         parser.add_argument('filename', nargs='+')

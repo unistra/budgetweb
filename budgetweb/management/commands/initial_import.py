@@ -24,5 +24,9 @@ class Command(NoArgsCommand):
             print('***** Import NatudeComptableRecette *****')
             call_command('import_naturecomptablerecette',
                          join(datapath, 'naturecomptablerecette.csv'))
+            print('***** Import Financial Plans *****')
+            call_command('import_pfi',
+                         join(datapath, 'planfinancement.csv'))
+
         except Exception as e:
             print(e)
