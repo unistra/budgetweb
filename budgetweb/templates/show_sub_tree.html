@@ -1,21 +1,5 @@
 {% load dipstrapfiles %}
 {% load staticfiles %}
-{% for node in listeCF %}
-   <li>
-  	<span style="width:auto;" toto="{{ node.name|trim }}">
-  		<i class="glyphicon glyphicon-plus"></i>
-  		{{ node.name|trim }}
-  	</span>
-  	<div class="showTree">100 000 &euro;</div>
-  	<div class="showTree">100 000 &euro;</div>
-  	<div class="showTree">100 000 &euro;</div>
-  	<div class="showTree">&nbsp;</div>
-  	<div class="showTree">300 000 &euro;</div>
-  	<div class="showTree">400 000 &euro;</div>
-  	<div class="showTree">500 000 &euro;</div>
-  		<ul id="{{ node.name|trim }}"></ul>
-  </li>
-{% endfor %}
 {% for node in listePFI %}
    <li>
   	<span style="width:160px;" toto="{{ node.myid|trim }}">
@@ -35,6 +19,22 @@
     <div class="showTree">{% if node.sommeDepenseCP.somme %}{{ node.sommeDepenseCP.somme }}{% else %}0{% endif %} &euro;</div>
     <div class="showTree">{% if node.sommeDepenseAE.somme %}{{ node.sommeDepenseAE.somme }}{% else %}0{% endif %} &euro;</div>
   	<ul id="{{ node.myid|trim }}"></ul>
+  </li>
+{% endfor %}
+{% for node in listeCF %}
+   <li>
+  	<span style="width:auto;" toto="{{ node.name|trim }}">
+  		<i class="glyphicon glyphicon-plus"></i>
+  		{{ node.name|trim }}
+  	</span>
+  	<div class="showTree">100 000 &euro;</div>
+  	<div class="showTree">100 000 &euro;</div>
+  	<div class="showTree">100 000 &euro;</div>
+  	<div class="showTree">&nbsp;</div>
+  	<div class="showTree">300 000 &euro;</div>
+  	<div class="showTree">400 000 &euro;</div>
+  	<div class="showTree">500 000 &euro;</div>
+  		<ul id="{{ node.name|trim }}"></ul>
   </li>
 {% endfor %}
 <script src="{% static 'js/budgetweb.js' %}"></script>
