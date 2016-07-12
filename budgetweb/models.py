@@ -1,31 +1,26 @@
-from __future__ import unicode_literals
-
-from django.db import models
 from django import forms
-
-from django.utils import timezone
-import operator
-from django.core.validators import URLValidator
-
-from django.db.models import Q
-from datetime import datetime
 from django.core.exceptions import ValidationError
+from django.core.validators import URLValidator
+from django.db import models
+from django.db.models import Q
+from django.utils import timezone
 
 
-"""----------------------------------------------
-Gestion des autorisations utilisateurs sur les CF
-Possibilités: * P* PAIE* ou un nom précis
-----------------------------------------------"""
 class Authorisation(models.Model):
+    """
+    Gestion des autorisations utilisateurs sur les CF
+    Possibilités: * P* PAIE* ou un nom précis
+    """
     username = models.CharField(max_length=100)
     myobject = models.CharField(max_length=100)
 
-"""----------------------------------------------
-Gestion des périodes de budget. Une seule active
-avec bloqué=False. Les dépenses et les recettes
-sont saisies pour une période
-----------------------------------------------"""
+
 class PeriodeBudget(models.Model):
+    """
+    Gestion des périodes de budget. Une seule active
+    avec bloqué=False. Les dépenses et les recettes
+    sont saisies pour une période
+    """
     name = models.CharField(max_length=20,verbose_name=u'Libellé court')
     label = models.CharField(max_length=100,verbose_name=u'Libellé long')
     annee = models.DateField( null=True,verbose_name=u'Année')
@@ -36,10 +31,10 @@ class PeriodeBudget(models.Model):
         return '{0.name} -- {0.label} -- {0.annee.year}'.format(self)
 
 
-"""----------------------------------------------
-Gestion des Comptes budgétaires
-----------------------------------------------"""
 class CompteBudget(models.Model):
+    """
+    Gestion des Comptes budgétaires
+    """
     code = models.CharField(max_length=20, verbose_name=u'Code')
     label = models.CharField(max_length=150,blank=True,default="",verbose_name=u'Libellé')
     description = models.CharField(max_length=150,blank=True,default="",verbose_name=u'Description')
@@ -69,10 +64,11 @@ class ComptaNature(models.Model):
     def __str__(self):
         return self.label
 
-"""----------------------------------------------
-Gestion des natures comptables. En cours de précisions
-----------------------------------------------"""
+
 class NatureComptable(models.Model):
+    """
+    Gestion des natures comptables. En cours de précisions
+    """
     enveloppe = models.CharField(max_length=50,blank=True,default="",verbose_name=u'Enveloppe')
     fondbudget_recette = models.ForeignKey('FondBudgetaire', default='',blank = True,null=True,verbose_name=u'Fond budgetaire')
     naturec_dep = models.ForeignKey('ComptaNature', default='',blank = True,null=True, verbose_name=u'Nature comptable')
@@ -94,10 +90,10 @@ class NatureComptable(models.Model):
                 else self.fondbudget_recette.code)
 
 
-"""----------------------------------------------
-Gestion des domaines fonctionnels. En cours de précisions
-----------------------------------------------"""
 class DomaineFonctionnel(models.Model):
+    """
+    Gestion des domaines fonctionnels. En cours de précisions
+    """
     dfcode = models.CharField(max_length=100, default="", verbose_name=u'Code',unique=True)
     dflabel = models.CharField(max_length=100, default="",
                 verbose_name=u'Libellé',unique=True)
@@ -114,10 +110,10 @@ class DomaineFonctionnel(models.Model):
         return '{0.dfcode} -- {0.dflabel}'.format(self)
 
 
-"""--------------------------------------------------------------
-Gestion de la hiérarchie des Objets CF/CP/CC. En cours de précisions
-----------------------------------------------------------------"""
 class Structure(models.Model):
+    """
+    Gestion de la hiérarchie des Objets CF/CP/CC. En cours de précisions
+    """
     myid = models.CharField(max_length=100, default='',blank=True,verbose_name=u'Code')
     type = models.CharField(max_length=100,verbose_name=u'Type')
     name = models.CharField(max_length=100,verbose_name=u'Libellé court')
@@ -144,12 +140,12 @@ class Structure(models.Model):
         return '{0.name} -- {0.label}'.format(self)
 
 
-"""----------------------------------------------
-Gestion des Plans de financement. En cours de précisions
-----------------------------------------------"""
 #myid : code court pour l operation
 #name : designation de l operation
 class PlanFinancement(models.Model):
+    """
+    Gestion des Plans de financement. En cours de précisions
+    """
     myid = models.CharField(max_length=100, default='',blank=True,verbose_name=u'Code court')
     name = models.CharField(max_length=100,verbose_name=u'Libellé')
     eotp = models.CharField(max_length=100,
@@ -187,10 +183,10 @@ class PlanFinancement(models.Model):
         return 'PFI : {0.myid} -- Eotp : {0.eotp}'.format(self)
 
 
-"""----------------------------------------------
-Gestion des Depenses. En cours de précisions
-----------------------------------------------"""
-class DepenseFull ( models.Model ):
+class DepenseFull(models.Model):
+    """
+    Gestion des Depenses. En cours de précisions
+    """
     myid = models.CharField(max_length=100, default='',blank=True)
     structlev3 = models.ForeignKey ('Structure',related_name='depensestructlev3',verbose_name=u'Structure-CF')
     cptdeplev1 = models.ForeignKey ('NatureComptable', blank=True , null=True,
@@ -243,10 +239,10 @@ class DepenseFull ( models.Model ):
         super(DepenseFull, self).save(*args, **kwargs)
 
 
-"""----------------------------------------------
-Gestion des Recettes. En cours de précisions
-----------------------------------------------"""
 class RecetteFull ( models.Model ):
+    """
+    Gestion des Recettes. En cours de précisions
+    """
     myid = models.CharField(max_length=100, default='',blank=True)
     structlev3 = models.ForeignKey ('Structure',related_name='recstructlev3',verbose_name=u'Structure-CF')
     cptdeplev1 = models.ForeignKey ('NatureComptable',related_name='recettes',verbose_name=u'Nature comptable')
