@@ -18,5 +18,11 @@ class Command(NoArgsCommand):
             print('***** Import functional domains *****')
             call_command('import_functionaldomains',
                          join(datapath, 'domaines_fonctionnels.csv'))
+            print('***** Import NatudeComptableDepense *****')
+            call_command('import_naturecomptabledepense',
+                         join(datapath, 'naturecomptabledepense.csv'))
+            print('***** Import NatudeComptableRecette *****')
+            call_command('import_naturecomptablerecette',
+                         join(datapath, 'naturecomptablerecette.csv'))
         except Exception as e:
             print(e)

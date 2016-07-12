@@ -29,84 +29,14 @@ class PeriodeBudget(models.Model):
         return '{0.name} -- {0.label} -- {0.annee.year}'.format(self)
 
 
-class CompteBudget(models.Model):
-    """
-    Gestion des Comptes budgétaires
-    """
-    code = models.CharField('Code', max_length=20)
-    label = models.CharField('Libellé', max_length=150, blank=True, default="")
-    description = models.CharField('Description', max_length=150, blank=True,
-                                   default="")
-
-    def __str__(self):
-        return '{0.code} :: {0.label}'.format(self)
-
-
-class FondBudgetaire(models.Model):
-    code = models.CharField('Code du Fond budgetaire', max_length=100)
-    label = models.CharField('Libellé', max_length=100, default="")
-#    enveloppe = models.CharField('Enveloppe', max_length=50, blank=True,
-#                                 default="")
-
-    def __str__(self):
-        return '{0.code} :: {0.label}'.format(self)
-
-
-class ComptaNature(models.Model):
-    code = models.CharField('Code de la nature comptable', max_length=100)
-    label = models.CharField('Libellé', max_length=100, default="")
-#    enveloppe = models.CharField('Enveloppe', max_length=50, blank=True,
-#                                 default="")
-
-    def __str__(self):
-        return self.label
-
-
-class NatureComptable(models.Model):
-    """
-    Gestion des natures comptables. En cours de précisions
-    """
-    enveloppe = models.CharField('Enveloppe', max_length=50, blank=True,
-                                 default="")
-    #fondbudget_recette = models.ForeignKey('FondBudgetaire', default='',
-    #    blank=models.ForeignKey('ComptaNature', default='', blank=True,
-    #    null=models.ForeignKey('ComptaNature', default='', blank=True,
-    #    null=True, verbose_name=u'Nature comptable')
-    #pfifleche = models.BooleanField(ver'Utilisé avec un PFI fléché o/n:',
-    #                                default=False)
-    #ncsecondairecode = models.CharField('Code nature comptable secondaire',
-    #                                    max_length=100, default="")
-    #ccbd = models.ForeignKey('CompteBudget', blank=True, default="",
-    #                         verbose_name=u'Compte budgétaire')
-    #decalagetresocpae = models.BooleanField(
-    #    'Décalage de Trésorerie CP<>AE o/n:', default=False)
-    #nctype = models.CharField('Nature utilisée en recette ou en dépenses',
-    #                          max_length=100, default="")
-#    ccnamesecond = models.CharField(
-#        'Libellé court nature comptable secondaire', max_length=100,
-#        default="")
-
-    def __str__(self):
-        return '{0.enveloppe} -- {1}'.format(
-            self, self.naturec_dep.code if self.nctype == 'dep'\
-                else self.fondbudget_recette.code)
-
-
 class DomaineFonctionnel(models.Model):
     """
     Gestion des domaines fonctionnels. En cours de précisions
     """
-    dfcode = models.CharField('Code', max_length=100, default="", unique=True)
-    dflabel = models.CharField('Libellé', max_length=100, default="",
-                               unique=True)
-    dfgrpcumul = models.CharField('Groupe de cumul', max_length=100,
-                                  default="", blank=True)
-    dfgrpfonc = models.CharField('Groupe fonctionnel', max_length=100,
-                                 default="", blank=True)
-    dfrmq = models.CharField('Remarque', max_length=100, default="",
-                             blank=True)
-    dfdesc = models.CharField('Description', max_length=100, default="",
-                              blank=True)
+    code = models.CharField('Code', max_length=100, default="", unique=True)
+    label = models.CharField('Libellé', max_length=100, default="",
+                             unique=True)
+    is_active = models.BooleanField('Actif', max_length=100, default=True)
 
     def __str__(self):
         return '{0.dfcode} -- {0.dflabel}'.format(self)
@@ -173,6 +103,39 @@ class PlanFinancement(models.Model):
     def __str__(self):
         return 'PFI : {0.myid} -- Eotp : {0.eotp}'.format(self)
 
+class NatureComptableDepense(models.Model):
+
+    enveloppe = models.CharField(max_length=100, verbose_name='Enveloppe')
+    label_nature_comptable = models.CharField(max_length=100,
+                                              verbose_name='Désignation de la nature comptable')
+    code_nature_comptable = models.CharField(max_length=100,
+                                             verbose_name='Code de la nature comptable')
+    code_compte_budgetaire = models.CharField(max_length=100,
+                                              verbose_name='Code du compte budgétaire')
+    label_compte_budgetaire = models.CharField(max_length=100,
+                                               verbose_name='Désignation du compte budgétaire')
+    is_fleche = models.BooleanField('Fleché', max_length=100, default=True)
+    is_decalage_tresorerie = models.BooleanField('Décalage trésorerie',
+                                                 max_length=100)
+    is_active = models.BooleanField('Actif', max_length=100, default=True)
+
+class NatureComptableRecette(models.Model):
+
+    enveloppe = models.CharField(max_length=100, verbose_name='Enveloppe')
+    label_fonds = models.CharField(max_length=100,
+                                              verbose_name='Désignation de la nature comptable')
+    code_fonds = models.CharField(max_length=100,
+                                             verbose_name='Code de la nature comptable')
+    code_nature_comptable = models.CharField(max_length=100,
+                                              verbose_name='Code du compte budgétaire')
+    label_nature_comptable = models.CharField(max_length=100,
+                                               verbose_name='Désignation du compte budgétaire')
+    code_compte_budgetaire = models.CharField(max_length=100,
+                                              verbose_name='Code du compte budgétaire')
+    label_compte_budgetaire = models.CharField(max_length=100,
+                                               verbose_name='Désignation du compte budgétaire')
+    is_fleche = models.BooleanField('Fleché', max_length=100, default=True)
+    is_active = models.BooleanField('Actif', max_length=100, default=True)
 
 class Depense(models.Model):
     pfi = models.ForeignKey('PlanFinancement',
@@ -191,14 +154,14 @@ class Depense(models.Model):
     domainefonctionnel = models.ForeignKey('DomaineFonctionnel',
                                            verbose_name='Domaine fonctionnel')
     naturecomptabledepense = models.ForeignKey('NatureComptableDepense',
-                                            verbose_name='Nature Comptable Dépense')
+                                               verbose_name='Nature Comptable Dépense')
     commentaire = models.TextField(blank=True, null=True)
     lienpiecejointe = models.CharField(max_length=255,
                                        verbose_name='Lien vers un fichier',
                                        validators=[URLValidator()],
                                        blank=True)
     periodebudget = models.ForeignKey('PeriodeBudget', blank=True, null=True,
-                                       related_name='periodebudget')
+                                       related_name='periodebudgetdepense')
     annee = models.PositiveIntegerField(verbose_name='Année de la saisie')
     creele = models.DateTimeField(auto_now_add=True, blank=True)
     creepar = models.CharField(max_length=100, blank=True, null=True)
@@ -251,7 +214,7 @@ class Recette(models.Model):
                                        validators=[URLValidator()],
                                        blank=True)
     periodebudget = models.ForeignKey('PeriodeBudget', blank=True, null=True,
-                                       related_name='periodebudget')
+                                       related_name='periodebudgetrecette')
     annee = models.PositiveIntegerField(verbose_name='Année de la saisie')
     creele = models.DateTimeField(auto_now_add=True, blank=True)
     creepar = models.CharField(max_length=100, blank=True, null=True)
