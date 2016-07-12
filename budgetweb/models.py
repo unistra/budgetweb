@@ -68,20 +68,20 @@ class NatureComptable(models.Model):
     """
     enveloppe = models.CharField('Enveloppe', max_length=50, blank=True,
                                  default="")
-    fondbudget_recette = models.ForeignKey('FondBudgetaire', default='',
-        blank=models.ForeignKey('ComptaNature', default='', blank=True,
-        null=models.ForeignKey('ComptaNature', default='', blank=True,
-        null=True, verbose_name=u'Nature comptable')
-    pfifleche = models.BooleanField(ver'Utilisé avec un PFI fléché o/n:',
-                                    default=False)
-    ncsecondairecode = models.CharField('Code nature comptable secondaire',
-                                        max_length=100, default="")
-    ccbd = models.ForeignKey('CompteBudget', blank=True, default="",
-                             verbose_name=u'Compte budgétaire')
-    decalagetresocpae = models.BooleanField(
-        'Décalage de Trésorerie CP<>AE o/n:', default=False)
-    nctype = models.CharField('Nature utilisée en recette ou en dépenses',
-                              max_length=100, default="")
+    #fondbudget_recette = models.ForeignKey('FondBudgetaire', default='',
+    #    blank=models.ForeignKey('ComptaNature', default='', blank=True,
+    #    null=models.ForeignKey('ComptaNature', default='', blank=True,
+    #    null=True, verbose_name=u'Nature comptable')
+    #pfifleche = models.BooleanField(ver'Utilisé avec un PFI fléché o/n:',
+    #                                default=False)
+    #ncsecondairecode = models.CharField('Code nature comptable secondaire',
+    #                                    max_length=100, default="")
+    #ccbd = models.ForeignKey('CompteBudget', blank=True, default="",
+    #                         verbose_name=u'Compte budgétaire')
+    #decalagetresocpae = models.BooleanField(
+    #    'Décalage de Trésorerie CP<>AE o/n:', default=False)
+    #nctype = models.CharField('Nature utilisée en recette ou en dépenses',
+    #                          max_length=100, default="")
 #    ccnamesecond = models.CharField(
 #        'Libellé court nature comptable secondaire', max_length=100,
 #        default="")
@@ -181,13 +181,13 @@ class Depense(models.Model):
                                  verbose_name='Centre financier')
     montantDC = models.DecimalField(max_digits=12, decimal_places=2,
                                     blank=True, null=True)
-    montantCP = models.DecimalField(verbose_name='Montant Crédit de Paiement'
+    montantCP = models.DecimalField(verbose_name='Montant Crédit de Paiement',
                                     max_digits=12, decimal_places=2,
                                     blank=True, null=True)
-    montantAE = models.DecimalField(verbose_name='Montant Autorisation d\'Engagement'
+    montantAE = models.DecimalField(verbose_name='Montant Autorisation d\'Engagement',
                                     max_digits=12, decimal_places=2,
                                     blank=True, null=True)
-    fonds = models.CharField(max_lenth=100, default='NA')
+    fonds = models.CharField(max_length=100, default='NA', editable=False)
     domainefonctionnel = models.ForeignKey('DomaineFonctionnel',
                                            verbose_name='Domaine fonctionnel')
     naturecomptabledepense = models.ForeignKey('NatureComptableDepense',
@@ -236,13 +236,13 @@ class Recette(models.Model):
                                  verbose_name='Centre financier')
     montantDC = models.DecimalField(max_digits=12, decimal_places=2,
                                     blank=True, null=True)
-    montantRE = models.DecimalField(verbose_name='Montant Crédit de Paiement'
+    montantRE = models.DecimalField(verbose_name='Montant Recette Encaissable',
                                     max_digits=12, decimal_places=2,
                                     blank=True, null=True)
-    montantAR = models.DecimalField(verbose_name='Montant Autorisation d\'Engagement'
+    montantAR = models.DecimalField(verbose_name='Montant Autorisation de Recette',
                                     max_digits=12, decimal_places=2,
                                     blank=True, null=True)
-    domainefonctionnel = models.CharField(max_lenth=100, default='NA')
+    domainefonctionnel = models.CharField(max_length=100, default='NA', editable=False)
     naturecomptablerecette = models.ForeignKey('NatureComptableRecette',
                                                verbose_name='Nature Comptable Recette')
     commentaire = models.TextField(blank=True, null=True)
