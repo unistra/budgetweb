@@ -10,7 +10,6 @@ class Command(NoArgsCommand):
 
     def handle_noargs(self, **options):
         datapath = join(settings.SITE_ROOT, 'datas')
-        print('FF : %s' % datapath)
 
         try:
             print('***** Import structures *****')
