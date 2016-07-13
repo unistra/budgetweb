@@ -2,8 +2,8 @@
 {% load staticfiles %}
 {% for node in listePFI %}
    <li>
-  	<span style="width:160px;" toto="{{ node.id }}">
-      {{ node.id }}
+  	<span style="width:160px;" toto="{{ node.code }}">
+      {{ node.label }}
       {% if node.pluriannuel %}
       <a href="{% url 'pluriannuel' pfiid=node.id %}">D.&amp; R.</a>&nbsp;
       {% else %}
@@ -20,7 +20,7 @@
     <div class="showTree">{% if node.sommeDepenseDC.somme %}{{ node.sommeDepenseDC.somme }}{% else %}0{% endif %} &euro;</div>
     <div class="showTree">{% if node.sommeDepenseCP.somme %}{{ node.sommeDepenseCP.somme }}{% else %}0{% endif %} &euro;</div>
     <div class="showTree">{% if node.sommeDepenseAE.somme %}{{ node.sommeDepenseAE.somme }}{% else %}0{% endif %} &euro;</div>
-  	<ul id="{{ node.myid|trim }}"></ul>
+  	<ul id="{{ node.code }}"></ul>
   </li>
 {% endfor %}
 {% for node in listeCF %}
@@ -36,7 +36,6 @@
   	<div class="showTree">300 000 &euro;</div>
   	<div class="showTree">400 000 &euro;</div>
   	<div class="showTree">500 000 &euro;</div>
-  		<ul id="{{ node.name|trim }}"></ul>
+  		<ul id="{{ node.code }}"></ul>
   </li>
 {% endfor %}
-<script src="{% static 'js/budgetweb.js' %}"></script>

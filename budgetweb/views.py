@@ -2170,10 +2170,10 @@ def show_sub_tree(request, structid):
 
     # On récupère la liste des CF fils.
     listeCF = Structure.objects.filter(parent=structure)
+    print('LCF : %s' % listeCF)
 
     # Et enfin on ajoute les PFI, si jamais il y en a.
     listePFI = PlanFinancement.objects.filter(structure=structure).values()
-    listePFI2 = []
     for pfi in listePFI:
         pfi['sommeDepenseAE'] = Depense.objects.filter(pfi__id=pfi['id']).aggregate(somme=Sum('montantAE'))
         pfi['sommeDepenseCP'] = Depense.objects.filter(pfi__id=pfi['id']).aggregate(somme=Sum('montantCP'))
@@ -2181,7 +2181,9 @@ def show_sub_tree(request, structid):
 #        pfi['sommeRecetteAR'] = Recette.objects.filter(pfi__id=pfi['id']).aggregate(somme=Sum('montant'))
 #        pfi['sommeRecetteRE'] = Recette.objects.filter(pfi__id=pfi['id']).aggregate(somme=Sum('montantre'))
 #        pfi['sommeRecetteDC'] = Recette.objects.filter(pfi__id=pfi['id']).aggregate(somme=Sum('montantdc'))
-    return render(request, 'show_sub_tree.html', { 'listeCF': listeCF, 'listePFI' : listePFI})
+
+    context = {'listeCF': listeCF, 'listePFI': listePFI}
+    return render(request, 'show_sub_tree.html', context)
 
 
 @login_required
