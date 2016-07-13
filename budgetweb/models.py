@@ -26,7 +26,7 @@ class PeriodeBudget(models.Model):
     is_active = models.BooleanField('Activé (oui/,non)', default=True)
 
     def __str__(self):
-        return '{0.name} -- {0.label} -- {0.annee.year}'.format(self)
+        return '{0.code} -- {0.label} -- {0.annee}'.format(self)
 
 
 class DomaineFonctionnel(models.Model):
@@ -39,7 +39,7 @@ class DomaineFonctionnel(models.Model):
     is_active = models.BooleanField('Actif', max_length=100, default=True)
 
     def __str__(self):
-        return '{0.dfcode} -- {0.dflabel}'.format(self)
+        return '{0.code} -- {0.label}'.format(self)
 
 
 class Structure(models.Model):
@@ -88,7 +88,7 @@ class PlanFinancement(models.Model):
         ordering = ['label']
 
     def __str__(self):
-        return str(code)
+        return '{0.code} -- {0.label} ({0.structure})'.format(self)
 
 
 class NatureComptableDepense(models.Model):
