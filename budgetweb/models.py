@@ -50,8 +50,8 @@ class Structure(models.Model):
     code = models.CharField('Code', max_length=100, unique=True)
     label = models.CharField('Libellé', max_length=100)
     parent = models.ForeignKey('Structure', blank=True, null=True,
-        related_name='fils',
-        verbose_name=u'Lien direct vers la structure parent')
+                               related_name='fils',
+                               verbose_name='Lien direct vers le parent')
     is_active = models.BooleanField('Actif', max_length=100, default=True)
 
     class Meta:
@@ -61,8 +61,6 @@ class Structure(models.Model):
         return '{0.code} -- {0.label}'.format(self)
 
 
-#myid : code court pour l operation
-#name : designation de l operation
 class PlanFinancement(models.Model):
     """
     Gestion des Plans de financement. En cours de précisions
@@ -72,8 +70,10 @@ class PlanFinancement(models.Model):
     code = models.CharField('Code du PFI', max_length=100, default='NA')
     label = models.CharField('Libellé', max_length=100)
     eotp = models.CharField("Code court de l'eotp", max_length=100)
-    centrecoutderive = models.CharField('Centre de coût associé', max_length=100)
-    centreprofitderive = models.CharField('Centre de profit associé', max_length=100)
+    centrecoutderive = models.CharField('Centre de coût associé',
+                                        max_length=100)
+    centreprofitderive = models.CharField('Centre de profit associé',
+                                          max_length=100)
     is_fleche = models.BooleanField('Fléché oui/non', default=False)
     is_pluriannuel = models.BooleanField('Pluriannuel oui/non', default=False)
     is_active = models.BooleanField('Actif', max_length=100, default=True)
@@ -94,14 +94,18 @@ class PlanFinancement(models.Model):
 class NatureComptableDepense(models.Model):
 
     enveloppe = models.CharField(max_length=100, verbose_name='Enveloppe')
-    label_nature_comptable = models.CharField(max_length=100,
-                                              verbose_name='Désignation de la nature comptable')
-    code_nature_comptable = models.CharField(max_length=100,
-                                             verbose_name='Code de la nature comptable')
-    code_compte_budgetaire = models.CharField(max_length=100,
-                                              verbose_name='Code du compte budgétaire')
-    label_compte_budgetaire = models.CharField(max_length=100,
-                                               verbose_name='Désignation du compte budgétaire')
+    label_nature_comptable = models.CharField(
+        max_length=100,
+        verbose_name='Désignation de la nature comptable')
+    code_nature_comptable = models.CharField(
+        max_length=100,
+        verbose_name='Code de la nature comptable')
+    code_compte_budgetaire = models.CharField(
+        max_length=100,
+        verbose_name='Code du compte budgétaire')
+    label_compte_budgetaire = models.CharField(
+        max_length=100,
+        verbose_name='Désignation du compte budgétaire')
     is_fleche = models.BooleanField('Fleché', max_length=100, default=True)
     is_decalage_tresorerie = models.BooleanField('Décalage trésorerie',
                                                  max_length=100)
@@ -111,18 +115,23 @@ class NatureComptableDepense(models.Model):
 class NatureComptableRecette(models.Model):
 
     enveloppe = models.CharField(max_length=100, verbose_name='Enveloppe')
-    label_fonds = models.CharField(max_length=100,
-                                              verbose_name='Désignation de la nature comptable')
+    label_fonds = models.CharField(
+        max_length=100,
+        verbose_name='Désignation de la nature comptable')
     code_fonds = models.CharField(max_length=100,
-                                             verbose_name='Code de la nature comptable')
-    code_nature_comptable = models.CharField(max_length=100,
-                                              verbose_name='Code du compte budgétaire')
-    label_nature_comptable = models.CharField(max_length=100,
-                                               verbose_name='Désignation du compte budgétaire')
-    code_compte_budgetaire = models.CharField(max_length=100,
-                                              verbose_name='Code du compte budgétaire')
-    label_compte_budgetaire = models.CharField(max_length=100,
-                                               verbose_name='Désignation du compte budgétaire')
+                                  verbose_name='Code de la nature comptable')
+    code_nature_comptable = models.CharField(
+        max_length=100,
+        verbose_name='Code du compte budgétaire')
+    label_nature_comptable = models.CharField(
+        max_length=100,
+        verbose_name='Désignation du compte budgétaire')
+    code_compte_budgetaire = models.CharField(
+        max_length=100,
+        verbose_name='Code du compte budgétaire')
+    label_compte_budgetaire = models.CharField(
+        max_length=100,
+        verbose_name='Désignation du compte budgétaire')
     is_fleche = models.BooleanField('Fleché', max_length=100, default=True)
     is_active = models.BooleanField('Actif', max_length=100, default=True)
 
@@ -137,29 +146,30 @@ class Depense(models.Model):
     montantCP = models.DecimalField(verbose_name='Montant Crédit de Paiement',
                                     max_digits=12, decimal_places=2,
                                     blank=True, null=True)
-    montantAE = models.DecimalField(verbose_name='Montant Autorisation d\'Engagement',
-                                    max_digits=12, decimal_places=2,
-                                    blank=True, null=True)
+    montantAE = models.DecimalField(
+        verbose_name='Montant Autorisation d\'Engagement',
+        max_digits=12, decimal_places=2, blank=True, null=True)
     fonds = models.CharField(max_length=100, default='NA', editable=False)
     domainefonctionnel = models.ForeignKey('DomaineFonctionnel',
                                            verbose_name='Domaine fonctionnel')
-    naturecomptabledepense = models.ForeignKey('NatureComptableDepense',
-                                               verbose_name='Nature Comptable Dépense')
+    naturecomptabledepense = models.ForeignKey(
+        'NatureComptableDepense',
+        verbose_name='Nature Comptable Dépense')
     commentaire = models.TextField(blank=True, null=True)
     lienpiecejointe = models.CharField(max_length=255,
                                        verbose_name='Lien vers un fichier',
                                        validators=[URLValidator()],
                                        blank=True)
     periodebudget = models.ForeignKey('PeriodeBudget', blank=True, null=True,
-                                       related_name='periodebudgetdepense')
+                                      related_name='periodebudgetdepense')
     annee = models.PositiveIntegerField(verbose_name='Année de la saisie')
     creele = models.DateTimeField(auto_now_add=True, blank=True)
     creepar = models.CharField(max_length=100, blank=True, null=True)
-    modifiele = models.DateTimeField(verbose_name='Date de modification', auto_now=True,
-                                     blank=True)
+    modifiele = models.DateTimeField(verbose_name='Date de modification',
+                                     auto_now=True, blank=True)
     modifiepar = models.CharField(max_length=100, blank=True, null=True)
 
-    #def clean(self):
+    # def clean(self):
     #    montantae = self.montantae
     #    montantcp = self.montantcp
     #
@@ -174,13 +184,18 @@ class Depense(models.Model):
     #        decalagetreso = self.cptdeplev1.decalagetresocpae
     #        if decalagetreso == False:
     #            if montantae != montantcp:
-    #                raise ValidationError({'montantae': u'Pas de décalage de trésorerie sur cette nature comptable.Veuillez vous assurrer que montantae=montantcp.'})
+    #                raise ValidationError({'montantae': u'Pas de décalage de
+    #                               trésorerie sur cette nature comptable.
+    #                               Veuillez vous assurrer que
+    #                               montantae=montantcp.'})
     #    else:
-    #        raise ValidationError({'cptdeplev1': u'Veuillez saisir la nature comptable'})
+    #        raise ValidationError({'cptdeplev1': u'Veuillez saisir
+    #                               la nature comptable'})
     #
-    #def save(self, *args, **kwargs):
+    # def save(self, *args, **kwargs):
     #    self.full_clean()
     #    super(DepenseFull, self).save(*args, **kwargs)
+
 
 class Recette(models.Model):
     pfi = models.ForeignKey('PlanFinancement',
@@ -192,29 +207,31 @@ class Recette(models.Model):
     montantRE = models.DecimalField(verbose_name='Montant Recette Encaissable',
                                     max_digits=12, decimal_places=2,
                                     blank=True, null=True)
-    montantAR = models.DecimalField(verbose_name='Montant Autorisation de Recette',
-                                    max_digits=12, decimal_places=2,
-                                    blank=True, null=True)
-    domainefonctionnel = models.CharField(max_length=100, default='NA', editable=False)
-    naturecomptablerecette = models.ForeignKey('NatureComptableRecette',
-                                               verbose_name='Nature Comptable Recette')
+    montantAR = models.DecimalField(
+        verbose_name='Montant Autorisation de Recette',
+        max_digits=12, decimal_places=2, blank=True, null=True)
+    domainefonctionnel = models.CharField(max_length=100, default='NA',
+                                          editable=False)
+    naturecomptablerecette = models.ForeignKey(
+        'NatureComptableRecette',
+        verbose_name='Nature Comptable Recette')
     commentaire = models.TextField(blank=True, null=True)
     lienpiecejointe = models.CharField(max_length=255,
                                        verbose_name='Lien vers un fichier',
                                        validators=[URLValidator()],
                                        blank=True)
     periodebudget = models.ForeignKey('PeriodeBudget', blank=True, null=True,
-                                       related_name='periodebudgetrecette')
+                                      related_name='periodebudgetrecette')
     annee = models.PositiveIntegerField(verbose_name='Année de la saisie')
     creele = models.DateTimeField(auto_now_add=True, blank=True)
     creepar = models.CharField(max_length=100, blank=True, null=True)
-    modifiele = models.DateTimeField(verbose_name='Date de modification', auto_now=True,
-                                     blank=True)
+    modifiele = models.DateTimeField(verbose_name='Date de modification',
+                                     auto_now=True, blank=True)
     modifiepar = models.CharField(max_length=100, blank=True, null=True)
 
-    #def clean(self):
+    # def clean(self):
     #    pass
     #
-    #def save(self, *args, **kwargs):
+    # def save(self, *args, **kwargs):
     #    self.full_clean()
     #    super(RecetteFull, self).save(*args, **kwargs)
