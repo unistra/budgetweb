@@ -8,7 +8,7 @@ from . import views
 admin.autodiscover()
 
 urlpatterns = [
-    url(r'^search/$', views.search, name='search'),
+#    url(r'^search/$', views.search, name='search'),
     url(r'^accounts/login/$', 'django_cas.views.login'),
     url(r'^accounts/logout/$', 'django_cas.views.logout'),
     # Examples:
@@ -19,19 +19,19 @@ urlpatterns = [
 #    url(r'^authorisationuser/$', views.authorisation_user,name='authorisation_user'),
 #    url(r'^authorisation/(?P<pkauth>[0-9]+)/detail/$', views.authorisation_detail, name='authorisation_detail'),
 #    url(r'^authorisation/(?P<pkauth>[0-9]+)/delete/$', views.authorisation_delete, name='authorisation_delete'),
-    url(r'^authorisation/import/$', views.authorisation_importcsv,name='authorisation_importcsv'),
-    url(r'^authorisation/deleteall/$', views.authorisation_deleteall, name='authorisation_deleteall'),
+#    url(r'^authorisation/import/$', views.authorisation_importcsv,name='authorisation_importcsv'),
+#    url(r'^authorisation/deleteall/$', views.authorisation_deleteall, name='authorisation_deleteall'),
 ## classe NatureComptable
 #    url(r'^naturecomptable/new/$', views.naturecomptable_new, name='naturecomptable_new'),
-    url(r'^naturecomptable/$', views.naturecomptable_list,name='naturecomptable_list'),
+#    url(r'^naturecomptable/$', views.naturecomptable_list,name='naturecomptable_list'),
 #    url(r'^naturecomptable/(?P<pkcc>[0-9]+)/detail/$', views.naturecomptable_detail, name='naturecomptable_detail'),
 #    url(r'^naturecomptable/(?P<pkcc>[0-9]+)/delete/$', views.naturecomptable_delete, name='naturecomptable_delete'),
 #    url(r'^naturecomptable/(?P<pkcc>[0-9]+)/edit/$', views.naturecomptable_edit, name='naturecomptable_edit'),
-    url(r'^naturecomptable/import/$', views.naturecomptable_importcsv,name='naturecomptable_importcsv'),
-    url(r'^naturecomptable/deleteall/$', views.naturecomptable_deleteall, name='naturecomptable_deleteall'),
+#    url(r'^naturecomptable/import/$', views.naturecomptable_importcsv,name='naturecomptable_importcsv'),
+#    url(r'^naturecomptable/deleteall/$', views.naturecomptable_deleteall, name='naturecomptable_deleteall'),
 ## classe DomaineFonctionnel
 #    url(r'^domainefonctionnel/new/$', views.domainefonctionnel_new, name='domainefonctionnel_new'),
-    url(r'^domainefonctionnel/$', views.domainefonctionnel_list,name='domainefonctionnel_list'),
+#    url(r'^domainefonctionnel/$', views.domainefonctionnel_list,name='domainefonctionnel_list'),
 #    url(r'^domainefonctionnel/(?P<pkdf>[0-9]+)/detail/$', views.domainefonctionnel_detail, name='domainefonctionnel_detail'),
 #    url(r'^domainefonctionnel/(?P<pkdf>[0-9]+)/edit/$', views.domainefonctionnel_edit, name='domainefonctionnel_edit'),
 #    url(r'^domainefonctionnel/(?P<pkdf>[0-9]+)/delete/$', views.domainefonctionnel_delete, name='domainefonctionnel_delete'),
@@ -39,17 +39,17 @@ urlpatterns = [
 #    url(r'^domainefonctionnel/deleteall/$', views.domainefonctionnel_deleteall, name='domainefonctionnel_deleteall'),
 ##Compte Budgetaire
 #    url(r'^comptebudget/new/$', views.comptebudget_new, name='comptebudget_new'),
-    url(r'^comptebudget/$', views.comptebudget_list,name='comptebudget_list'),
+#    url(r'^comptebudget/$', views.comptebudget_list,name='comptebudget_list'),
 #    url(r'^comptebudget/(?P<pkcb>[0-9]+)/delete/$', views.comptebudget_delete, name='comptebudget_delete'),
 ##    url(r'^comptebudget/(?P<pk>[0-9]+)/edit/$', views.comptebudget_edit, name='comptebudget_edit'),
 ##ComptaNature
 #    url(r'^comptanature/new/$', views.comptanature_new, name='comptanature_new'),
-    url(r'^comptanature/$', views.comptanature_list,name='comptanature_list'),
+#    url(r'^comptanature/$', views.comptanature_list,name='comptanature_list'),
 #    url(r'^comptanature/(?P<pkcb>[0-9]+)/delete/$', views.comptanature_delete, name='comptanature_delete'),
 #    url(r'^comptanature/(?P<pk>[0-9]+)/edit/$', views.comptanature_edit, name='comptanature_edit'),
 ##FondBudgetaire
 #    url(r'^fondbudgetaire/new/$', views.fondbudgetaire_new, name='fondbudgetaire_new'),
-    url(r'^fondbudgetaire/$', views.fondbudgetaire_list,name='fondbudgetaire_list'),
+#    url(r'^fondbudgetaire/$', views.fondbudgetaire_list,name='fondbudgetaire_list'),
 #    url(r'^fondbudgetaire/(?P<pkcb>[0-9]+)/delete/$', views.fondbudgetaire_delete, name='fondbudgetaire_delete'),
 #    url(r'^fondbudgetaire/(?P<pk>[0-9]+)/edit/$', views.fondbudgetaire_edit, name='fondbudgetaire_edit'),
 ## classe Structure
@@ -64,16 +64,16 @@ urlpatterns = [
 #    url(r'^structure/set_parent/$', views.structure_set_parent, name='structure_set_parent'),
 ## classe PlanFinancement
 #    url(r'^planfinancement/new/$', views.planfinancement_new, name='planfinancement_new'),
-    url(r'^planfinancement/$', views.planfinancement_list,name='planfinancement_list'),
+#    url(r'^planfinancement/$', views.planfinancement_list,name='planfinancement_list'),
     url(r'^planfinancementavecrecdep/$', views.liste_pfi_avec_depenses_recettes,name='liste_pfi_avec_depenses_recettes'),
 #    url(r'^planfinancement/(?P<pkpfi>[0-9]+)/detail/$', views.planfinancement_detail, name='planfinancement_detail'),
 #    url(r'^planfinancement/(?P<pkpfi>[0-9]+)/delete/$', views.planfinancement_delete, name='planfinancement_delete'),
 #    url(r'^planfinancement/(?P<pkpfi>[0-9]+)/edit/$', views.planfinancement_edit, name='planfinancement_edit'),
-    url(r'^planfinancement/import/$', views.planfinancement_importcsv,name='planfinancement_importcsv'),
-    url(r'^planfinancement/deleteall/$', views.planfinancement_deleteall, name='planfinancement_deleteall'),
+#    url(r'^planfinancement/import/$', views.planfinancement_importcsv,name='planfinancement_importcsv'),
+#    url(r'^planfinancement/deleteall/$', views.planfinancement_deleteall, name='planfinancement_deleteall'),
 ## class DepenseFull
 #    url(r'^depensefull/new_avec_pfi_cflink/(?P<struct3id>\w+)/(?P<pfiid>[0-9]+)$', views.depensefull_new_avec_pfi_cflink, name='depensefull_new_avec_pfi_cflink'),
-    url(r'^depensefull/$', views.depensefull_list,name='depensefull_list'),
+#    url(r'^depensefull/$', views.depensefull_list,name='depensefull_list'),
 #    url(r'^depensefull/regroup/$', views.depensefull_listregroup,name='depensefull_listregroup'),
 #    url(r'^depensefull/(?P<pkdep>[0-9]+)/detail/$', views.depensefull_detail, name='depensefull_detail'),
 #    url(r'^depensefull/(?P<pkdep>[0-9]+)/detail2/$', views.depensefull_detail2, name='depensefull_detail2'),
@@ -83,24 +83,24 @@ urlpatterns = [
 #    url(r'^depensefull/(?P<pkdep>[0-9]+)/edit2/$', views.depensefull_edit2, name='depensefull_edit2'),
 #    url(r'^depensefull/deleteall/$', views.depensefull_deleteall, name='depensefull_deleteall'),
 #    url(r'^depensefull/(?P<pkcc>[0-9]+)/parcc/$', views.depensefull_parcc, name='depensefull_parcc'),
-#    url(r'^depensefull/baseformsetdepensefullavec_pfi_cflink/(?P<struct3id>\w+)/(?P<pfiid>[0-9]+)$', views.baseformsetdepensefullavec_pfi_cflink, name='baseformsetdepensefullavec_pfi_cflink'),
+    url(r'^depensefull/baseformsetdepensefullavec_pfi_cflink/(?P<struct3id>\w+)/(?P<pfiid>[0-9]+)$', views.baseformsetdepensefullavec_pfi_cflink, name='baseformsetdepensefullavec_pfi_cflink'),
 #
 ## class RecetteFull
 #    url(r'^recettefull/new_avec_pfi_cflink/(?P<struct3id>\w+)/(?P<pfiid>[0-9]+)$', views.recettefull_new_avec_pfi_cflink, name='recettefull_new_avec_pfi_cflink'),
 #    url(r'^recettefull/baseformsetrecettefullavec_pfi_cflink/(?P<struct3id>\w+)/(?P<pfiid>[0-9]+)$', views.baseformsetrecettefullavec_pfi_cflink, name='baseformsetrecettefullavec_pfi_cflink'),
-    url(r'^recettefull/$', views.recettefull_list,name='recettefull_list'),
+#    url(r'^recettefull/$', views.recettefull_list,name='recettefull_list'),
 #    url(r'^recettefull/(?P<pkrec>[0-9]+)/detail/$', views.recettefull_detail, name='recettefull_detail'),
 #    url(r'^recettefull/(?P<pkrec>[0-9]+)/detail2/$', views.recettefull_detail2, name='recettefull_detail2'),
 #    url(r'^recettefull/(?P<pkrec>[0-9]+)/delete/$', views.recettefull_delete, name='recettefull_delete'),
 #    url(r'^recettefull/(?P<pkrec>[0-9]+)/delete2/$', views.recettefull_delete2, name='recettefull_delete2'),
 #    url(r'^recettefull/(?P<pkrec>[0-9]+)/edit/$', views.recettefull_edit, name='recettefull_edit'),
 #    url(r'^recettefull/(?P<pkrec>[0-9]+)/edit2/$', views.recettefull_edit2, name='recettefull_edit2'),
-    url(r'^recettefull/deleteall/$', views.depensefull_deleteall, name='recettefull_deleteall'),
+#    url(r'^recettefull/deleteall/$', views.depensefull_deleteall, name='recettefull_deleteall'),
 #    url(r'^recettefull/(?P<pkcp>[0-9]+)/parcp/$', views.recettefull_parcp, name='recettefull_parcp'),
 #
 ## class PeriodeBudget
 #    url(r'^periodebudget/new/$', views.periodebudget_new, name='periodebudget_new'),
-    url(r'^periodebudget/$', views.periodebudget_list,name='periodebudget_list'),
+#    url(r'^periodebudget/$', views.periodebudget_list,name='periodebudget_list'),
 #    url(r'^periodebudget/(?P<pkpb>[0-9]+)/detail/$', views.periodebudget_detail, name='periodebudget_detail'),
 #    url(r'^periodebudget/(?P<pkpb>[0-9]+)/delete/$', views.periodebudget_delete, name='periodebudget_delete'),
 #    url(r'^periodebudget/(?P<pkpb>[0-9]+)/edit/$', views.periodebudget_edit, name='periodebudget_edit'),

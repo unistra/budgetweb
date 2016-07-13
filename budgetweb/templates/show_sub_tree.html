@@ -2,13 +2,15 @@
 {% load staticfiles %}
 {% for node in listePFI %}
    <li>
-  	<span style="width:160px;" toto="{{ node.myid|trim }}">
-  		{{ node.myid|trim }}
+  	<span style="width:160px;" toto="{{ node.id }}">
+      {{ node.id }}
       {% if node.pluriannuel %}
       <a href="{% url 'pluriannuel' pfiid=node.id %}">D.&amp; R.</a>&nbsp;
       {% else %}
+      {% comment "FIXME" %}
         <a href="{% url 'baseformsetdepensefullavec_pfi_cflink' pfiid=node.id struct3id=node.cfassoclink_id %}">D</a>&nbsp;
         <a href="{% url 'baseformsetrecettefullavec_pfi_cflink' pfiid=node.id struct3id=node.cfassoclink_id %}">R</a>
+      {% endcomment %}
       {% endif %}
   	</span>
     <div class="showTree">{% if node.sommeRecetteDC.somme %}{{ node.sommeRecetteDC.somme }}{% else %}0{% endif %} &euro;</div>
@@ -23,9 +25,9 @@
 {% endfor %}
 {% for node in listeCF %}
    <li>
-  	<span style="width:auto;" toto="{{ node.name|trim }}">
+  	<span style="width:auto;" toto="{{ node.code }}">
   		<i class="glyphicon glyphicon-plus"></i>
-  		{{ node.name|trim }}
+  		{{ node.label|trim }}
   	</span>
   	<div class="showTree">100 000 &euro;</div>
   	<div class="showTree">100 000 &euro;</div>
