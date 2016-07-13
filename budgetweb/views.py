@@ -42,6 +42,8 @@ from budgetweb.libs.node import generateTree
 from .models import (Authorisation, Depense, DomaineFonctionnel, PeriodeBudget,
                      PlanFinancement, Recette, Structure)
 
+from .forms import (RecetteForm)
+
 # logging
 import logging
 # Get an instance of a logger
@@ -2201,6 +2203,12 @@ def depense(request, pfiid):
 
 
 @login_required
-def depense(request, pfiid):
+def recette(request, pfiid):
     pfi = PlanFinancement.objects.get(pk=pfiid)
-    return render(request, 'recette.html', {'test': 'TEST', 'PFI': pfi})
+    recette = RecetteForm()
+    if request.method == "POST" in request.POST:
+        recette = RecetteForm(request.POST)
+        if form_validate.is_valid():
+            print("coucou")
+    return render(request, 'recette.html', {'test': 'TEST', 'PFI': pfi,
+                                            'form_recette': recette})

@@ -139,7 +139,7 @@ urlpatterns = [
     url(r'^pluriannuel/(?P<pfiid>\w+)$', views.pluriannuel,
         name="pluriannuel"),
     url(r'^depense/(?P<pfiid>\w+)/', views.depense, name="depense"),
-    url(r'^recette/(?P<pfiid>\w+)/', views.depense, name="recette"),
+    url(r'^recette/(?P<pfiid>\w+)/', views.recette, name="recette"),
 ]
 # debug toolbar for dev
 if settings.DEBUG and 'debug_toolbar'in settings.INSTALLED_APPS:

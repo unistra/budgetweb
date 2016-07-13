@@ -6,7 +6,7 @@ from django.http import Http404, HttpResponse
 #from .models import (Authorisation, ComptaNature, CompteBudget, DepenseFull,
 #                     DomaineFonctionnel, FondBudgetaire, NatureComptable,
 #                     PeriodeBudget, PlanFinancement, RecetteFull, Structure)
-
+from .models import (Recette, NatureComptableRecette)
 
 #class AuthorisationForm(forms.ModelForm):
 #
@@ -186,7 +186,7 @@ from django.http import Http404, HttpResponse
 #        #self.fields['plfi'].queryset = PlanFinancement.objects.filter(id=instance.plfi.id)
 #
 #        #pas de modification sur ces champs
-#        # la periode de budget est calculee automatiquement 
+#        # la periode de budget est calculee automatiquement
 #        if instance and instance.pk:
 #            self.fields['structlev3'].queryset = Structure.objects.filter(id=instance.structlev3.id)
 #            self.fields['plfi'].queryset = PlanFinancement.objects.filter(id=instance.plfi.id)
@@ -236,7 +236,7 @@ from django.http import Http404, HttpResponse
 #        #self.fields['plfi'].queryset = PlanFinancement.objects.filter(id=instance.plfi.id)
 #
 #        #pas de modification sur ces champs
-#        # la periode de budget est calculee automatiquement 
+#        # la periode de budget est calculee automatiquement
 #        if instance and instance.pk:
 #            self.fields['structlev3'].queryset = Structure.objects.filter(id=instance.structlev3.id)
 #            self.fields['plfi'].queryset = PlanFinancement.objects.filter(id=instance.plfi.id)
@@ -341,7 +341,7 @@ from django.http import Http404, HttpResponse
 #        instance = getattr(self, 'instance', None)
 #        #pas de modification sur ces champs
 #        # en recette domfonc=NA toujours
-#        # la periode de budget est calculee automatiquement 
+#        # la periode de budget est calculee automatiquement
 #        if instance and instance.pk:
 #            self.fields['structlev3'].queryset = Structure.objects.filter(id=instance.structlev3.id)
 #            self.fields['plfi'].queryset = PlanFinancement.objects.filter(id=instance.plfi.id)
@@ -385,7 +385,7 @@ from django.http import Http404, HttpResponse
 #        instance = getattr(self, 'instance', None)
 #        #pas de modification sur ces champs
 #        # en recette domfonc=NA toujours
-#        # la periode de budget est calculee automatiquement 
+#        # la periode de budget est calculee automatiquement
 #        if instance and instance.pk:
 #            self.fields['structlev3'].queryset = Structure.objects.filter(id=instance.structlev3.id)
 #            self.fields['plfi'].queryset = PlanFinancement.objects.filter(id=instance.plfi.id)
@@ -499,3 +499,21 @@ from django.http import Http404, HttpResponse
 #                       )
 #            else:
 #                print ('no clean data for this form')
+
+
+class RecetteForm(forms.ModelForm):
+    class Meta:
+        model = Recette
+        fields = ('pfi', 'structure',
+                  'naturecomptablerecette', 'annee',
+                  'montantAR', 'montantRE', 'montantDC', 'commentaire',
+                  'periodebudget', 'lienpiecejointe')
+        widgets = {
+            'commentaire': forms.Textarea(attrs={'cols': 40, 'rows': 2}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(RecetteForm, self).__init__(*args, **kwargs)
+        naturecomptable = NatureComptableRecette.objects.filter(is_fleche=True)
+        self.fields['naturecomptablerecette'].queryset = naturecomptable
+        instance = getattr(self, 'instance', None)
