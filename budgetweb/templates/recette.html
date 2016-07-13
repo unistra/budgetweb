@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block head-additional %}
+	<link rel="stylesheet" href="{% static 'css/budgetweb.css' %}"/>
+{% endblock %}
+
+{% block content %}
+	<div class="col-md-12">
+	<fieldset>
+		<legend><h4>Caractérisque du PFI : {{ PFI.code }} ({{ PFI.label }})</h4></legend>
+		FIX IT
+	</fieldset>
+	</div>
+{% endblock %}
+
+{% block foot-javascript %}
+<script src="{% static 'js/budgetweb.js' %}"></script>
+{% endblock %}

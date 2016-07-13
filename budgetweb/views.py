@@ -2154,16 +2154,17 @@ def baseformsetdepensefullavec_pfi_cflink(request,struct3id,pfiid):
 #
 #    return render(request, 'recettefull_formset.html',context)
 #
-#
-#
+
+
 @login_required
-def show_tree(request):
+def show_tree(request, type_affichage):
     listeCF = generateTree(request)
-    return render(request, 'showtree.html', { 'listeCF': listeCF})
+    return render(request, 'showtree.html', {'listeCF': listeCF,
+                                            'typeAffichage': type_affichage})
 
 
 @login_required
-def show_sub_tree(request, structid):
+def show_sub_tree(request, type_affichage, structid):
 
     # On récupère l'ID sur PAPA
     structure = Structure.objects.get(code=structid)
@@ -2178,17 +2179,28 @@ def show_sub_tree(request, structid):
         pfi['sommeDepenseAE'] = Depense.objects.filter(pfi__id=pfi['id']).aggregate(somme=Sum('montantAE'))
         pfi['sommeDepenseCP'] = Depense.objects.filter(pfi__id=pfi['id']).aggregate(somme=Sum('montantCP'))
         pfi['sommeDepenseDC'] = Depense.objects.filter(pfi__id=pfi['id']).aggregate(somme=Sum('montantDC'))
-#        pfi['sommeRecetteAR'] = Recette.objects.filter(pfi__id=pfi['id']).aggregate(somme=Sum('montant'))
-#        pfi['sommeRecetteRE'] = Recette.objects.filter(pfi__id=pfi['id']).aggregate(somme=Sum('montantre'))
-#        pfi['sommeRecetteDC'] = Recette.objects.filter(pfi__id=pfi['id']).aggregate(somme=Sum('montantdc'))
+        pfi['sommeRecetteAR'] = Recette.objects.filter(pfi__id=pfi['id']).aggregate(somme=Sum('montantAR'))
+        pfi['sommeRecetteRE'] = Recette.objects.filter(pfi__id=pfi['id']).aggregate(somme=Sum('montantRE'))
+        pfi['sommeRecetteDC'] = Recette.objects.filter(pfi__id=pfi['id']).aggregate(somme=Sum('montantDC'))
 
-    context = {'listeCF': listeCF, 'listePFI': listePFI}
+    context = {'listeCF': listeCF, 'listePFI': listePFI,
+               'typeAffichage': type_affichage}
     return render(request, 'show_sub_tree.html', context)
 
 
 @login_required
-def pluriannuel(request,pfiid):
-    pfi = PlanFinancement.objects.filter(pk=pfiid).first()
+def pluriannuel(request, pfiid):
+    pfi = PlanFinancement.objects.get(pk=pfiid)
+    return render(request, 'pluriannuel.html', {'test': "test", 'PFI': pfi})
 
 
-    return render(request, 'pluriannuel.html', { 'test' : "test", 'PFI': pfi})
+@login_required
+def depense(request, pfiid):
+    pfi = PlanFinancement.objects.get(pk=pfiid)
+    return render(request, 'depense.html', {'test': 'TEST', 'PFI': pfi})
+
+
+@login_required
+def depense(request, pfiid):
+    pfi = PlanFinancement.objects.get(pk=pfiid)
+    return render(request, 'recette.html', {'test': 'TEST', 'PFI': pfi})

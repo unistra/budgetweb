@@ -42,7 +42,41 @@
                        <span class="caret"></span></a>
                        <ul class="dropdown-menu">
                           <li><a href="{% url 'liste_pfi_avec_depenses_recettes'%}">Menu PFI </a></li>
-                          <li><a href="{% url 'show_tree'%}">Menu PFI2</a></li>
+                          <li><a href="{% url 'show_tree' type_affichage='gbcp'%}">Menu GBCP</a></li>
+                          <li><a href="{% url 'show_tree' type_affichage='dc'%}">Menu Droit Constaté</a></li>
+                          {% comment %}
+                          <li><a href="{% url 'structure_list2'%}">Menu structures </a></li>
+                          <li><a href="{% url 'authorisation_list'%}">Liste des -autorisations-</a></li>
+                          <li><a href="{% url 'naturecomptable_list'%}">Liste des -natures comptables-</a></li>
+                          <li><a href="{% url 'comptebudget_list'%}">Liste des -comptes budg&eacutetaires-</a></li>
+                          <li><a href="{% url 'domainefonctionnel_list'%}">Liste des -domaines fonctionnels-</a></li>
+                          <li><a href="{% url 'structure_list'%}">Liste des -structures- </a></li>
+                          <li><a href="{% url 'planfinancement_list'%}">Liste des -plans de financement- </a></li>
+                          <li><a href="{% url 'depensefull_list'%}">Liste des -depenses-V2 </a></li>
+                          <li><a href="{% url 'recettefull_list'%}">Liste des -recettes-V2 </a></li>
+                          <li><a href="{% url 'periodebudget_list'%}">Liste des -P&eacuteriode budg&eacutetaire- </a></li>
+                          <li><a href="#"> --- --- --- </a></li>
+                          <li><a href="{% url 'comptanature_list'%}">D&eacutepenses - Liste des -natures comptables-</a></li>
+                          <li><a href="{% url 'fondbudgetaire_list'%}">Recettes - Liste des -fonds budg&eacutetaires-</a></li>
+
+                          <li><a href="#"> --- --- --- </a></li>
+                          <li><a href="{% url 'authorisation_importcsv'%}">Import des autorisations</a></li>
+                          <li><a href="{% url 'authorisation_deleteall'%}">Nettoyer la table des autorisations</a></li>
+                          <li><a href="#"> --- --- --- </a></li>
+                          <li><a href="{% url 'naturecomptable_importcsv'%}">Import des natures comptables</a></li>
+                          <li><a href="{% url 'naturecomptable_deleteall'%}">Nettoyer la table des natures comptables</a></li>
+                          <li><a href="#"> --- --- --- </a></li>
+                          <li><a href="{% url 'domainefonctionnel_importcsv'%}">Import des domaines fonctionnels</a></li>
+                          <li><a href="{% url 'domainefonctionnel_deleteall'%}">Nettoyer la table des domaines fonctionnels</a></li>
+                          <li><a href="#"> --- --- --- </a></li>
+                          <li><a href="{% url 'structure_importcsv'%}">Import des structures</a></li>
+                          <li><a href="{% url 'structure_deleteall'%}">Nettoyer la table des structures</a></li>
+                          <li><a href="#"> --- --- --- </a></li>
+                          <li><a href="{% url 'planfinancement_importcsv'%}">Import des -plans de financement- </a></li>
+                          <li><a href="{% url 'planfinancement_deleteall'%}">Nettoyer la table des -plans de financement-</a></li>
+                          <li><a href="#"> --- --- --- </a></li>
+                          <li><a href="{% url 'recettefull_deleteall'%}">Nettoyer la table des -recettes-</a></li>
+                        {% endcomment %}
                        </ul>
                     </li>
 		    {% if user.is_authenticated %}

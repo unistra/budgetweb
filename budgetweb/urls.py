@@ -129,12 +129,17 @@ urlpatterns = [
 
     url(r'^admin/', include(admin.site.urls)),
 
-# Affichage
-    url(r'^showtree/$', views.show_tree, name="show_tree"),
-# Affichage AJAX.
-    url(r'^showtree/getsubtree/(?P<structid>\w+)$', views.show_sub_tree, name="show_sub_tree"),
-# Pluriannuel
-    url(r'^pluriannuel/(?P<pfiid>\w+)$', views.pluriannuel, name="pluriannuel"),
+    # Base de l'arbre.
+    url(r'^showtree/(?P<type_affichage>\w+)/$', views.show_tree,
+        name="show_tree"),
+    # Affichage AJAX.
+    url(r'^showtree/(?P<type_affichage>\w+)/getsubtree/(?P<structid>\w+)$',
+        views.show_sub_tree, name="show_sub_tree"),
+    # Pluriannuel
+    url(r'^pluriannuel/(?P<pfiid>\w+)$', views.pluriannuel,
+        name="pluriannuel"),
+    url(r'^depense/(?P<pfiid>\w+)/', views.depense, name="depense"),
+    url(r'^recette/(?P<pfiid>\w+)/', views.depense, name="recette"),
 ]
 # debug toolbar for dev
 if settings.DEBUG and 'debug_toolbar'in settings.INSTALLED_APPS:
