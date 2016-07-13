@@ -17,21 +17,18 @@ class Command(BaseCommand):
                 reader = csv.reader(h, delimiter=';', quotechar='"')
                 created = 0
                 for row in reader:
-                    if row[0]=='PFI fléché':
-                        pfi_is_fleche = True
-                    else:
-                        pfi_is_fleche = False
-                    if row[6]=='oui':
-                        decalage = True
-                    else:
-                        decalage = False
+                    pfi_is_fleche = (row[0] == 'PFI fléché')
+                    decalage = (row[6] == 'oui')
 
                     NatureComptableDepense.objects.update_or_create(
-                        enveloppe=row[1], label_nature_comptable=row[2],
-                        code_nature_comptable=row[3], code_compte_budgetaire=row[4],
-                        label_compte_budgetaire=row[5],is_fleche=pfi_is_fleche,
+                        enveloppe=row[1],
+                        label_nature_comptable=row[2],
+                        code_nature_comptable=row[3],
+                        code_compte_budgetaire=row[4],
+                        label_compte_budgetaire=row[5],
+                        is_fleche=pfi_is_fleche,
                         is_decalage_tresorerie=decalage,
                         defaults={'is_active': True}
                     )
                     created += 1
-                print('NatureComptableDepense created with %s : %s' % (filename, created, ))
+                print('NatureComptableDepense created with %s : %s' % (filename, created))
