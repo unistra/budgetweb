@@ -20,10 +20,10 @@ class PeriodeBudget(models.Model):
     avec bloqué=False. Les dépenses et les recettes
     sont saisies pour une période
     """
-    name = models.CharField('Libellé court', max_length=20)
+    code = models.CharField('Libellé court', max_length=20)
     label = models.CharField('Libellé long', max_length=100)
-    annee = models.DateField('Année', null=True)
-    bloque = models.BooleanField('Bloqué (False=Actif)', default=True)
+    annee = models.PositiveIntegerField('Année')
+    is_active = models.BooleanField('Activé (oui/,non)', default=True)
 
     def __str__(self):
         return '{0.name} -- {0.label} -- {0.annee.year}'.format(self)
@@ -90,6 +90,7 @@ class PlanFinancement(models.Model):
     def __str__(self):
         return str(code)
 
+
 class NatureComptableDepense(models.Model):
 
     enveloppe = models.CharField(max_length=100, verbose_name='Enveloppe')
@@ -105,6 +106,7 @@ class NatureComptableDepense(models.Model):
     is_decalage_tresorerie = models.BooleanField('Décalage trésorerie',
                                                  max_length=100)
     is_active = models.BooleanField('Actif', max_length=100, default=True)
+
 
 class NatureComptableRecette(models.Model):
 
@@ -123,6 +125,7 @@ class NatureComptableRecette(models.Model):
                                                verbose_name='Désignation du compte budgétaire')
     is_fleche = models.BooleanField('Fleché', max_length=100, default=True)
     is_active = models.BooleanField('Actif', max_length=100, default=True)
+
 
 class Depense(models.Model):
     pfi = models.ForeignKey('PlanFinancement',
