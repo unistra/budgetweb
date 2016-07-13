@@ -200,7 +200,7 @@ class Depense(models.Model):
 class Recette(models.Model):
     pfi = models.ForeignKey('PlanFinancement',
                             verbose_name='Programme de financement')
-    strcture = models.ForeignKey('Structure',
+    structure = models.ForeignKey('Structure',
                                  verbose_name='Centre financier')
     montantDC = models.DecimalField(max_digits=12, decimal_places=2,
                                     blank=True, null=True)
