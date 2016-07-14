@@ -7,7 +7,9 @@ from django.http import Http404, HttpResponse
 #                     DomaineFonctionnel, FondBudgetaire, NatureComptable,
 #                     PeriodeBudget, PlanFinancement, RecetteFull, Structure)
 from .models import (Recette, NatureComptableRecette,
-                     Depense, NatureComptableDepense)
+                     Depense, NatureComptableDepense,
+                     PlanFinancement,
+                     Structure)
 
 #class AuthorisationForm(forms.ModelForm):
 #
@@ -511,14 +513,26 @@ class RecetteForm(forms.ModelForm):
                   'periodebudget', 'lienpiecejointe')
         widgets = {
             'commentaire': forms.Textarea(attrs={'cols': 40, 'rows': 2}),
+            'pfi': forms.HiddenInput(),
+            'structure': forms.HiddenInput(),
         }
 
     def __init__(self, *args, **kwargs):
-        pfi_is_fleche = kwargs.pop('is_fleche')
+        pfiid = kwargs.pop('pfiid')
         super(RecetteForm, self).__init__(*args, **kwargs)
-        naturecomptable = \
-            NatureComptableRecette.objects.filter(is_fleche=pfi_is_fleche)
-        self.fields['naturecomptablerecette'].queryset = naturecomptable
+        pfi = PlanFinancement.objects.filter(id=pfiid)
+        is_fleche = pfi.first().is_fleche
+        structure = Structure.objects.filter(id=pfi.first().structure.id)
+        nc = NatureComptableRecette.objects.filter(is_fleche=is_fleche)
+        self.fields['naturecomptablerecette'].queryset = nc
+        self.fields['structure'].queryset = structure
+        self.fields['structure'].initial = structure.first().id
+        self.fields['pfi'].queryset = pfi
+        self.fields['pfi'].initial = pfi.first().id
+        self.fields['pfi'].widget.attrs['disabled'] = True
+        self.fields['structure'].widget.attrs['disabled'] = True
+        self.fields['annee'].widget.attrs['disabled'] = True
+        self.fields['annee'].initial = 2017
         instance = getattr(self, 'instance', None)
 
 
@@ -531,10 +545,24 @@ class DepenseForm(forms.ModelForm):
                   'periodebudget', 'lienpiecejointe')
         widgets = {
             'commentaire': forms.Textarea(attrs={'cols': 40, 'rows': 2}),
+            'pfi': forms.HiddenInput(),
+            'structure': forms.HiddenInput(),
         }
 
     def __init__(self, *args, **kwargs):
+        pfiid = kwargs.pop('pfiid')
         super(DepenseForm, self).__init__(*args, **kwargs)
-        naturecomptable = NatureComptableDepense.objects.filter()
-        self.fields['naturecomptabledepense'].queryset = naturecomptable
+        pfi = PlanFinancement.objects.filter(id=pfiid)
+        is_fleche = pfi.first().is_fleche
+        structure = Structure.objects.filter(id=pfi.first().structure.id)
+        nc = NatureComptableDepense.objects.filter(is_fleche=is_fleche)
+        self.fields['naturecomptabledepense'].queryset = nc
+        self.fields['structure'].queryset = structure
+        self.fields['structure'].initial = structure.first().id
+        self.fields['pfi'].queryset = pfi
+        self.fields['pfi'].initial = pfi.first().id
+        self.fields['pfi'].widget.attrs['disabled'] = True
+        self.fields['structure'].widget.attrs['disabled'] = True
+        self.fields['annee'].widget.attrs['disabled'] = True
+        self.fields['annee'].initial = 2017
         instance = getattr(self, 'instance', None)

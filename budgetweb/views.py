@@ -3,6 +3,7 @@
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
 from django.shortcuts import render, render_to_response
+
 #from django.template import RequestContext
 #from django.utils import timezone
 #from datetime import datetime
@@ -2162,7 +2163,7 @@ def baseformsetdepensefullavec_pfi_cflink(request,struct3id,pfiid):
 def show_tree(request, type_affichage):
     listeCF = generateTree(request)
     return render(request, 'showtree.html', {'listeCF': listeCF,
-                                            'typeAffichage': type_affichage})
+                                             'typeAffichage': type_affichage})
 
 
 @login_required
@@ -2178,12 +2179,24 @@ def show_sub_tree(request, type_affichage, structid):
     # Et enfin on ajoute les PFI, si jamais il y en a.
     listePFI = PlanFinancement.objects.filter(structure=structure).values()
     for pfi in listePFI:
-        pfi['sommeDepenseAE'] = Depense.objects.filter(pfi__id=pfi['id']).aggregate(somme=Sum('montantAE'))
-        pfi['sommeDepenseCP'] = Depense.objects.filter(pfi__id=pfi['id']).aggregate(somme=Sum('montantCP'))
-        pfi['sommeDepenseDC'] = Depense.objects.filter(pfi__id=pfi['id']).aggregate(somme=Sum('montantDC'))
-        pfi['sommeRecetteAR'] = Recette.objects.filter(pfi__id=pfi['id']).aggregate(somme=Sum('montantAR'))
-        pfi['sommeRecetteRE'] = Recette.objects.filter(pfi__id=pfi['id']).aggregate(somme=Sum('montantRE'))
-        pfi['sommeRecetteDC'] = Recette.objects.filter(pfi__id=pfi['id']).aggregate(somme=Sum('montantDC'))
+        pfi['sommeDepenseAE'] = Depense.objects.filter(
+                                pfi__id=pfi['id']).aggregate(
+                                somme=Sum('montantAE'))
+        pfi['sommeDepenseCP'] = Depense.objects.filter(
+                                pfi__id=pfi['id']).aggregate(
+                                somme=Sum('montantCP'))
+        pfi['sommeDepenseDC'] = Depense.objects.filter(
+                                pfi__id=pfi['id']).aggregate(
+                                somme=Sum('montantDC'))
+        pfi['sommeRecetteAR'] = Recette.objects.filter(
+                                pfi__id=pfi['id']).aggregate(
+                                somme=Sum('montantAR'))
+        pfi['sommeRecetteRE'] = Recette.objects.filter(
+                                pfi__id=pfi['id']).aggregate(
+                                somme=Sum('montantRE'))
+        pfi['sommeRecetteDC'] = Recette.objects.filter(
+                                pfi__id=pfi['id']).aggregate(
+                                somme=Sum('montantDC'))
 
     context = {'listeCF': listeCF, 'listePFI': listePFI,
                'typeAffichage': type_affichage}
@@ -2199,7 +2212,7 @@ def pluriannuel(request, pfiid):
 @login_required
 def depense(request, pfiid):
     pfi = PlanFinancement.objects.get(pk=pfiid)
-    depense = DepenseForm()
+    depense = DepenseForm(pfiid=pfiid)
     if request.method == "POST" in request.POST:
         depense = RecetteForm(request.POST)
         if form_depense.is_valid():
@@ -2211,7 +2224,7 @@ def depense(request, pfiid):
 @login_required
 def recette(request, pfiid):
     pfi = PlanFinancement.objects.get(pk=pfiid)
-    recette = RecetteForm(is_fleche=pfi.is_fleche)
+    recette = RecetteForm(pfiid=pfiid)
     if request.method == "POST" in request.POST:
         recette = RecetteForm(request.POST)
         if form_recette.is_valid():

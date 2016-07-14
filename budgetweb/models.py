@@ -111,6 +111,10 @@ class NatureComptableDepense(models.Model):
                                                  max_length=100)
     is_active = models.BooleanField('Actif', max_length=100, default=True)
 
+    def __str__(self):
+        return '{0.code_nature_comptable} - \
+                {0.label_nature_comptable}'.format(self)
+
 
 class NatureComptableRecette(models.Model):
 
@@ -133,6 +137,7 @@ class NatureComptableRecette(models.Model):
     def __str__(self):
         return '{0.code_nature_comptable} - \
                 {0.label_nature_comptable}'.format(self)
+
 
 class Depense(models.Model):
     pfi = models.ForeignKey('PlanFinancement',
