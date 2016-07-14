@@ -3,17 +3,22 @@
 		<i class="glyphicon glyphicon-plus"></i>
 		{{ node.title }}
 	</span>
-	<div class="showTree">100 000 &euro;</div>
-	<div class="showTree">100 000 &euro;</div>
-	<div class="showTree">100 000 &euro;</div>
-	<div class="showTree">&nbsp;</div>
-	<div class="showTree">300 000 &euro;</div>
-	<div class="showTree">400 000 &euro;</div>
-	<div class="showTree">500 000 &euro;</div>
+	{% if typeAffichage == "gbcp" %}
+		<div class="showTree">50 000,00 &euro;</div>
+		<div class="showTree">50 000,00 &euro;</div>
+		<div class="showTree">&nbsp;</div>
+		<div class="showTree">50 000,00 &euro;</div>
+		<div class="showTree">50 000,00 &euro;</div>
+	{% else %}
+		<div class="showTree">50 000,00 &euro;</div>
+		<div class="showTree">50 000,00 &euro;</div>
+		<div class="showTree">&nbsp;</div>
+		<div class="showTree">50 000,00 &euro;</div>
+	{% endif %}
 		<ul id="{{ node.title }}">
          {%for ch in node.getChild %}
               {%with node=ch template_name="show_tree_template.html" %}
-                   {%include template_name%}
+                   {% include template_name with typeAffichage="typeAffichage" %}
               {%endwith%}
          {%endfor%}
 		 </ul>

@@ -27,8 +27,8 @@ from django.shortcuts import get_object_or_404, redirect
 
 
 from budgetweb.libs.node import generateTree
-from .forms import (BaseDepenseFullFormSet, #BaseRecetteFullFormSet,
-                     DepenseForm,
+from .forms import (BaseDepenseFullFormSet,  # BaseRecetteFullFormSet,
+                    DepenseForm,
                     DepenseFormPfi, RecetteForm, RecetteFormPfi)
 from .models import (Authorisation, Depense, DomaineFonctionnel, PeriodeBudget,
                      PlanFinancement, Recette, Structure)
@@ -38,15 +38,15 @@ import logging
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
-#---------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------
 
-#def search(request):
+# def search(request):
 #    pass
 #
-##---------------------------------------
+# --------------------------------------
 
 
-#@login_required
+# @login_required
 def home(request):
     return render_to_response('base.html')
 
@@ -140,31 +140,32 @@ Liste des structure CF/CC/CP
 def structure_list(request):
     if request.method == "POST":
         stname = request.POST['stname']
-        stlabel  = request.POST['stlabel']
-        if stname == "" and stlabel == "" :
+        stlabel = request.POST['stlabel']
+        if stname == "" and stlabel == "":
             myst = Structure.objects.all()
-        elif stname == "" :
-            myst = Structure.objects.filter ( label__icontains = stlabel )
-        elif stlabel == "" :
-            myst = Structure.objects.filter ( name__icontains = stname )
+        elif stname == "":
+            myst = Structure.objects.filter(label__icontains=stlabel)
+        elif stlabel == "":
+            myst = Structure.objects.filter(name__icontains=stname)
         else:
-            myst = Structure.objects.filter( label__icontains = stlabel ).filter( name__icontains = stname )
+            myst = Structure.objects.filter(label__icontains=stlabel) \
+                .filter(name__icontains=stname)
     else:
         myst = Structure.objects.all()
 
-    return render(request, 'structure_lists.html', {'reponses':myst})
+    return render(request, 'structure_lists.html', {'reponses': myst})
 
 
 def structure_list2(request):
     myst = Structure.objects.filter(parent=None)
 
-    return render(request, 'structure_lists_arbomain.html', {'reponses':myst})
+    return render(request, 'structure_lists_arbomain.html', {'reponses': myst})
 
 
 #
 #
-#@login_required
-#def structure_set_parent(request):
+# @login_required
+# def structure_set_parent(request):
 #    mystructures = Structure.objects.all()
 #    for child in mystructures:
 #        child.parent=Structure.objects.filter(myid=child.parentid).first()
@@ -759,7 +760,7 @@ def baseformsetdepensefullavec_pfi_cflink(request, pfiid):
     # print('BF : %s' % DepenseFullFormSet.form.base_fields)
     DepenseFullFormSet.form.base_fields['structure'] = structure
     DepenseFullFormSet.form.base_fields['pfi'] = pfi
-    
+
 
     budget = current_budget()
     depense = 'dep'
@@ -885,7 +886,7 @@ def show_sub_tree(request, type_affichage, structid):
 
     # On récupère la liste des CF fils.
     listeCF = Structure.objects.filter(parent=structure)
-    print('LCF : %s' % listeCF)
+    # print('LCF : %s' % listeCF)
 
     # Et enfin on ajoute les PFI, si jamais il y en a.
     listePFI = PlanFinancement.objects.filter(structure=structure).values()
@@ -909,12 +910,13 @@ def show_sub_tree(request, type_affichage, structid):
                                 pfi__id=pfi['id']).aggregate(
                                 somme=Sum('montantDC'))
 
-    context = {'listeCF': listeCF, 'listePFI': listePFI}
+    context = {'listeCF': listeCF, 'listePFI': listePFI,
+               'typeAffichage': type_affichage}
     return render(request, 'show_sub_tree.html', context)
 
 
 @login_required
-def pluriannuel(request,pfiid):
+def pluriannuel(request, pfiid):
     pfi = PlanFinancement.objects.filter(pk=pfiid).first()
     return render(request, 'pluriannuel.html', {'test': "test", 'PFI': pfi})
 
