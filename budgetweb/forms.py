@@ -8,44 +8,44 @@ from .models import (Authorisation, Depense, DomaineFonctionnel,
                      PeriodeBudget, PlanFinancement, Recette, Structure)
 
 
-#class AuthorisationForm(forms.ModelForm):
+# class AuthorisationForm(forms.ModelForm):
 #
 #    class Meta:
 #        model = Authorisation
 #        fields = ('username', 'myobject')
 #
 #
-#class CompteBudgetForm(forms.ModelForm):
+# class CompteBudgetForm(forms.ModelForm):
 #
 #    class Meta:
 #        model = CompteBudget
 #        fields = ('code', 'label', 'description')
 #
 #
-#class ComptaNatureForm(forms.ModelForm):
+# class ComptaNatureForm(forms.ModelForm):
 #
 #    class Meta:
 #        model = ComptaNature
 #        fields = ('code', 'label')
 #
 #
-#class FondBudgetaireForm(forms.ModelForm):
+# class FondBudgetaireForm(forms.ModelForm):
 #
 #    class Meta:
 #        model = FondBudgetaire
 #        fields = ('code', 'label')
 #
 #
-#class NatureComptableForm(forms.ModelForm):
+# class NatureComptableForm(forms.ModelForm):
 #
 #    class Meta:
 #        model = NatureComptable
 #        fields = ('enveloppe', 'fondbudget_recette', 'naturec_dep',
-#                  'pfifleche', 'ncsecondairecode', 'ccbd', 'decalagetresocpae',
-#                  'nctype')
+#                  'pfifleche', 'ncsecondairecode', 'ccbd',
+#                  'decalagetresocpae','nctype')
 #
 #
-#class DomaineFonctionnelForm(forms.ModelForm):
+# class DomaineFonctionnelForm(forms.ModelForm):
 #
 #    class Meta:
 #        model = DomaineFonctionnel
@@ -53,7 +53,7 @@ from .models import (Authorisation, Depense, DomaineFonctionnel,
 #                  'dfdesc')
 #
 #
-#class StructureForm(forms.ModelForm):
+# class StructureForm(forms.ModelForm):
 #
 #    class Meta:
 #        model = Structure
@@ -61,7 +61,7 @@ from .models import (Authorisation, Depense, DomaineFonctionnel,
 #                  'bloq', 'modifdate', 'modifpar', 'dfmc', 'fdr', 'parent')
 #
 #
-#class StructureFormcc(forms.ModelForm):
+# class StructureFormcc(forms.ModelForm):
 #
 #    class Meta:
 #        model = Structure
@@ -74,7 +74,7 @@ from .models import (Authorisation, Depense, DomaineFonctionnel,
 #        self.fields['type'].queryset = " cc"
 #
 #
-#class PlanFinancementForm(forms.ModelForm):
+# class PlanFinancementForm(forms.ModelForm):
 #
 #    class Meta:
 #        model = PlanFinancement
@@ -93,7 +93,7 @@ from .models import (Authorisation, Depense, DomaineFonctionnel,
 #            .filter(type=' cf').order_by('name')
 #
 #
-#class DepenseFullForm(forms.ModelForm):
+# class DepenseFullForm(forms.ModelForm):
 #
 #    class Meta:
 #        model = DepenseFull
@@ -109,9 +109,9 @@ from .models import (Authorisation, Depense, DomaineFonctionnel,
 #        # populates the post
 #        super(DepenseFullForm, self).__init__(*args, **kwargs)
 #        #self.fields['structlev1'].queryset = Structure.objects\
-##            .filter(type=" cf").order_by('name')
+#            .filter(type=" cf").order_by('name')
 #        #self.fields['cptdeplev1'].queryset = NatureComptable.objects\
-##            .filter(nctype='dep').order_by('naturec_dep')
+#            .filter(nctype='dep').order_by('naturec_dep')
 #        #-----
 #        instance = getattr(self, 'instance', None)
 #        #pas de modification sur ces champs
@@ -138,7 +138,7 @@ from .models import (Authorisation, Depense, DomaineFonctionnel,
 #            return self.cleaned_data['myid']
 #
 #
-#class DepenseFullFormRestrict (forms.ModelForm):
+# class DepenseFullFormRestrict (forms.ModelForm):
 #
 #    class Meta:
 #        model = DepenseFull
@@ -174,21 +174,23 @@ class DepenseFormPfi(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(DepenseFormPfi, self).__init__(*args, **kwargs)
-        # self.fields['cptdeplev1'].queryset = NatureComptableDepense.objects.filter(
-        #     nctype='dep', pfifleche=True).order_by('enveloppe')
+# self.fields['cptdeplev1'].queryset = NatureComptableDepense.objects.filter(
+#     nctype='dep', pfifleche=True).order_by('enveloppe')
 
         instance = getattr(self, 'instance', None)
 
-        #pas de modification sur ces chamreps
+        # pas de modification sur ces chamreps
         # la periode de budget est calculee automatiquement
         if instance and instance.pk:
-            self.fields['structu'].queryset = Structure.objects.filter(id=instance.structlev3.id)
-            self.fields['pfi'].queryset = PlanFinancement.objects.filter(id=instance.plfi.id)
+            self.fields['structu'].queryset = \
+                Structure.objects.filter(id=instance.structlev3.id)
+            self.fields['pfi'].queryset = \
+                PlanFinancement.objects.filter(id=instance.plfi.id)
             self.fields['periodebudget'].widget.attrs['readonly'] = True
             self.fields['periodebudget'].widget.attrs['disabled'] = 'disabled'
 
 
-#class RecetteFullForm(forms.ModelForm):
+# class RecetteFullForm(forms.ModelForm):
 #
 #    class Meta:
 #        model = RecetteFull
@@ -202,9 +204,11 @@ class DepenseFormPfi(forms.ModelForm):
 #
 #    def __init__(self, *args, **kwargs):
 #        super(RecetteFullForm, self ).__init__(*args, **kwargs)
-#        self.fields['cptdeplev1'].queryset = NatureComptable.objects.filter(nctype='rec')
+#       self.fields['cptdeplev1'].queryset = \
+#           NatureComptable.objects.filter(nctype='rec')
 #        #en recette le DF = NA
-#        self.fields['domfonc'].queryset = DomaineFonctionnel.objects.filter(dfcode='NA')
+#        self.fields['domfonc'].queryset = \
+#           DomaineFonctionnel.objects.filter(dfcode='NA')
 #        instance = getattr(self, 'instance', None)
 #        #pas de modification sur ces champs
 #        # en recette domfonc=NA toujours
@@ -225,7 +229,7 @@ class DepenseFormPfi(forms.ModelForm):
 #            self.fields['periodebudget'].widget.attrs['disabled'] = 'disabled'
 #
 #
-#class RecetteFullFormRestrict(forms.ModelForm):
+# class RecetteFullFormRestrict(forms.ModelForm):
 #
 #    class Meta:
 #        model = RecetteFull
@@ -241,41 +245,51 @@ class DepenseFormPfi(forms.ModelForm):
 #        instance = getattr(self, 'instance', None)
 #        df_rec_na_set = DomaineFonctionnel.objects.filter(dfcode='NA')
 #        #pas de modification sur ces champs
-#        self.fields['cptdeplev1'].queryset = NatureComptable.objects.filter(id=instance.cptdeplev1.id)
-#        self.fields['structlev3'].queryset = Structure.objects.filter(id=instance.structlev3.id)
-#        self.fields['plfi'].queryset = PlanFinancement.objects.filter(id=instance.plfi.id)
-#        self.fields['domfonc'].queryset = DomaineFonctionnel.objects.filter(dfcode='NA') #DomaineFonctionnel.objects.filter(id=instance.plfi.id)
+#        self.fields['cptdeplev1'].queryset = \
+#           NatureComptable.objects.filter(id=instance.cptdeplev1.id)
+#        self.fields['structlev3'].queryset = \
+#           Structure.objects.filter(id=instance.structlev3.id)
+#        self.fields['plfi'].queryset = \
+#           PlanFinancement.objects.filter(id=instance.plfi.id)
+#        self.fields['domfonc'].queryset = \
+#           DomaineFonctionnel.objects.filter(dfcode='NA')
+#           DomaineFonctionnel.objects.filter(id=instance.plfi.id)
 
 
 class RecetteFormPfi (forms.ModelForm):
 
-   class Meta:
-       model = Recette
-       exclude = []
+    class Meta:
+        model = Recette
+        exclude = []
 
-       widgets = {
+        widgets = {
            'myfile': forms.Textarea(attrs={'cols': 40, 'rows': 2}),
-       }
+        }
 
-   def __init__(self, *args, **kwargs):
-       super(RecetteFormPfi, self).__init__(*args, **kwargs)
-       # self.fields['cptdeplev1'].queryset = NatureComptable.objects.filter(nctype='rec',pfifleche=True)
-       # self.fields['domfonc'].queryset = DomaineFonctionnel.objects.filter(dfcode='NA')
+    def __init__(self, *args, **kwargs):
+        super(RecetteFormPfi, self).__init__(*args, **kwargs)
+        # self.fields['cptdeplev1'].queryset = \
+        #      NatureComptable.objects.filter(nctype='rec',pfifleche=True)
+        # self.fields['domfonc'].queryset = \
+        #      DomaineFonctionnel.objects.filter(dfcode='NA')
 
-       instance = getattr(self, 'instance', None)
-       # pas de modification sur ces champs
-       # en recette domfonc=NA toujours
-       # la periode de budget est calculee automatiquement 
-       if instance and instance.pk:
-           self.fields['structure'].queryset = Structure.objects.filter(id=instance.structlev3.id)
-           self.fields['pfi'].queryset = PlanFinancement.objects.filter(id=instance.plfi.id)
-           # self.fields['cptdeplev1'].queryset = NatureComptable.objects.filter(id=instance.cptdeplev1.id)
+        instance = getattr(self, 'instance', None)
+        # pas de modification sur ces champs
+        # en recette domfonc=NA toujours
+        # la periode de budget est calculee automatiquement
+        if instance and instance.pk:
+            self.fields['structure'].queryset = \
+                Structure.objects.filter(id=instance.structlev3.id)
+            self.fields['pfi'].queryset = \
+                PlanFinancement.objects.filter(id=instance.plfi.id)
+            # self.fields['cptdeplev1'].queryset = \
+            #   NatureComptable.objects.filter(id=instance.cptdeplev1.id)
 
-           self.fields['periodebudget'].widget.attrs['readonly'] = True
-           self.fields['periodebudget'].widget.attrs['disabled'] = 'disabled'
+            self.fields['periodebudget'].widget.attrs['readonly'] = True
+            self.fields['periodebudget'].widget.attrs['disabled'] = 'disabled'
 
 
-#class PeriodeBudgetForm (forms.ModelForm):
+# class PeriodeBudgetForm (forms.ModelForm):
 #
 #    class Meta:
 #        model = PeriodeBudget
