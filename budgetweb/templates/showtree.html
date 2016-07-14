@@ -8,13 +8,17 @@
 {% block content %}
 		<div class="col-md-12">
 			<div class="title">
-				<div class="showTree" style="margin-right:20px;">&sum; Rec. DC</div>
-				<div class="showTree">&sum; Rec. RE</div>
-				<div class="showTree">&sum; Rec. AR</div>
-				<div class="showTree">&nbsp;</div>
-				<div class="showTree">&sum; Dép. DC</div>
-				<div class="showTree">&sum; Dép. CP</div>
-				<div class="showTree">&sum; Dép. AE</div>
+				{% if typeAffichage == "gbcp" %}
+ 					<div class="showTree" style="margin-right:20px;">&sum; Rec. RE</div>
+ 					<div class="showTree">&sum; Rec. AR</div>
+ 					<div class="showTree">&nbsp;</div>
+ 					<div class="showTree">&sum; Dép. CP</div>
+ 					<div class="showTree">&sum; Dép. AE</div>
+ 				{% else %}
+ 					<div class="showTree" style="margin-right:20px;">&sum; Rec. DC</div>
+ 					<div class="showTree">&nbsp;</div>
+ 					<div class="showTree">&sum; Dép. DC</div>
+				{% endif %}
 			</div>
 			<div class="tree well">
 
