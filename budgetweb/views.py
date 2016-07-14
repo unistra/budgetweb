@@ -916,6 +916,7 @@ def show_sub_tree(request, type_affichage, structid):
 @login_required
 def pluriannuel(request,pfiid):
     pfi = PlanFinancement.objects.filter(pk=pfiid).first()
+    return render(request, 'pluriannuel.html', {'test': "test", 'PFI': pfi})
 
 
 @login_required
