@@ -514,8 +514,10 @@ class RecetteForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
+        pfi_is_fleche = kwargs.pop('is_fleche')
         super(RecetteForm, self).__init__(*args, **kwargs)
-        naturecomptable = NatureComptableRecette.objects.filter(is_fleche=True)
+        naturecomptable = \
+            NatureComptableRecette.objects.filter(is_fleche=pfi_is_fleche)
         self.fields['naturecomptablerecette'].queryset = naturecomptable
         instance = getattr(self, 'instance', None)
 
@@ -533,6 +535,6 @@ class DepenseForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(DepenseForm, self).__init__(*args, **kwargs)
-        naturecomptable = NatureComptableDepense.objects.filter(is_fleche=True)
+        naturecomptable = NatureComptableDepense.objects.filter()
         self.fields['naturecomptabledepense'].queryset = naturecomptable
         instance = getattr(self, 'instance', None)

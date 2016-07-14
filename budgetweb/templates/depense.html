@@ -8,8 +8,12 @@
 {% block content %}
   <div class="col-md-12">
   {% include "detailspfi.html" %}
+	<form method="POST" class="post-form" id="searchForm" name="searchForm">
+					{% csrf_token %}
+					{{ form_depense.as_table }}
+					<button id="searchFormSubmit" type="submit" class="save btn btn-primary" name="search" data-toggle="tooltip" title="Affiche que les articles correspondant au(x) filtre(s)">Filter</button>
+				</form>
 
-	
   </div>
 {% endblock %}
 

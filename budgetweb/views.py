@@ -2211,7 +2211,7 @@ def depense(request, pfiid):
 @login_required
 def recette(request, pfiid):
     pfi = PlanFinancement.objects.get(pk=pfiid)
-    recette = RecetteForm()
+    recette = RecetteForm(is_fleche=pfi.is_fleche)
     if request.method == "POST" in request.POST:
         recette = RecetteForm(request.POST)
         if form_recette.is_valid():

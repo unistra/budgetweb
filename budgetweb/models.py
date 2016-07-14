@@ -118,23 +118,21 @@ class NatureComptableRecette(models.Model):
     label_fonds = models.CharField(
         max_length=100,
         verbose_name='Désignation de la nature comptable')
-    code_fonds = models.CharField(max_length=100,
-                                  verbose_name='Code de la nature comptable')
+    code_fonds = models.CharField(max_length=100, verbose_name='Code du fond')
     code_nature_comptable = models.CharField(
-        max_length=100,
-        verbose_name='Code du compte budgétaire')
+        max_length=100, verbose_name='Code de la nature comptable')
     label_nature_comptable = models.CharField(
-        max_length=100,
-        verbose_name='Désignation du compte budgétaire')
+        max_length=100, verbose_name='Désignation du compte budgétaire')
     code_compte_budgetaire = models.CharField(
-        max_length=100,
-        verbose_name='Code du compte budgétaire')
+        max_length=100, verbose_name='Code du compte budgétaire')
     label_compte_budgetaire = models.CharField(
-        max_length=100,
-        verbose_name='Désignation du compte budgétaire')
+        max_length=100, verbose_name='Désignation du compte budgétaire')
     is_fleche = models.BooleanField('Fleché', max_length=100, default=True)
     is_active = models.BooleanField('Actif', max_length=100, default=True)
 
+    def __str__(self):
+        return '{0.code_nature_comptable} - \
+                {0.label_nature_comptable}'.format(self)
 
 class Depense(models.Model):
     pfi = models.ForeignKey('PlanFinancement',

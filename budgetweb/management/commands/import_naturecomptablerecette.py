@@ -23,12 +23,13 @@ class Command(BaseCommand):
                         enveloppe=row[1],
                         label_fonds=row[2],
                         code_fonds=row[3],
-                        code_nature_comptable=row[4],
-                        label_nature_comptable=row[5],
-                        code_compte_budgetaire=row[6],
-                        label_compte_budgetaire=row[7],
+                        code_nature_comptable=row[5],
+                        label_nature_comptable=row[4],
+                        code_compte_budgetaire=row[7],
+                        label_compte_budgetaire=row[6],
                         is_fleche=pfi_is_fleche,
                         defaults={'is_active': True}
                     )
                     created += 1
-                print('NatureComptableRecette created with %s : %s' % (filename, created))
+                print('NatureComptableRecette created with %s : %s'
+                      % (filename, created))
