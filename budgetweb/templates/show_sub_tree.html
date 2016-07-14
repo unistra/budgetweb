@@ -7,17 +7,21 @@
       {% if node.is_pluriannuel %}
       <a href="{% url 'pluriannuel' pfiid=node.id %}">D.&amp; R.</a>&nbsp;
       {% else %}
-        <a href="{% url 'baseformsetdepensefullavec_pfi_cflink' pfiid=node.id %}">D</a>&nbsp;
-        <a href="{% url 'baseformsetrecettefullavec_pfi_cflink' pfiid=node.id %}">R</a>
+        <a href="{% url 'depense' pfiid=node.id %}">D</a>&nbsp;
+        <a href="{% url 'recette' pfiid=node.id %}">R</a>
       {% endif %}
   	</span>
-    <div class="showTree">{% if node.sommeRecetteDC.somme %}{{ node.sommeRecetteDC.somme }}{% else %}0{% endif %} &euro;</div>
-    <div class="showTree">{% if node.sommeRecetteRE.somme %}{{ node.sommeRecetteRE.somme }}{% else %}0{% endif %} &euro;</div>
-    <div class="showTree">{% if node.sommeRecetteAR.somme %}{{ node.sommeRecetteAR.somme }}{% else %}0{% endif %} &euro;</div>
-    <div class="showTree">&nbsp;</div>
-    <div class="showTree">{% if node.sommeDepenseDC.somme %}{{ node.sommeDepenseDC.somme }}{% else %}0{% endif %} &euro;</div>
-    <div class="showTree">{% if node.sommeDepenseCP.somme %}{{ node.sommeDepenseCP.somme }}{% else %}0{% endif %} &euro;</div>
-    <div class="showTree">{% if node.sommeDepenseAE.somme %}{{ node.sommeDepenseAE.somme }}{% else %}0{% endif %} &euro;</div>
+    {% if typeAffichage == "gbcp" %}
+       <div class="showTree">{% if node.sommeRecetteRE.somme %}{{ node.sommeRecetteRE.somme }}{% else %}0,00{% endif %} &euro;</div>
+       <div class="showTree">{% if node.sommeRecetteAR.somme %}{{ node.sommeRecetteAR.somme }}{% else %}0,00{% endif %} &euro;</div>
+       <div class="showTree">&nbsp;</div>
+       <div class="showTree">{% if node.sommeDepenseCP.somme %}{{ node.sommeDepenseCP.somme }}{% else %}0,00{% endif %} &euro;</div>
+       <div class="showTree">{% if node.sommeDepenseAE.somme %}{{ node.sommeDepenseAE.somme }}{% else %}0,00{% endif %} &euro;</div>
+     {% else %}
+       <div class="showTree">{% if node.sommeRecetteDC.somme %}{{ node.sommeRecetteDC.somme }}{% else %}0,00{% endif %} &euro;</div>
+       <div class="showTree">&nbsp;</div>
+       <div class="showTree">{% if node.sommeDepenseDC.somme %}{{ node.sommeDepenseDC.somme }}{% else %}0,00{% endif %} &euro;</div>
+    {% endif %}
   	<ul id="{{ node.code }}"></ul>
   </li>
 {% endfor %}
@@ -25,15 +29,19 @@
    <li>
   	<span style="width:auto;" toto="{{ node.code }}">
   		<i class="glyphicon glyphicon-plus"></i>
-  		{{ node.label }}
+  		{{ node.code }}
   	</span>
-  	<div class="showTree">100 000 &euro;</div>
-  	<div class="showTree">100 000 &euro;</div>
-  	<div class="showTree">100 000 &euro;</div>
-  	<div class="showTree">&nbsp;</div>
-  	<div class="showTree">300 000 &euro;</div>
-  	<div class="showTree">400 000 &euro;</div>
-  	<div class="showTree">500 000 &euro;</div>
-  		<ul id="{{ node.code }}"></ul>
+  	{% if typeAffichage == "gbcp" %}
+       <div class="showTree">100 000,00 &euro;</div>
+       <div class="showTree">200 000,00 &euro;</div>
+       <div class="showTree">&nbsp;</div>
+       <div class="showTree">300 000,00 &euro;</div>
+       <div class="showTree">400 000,00 &euro;</div>
+     {% else %}
+       <div class="showTree">250 000,00 &euro;</div>
+       <div class="showTree">&nbsp;</div>
+       <div class="showTree">250 000,00 &euro;</div>
+     {% endif %}
+    <ul id="{{ node.code }}"></ul>
   </li>
 {% endfor %}

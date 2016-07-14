@@ -41,8 +41,9 @@
                        <a class="dropdown-toggle" data-toggle="dropdown" href="#"> Menu BudgetWeb
                        <span class="caret"></span></a>
                        <ul class="dropdown-menu">
-                          <li><a href="{% url 'liste_pfi_avec_depenses_recettes'%}">Menu PFI </a></li>
-                          <li><a href="{% url 'show_tree'%}">Menu PFI2</a></li>
+                            <li><a href="{% url 'liste_pfi_avec_depenses_recettes'%}">Menu PFI </a></li>
+                            <li><a href="{% url 'show_tree' type_affichage='gbcp'%}">Menu GBCP</a></li>
+                            <li><a href="{% url 'show_tree' type_affichage='dc'%}">Menu Droit Constaté</a></li>
                        </ul>
                     </li>
 		    {% if user.is_authenticated %}

@@ -27,16 +27,12 @@ from django.shortcuts import get_object_or_404, redirect
 
 
 from budgetweb.libs.node import generateTree
-from .forms import (BaseDepenseFullFormSet, BaseRecetteFullFormSet,
-                    DepenseFormPfi, RecetteFormPfi)
+from .forms import (BaseDepenseFullFormSet, #BaseRecetteFullFormSet,
+                     DepenseForm,
+                    DepenseFormPfi, RecetteForm, RecetteFormPfi)
 from .models import (Authorisation, Depense, DomaineFonctionnel, PeriodeBudget,
                      PlanFinancement, Recette, Structure)
 
-<<<<<<< Updated upstream
-from .forms import (RecetteForm, DepenseForm)
-
-=======
->>>>>>> Stashed changes
 # logging
 import logging
 # Get an instance of a logger
@@ -875,18 +871,14 @@ def baseformsetrecettefullavec_pfi_cflink(request, pfiid):
 
 
 @login_required
-def show_tree(request):
+def show_tree(request, type_affichage):
     listeCF = generateTree(request)
-<<<<<<< Updated upstream
     return render(request, 'showtree.html', {'listeCF': listeCF,
                                              'typeAffichage': type_affichage})
-=======
-    return render(request, 'showtree.html', {'listeCF': listeCF})
->>>>>>> Stashed changes
 
 
 @login_required
-def show_sub_tree(request, structid):
+def show_sub_tree(request, type_affichage, structid):
 
     # On récupère l'ID sur PAPA
     structure = Structure.objects.get(code=structid)
@@ -898,7 +890,6 @@ def show_sub_tree(request, structid):
     # Et enfin on ajoute les PFI, si jamais il y en a.
     listePFI = PlanFinancement.objects.filter(structure=structure).values()
     for pfi in listePFI:
-<<<<<<< Updated upstream
         pfi['sommeDepenseAE'] = Depense.objects.filter(
                                 pfi__id=pfi['id']).aggregate(
                                 somme=Sum('montantAE'))
@@ -917,14 +908,6 @@ def show_sub_tree(request, structid):
         pfi['sommeRecetteDC'] = Recette.objects.filter(
                                 pfi__id=pfi['id']).aggregate(
                                 somme=Sum('montantDC'))
-=======
-        pfi['sommeDepenseAE'] = Depense.objects.filter(pfi__id=pfi['id']).aggregate(somme=Sum('montantAE'))
-        pfi['sommeDepenseCP'] = Depense.objects.filter(pfi__id=pfi['id']).aggregate(somme=Sum('montantCP'))
-        pfi['sommeDepenseDC'] = Depense.objects.filter(pfi__id=pfi['id']).aggregate(somme=Sum('montantDC'))
-#        pfi['sommeRecetteAR'] = Recette.objects.filter(pfi__id=pfi['id']).aggregate(somme=Sum('montant'))
-#        pfi['sommeRecetteRE'] = Recette.objects.filter(pfi__id=pfi['id']).aggregate(somme=Sum('montantre'))
-#        pfi['sommeRecetteDC'] = Recette.objects.filter(pfi__id=pfi['id']).aggregate(somme=Sum('montantdc'))
->>>>>>> Stashed changes
 
     context = {'listeCF': listeCF, 'listePFI': listePFI}
     return render(request, 'show_sub_tree.html', context)
@@ -935,7 +918,6 @@ def pluriannuel(request,pfiid):
     pfi = PlanFinancement.objects.filter(pk=pfiid).first()
 
 
-<<<<<<< Updated upstream
 @login_required
 def depense(request, pfiid):
     pfi = PlanFinancement.objects.get(pk=pfiid)
@@ -958,6 +940,3 @@ def recette(request, pfiid):
             print("coucou")
     return render(request, 'recette.html', {'test': 'TEST', 'PFI': pfi,
                                             'form_recette': recette})
-=======
-    return render(request, 'pluriannuel.html', { 'test' : "test", 'PFI': pfi})
->>>>>>> Stashed changes
