@@ -7,10 +7,7 @@
 
 {% block content %}
 	<div class="col-md-12">
-	<fieldset>
-		<legend><h4>Caractérisque du PFI : {{ PFI.code }} ({{ PFI.label }})</h4></legend>
-		{{ form_recette.as_table }}
-	</fieldset>
+	 {% include "detailspfi.html" %}
 	</div>
 {% endblock %}
 

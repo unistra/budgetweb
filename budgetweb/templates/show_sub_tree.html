@@ -4,7 +4,7 @@
    <li>
   	<span style="width:160px;" toto="{{ node.code }}">
       {{ node.code }}
-      {% if node.pluriannuel %}
+      {% if node.is_pluriannuel %}
       <a href="{% url 'pluriannuel' pfiid=node.id %}">D.&amp; R.</a>&nbsp;
       {% else %}
         <a href="{% url 'depense' pfiid=node.id %}">D</a>&nbsp;

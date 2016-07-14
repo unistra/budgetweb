@@ -139,8 +139,8 @@ class NatureComptableRecette(models.Model):
 class Depense(models.Model):
     pfi = models.ForeignKey('PlanFinancement',
                             verbose_name='Programme de financement')
-    strcture = models.ForeignKey('Structure',
-                                 verbose_name='Centre financier')
+    structure = models.ForeignKey('Structure',
+                                  verbose_name='Centre financier')
     montantDC = models.DecimalField(max_digits=12, decimal_places=2,
                                     blank=True, null=True)
     montantCP = models.DecimalField(verbose_name='Montant Crédit de Paiement',
@@ -201,7 +201,7 @@ class Recette(models.Model):
     pfi = models.ForeignKey('PlanFinancement',
                             verbose_name='Programme de financement')
     structure = models.ForeignKey('Structure',
-                                 verbose_name='Centre financier')
+                                  verbose_name='Centre financier')
     montantDC = models.DecimalField(max_digits=12, decimal_places=2,
                                     blank=True, null=True)
     montantRE = models.DecimalField(verbose_name='Montant Recette Encaissable',

@@ -42,7 +42,7 @@ from budgetweb.libs.node import generateTree
 from .models import (Authorisation, Depense, DomaineFonctionnel, PeriodeBudget,
                      PlanFinancement, Recette, Structure)
 
-from .forms import (RecetteForm)
+from .forms import (RecetteForm, DepenseForm)
 
 # logging
 import logging
@@ -2199,7 +2199,13 @@ def pluriannuel(request, pfiid):
 @login_required
 def depense(request, pfiid):
     pfi = PlanFinancement.objects.get(pk=pfiid)
-    return render(request, 'depense.html', {'test': 'TEST', 'PFI': pfi})
+    depense = DepenseForm()
+    if request.method == "POST" in request.POST:
+        depense = RecetteForm(request.POST)
+        if form_depense.is_valid():
+            print("coucou")
+    return render(request, 'depense.html', {'test': 'TEST', 'PFI': pfi,
+                                            'form_depense': depense})
 
 
 @login_required
@@ -2208,7 +2214,7 @@ def recette(request, pfiid):
     recette = RecetteForm()
     if request.method == "POST" in request.POST:
         recette = RecetteForm(request.POST)
-        if form_validate.is_valid():
+        if form_recette.is_valid():
             print("coucou")
     return render(request, 'recette.html', {'test': 'TEST', 'PFI': pfi,
                                             'form_recette': recette})

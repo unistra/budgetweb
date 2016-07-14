@@ -6,7 +6,8 @@ from django.http import Http404, HttpResponse
 #from .models import (Authorisation, ComptaNature, CompteBudget, DepenseFull,
 #                     DomaineFonctionnel, FondBudgetaire, NatureComptable,
 #                     PeriodeBudget, PlanFinancement, RecetteFull, Structure)
-from .models import (Recette, NatureComptableRecette)
+from .models import (Recette, NatureComptableRecette,
+                     Depense, NatureComptableDepense)
 
 #class AuthorisationForm(forms.ModelForm):
 #
@@ -516,4 +517,22 @@ class RecetteForm(forms.ModelForm):
         super(RecetteForm, self).__init__(*args, **kwargs)
         naturecomptable = NatureComptableRecette.objects.filter(is_fleche=True)
         self.fields['naturecomptablerecette'].queryset = naturecomptable
+        instance = getattr(self, 'instance', None)
+
+
+class DepenseForm(forms.ModelForm):
+    class Meta:
+        model = Depense
+        fields = ('pfi', 'structure',
+                  'naturecomptabledepense', 'annee',
+                  'montantAE', 'montantCP', 'montantDC', 'commentaire',
+                  'periodebudget', 'lienpiecejointe')
+        widgets = {
+            'commentaire': forms.Textarea(attrs={'cols': 40, 'rows': 2}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(DepenseForm, self).__init__(*args, **kwargs)
+        naturecomptable = NatureComptableDepense.objects.filter(is_fleche=True)
+        self.fields['naturecomptabledepense'].queryset = naturecomptable
         instance = getattr(self, 'instance', None)
