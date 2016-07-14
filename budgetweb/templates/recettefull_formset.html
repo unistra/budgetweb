@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block head-javascript %}
+<script src="{% static 'js/jquery.formset.js' %}"></script>
+<script src="{% static 'js/mainmfjdsrec.js--' %}"></script>
+
+{% endblock %}
+
+
+{% block content %}
+<br>
+{% if messages %}
+    {% for message in messages %}
+        <p>{{ message }}</p>
+    {% endfor %}
+{% endif %}
+<br>
+
+<table>
+  <tr><th> Période budget : </th>
+      <td>
+         <table border="5" bordercolor="blue">
+          <tr><td>{{ budget }}</td></tr>
+         </table>
+       </td>
+   </tr>
+
+  <TR><th> Nouvelle recette sur la structure : </th>
+      <TD>{% if structure.parent %}
+             {% with node=structure template_name="structure_tree_view_template.html" %}
+               {% include "structure_tree_view_template.html" %}
+             {% endwith %}
+          {% endif %}
+      </TD>
+    {% if structure.name.errors %}
+      <TD>{% for error in structure.name.errors %}{{ error|escape }}{% endfor %}</TD>
+    {% endif %}
+   </TR>
+  <tr><th> Nom du PFI : </th>
+      <td><table border="5" bordercolor="blue">
+          <tr><td><p id="plfi">{{ pfi.label }}</p></td>
+           {% if pfi.label.errors %}
+             <td>{% for error in pfi.label.errors %}{{ error|escape }}{% endfor %} </td>
+           {% endif %}
+         </table>
+      </td>
+  </tr>
+
+</table>
+<br>
+
+{% if recettefull_formset.errors %}
+  {{ recettefull_formset.errors }}
+{% endif %}
+
+<br>
+<!-- debut  de la table pour le formulaire -->
+<table border="5" bordercolor="blue" style="background-color:#FFFAEE">
+
+<form style="background-color:#FFFAEE" method="post">
+    {% csrf_token %}
+    {{ recettefull_formset.management_form }}
+    {% for recettefull_form in recettefull_formset %}
+            {{ recettefull_form.id }}
+        <tr><td>
+        <div class="recette-formset">
+
+            {{ recettefull_form.structlev3 }}
+            {% if recettefull_form.structlev3.errors %}
+                {% for error in recettefull_form.structlev3.errors %}
+                    {{ error|escape }}
+                {% endfor %}
+            {% endif %}
+
+           {{ recettefull_form.plfi}} 
+            {% if recettefull_form.plfi.errors %}
+                {% for error in recettefull_form.plfi.errors %}
+                    {{ error|escape }}
+                {% endfor %}
+            {% endif %}
+
+            {{ recettefull_form.domfonc}}
+            {% if recettefull_form.domfonc.errors %}
+                {% for error in recettefull_form.domfonc.errors %}
+                    {{ error|escape }}
+                {% endfor %}
+            {% endif %}
+
+
+            {{recettefull_form.cptdeplev1.label_tag}} {{recettefull_form.cptdeplev1}}
+            {% if recettefull_form.cptdeplev1.errors %}
+                {% for error in recettefull_form.cptdeplev1.errors %}
+                    {{ error|escape }}
+                {% endfor %}
+            {% endif %}
+
+
+            {{ recettefull_form.montantdc.label_tag }}{{ recettefull_form.montantdc }}
+            {% if recettefull_form.montantdc.errors %}
+                {% for error in recettefull_form.montantdc.errors %}
+                    {{ error|escape }}
+                {% endfor %}
+            {% endif %}
+
+            {{ recettefull_form.montantar.label_tag }} {{ recettefull_form.montantar }}
+            {% if recettefull_form.montantar.errors %}
+                {% for error in recettefull_form.montantar.errors %}
+                    {{ error|escape }}
+                {% endfor %}
+            {% endif %}
+
+            {{ recettefull_form.montantre.label_tag }} {{ recettefull_form.montantre }}
+            {% if recettefull_form.montantre.errors %}
+                {% for error in recettefull_form.montantre.errors %}
+                    {{ error|escape }}
+                {% endfor %}
+            {% endif %}
+
+            {{ recettefull_form.commentaire.label_tag }} {{ recettefull_form.commentaire }}
+            {% if recettefull_form.commentaire.errors %}
+                {% for error in recettefull_form.commentaire.errors %}
+                    {{ error|escape }}
+                {% endfor %}
+            {% endif %}
+
+            {{ recettefull_form.myfile.label_tag }} {{ recettefull_form.myfile }}
+            {% if recettefull_form.myfile.errors %}
+                {% for error in recettefull_form.myfile.errors %}
+                    {{ error|escape }}
+                {% endfor %}
+            {% endif %}
+
+            <!-- traitement des erreurs -->
+                    {% for field in recettefull_form.fields %}
+                         {% if field.errors %}
+                            {% for error in field.errors %}
+                               {{ error|escape }}
+                            {% endfor %}
+                         {% endif %}
+                    {% endfor %}
+
+        </div>
+        <br>
+        </td></tr>
+    {% endfor %}
+
+<tr><td>
+<br>
+    {% if recettefull_formset.non_form_errors %}
+        {% for error in recettefull_formset.non_form_errors %}
+            {{ error|escape }}
+        {% endfor %}
+    <br>
+    {% endif %}
+</td></tr><tr><td>
+    <input type="submit" value="Enregistrer" class="save btn btn-default">
+</form>
+
+
+
+<!-- fin de la table pour le formulaire -->
+</td></tr>
+</table>
+<!-- Include formset plugin - including jQuery dependency -->
+<script>
+  $('.recette-formset').formset({
+    addText: 'Ajouter',
+    deleteText: 'Supprimer'
+  });
+</script>
+
+
+<br>
+<br>
+
+{% endblock %}
+
