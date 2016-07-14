@@ -15,14 +15,14 @@ class Command(BaseCommand):
         for filename in options.get('filename'):
             with open(filename) as h:
                 reader = csv.reader(h, delimiter=';', quotechar='"')
-                created = 0
+                total = 0
                 for row in reader:
                     pfi_is_fleche = (row[3] == 'oui')
                     pluri = (row[4] == 'oui')
                     struct_code = row[0]
 
                     struct = Structure.objects.get(code=struct_code)
-                    PlanFinancement.objects.update_or_create(
+                    created = PlanFinancement.objects.update_or_create(
                         structure=struct,
                         code=row[1],
                         label=row[2],
@@ -32,6 +32,6 @@ class Command(BaseCommand):
                         is_fleche=pfi_is_fleche,
                         is_pluriannuel=pluri,
                         defaults={'is_active': True}
-                    )
-                    created += 1
-                print('Financials Plans created with %s : %s' % (filename, created))
+                    )[1]
+                    total += int(created)
+                print('Financials Plans created with %s : %s' % (filename, total))

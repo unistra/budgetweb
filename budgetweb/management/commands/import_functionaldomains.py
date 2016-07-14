@@ -15,10 +15,10 @@ class Command(BaseCommand):
         for filename in options.get('filename'):
             with open(filename) as h:
                 reader = csv.reader(h, delimiter=';', quotechar='"')
-                created = 0
+                total = 0
                 for row in reader:
-                    DomaineFonctionnel.objects.update_or_create(
+                    created = DomaineFonctionnel.objects.update_or_create(
                         code=row[0], label=row[1], defaults={'is_active': True}
-                    )
-                    created += 1
-                print('Functional Domains created with %s : %s' % (filename, created, ))
+                    )[1]
+                    total += int(created)
+                print('Functional Domains created with %s : %s' % (filename, total))

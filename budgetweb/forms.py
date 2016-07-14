@@ -3,13 +3,10 @@ from django.forms.formsets import BaseFormSet
 from django.forms.models import modelformset_factory, BaseModelFormSet
 from django.http import Http404, HttpResponse
 
-#from .models import (Authorisation, ComptaNature, CompteBudget, DepenseFull,
-#                     DomaineFonctionnel, FondBudgetaire, NatureComptable,
-#                     PeriodeBudget, PlanFinancement, RecetteFull, Structure)
-from .models import (Recette, NatureComptableRecette,
-                     Depense, NatureComptableDepense,
-                     PlanFinancement,
-                     Structure)
+from .models import (Authorisation, Depense, DomaineFonctionnel,
+                     NatureComptableDepense, NatureComptableRecette,
+                     PeriodeBudget, PlanFinancement, Recette, Structure)
+
 
 #class AuthorisationForm(forms.ModelForm):
 #
@@ -165,106 +162,32 @@ from .models import (Recette, NatureComptableRecette,
 #            id=instance.plfi.id)
 #
 #
-#class DepenseFullFormPfifleche(forms.ModelForm):
-#
-#    class Meta:
-#        model = DepenseFull
-#        fields = ('id', 'myid', 'structlev3', 'cptdeplev1', 'domfonc', 'plfi',
-#                  'montantdc', 'montantcp', 'montantae', 'dateae',
-#                  'commentaire', 'periodebudget', 'myfile')
-#
-#        widgets = {
-#            'myfile': forms.Textarea(attrs={'cols': 40, 'rows': 2}),
-#        }
-#
-#    def __init__(self, *args, **kwargs):
-#        super(DepenseFullFormPfifleche, self).__init__(*args, **kwargs)
-#        self.fields['cptdeplev1'].queryset = NatureComptable.objects.filter(
-#            nctype='dep', pfifleche=True).order_by('enveloppe')
-#
-#        instance = getattr(self, 'instance', None)
-#        #pas de modification sur ces champs
-#        #self.fields['cptdeplev1'].queryset = NatureComptable.objects.filter(id=instance.cptdeplev1.id)
-#        #self.fields['structlev3'].queryset = Structure.objects.filter(id=instance.structlev3.id)
-#        #self.fields['plfi'].queryset = PlanFinancement.objects.filter(id=instance.plfi.id)
-#
-#        #pas de modification sur ces champs
-#        # la periode de budget est calculee automatiquement
-#        if instance and instance.pk:
-#            self.fields['structlev3'].queryset = Structure.objects.filter(id=instance.structlev3.id)
-#            self.fields['plfi'].queryset = PlanFinancement.objects.filter(id=instance.plfi.id)
-#            #self.fields['structlev3'].widget.attrs['readonly'] = True
-#            #self.fields['structlev3'].widget.attrs['disabled'] = 'disabled'
-#            #self.fields['cptdeplev1'].widget.attrs['readonly'] = True
-#            #self.fields['cptdeplev1'].widget.attrs['disabled'] = 'disabled'
-#            #self.fields['plfi'].widget.attrs['readonly'] = True
-#            #self.fields['plfi'].widget.attrs['disabled'] = 'disabled'
-#            self.fields['myid'].widget.attrs['readonly'] = True
-#            self.fields['myid'].widget.attrs['disabled'] = 'disabled'
-#            self.fields['periodebudget'].widget.attrs['readonly'] = True
-#            #self.fields['domfonc'].widget.attrs['readonly'] = True
-#            #self.fields['domfonc'].widget.attrs['disabled'] = 'disabled'
-#            self.fields['periodebudget'].widget.attrs['disabled'] = 'disabled'
-#
-#    def clean_myid(self):
-#        instance = getattr(self, 'instance', None)
-#        if instance and instance.pk:
-#            return instance.myid
-#        else:
-#            return self.cleaned_data['myid']
-#
-#
-#class DepenseFullFormPfinonfleche(forms.ModelForm):
-#
-#    class Meta:
-#        model = DepenseFull
-#        fields = ('id', 'myid', 'structlev3', 'cptdeplev1', 'domfonc', 'plfi',
-#                  'montantdc', 'montantcp', 'montantae', 'dateae',
-#                  'commentaire', 'periodebudget', 'myfile')
-#
-#        widgets = {
-#            'myfile': forms.Textarea(attrs={'cols': 40, 'rows': 2}),
-#        }
-#
-#    def __init__(self, *args, **kwargs):
-#        super(DepenseFullFormPfinonfleche, self ).__init__(*args, **kwargs)
-#        self.fields['cptdeplev1'].queryset = NatureComptable.objects.filter(
-#            nctype='dep', pfifleche=False).order_by('enveloppe')
-#
-#        #-----
-#        instance = getattr(self, 'instance', None)
-#        #pas de modification sur ces champs
-#        #self.fields['cptdeplev1'].queryset = NatureComptable.objects.filter(id=instance.cptdeplev1.id)
-#        #self.fields['structlev3'].queryset = Structure.objects.filter(id=instance.structlev3.id)
-#        #self.fields['plfi'].queryset = PlanFinancement.objects.filter(id=instance.plfi.id)
-#
-#        #pas de modification sur ces champs
-#        # la periode de budget est calculee automatiquement
-#        if instance and instance.pk:
-#            self.fields['structlev3'].queryset = Structure.objects.filter(id=instance.structlev3.id)
-#            self.fields['plfi'].queryset = PlanFinancement.objects.filter(id=instance.plfi.id)
-#
-#            #self.fields['structlev3'].widget.attrs['readonly'] = True
-#            #self.fields['structlev3'].widget.attrs['disabled'] = 'disabled'
-#            #self.fields['cptdeplev1'].widget.attrs['readonly'] = True
-#            #self.fields['cptdeplev1'].widget.attrs['disabled'] = 'disabled'
-#            #self.fields['plfi'].widget.attrs['readonly'] = True
-#            #self.fields['plfi'].widget.attrs['disabled'] = 'disabled'
-#            self.fields['myid'].widget.attrs['readonly'] = True
-#            self.fields['myid'].widget.attrs['disabled'] = 'disabled'
-#            self.fields['periodebudget'].widget.attrs['readonly'] = True
-#            #self.fields['domfonc'].widget.attrs['readonly'] = True
-#            #self.fields['domfonc'].widget.attrs['disabled'] = 'disabled'
-#            self.fields['periodebudget'].widget.attrs['disabled'] = 'disabled'
-#
-#    def clean_myid(self):
-#        instance = getattr(self, 'instance', None)
-#        if instance and instance.pk:
-#            return instance.myid
-#        else:
-#            return self.cleaned_data['myid']
-#
-#
+class DepenseFormPfi(forms.ModelForm):
+
+    class Meta:
+        model = Depense
+        exclude = []
+
+        widgets = {
+            'myfile': forms.Textarea(attrs={'cols': 40, 'rows': 2}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(DepenseFormPfi, self).__init__(*args, **kwargs)
+        # self.fields['cptdeplev1'].queryset = NatureComptableDepense.objects.filter(
+        #     nctype='dep', pfifleche=True).order_by('enveloppe')
+
+        instance = getattr(self, 'instance', None)
+
+        #pas de modification sur ces chamreps
+        # la periode de budget est calculee automatiquement
+        if instance and instance.pk:
+            self.fields['structu'].queryset = Structure.objects.filter(id=instance.structlev3.id)
+            self.fields['pfi'].queryset = PlanFinancement.objects.filter(id=instance.plfi.id)
+            self.fields['periodebudget'].widget.attrs['readonly'] = True
+            self.fields['periodebudget'].widget.attrs['disabled'] = 'disabled'
+
+
 #class RecetteFullForm(forms.ModelForm):
 #
 #    class Meta:
@@ -322,93 +245,36 @@ from .models import (Recette, NatureComptableRecette,
 #        self.fields['structlev3'].queryset = Structure.objects.filter(id=instance.structlev3.id)
 #        self.fields['plfi'].queryset = PlanFinancement.objects.filter(id=instance.plfi.id)
 #        self.fields['domfonc'].queryset = DomaineFonctionnel.objects.filter(dfcode='NA') #DomaineFonctionnel.objects.filter(id=instance.plfi.id)
-#
-#
-#class RecetteFullFormPfifleche (forms.ModelForm):
-#
-#    class Meta:
-#        model = RecetteFull
-#        fields = ('myid', 'structlev3', 'cptdeplev1', 'domfonc', 'plfi',
-#                  'montantar', 'montantre', 'montantdc', 'commentaire',
-#                  'periodebudget', 'myfile')
-#
-#        widgets = {
-#            'myfile': forms.Textarea(attrs={'cols': 40, 'rows': 2}),
-#        }
-#
-#    def __init__(self, *args, **kwargs):
-#        super(RecetteFullFormPfifleche, self).__init__(*args, **kwargs)
-#        self.fields['cptdeplev1'].queryset = NatureComptable.objects.filter(nctype='rec',pfifleche=True)
-#        self.fields['domfonc'].queryset = DomaineFonctionnel.objects.filter(dfcode='NA')
-#
-#        instance = getattr(self, 'instance', None)
-#        #pas de modification sur ces champs
-#        # en recette domfonc=NA toujours
-#        # la periode de budget est calculee automatiquement
-#        if instance and instance.pk:
-#            self.fields['structlev3'].queryset = Structure.objects.filter(id=instance.structlev3.id)
-#            self.fields['plfi'].queryset = PlanFinancement.objects.filter(id=instance.plfi.id)
-#            #self.fields['domfonc'].queryset = DomaineFonctionnel.objects.filter(id=instance.plfi.id)
-#            self.fields['cptdeplev1'].queryset = NatureComptable.objects.filter(id=instance.cptdeplev1.id)
-#            #self.fields['structlev3'].widget.attrs['readonly'] = True
-#            #self.fields['structlev3'].widget.attrs['disabled'] = 'disabled'
-#            #self.fields['cptdeplev1'].widget.attrs['readonly'] = True
-#            #self.fields['cptdeplev1'].widget.attrs['disabled'] = 'disabled'
-#            #self.fields['plfi'].widget.attrs['readonly'] = True
-#            #self.fields['plfi'].widget.attrs['disabled'] = 'disabled'
-#            #self.fields['myid'].widget.attrs['readonly'] = True
-#            #self.fields['myid'].widget.attrs['disabled'] = 'disabled'
-#
-#            self.fields['periodebudget'].widget.attrs['readonly'] = True
-#            #self.fields['domfonc'].widget.attrs['readonly'] = True
-#            #self.fields['domfonc'].widget.attrs['disabled'] = 'disabled'
-#            self.fields['periodebudget'].widget.attrs['disabled'] = 'disabled'
-#
-#
-#class RecetteFullFormPfinonfleche(forms.ModelForm):
-#
-#    class Meta:
-#        model = RecetteFull
-#        fields = ('myid', 'structlev3', 'cptdeplev1', 'domfonc', 'plfi',
-#                  'montantar', 'montantre', 'montantdc', 'commentaire',
-#                  'periodebudget', 'myfile')
-#
-#        widgets = {
-#            'myfile': forms.Textarea(attrs={'cols': 40, 'rows': 2}),
-#        }
-#
-#    def __init__(self, *args, **kwargs):
-#        super(RecetteFullFormPfinonfleche, self ).__init__(*args, **kwargs)
-#        self.fields['cptdeplev1'].queryset = NatureComptable.objects.filter(nctype='rec',pfifleche=False)
-#        self.fields['domfonc'].queryset = DomaineFonctionnel.objects.filter(dfcode='NA')
-#        instance = getattr(self, 'instance', None)
-#        #pas de modification sur ces champs
-#        #self.fields['cptdeplev1'].queryset = NatureComptable.objects.filter(id=instance.cptdeplev1.id)
-#
-#        instance = getattr(self, 'instance', None)
-#        #pas de modification sur ces champs
-#        # en recette domfonc=NA toujours
-#        # la periode de budget est calculee automatiquement
-#        if instance and instance.pk:
-#            self.fields['structlev3'].queryset = Structure.objects.filter(id=instance.structlev3.id)
-#            self.fields['plfi'].queryset = PlanFinancement.objects.filter(id=instance.plfi.id)
-#
-#            self.fields['cptdeplev1'].queryset = NatureComptable.objects.filter(id=instance.cptdeplev1.id)
-#            #self.fields['structlev3'].widget.attrs['readonly'] = True
-#            #self.fields['structlev3'].widget.attrs['disabled'] = 'disabled'
-#            #self.fields['cptdeplev1'].widget.attrs['readonly'] = True
-#            #self.fields['cptdeplev1'].widget.attrs['disabled'] = 'disabled'
-#            #self.fields['plfi'].widget.attrs['readonly'] = True
-#            #self.fields['plfi'].widget.attrs['disabled'] = 'disabled'
-#            #self.fields['myid'].widget.attrs['readonly'] = True
-#            #self.fields['myid'].widget.attrs['disabled'] = 'disabled'
-#
-#            self.fields['periodebudget'].widget.attrs['readonly'] = True
-#            #self.fields['domfonc'].widget.attrs['readonly'] = True
-#            #self.fields['domfonc'].widget.attrs['disabled'] = 'disabled'
-#            self.fields['periodebudget'].widget.attrs['disabled'] = 'disabled'
-#
-#
+
+
+class RecetteFormPfi (forms.ModelForm):
+
+   class Meta:
+       model = Recette
+       exclude = []
+
+       widgets = {
+           'myfile': forms.Textarea(attrs={'cols': 40, 'rows': 2}),
+       }
+
+   def __init__(self, *args, **kwargs):
+       super(RecetteFormPfi, self).__init__(*args, **kwargs)
+       # self.fields['cptdeplev1'].queryset = NatureComptable.objects.filter(nctype='rec',pfifleche=True)
+       # self.fields['domfonc'].queryset = DomaineFonctionnel.objects.filter(dfcode='NA')
+
+       instance = getattr(self, 'instance', None)
+       # pas de modification sur ces champs
+       # en recette domfonc=NA toujours
+       # la periode de budget est calculee automatiquement 
+       if instance and instance.pk:
+           self.fields['structure'].queryset = Structure.objects.filter(id=instance.structlev3.id)
+           self.fields['pfi'].queryset = PlanFinancement.objects.filter(id=instance.plfi.id)
+           # self.fields['cptdeplev1'].queryset = NatureComptable.objects.filter(id=instance.cptdeplev1.id)
+
+           self.fields['periodebudget'].widget.attrs['readonly'] = True
+           self.fields['periodebudget'].widget.attrs['disabled'] = 'disabled'
+
+
 #class PeriodeBudgetForm (forms.ModelForm):
 #
 #    class Meta:
@@ -416,92 +282,11 @@ from .models import (Recette, NatureComptableRecette,
 #        fields = ('name', 'label', 'annee', 'bloque')
 #
 #
-#class BaseDepenseFullFormSet(BaseModelFormSet):
-#
-#    def clean(self):
-#        if any(self.errors):
-#            return
-#
-#        for form in self.forms:
-#            if form.cleaned_data:
-#                if 1:  # form.cleaned_data['myid']:
-#                    montantae = form.cleaned_data['montantae']
-#                    if not montantae:
-#                        raise forms.ValidationError(
-#                            'Veuillez renseigner montantae.',
-#                            code='on_save_missing_montantae'
-#                        )
-#
-#                    montantcp = form.cleaned_data['montantcp']
-#                    if not montantcp:
-#                        raise forms.ValidationError(
-#                            'Veuillez renseigner montantcp.',
-#                            code='on_save_missing_montantcp'
-#                       )
-#                    montantdc = form.cleaned_data['montantdc']
-#                    if not montantdc:
-#                        raise forms.ValidationError(
-#                            'Veuillez renseigner montantdc.',
-#                            code='on_save_missing_montantdc'
-#                       )
-#                    domfonc = form.cleaned_data['domfonc']
-#                    if not domfonc:
-#                        raise forms.ValidationError(
-#                            'Veuillez renseigner le domaine fonctionnel.',
-#                            code='on_save_missing_domaine_fonctionnel'
-#                       )
-#                    cptdeplev1 = form.cleaned_data['cptdeplev1']
-#                    if not cptdeplev1:
-#                        raise forms.ValidationError(
-#                            "Veuillez renseigner l'enveloppe comptable.",
-#                            code='on_save_missing_enveloppe_comptable'
-#                       )
-#                    dateae = form.cleaned_data['dateae']
-#                    if not dateae:
-#                        raise forms.ValidationError(
-#                            'Veuillez renseigner la date de ae.',
-#                            code='on_save_missing_date_ae'
-#                       )
-#            else:
-#                print ('no clean data for this form')
-#
-#
-#class BaseRecetteFullFormSet(BaseModelFormSet):
-#
-#    def clean(self):
-#        if any(self.errors):
-#            return
-#
-#        for form in self.forms:
-#            if form.cleaned_data:
-#                if form.cleaned_data['myid']:
-#                    montantre = form.cleaned_data['montantre']
-#                    if not montantre:
-#                        raise forms.ValidationError(
-#                            'Veuillez renseigner montantre.',
-#                            code='on_save_missing_montantre'
-#                        )
-#
-#                    montantar = form.cleaned_data['montantar']
-#                    if not montantar:
-#                        raise forms.ValidationError(
-#                            'Veuillez renseigner montantar.',
-#                            code='on_save_missing_montantar'
-#                       )
-#                    montantdc = form.cleaned_data['montantdc']
-#                    if not montantdc:
-#                        raise forms.ValidationError(
-#                            'Veuillez renseigner montantdc.',
-#                            code='on_save_missing_montantdc'
-#                       )
-#                    cptdeplev1 = form.cleaned_data['cptdeplev1']
-#                    if not cptdeplev1:
-#                        raise forms.ValidationError(
-#                            "Veuillez renseigner l'enveloppe comptable.",
-#                            code='on_save_missing_enveloppe_comptable'
-#                       )
-#            else:
-#                print ('no clean data for this form')
+class BaseDepenseFullFormSet(BaseModelFormSet):
+
+    def clean(self):
+        if any(self.errors):
+            return
 
 
 class RecetteForm(forms.ModelForm):

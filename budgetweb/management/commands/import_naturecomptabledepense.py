@@ -15,12 +15,12 @@ class Command(BaseCommand):
         for filename in options.get('filename'):
             with open(filename) as h:
                 reader = csv.reader(h, delimiter=';', quotechar='"')
-                created = 0
+                total = 0
                 for row in reader:
                     pfi_is_fleche = (row[0] == 'PFI fléché')
                     decalage = (row[6] == 'oui')
 
-                    NatureComptableDepense.objects.update_or_create(
+                    created = NatureComptableDepense.objects.update_or_create(
                         enveloppe=row[1],
                         label_nature_comptable=row[2],
                         code_nature_comptable=row[3],
@@ -29,6 +29,6 @@ class Command(BaseCommand):
                         is_fleche=pfi_is_fleche,
                         is_decalage_tresorerie=decalage,
                         defaults={'is_active': True}
-                    )
-                    created += 1
-                print('NatureComptableDepense created with %s : %s' % (filename, created))
+                    )[1]
+                    total += int(created)
+                print('NatureComptableDepense created with %s : %s' % (filename, total))

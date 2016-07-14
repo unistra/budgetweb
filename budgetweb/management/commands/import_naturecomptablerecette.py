@@ -15,11 +15,11 @@ class Command(BaseCommand):
         for filename in options.get('filename'):
             with open(filename) as h:
                 reader = csv.reader(h, delimiter=';', quotechar='"')
-                created = 0
+                total = 0
                 for row in reader:
                     pfi_is_fleche = (row[0] == 'PFI fléché')
 
-                    NatureComptableRecette.objects.update_or_create(
+                    created = NatureComptableRecette.objects.update_or_create(
                         enveloppe=row[1],
                         label_fonds=row[2],
                         code_fonds=row[3],
@@ -29,7 +29,7 @@ class Command(BaseCommand):
                         label_compte_budgetaire=row[6],
                         is_fleche=pfi_is_fleche,
                         defaults={'is_active': True}
-                    )
-                    created += 1
-                print('NatureComptableRecette created with %s : %s'
-                      % (filename, created))
+                    )[1]
+                    total += int(created)
+                print('NatureComptableRecette created with %s : %s' %
+                    (filename, total))

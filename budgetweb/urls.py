@@ -83,11 +83,11 @@ urlpatterns = [
 #    url(r'^depensefull/(?P<pkdep>[0-9]+)/edit2/$', views.depensefull_edit2, name='depensefull_edit2'),
 #    url(r'^depensefull/deleteall/$', views.depensefull_deleteall, name='depensefull_deleteall'),
 #    url(r'^depensefull/(?P<pkcc>[0-9]+)/parcc/$', views.depensefull_parcc, name='depensefull_parcc'),
-    url(r'^depensefull/baseformsetdepensefullavec_pfi_cflink/(?P<struct3id>\w+)/(?P<pfiid>[0-9]+)$', views.baseformsetdepensefullavec_pfi_cflink, name='baseformsetdepensefullavec_pfi_cflink'),
+    url(r'^depensefull/baseformsetdepensefullavec_pfi_cflink/(?P<pfiid>\d+)$', views.baseformsetdepensefullavec_pfi_cflink, name='baseformsetdepensefullavec_pfi_cflink'),
 #
 ## class RecetteFull
 #    url(r'^recettefull/new_avec_pfi_cflink/(?P<struct3id>\w+)/(?P<pfiid>[0-9]+)$', views.recettefull_new_avec_pfi_cflink, name='recettefull_new_avec_pfi_cflink'),
-#    url(r'^recettefull/baseformsetrecettefullavec_pfi_cflink/(?P<struct3id>\w+)/(?P<pfiid>[0-9]+)$', views.baseformsetrecettefullavec_pfi_cflink, name='baseformsetrecettefullavec_pfi_cflink'),
+    url(r'^recettefull/baseformsetrecettefullavec_pfi_cflink/(?P<pfiid>\d+)$', views.baseformsetrecettefullavec_pfi_cflink, name='baseformsetrecettefullavec_pfi_cflink'),
 #    url(r'^recettefull/$', views.recettefull_list,name='recettefull_list'),
 #    url(r'^recettefull/(?P<pkrec>[0-9]+)/detail/$', views.recettefull_detail, name='recettefull_detail'),
 #    url(r'^recettefull/(?P<pkrec>[0-9]+)/detail2/$', views.recettefull_detail2, name='recettefull_detail2'),
@@ -129,17 +129,12 @@ urlpatterns = [
 
     url(r'^admin/', include(admin.site.urls)),
 
-    # Base de l'arbre.
-    url(r'^showtree/(?P<type_affichage>\w+)/$', views.show_tree,
-        name="show_tree"),
-    # Affichage AJAX.
-    url(r'^showtree/(?P<type_affichage>\w+)/getsubtree/(?P<structid>\w+)$',
-        views.show_sub_tree, name="show_sub_tree"),
-    # Pluriannuel
-    url(r'^pluriannuel/(?P<pfiid>\w+)$', views.pluriannuel,
-        name="pluriannuel"),
-    url(r'^depense/(?P<pfiid>\w+)/', views.depense, name="depense"),
-    url(r'^recette/(?P<pfiid>\w+)/', views.recette, name="recette"),
+# Affichage
+    url(r'^showtree/$', views.show_tree, name="show_tree"),
+# Affichage AJAX.
+    url(r'^showtree/getsubtree/(?P<structid>\w+)$', views.show_sub_tree, name="show_sub_tree"),
+# Pluriannuel
+    url(r'^pluriannuel/(?P<pfiid>\w+)$', views.pluriannuel, name="pluriannuel"),
 ]
 # debug toolbar for dev
 if settings.DEBUG and 'debug_toolbar'in settings.INSTALLED_APPS:

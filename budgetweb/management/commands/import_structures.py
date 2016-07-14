@@ -35,7 +35,7 @@ class Command(BaseCommand):
         for filename in options.get('filename'):
             with open(filename) as h:
                 reader = csv.DictReader(h, delimiter=';', quotechar='"')
-                created = 0
+                total = 0
                 structures = {}
                 for row in reader:
                     code = row['CF']
@@ -45,7 +45,6 @@ class Command(BaseCommand):
                         'label': row['Désignation  CF'],
                         'parent': row['CF Sup. sifac']
                     }
-                    created += 1
 
                 iteration = 0
                 while structures and iteration < max_iterations:
@@ -54,8 +53,9 @@ class Command(BaseCommand):
                         try:
                             parent = Structure.objects.get(code=structure['parent'])
                             structure['parent'] = parent
-                            Structure.objects.update_or_create(**structure)
+                            created = Structure.objects.update_or_create(**structure)[1]
                             treated.append(code)
+                            total += int(created)
                         except Structure.DoesNotExist:
                             pass
                     structures = {k: v for k, v in structures.items()\
@@ -63,4 +63,4 @@ class Command(BaseCommand):
                     iteration += 1
 
             print('Stuctures created with %s : %s\n\tMissing: %s' %
-                  (filename, created, ', '.join(structures.keys())))
+                  (filename, total, ', '.join(structures.keys())))

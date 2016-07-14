@@ -1,7 +1,7 @@
 from django import template
 from django.conf import settings
 from django.templatetags.static import StaticNode, PrefixNode, urljoin
-import re
+
 
 register = template.Library()
 

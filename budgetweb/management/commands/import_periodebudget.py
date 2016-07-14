@@ -9,11 +9,10 @@ class Command(BaseCommand):
     help = 'Import the Financial Plan from a csv file'
 
     def handle(self, *args, **options):
-        PeriodeBudget.objects.update_or_create(
+        created = PeriodeBudget.objects.update_or_create(
             code="BI",
             label="Budget initial",
             annee="2017",
             defaults={'is_active': True}
-            )
-        created = 1
-        print('PeriodeBudget created : %s' % ( created, ))
+            )[1]
+        print('PeriodeBudget created : %s' % (int(created)))
