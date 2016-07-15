@@ -11,6 +11,20 @@
 <fieldset>
 	<form id="editPFI" name="editPFI" method="POST" class="post-form">
 			{% csrf_token %}
+			{% if form.errors %}
+		    {% for field in form %}
+		        {% for error in field.errors %}
+		            <div class="alert alert-error">
+		                <strong>{{ error|escape }}</strong>
+		            </div>
+		        {% endfor %}
+		    {% endfor %}
+		    {% for error in form.non_field_errors %}
+		        <div class="alert alert-error">
+		            <strong>{{ error|escape }}</strong>
+		        </div>
+		    {% endfor %}
+			{% endif %}
 			<input type="hidden" name="pk" value="{{ PFI.pk }}">
 			<div class="fieldWrapper">
 						<label for="{{ PFI.date_debut.id_for_label }}">Date de début :</label>
@@ -23,13 +37,166 @@
 			<button id="submit" type="submit" class="save btn btn-primary">Modifier</button>
 	</form>
 </fieldset>
-<fieldset>
-	<legend>Liste des dépenses</legend>
-
-</fieldset>
-<fieldset>
-	<legend>Liste des recettes</legend>
-
-</fieldset>
+	<fieldset>
+		<legend>Liste des dépenses {{ rangeYear }}</legend>
+		<table>
+			<thead>
+				<tr>
+					<td>Etape</td>
+					<td>Type</td>
+					{% for value in rangeYear %}
+						<td colspan="2">{{ value }}</td>
+					{% endfor %}
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td rowspan="3">BP</td>
+					<td rowspan="3">CP</td>
+					{% for value in rangeYear %}
+						<td nowrap>Fonct. :</td>
+						<td rowspan="3">Détails (obligatoire)</td>
+					{% endfor %}
+				</tr>
+				<tr>
+					{% for value in rangeYear %}
+						<td nowrap>Inves. :</td>
+					{% endfor %}
+				</tr>
+				<tr>
+					{% for value in rangeYear %}
+						<td nowrap>Pers. :</td>
+					{% endfor %}
+				</tr>
+				<tr>
+					<td colspan="2">&nbsp;</td>
+					{% for value in rangeYear %}
+						<td nowrap>Total. :</td>
+					{% endfor %}
+				</tr>
+				<tr>
+					<td rowspan="3">BP</td>
+					<td rowspan="3">AE</td>
+					{% for value in rangeYear %}
+						<td nowrap>Fonct. :</td>
+						<td rowspan="3">Détails (obligatoire)</td>
+					{% endfor %}
+				</tr>
+				<tr>
+					{% for value in rangeYear %}
+						<td nowrap>Inves. :</td>
+					{% endfor %}
+				</tr>
+				<tr>
+					{% for value in rangeYear %}
+						<td nowrap>Pers. :</td>
+					{% endfor %}
+				</tr>
+				<tr>
+					<td colspan="2">&nbsp;</td>
+					{% for value in rangeYear %}
+						<td nowrap>Total. :</td>
+					{% endfor %}
+				</tr>
+				<tr>
+					<td rowspan="3">BP</td>
+					<td rowspan="3">DC</td>
+					{% for value in rangeYear %}
+						<td nowrap>Fonct. :</td>
+						<td rowspan="3">Détails (obligatoire)</td>
+					{% endfor %}
+				</tr>
+				<tr>
+					{% for value in rangeYear %}
+						<td nowrap>Inves. :</td>
+					{% endfor %}
+				</tr>
+				<tr>
+					{% for value in rangeYear %}
+						<td nowrap>Pers. :</td>
+					{% endfor %}
+				</tr>
+				<tr>
+					<td colspan="2">&nbsp;</td>
+					{% for value in rangeYear %}
+						<td nowrap>Total. :</td>
+					{% endfor %}
+				</tr>
+			</tbody>
+		</table>
+	</fieldset>
+	<fieldset>
+		<legend>Liste des recettes</legend>
+		<table>
+			<thead>
+				<tr>
+					<td>Etape</td>
+					<td>Type</td>
+					{% for value in rangeYear %}
+						<td colspan="2">{{ value }}</td>
+					{% endfor %}
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td rowspan="3">BP</td>
+					<td rowspan="3">RE</td>
+					{% for value in rangeYear %}
+						<td nowrap>Fonct. + Inves. :</td>
+						<td rowspan="3">Détails (obligatoire)</td>
+					{% endfor %}
+				</tr>
+				<tr>
+					{% for value in rangeYear %}
+						<td nowrap>Pers. :</td>
+					{% endfor %}
+				</tr>
+				<tr>
+					<td colspan="2">&nbsp;</td>
+					{% for value in rangeYear %}
+						<td nowrap>Total. :</td>
+					{% endfor %}
+				</tr>
+				<tr>
+					<td rowspan="3">BP</td>
+					<td rowspan="3">DC</td>
+					{% for value in rangeYear %}
+						<td nowrap>Fonct. + Inves. :</td>
+						<td rowspan="3">Détails (obligatoire)</td>
+					{% endfor %}
+				</tr>
+				<tr>
+					{% for value in rangeYear %}
+						<td nowrap>Pers. :</td>
+					{% endfor %}
+				</tr>
+				<tr>
+					<td colspan="2">&nbsp;</td>
+					{% for value in rangeYear %}
+						<td nowrap>Total. :</td>
+					{% endfor %}
+				</tr>
+				<tr>
+					<td rowspan="3">BP</td>
+					<td rowspan="3">AR</td>
+					{% for value in rangeYear %}
+						<td nowrap>Fonct. + Inves. :</td>
+						<td rowspan="3">Détails (obligatoire)</td>
+					{% endfor %}
+				</tr>
+				<tr>
+					{% for value in rangeYear %}
+						<td nowrap>Pers. :</td>
+					{% endfor %}
+				</tr>
+				<tr>
+					<td colspan="2">&nbsp;</td>
+					{% for value in rangeYear %}
+						<td nowrap>Total. :</td>
+					{% endfor %}
+				</tr>
+			</tbody>
+		</table>
+	</fieldset>
 </div>
 {% endblock %}

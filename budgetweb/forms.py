@@ -369,11 +369,21 @@ class DepenseForm(forms.ModelForm):
 
 class PlanFinancementPluriForm(forms.ModelForm):
 
-    date_debut = forms.DateField(widget=forms.DateInput(
-                                attrs={'class': 'datetimepicker'}))
-    date_fin = forms.DateField(widget=forms.DateInput(
-                                attrs={'class': 'datetimepicker'}))
+    date_debut = forms.DateField(required=False, widget=forms.DateInput(
+                                 attrs={'class': 'datetimepicker'}))
+    date_fin = forms.DateField(required=False, widget=forms.DateInput(
+                               attrs={'class': 'datetimepicker'}))
 
     class Meta:
         model = PlanFinancement
         fields = ('date_debut', 'date_fin')
+
+    def clean(self):
+        super(PlanFinancementPluriForm, self).clean()
+        date_debut = self.cleaned_data.get("date_debut")
+        date_fin = self.cleaned_data.get("date_fin")
+
+        if date_fin and date_debut and date_fin < date_debut:
+            raise forms.ValidationError(
+                "La date de début est inférieur à la date de fin !"
+            )

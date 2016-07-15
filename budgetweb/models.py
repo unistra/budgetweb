@@ -77,12 +77,10 @@ class PlanFinancement(models.Model):
     is_fleche = models.BooleanField('Fléché oui/non', default=False)
     is_pluriannuel = models.BooleanField('Pluriannuel oui/non', default=False)
     is_active = models.BooleanField('Actif', max_length=100, default=True)
-    date_debut = models.DateField(
-        'Date de début', null=True, blank=True,
-        help_text='Date de début')
-    date_fin = models.DateField(
-        'Date de fin', null=True, blank=True,
-        help_text='Date de fin')
+    date_debut = models.DateField('Date de début', null=True, blank=True,
+                                  help_text='Date de début')
+    date_fin = models.DateField('Date de fin', null=True, blank=True,
+                                help_text='Date de fin')
 
     class Meta:
         ordering = ['label']

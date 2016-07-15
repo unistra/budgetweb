@@ -175,3 +175,7 @@ label {
   text-align: right;
   vertical-align: top;
 }​
+
+thead {
+  text-align: center;
+}

@@ -930,7 +930,15 @@ def pluriannuel(request, pfiid):
     else:
         form = PlanFinancementPluriForm(instance=pfi)
 
-    return render(request, 'pluriannuel.html', {'PFI': pfi, 'form': form})
+    # On a une date de debut et de fin, on prépare un tableau
+    range_year = {}
+    if pfi.date_debut and pfi.date_fin:
+        start = pfi.date_debut.year
+        while start <= pfi.date_fin.year:
+            range_year[start] = True
+            start = start + 1
+    context = {'PFI': pfi, 'form': form, 'rangeYear': sorted(range_year)}
+    return render(request, 'pluriannuel.html', context)
 
 
 @login_required
