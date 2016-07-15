@@ -2,39 +2,42 @@
 {% load staticfiles %}
 
 {% block head-additional %}
-	<link rel="stylesheet" href="{% static 'css/budgetweb.css' %}"/>
+  <link rel="stylesheet" href="{% static 'css/budgetweb.css' %}"/>
 {% endblock %}
 
 {% block content %}
-	<div class="col-md-12">
+  <div class="col-md-12">
     {% include "detailspfi.html" %}
     </div>
-    <form method="POST">
-	    {% csrf_token %}
-	    {{ formset.management_form }}
-		<table id='supertable' border=1>
-	        {% for form in formset %}
-	        {% if forloop.counter = 1 %}
-		    <thead>
-		        <tr>
-		        {% for field in form.visible_fields %}
-		            <th style="white-space:nowrap;">{{ field.label }}</th>
-		        {% endfor %}
-		        </tr>
-		    </thead>
-	        <tbody>
-			{% endif %}
-				<tr>
-			        {% for field in form.visible_fields %}
-		            <td style="background: pink; line-height:1; white-space:nowrap;" >{{ field }}</td>
-			        {% endfor %}
-			    </tr>
-	        {% endfor %}
-	        </tbody>
-		</table>
-		<input type="button" value="Ajouter" id="add_form">
-		<button type="submit" class="save btn btn-primary">Enregistrer</button>
-	</form>
+    <form method="POST" action="{% url 'recette' pfiid=PFI.id%}">
+      {% csrf_token %}
+      {{ formset.management_form }}
+    <table id='supertable' border=1>
+        {% for form in formset %}
+        {% if forloop.counter = 1 %}
+        <thead>
+            <tr>
+            {% for field in form.visible_fields %}
+                <th style="white-space:nowrap;">{{ field.label }}</th>
+            {% endfor %}
+            </tr>
+        </thead>
+          <tbody>
+        {% endif %}
+        <tr>
+            {% for field in form.visible_fields %}
+                <td style="background: pink; line-height:1; white-space:nowrap;" >{{ field }}</td>
+            {% endfor %}
+            {% for hidden in form.hidden_fields %}
+			    {{ hidden }}
+			{% endfor %}
+			        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <input type="button" value="Ajouter" id="add_form">
+    <button type="submit" class="save btn btn-primary">Enregistrer</button>
+  </form>
 {% endblock %}
 {% block foot-javascript %}
 <script src="{% static 'js/budgetweb.js' %}"></script>
