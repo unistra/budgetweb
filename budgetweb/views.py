@@ -30,7 +30,7 @@ from django.shortcuts import get_object_or_404, redirect
 
 from budgetweb.libs.node import generateTree
 from .forms import (BaseDepenseFullFormSet,  # BaseRecetteFullFormSet,
-                    DepenseForm,
+                    DepenseForm, PlanFinancementPluriForm,
                     DepenseFormPfi, RecetteForm, RecetteFormPfi)
 from .models import (Authorisation, Depense, DomaineFonctionnel, PeriodeBudget,
                      PlanFinancement, Recette, Structure)
@@ -919,8 +919,18 @@ def show_sub_tree(request, type_affichage, structid):
 
 @login_required
 def pluriannuel(request, pfiid):
-    pfi = PlanFinancement.objects.filter(pk=pfiid).first()
-    return render(request, 'pluriannuel.html', {'test': "test", 'PFI': pfi})
+    pfi = get_object_or_404(PlanFinancement, pk=pfiid)
+    if request.method == "POST":
+        form = PlanFinancementPluriForm(request.POST, instance=pfi)
+        if form.is_valid():
+            print(form)
+            post = form.save(commit=False)
+            post.save()
+            return redirect('pluriannuel', pfiid=pfi.id)
+    else:
+        form = PlanFinancementPluriForm(instance=pfi)
+
+    return render(request, 'pluriannuel.html', {'PFI': pfi, 'form': form})
 
 
 @login_required

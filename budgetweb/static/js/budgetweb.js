@@ -1,4 +1,19 @@
+function initDateTimePicker() {
+	$('.datetimepicker').datetimepicker({
+		widgetPositioning: { horizontal: 'left',
+							 vertical: 'bottom',
+						   },
+		format:'DD/MM/YYYY',
+		minDate:new Date(new Date().getFullYear(), 0, 1),
+		maxDate: new Date(new Date().getFullYear(), 11, 31),
+		locale:'fr'
+	});
+}
+
+
 $(document).ready(function() {
+	initDateTimePicker();
+
 	$('.tree li:has(ul)').addClass('parent_li').find(' > span').attr('title', 'Ouvrir cette branche');
 	$('span').unbind('click');
 	$('.tree li.parent_li').on('click', 'span', function (e) {

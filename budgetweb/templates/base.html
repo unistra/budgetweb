@@ -4,7 +4,7 @@
 {% load myfilters %}
 <html>
 <head>
-    <title>{% block title %}budgetweb{% endblock %}</title>
+    <title>{% block title %}Budgetweb{% endblock %}</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -70,6 +70,13 @@
             </div>
         </footer>
     </div>
-    {% block foot-javascript %}{% endblock %}
+    {% block foot-javascript %}
+      {% block additional-javascript %}
+    	 {% csrf_token %}
+       <script src="{% static 'js/moment/moment-with-locales.min.js' %}"></script>
+ 			 <script src="{% static 'js/bootstrap-datetimepicker.min.js' %}"></script>
+       <script src="{% static 'js/budgetweb.js' %}"></script>
+    	{% endblock %}
+    {% endblock %}
 </body>
 </html>

@@ -365,3 +365,15 @@ class DepenseForm(forms.ModelForm):
         self.fields['annee'].widget.attrs['disabled'] = True
         self.fields['annee'].initial = 2017
         instance = getattr(self, 'instance', None)
+
+
+class PlanFinancementPluriForm(forms.ModelForm):
+
+    date_debut = forms.DateField(widget=forms.DateInput(
+                                attrs={'class': 'datetimepicker'}))
+    date_fin = forms.DateField(widget=forms.DateInput(
+                                attrs={'class': 'datetimepicker'}))
+
+    class Meta:
+        model = PlanFinancement
+        fields = ('date_debut', 'date_fin')

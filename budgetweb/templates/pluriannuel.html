@@ -13,13 +13,14 @@
 			{% csrf_token %}
 			<input type="hidden" name="pk" value="{{ PFI.pk }}">
 			<div class="fieldWrapper">
-						<label for="{{ PFI.date_debut_tarif.id_for_label }}">Date de début du programme de financement :</label>
-						{{ formnew.date_debut_tarif }}
+						<label for="{{ PFI.date_debut.id_for_label }}">Date de début :</label>
+						{{ form.date_debut }}
 			</div>
 			<div class="fieldWrapper">
-						<label for="{{ PFI.date_debut_tarif.id_for_label }}">Date de fin du programme de financement :</label>
-						{{ formnew.date_debut_tarif }}
+						<label for="{{ PFI.date_fin.id_for_label }}">Date de fin :</label>
+						{{ form.date_fin }}
 			</div>
+			<button id="submit" type="submit" class="save btn btn-primary">Modifier</button>
 	</form>
 </fieldset>
 <fieldset>
@@ -31,7 +32,4 @@
 
 </fieldset>
 </div>
-{% endblock %}
-{% block foot-javascript %}
-<script src="{% static 'js/budgetweb.js' %}"></script>
 {% endblock %}
