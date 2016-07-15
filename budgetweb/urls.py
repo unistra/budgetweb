@@ -123,14 +123,7 @@ urlpatterns = [
 #    url(r'^ajax/ajax_add_enveloppetype/(?P<pkstr1>[0-9]+)/$', views.ajax_add_enveloppetype,name="ajax_add_enveloppetype"),
 #    url(r'^ajax/ajax_recette_displaycompte/(?P<pkstr1>[0-9]+)/$', views.ajax_recette_displaycompte ,name="ajax_recette_displaycompte"),
 
-# AJAX GENERAL
-    url(r'^ajax/ajax_add_eotp/(?P<pkstr1>[0-9]+)/$',
-        views.ajax_add_eotp, name="ajax_add_eotp"),
-    # url(r'^app/', include('apps.app.urls')),
-
-    url(r'^admin/', include(admin.site.urls)),
-
-    # Base de l'arbre.
+# Base de l'arbre.
     url(r'^showtree/(?P<type_affichage>\w+)/$', views.show_tree,
         name="show_tree"),
     # Affichage AJAX.
@@ -141,6 +134,14 @@ urlpatterns = [
         name="pluriannuel"),
     url(r'^depense/(?P<pfiid>\w+)/', views.depense, name="depense"),
     url(r'^recette/(?P<pfiid>\w+)/', views.recette, name="recette"),
+
+# AJAX GENERAL
+    url(r'^ajax/ajax_add_eotp/(?P<pkstr1>[0-9]+)/$',
+        views.ajax_add_eotp, name="ajax_add_eotp"),
+    # url(r'^app/', include('apps.app.urls')),
+
+    url(r'^admin/', include(admin.site.urls)),
+
 ]
 # debug toolbar for dev
 if settings.DEBUG and 'debug_toolbar'in settings.INSTALLED_APPS:

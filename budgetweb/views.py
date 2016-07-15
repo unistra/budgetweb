@@ -945,5 +945,9 @@ def recette(request, pfiid):
         recette = RecetteForm(request.POST)
         if form_recette.is_valid():
             print("coucou")
-    return render(request, 'recette.html', {'test': 'TEST', 'PFI': pfi,
-                                            'formset': RecetteFormSet})
+    context = {
+        'test': 'TEST',
+        'PFI': pfi,
+        'formset': RecetteFormSet
+    }
+    return render(request, 'recette.html', context)

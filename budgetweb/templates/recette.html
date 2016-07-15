@@ -7,34 +7,31 @@
 
 {% block content %}
 	<div class="col-md-12">
-	 {% include "detailspfi.html" %}
-
-	 <table id='supertable' border=1>
-		{% for form in formset %}
-		    {% if forloop.counter = 1 %}
+    {% include "detailspfi.html" %}
+    </div>
+    <form method="POST">
+		<table id='supertable' border=1>
+	        {% for form in formset %}
+	        {% if forloop.counter = 1 %}
 		    <thead>
+		        <tr>
 		        {% for field in form.visible_fields %}
-		            <td style="white-space:nowrap;" >{{ field.label_tag }}</td>
+		            <th style="white-space:nowrap;">{{ field.label }}</th>
 		        {% endfor %}
+		        </tr>
 		    </thead>
-		    {% endif %}
-				<tbody>
-		    <td>
-		        <table>
-		        {% for field in form.visible_fields %}
-		            <tr><td style="background: pink; line-height:1; white-space:nowrap;" >{{ field}}</td></tr>
-		        {% endfor %}
-		        </table>
-		    </td>
-			</tbody>
-		{% endfor %}
-		</tr>
+	        <tbody>
+			{% endif %}
+				<tr>
+			        {% for field in form.visible_fields %}
+		            <td style="background: pink; line-height:1; white-space:nowrap;" >{{ field }}</td>
+			        {% endfor %}
+			    </tr>
+	        {% endfor %}
+	        </tbody>
 		</table>
-
-
-
-
-	</div>
+		<button type="submit" class="save btn btn-primary">Enregistrer</button>
+	</form>
 {% endblock %}
 
 {% block foot-javascript %}
