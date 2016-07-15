@@ -5,6 +5,8 @@ from django.db.models import Sum
 from django.forms.models import modelformset_factory
 from django.shortcuts import render, render_to_response
 
+from django.forms import formset_factory
+
 #from django.template import RequestContext
 #from datetime import datetime
 from django.shortcuts import get_object_or_404, redirect
@@ -932,14 +934,16 @@ def depense(request, pfiid):
     return render(request, 'depense.html', {'test': 'TEST', 'PFI': pfi,
                                             'form_depense': depense})
 
+from functools import partial, wraps
+
 
 @login_required
 def recette(request, pfiid):
-    pfi = PlanFinancement.objects.get(pk=pfiid)
-    recette = RecetteForm(pfiid=pfiid)
+    pfi = PlanFinancement.objects.get(pk=pfiid).id
+    RecetteFormSet = formset_factory(wraps(RecetteForm)(partial(RecetteForm, pfiid=pfi)), extra=3)
     if request.method == "POST" in request.POST:
         recette = RecetteForm(request.POST)
         if form_recette.is_valid():
             print("coucou")
     return render(request, 'recette.html', {'test': 'TEST', 'PFI': pfi,
-                                            'form_recette': recette})
+                                            'formset': RecetteFormSet})
