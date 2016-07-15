@@ -47,6 +47,7 @@
 					{% for value in rangeYear %}
 						<td colspan="2">{{ value }}</td>
 					{% endfor %}
+					<td>Total</td>
 				</tr>
 			</thead>
 			<tbody>
@@ -54,72 +55,102 @@
 					<td rowspan="3">BP</td>
 					<td rowspan="3">CP</td>
 					{% for value in rangeYear %}
-						<td nowrap>Fonct. :</td>
-						<td rowspan="3">Détails (obligatoire)</td>
+						<td nowrap><label class="pluri">Fonct. :</label><input type="text" size="10" value="100 000 &euro;"></td>
+						<td rowspan="4" class="table-details">Détails (obligatoire)</td>
 					{% endfor %}
+					<td nowrap><label class="pluri">Total :</label><input type="text" size="10" value="100 000 &euro;"></td>
 				</tr>
 				<tr>
 					{% for value in rangeYear %}
-						<td nowrap>Inves. :</td>
+						<td nowrap><label class="pluri">Inves. :</label><input type="text" size="10" value="100 000 &euro;"></td>
 					{% endfor %}
+					<td nowrap><label class="pluri">Total :</label><input type="text" size="10" value="100 000 &euro;"></td>
 				</tr>
 				<tr>
 					{% for value in rangeYear %}
-						<td nowrap>Pers. :</td>
+						<td nowrap><label class="pluri">Pers. :</label><input type="text" size="10" value="100 000 &euro;"></td>
 					{% endfor %}
+					<td nowrap><label class="pluri">Total :</label><input type="text" size="10" value="100 000 &euro;"></td>
 				</tr>
 				<tr>
 					<td colspan="2">&nbsp;</td>
 					{% for value in rangeYear %}
-						<td nowrap>Total. :</td>
+						<td nowrap><label class="pluri">Total. :</label><input type="text" size="10" value="100 000 &euro;"></td>
+					{% endfor %}
+					<td>&nbsp;</td>
+				</tr>
+				<tr style="line-height: 0px;border:2px solid #000000;">
+					<td colspan="2">&nbsp;</td>
+					{% for value in rangeYear %}
+						<td nowrap>&nbsp;</td>
 					{% endfor %}
 				</tr>
 				<tr>
 					<td rowspan="3">BP</td>
 					<td rowspan="3">AE</td>
 					{% for value in rangeYear %}
-						<td nowrap>Fonct. :</td>
-						<td rowspan="3">Détails (obligatoire)</td>
+						<td nowrap><label class="pluri">Fonct. :</label><input type="text" size="10" value="100 000 &euro;"></td>
+						<td rowspan="4" class="table-details">Détails (obligatoire)</td>
 					{% endfor %}
+					<td nowrap><label class="pluri">Total :</label><input type="text" size="10" value="100 000 &euro;"></td>
 				</tr>
 				<tr>
 					{% for value in rangeYear %}
-						<td nowrap>Inves. :</td>
+						<td nowrap><label class="pluri">Inves. :</label><input type="text" size="10" value="100 000 &euro;"></td>
 					{% endfor %}
+					<td nowrap><label class="pluri">Total :</label><input type="text" size="10" value="100 000 &euro;"></td>
 				</tr>
 				<tr>
 					{% for value in rangeYear %}
-						<td nowrap>Pers. :</td>
+						<td nowrap><label class="pluri">Pers. :</label><input type="text" size="10" value="100 000 &euro;"></td>
 					{% endfor %}
+					<td nowrap><label class="pluri">Total :</label><input type="text" size="10" value="100 000 &euro;"></td>
 				</tr>
 				<tr>
 					<td colspan="2">&nbsp;</td>
 					{% for value in rangeYear %}
-						<td nowrap>Total. :</td>
+						<td nowrap><label class="pluri">Total. :</label><input type="text" size="10" value="100 000 &euro;"></td>
+					{% endfor %}
+					<td>&nbsp;</td>
+				</tr>
+				<tr style="line-height: 0px;border:2px solid #000000;">
+					<td colspan="2">&nbsp;</td>
+					{% for value in rangeYear %}
+						<td nowrap>&nbsp;</td>
 					{% endfor %}
 				</tr>
 				<tr>
 					<td rowspan="3">BP</td>
 					<td rowspan="3">DC</td>
 					{% for value in rangeYear %}
-						<td nowrap>Fonct. :</td>
-						<td rowspan="3">Détails (obligatoire)</td>
+						<td nowrap><label class="pluri">Fonct. :</label><input type="text" size="10" value="100 000 &euro;"></td>
+						<td rowspan="4" class="table-details">Détails (obligatoire)</td>
 					{% endfor %}
+					<td nowrap><label class="pluri">Total :</label><input type="text" size="10" value="100 000 &euro;"></td>
 				</tr>
 				<tr>
 					{% for value in rangeYear %}
-						<td nowrap>Inves. :</td>
+						<td nowrap><label class="pluri">Inves. :</label><input type="text" size="10" value="100 000 &euro;"></td>
 					{% endfor %}
+					<td nowrap><label class="pluri">Total :</label><input type="text" size="10" value="100 000 &euro;"></td>
 				</tr>
 				<tr>
 					{% for value in rangeYear %}
-						<td nowrap>Pers. :</td>
+						<td nowrap><label class="pluri">Pers. :</label><input type="text" size="10" value="100 000 &euro;"></td>
 					{% endfor %}
+					<td nowrap><label class="pluri">Total :</label><input type="text" size="10" value="100 000 &euro;"></td>
 				</tr>
 				<tr>
 					<td colspan="2">&nbsp;</td>
 					{% for value in rangeYear %}
-						<td nowrap>Total. :</td>
+						<td nowrap><label class="pluri">Total. :</label><input type="text" size="10" value="100 000 &euro;"></td>
+					{% endfor %}
+					<td>&nbsp;</td>
+				</tr>
+				<tr style="line-height: 0px;border:2px solid #000000;">
+					<td colspan="2">&nbsp;</td>
+					{% for value in rangeYear %}
+						<td nowrap>&nbsp;</td>
 					{% endfor %}
 				</tr>
 			</tbody>
@@ -142,61 +173,81 @@
 					<td rowspan="3">BP</td>
 					<td rowspan="3">RE</td>
 					{% for value in rangeYear %}
-						<td nowrap>Fonct. + Inves. :</td>
-						<td rowspan="3">Détails (obligatoire)</td>
+						<td nowrap><label class="pluri">F + I :</label><input type="text" size="10" value="100 000 &euro;"></td>
+						<td rowspan="3" class="table-details">Détails (obligatoire)</td>
 					{% endfor %}
 				</tr>
 				<tr>
 					{% for value in rangeYear %}
-						<td nowrap>Pers. :</td>
+						<td nowrap><label class="pluri">Pers. :</label><input type="text" size="10" value="100 000 &euro;"></td>
 					{% endfor %}
 				</tr>
 				<tr>
+					{% for value in rangeYear %}
+						<td nowrap><label class="pluri">Total. :</label><input type="text" size="10" value="100 000 &euro;"></td>
+					{% endfor %}
+				</tr>
+				<tr style="line-height: 0px;border:2px solid #000000;">
 					<td colspan="2">&nbsp;</td>
 					{% for value in rangeYear %}
-						<td nowrap>Total. :</td>
+						<td nowrap>&nbsp;</td>
 					{% endfor %}
 				</tr>
 				<tr>
 					<td rowspan="3">BP</td>
 					<td rowspan="3">DC</td>
 					{% for value in rangeYear %}
-						<td nowrap>Fonct. + Inves. :</td>
-						<td rowspan="3">Détails (obligatoire)</td>
+						<td nowrap><label class="pluri">F + I :</label><input type="text" size="10" value="100 000 &euro;"></td>
+						<td rowspan="3" class="table-details">Détails (obligatoire)</td>
 					{% endfor %}
 				</tr>
 				<tr>
 					{% for value in rangeYear %}
-						<td nowrap>Pers. :</td>
+						<td nowrap><label class="pluri">Pers. :</label><input type="text" size="10" value="100 000 &euro;"></td>
 					{% endfor %}
 				</tr>
 				<tr>
+					{% for value in rangeYear %}
+						<td nowrap><label class="pluri">Total. :</label><input type="text" size="10" value="100 000 &euro;"></td>
+					{% endfor %}
+				</tr>
+				<tr style="line-height: 0px;border:2px solid #000000;">
 					<td colspan="2">&nbsp;</td>
 					{% for value in rangeYear %}
-						<td nowrap>Total. :</td>
+						<td nowrap>&nbsp;</td>
 					{% endfor %}
 				</tr>
 				<tr>
 					<td rowspan="3">BP</td>
 					<td rowspan="3">AR</td>
 					{% for value in rangeYear %}
-						<td nowrap>Fonct. + Inves. :</td>
-						<td rowspan="3">Détails (obligatoire)</td>
+						<td nowrap><label class="pluri">F + I :</label><input type="text" size="10" value="100 000 &euro;"></td>
+						<td rowspan="3" class="table-details">Détails (obligatoire)</td>
 					{% endfor %}
 				</tr>
 				<tr>
 					{% for value in rangeYear %}
-						<td nowrap>Pers. :</td>
+						<td nowrap><label class="pluri">Pers. :</label><input type="text" size="10" value="100 000 &euro;"></td>
 					{% endfor %}
 				</tr>
 				<tr>
+					{% for value in rangeYear %}
+						<td nowrap><label class="pluri">Total. :</label><input type="text" size="10" value="100 000 &euro;"></td>
+					{% endfor %}
+				</tr>
+				<tr style="line-height: 0px;border:2px solid #000000;">
 					<td colspan="2">&nbsp;</td>
 					{% for value in rangeYear %}
-						<td nowrap>Total. :</td>
+						<td nowrap>&nbsp;</td>
 					{% endfor %}
 				</tr>
 			</tbody>
 		</table>
+		<br />
+		<br />
+		<br />
+		<br />
 	</fieldset>
 </div>
+
 {% endblock %}

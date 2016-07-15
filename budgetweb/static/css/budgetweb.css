@@ -174,8 +174,34 @@ label {
   width: 180px;
   text-align: right;
   vertical-align: top;
-}​
+}
 
-thead {
+thead td {
   text-align: center;
+  font-weight: bold;
+  border: 3px solid #000000;
+}
+
+tbody tr {
+  border-right: 3px solid #000000;
+  border-left: 3px solid #000000;
+}
+
+tbody td {
+    border: 1px solid #000000;
+}
+
+.table-details {
+  text-align:center;
+}
+
+.container {
+  width:100%;
+}
+
+.pluri {
+  display: inline-block;
+  width: 50px;
+  text-align: right;
+  vertical-align: middle;
 }
