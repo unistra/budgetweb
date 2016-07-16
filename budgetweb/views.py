@@ -362,35 +362,61 @@ def pluriannuel(request, pfiid):
     return render(request, 'pluriannuel.html', context)
 
 
+def modelformset_factory_with_kwargs(cls, **formset_kwargs):
+    class ModelformsetFactoryWithKwargs(cls):
+        def __init__(self, *args, **kwargs):
+            kwargs.update(formset_kwargs)
+            super().__init__(*args, **kwargs)
+    return ModelformsetFactoryWithKwargs
+
+
 @login_required
 def depense(request, pfiid):
     pfi = PlanFinancement.objects.get(pk=pfiid)
-    depense = DepenseForm(pfiid=pfiid)
+    DepenseFormSet = modelformset_factory(
+        Depense,
+        form=modelformset_factory_with_kwargs(DepenseForm, pfi=pfi),
+        exclude=[],
+        extra=3
+    )
+    formset = DepenseFormSet(queryset=Depense.objects.filter(pfi=pfi))
     if request.method == "POST":
-        depense = RecetteForm(request.POST)
-        if form_depense.is_valid():
-            print("coucou")
-    return render(request, 'depense.html', {'test': 'TEST', 'PFI': pfi,
-                                            'form_depense': depense})
+        formset = DepenseFormSet(request.POST)
+        if formset.is_valid():
+            for data in formset.cleaned_data:
+                if data:
+                    obj = Depense(**data)
+                    obj.save()
+        else:
+            print('EEE : %s' % formset.errors)
+
+    context = {
+        'test': 'TEST',
+        'PFI': pfi,
+        'formset': formset
+    }
+    return render(request, 'depense.html', context)
 
 
 @login_required
 def recette(request, pfiid):
     pfi = PlanFinancement.objects.get(pk=pfiid)
-    # Initial values ?
-    RecetteFormSet = formset_factory(
-        wraps(RecetteForm)(partial(RecetteForm, pfiid=pfi.pk)), extra=3)
+    RecetteFormSet = modelformset_factory(
+        Recette,
+        form=modelformset_factory_with_kwargs(RecetteForm, pfi=pfi),
+        exclude=[],
+        extra=3
+    )
+    formset = RecetteFormSet(queryset=Recette.objects.filter(pfi=pfi))
     if request.method == "POST":
         formset = RecetteFormSet(request.POST)
         if formset.is_valid():
             for data in formset.cleaned_data:
                 if data:
-                    r = Recette(**data)
-                    r.save()
+                    obj = Recette(**data)
+                    obj.save()
         else:
             print('EEE : %s' % formset.errors)
-    else:
-        formset = RecetteFormSet()
 
     context = {
         'test': 'TEST',

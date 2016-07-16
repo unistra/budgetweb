@@ -35,17 +35,16 @@ class RecetteForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        pfiid = kwargs.pop('pfiid')
+        pfi = kwargs.pop('pfi')
         super(RecetteForm, self).__init__(*args, **kwargs)
-        pfi = PlanFinancement.objects.get(id=pfiid)
         is_fleche = pfi.is_fleche
         structure = pfi.structure
         nc = NatureComptableRecette.objects.filter(is_fleche=is_fleche)
         self.fields['naturecomptablerecette'].queryset = nc
         self.fields['structure'].initial = structure.pk
+        self.fields['structure'].widget.attrs['readonly'] = True
         self.fields['pfi'].initial = pfi.pk
         self.fields['pfi'].widget.attrs['readonly'] = True
-        self.fields['structure'].widget.attrs['readonly'] = True
         self.fields['annee'].widget.attrs['readonly'] = True
         self.fields['annee'].initial = 2017
 
@@ -64,20 +63,17 @@ class DepenseForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        pfiid = kwargs.pop('pfiid')
+        pfi = kwargs.pop('pfi')
         super(DepenseForm, self).__init__(*args, **kwargs)
-        pfi = PlanFinancement.objects.filter(id=pfiid)
-        is_fleche = pfi.first().is_fleche
-        structure = Structure.objects.filter(id=pfi.first().structure.id)
+        is_fleche = pfi.is_fleche
+        structure = pfi.structure
         nc = NatureComptableDepense.objects.filter(is_fleche=is_fleche)
         self.fields['naturecomptabledepense'].queryset = nc
-        self.fields['structure'].queryset = structure
-        self.fields['structure'].initial = structure.first().id
-        self.fields['pfi'].queryset = pfi
-        self.fields['pfi'].initial = pfi.first().id
-        self.fields['pfi'].widget.attrs['disabled'] = True
-        self.fields['structure'].widget.attrs['disabled'] = True
-        self.fields['annee'].widget.attrs['disabled'] = True
+        self.fields['structure'].initial = structure.pk
+        self.fields['structure'].widget.attrs['readonly'] = True
+        self.fields['pfi'].initial = pfi.pk
+        self.fields['pfi'].widget.attrs['readonly'] = True
+        self.fields['annee'].widget.attrs['readonly'] = True
         self.fields['annee'].initial = 2017
 
 
