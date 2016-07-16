@@ -306,7 +306,6 @@ def show_sub_tree(request, type_affichage, structid):
 
     # On récupère l'ID sur PAPA
     structure = Structure.objects.get(code=structid)
-
     # On récupère la liste des CF fils.
     listeCF = Structure.objects.filter(parent=structure)
     # print('LCF : %s' % listeCF)
@@ -373,9 +372,11 @@ def modelformset_factory_with_kwargs(cls, **formset_kwargs):
 @login_required
 def depense(request, pfiid):
     pfi = PlanFinancement.objects.get(pk=pfiid)
+    periodebudget = PeriodeBudget.objects.filter(is_active=True).first()
     DepenseFormSet = modelformset_factory(
         Depense,
-        form=modelformset_factory_with_kwargs(DepenseForm, pfi=pfi),
+        form=modelformset_factory_with_kwargs(DepenseForm, pfi=pfi,
+                                              periodebudget=periodebudget),
         exclude=[],
         extra=3
     )
@@ -401,9 +402,11 @@ def depense(request, pfiid):
 @login_required
 def recette(request, pfiid):
     pfi = PlanFinancement.objects.get(pk=pfiid)
+    periodebudget = PeriodeBudget.objects.filter(is_active=True).first()
     RecetteFormSet = modelformset_factory(
         Recette,
-        form=modelformset_factory_with_kwargs(RecetteForm, pfi=pfi),
+        form=modelformset_factory_with_kwargs(RecetteForm, pfi=pfi,
+                                              periodebudget=periodebudget),
         exclude=[],
         extra=3
     )
@@ -414,6 +417,7 @@ def recette(request, pfiid):
             for data in formset.cleaned_data:
                 if data:
                     obj = Recette(**data)
+                    print(obj)
                     obj.save()
         else:
             print('EEE : %s' % formset.errors)

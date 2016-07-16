@@ -22,20 +22,29 @@ class BaseRecetteFormSet(BaseFormSet):
 
 class RecetteForm(forms.ModelForm):
 
+    montantDC = forms.DecimalField(widget=forms.NumberInput(
+                     attrs={'style': 'width:100px;',
+                            'step': ''}))
+    montantAR = montantRE = montantDC
+
     class Meta:
         model = Recette
-        fields = ('pfi', 'structure',
+        fields = ('pfi', 'structure', 'periodebudget',
                   'naturecomptablerecette', 'annee',
                   'montantAR', 'montantRE', 'montantDC', 'commentaire',
-                  'periodebudget', 'lienpiecejointe')
+                  'lienpiecejointe')
         widgets = {
             'commentaire': forms.Textarea(attrs={'cols': 40, 'rows': 2}),
+            'annee': forms.NumberInput(attrs={
+                        'style': 'width:50px;-moz-appearance: textfield;'}),
             'pfi': forms.HiddenInput(),
             'structure': forms.HiddenInput(),
+            'periodebudget': forms.HiddenInput(),
         }
 
     def __init__(self, *args, **kwargs):
         pfi = kwargs.pop('pfi')
+        periodebudget = kwargs.pop('periodebudget')
         super(RecetteForm, self).__init__(*args, **kwargs)
         is_fleche = pfi.is_fleche
         structure = pfi.structure
@@ -45,25 +54,37 @@ class RecetteForm(forms.ModelForm):
         self.fields['structure'].widget.attrs['readonly'] = True
         self.fields['pfi'].initial = pfi.pk
         self.fields['pfi'].widget.attrs['readonly'] = True
+        self.fields['periodebudget'].initial = periodebudget.pk
+        self.fields['periodebudget'].widget.attrs['readonly'] = True
         self.fields['annee'].widget.attrs['readonly'] = True
         self.fields['annee'].initial = 2017
 
 
 class DepenseForm(forms.ModelForm):
+
+    montantDC = forms.DecimalField(widget=forms.NumberInput(
+                         attrs={'style': 'width:100px;',
+                                'step': ''}))
+    montantAE = montantCP = montantDC
+
     class Meta:
         model = Depense
-        fields = ('pfi', 'structure',
-                  'naturecomptabledepense', 'annee',
+        fields = ('pfi', 'structure', 'domainefonctionnel',
+                  'periodebudget', 'naturecomptabledepense', 'annee',
                   'montantAE', 'montantCP', 'montantDC', 'commentaire',
-                  'periodebudget', 'lienpiecejointe')
+                  'lienpiecejointe')
         widgets = {
             'commentaire': forms.Textarea(attrs={'cols': 40, 'rows': 2}),
             'pfi': forms.HiddenInput(),
+            'annee': forms.NumberInput(attrs={
+                        'style': 'width:50px;-moz-appearance: textfield;'}),
             'structure': forms.HiddenInput(),
+            'periodebudget': forms.HiddenInput(),
         }
 
     def __init__(self, *args, **kwargs):
         pfi = kwargs.pop('pfi')
+        periodebudget = kwargs.pop('periodebudget')
         super(DepenseForm, self).__init__(*args, **kwargs)
         is_fleche = pfi.is_fleche
         structure = pfi.structure
@@ -73,6 +94,8 @@ class DepenseForm(forms.ModelForm):
         self.fields['structure'].widget.attrs['readonly'] = True
         self.fields['pfi'].initial = pfi.pk
         self.fields['pfi'].widget.attrs['readonly'] = True
+        self.fields['periodebudget'].initial = periodebudget.pk
+        self.fields['periodebudget'].widget.attrs['readonly'] = True
         self.fields['annee'].widget.attrs['readonly'] = True
         self.fields['annee'].initial = 2017
 

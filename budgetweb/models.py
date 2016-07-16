@@ -150,15 +150,17 @@ class Depense(models.Model):
     domainefonctionnel = models.ForeignKey('DomaineFonctionnel',
                                            verbose_name='Domaine fonctionnel')
     naturecomptabledepense = models.ForeignKey(
-        'NatureComptableDepense', verbose_name='Nature Comptable Dépense')
+        'NatureComptableDepense', verbose_name='Nature Comptable')
     commentaire = models.TextField(blank=True, null=True)
     lienpiecejointe = models.CharField(max_length=255,
                                        verbose_name='Lien vers un fichier',
                                        validators=[URLValidator()],
                                        blank=True)
-    periodebudget = models.ForeignKey('PeriodeBudget', blank=True, null=True,
+    periodebudget = models.ForeignKey('PeriodeBudget',
+                                      verbose_name='Période budgétaire',
+                                      blank=True, null=True,
                                       related_name='periodebudgetdepense')
-    annee = models.PositiveIntegerField(verbose_name='Année de la saisie')
+    annee = models.PositiveIntegerField(verbose_name='Année')
     creele = models.DateTimeField(auto_now_add=True, blank=True)
     creepar = models.CharField(max_length=100, blank=True, null=True)
     modifiele = models.DateTimeField(verbose_name='Date de modification',
@@ -208,15 +210,17 @@ class Recette(models.Model):
     domainefonctionnel = models.CharField(max_length=100, default='NA',
                                           editable=False)
     naturecomptablerecette = models.ForeignKey(
-        'NatureComptableRecette', verbose_name='Nature Comptable Recette')
+        'NatureComptableRecette', verbose_name='Nature Comptable')
     commentaire = models.TextField(blank=True, null=True)
     lienpiecejointe = models.CharField(max_length=255,
                                        verbose_name='Lien vers un fichier',
                                        validators=[URLValidator()],
                                        blank=True)
-    periodebudget = models.ForeignKey('PeriodeBudget', blank=True, null=True,
+    periodebudget = models.ForeignKey('PeriodeBudget',
+                                      verbose_name='Période budgétaire',
+                                      blank=True, null=True,
                                       related_name='periodebudgetrecette')
-    annee = models.PositiveIntegerField(verbose_name='Année de la saisie')
+    annee = models.PositiveIntegerField(verbose_name='Année')
     creele = models.DateTimeField(auto_now_add=True, blank=True)
     creepar = models.CharField(max_length=100, blank=True, null=True)
     modifiele = models.DateTimeField(verbose_name='Date de modification',

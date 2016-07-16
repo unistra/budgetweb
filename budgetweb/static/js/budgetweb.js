@@ -10,7 +10,6 @@ function initDateTimePicker() {
 	});
 }
 
-
 $(document).ready(function() {
 	initDateTimePicker();
 

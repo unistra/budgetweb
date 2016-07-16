@@ -62,10 +62,6 @@ urlpatterns = [
     url(r'^depense/(?P<pfiid>\w+)/', views.depense, name="depense"),
     url(r'^recette/(?P<pfiid>\w+)/', views.recette, name="recette"),
 
-# AJAX GENERAL
-#    url(r'^ajax/ajax_add_eotp/(?P<pkstr1>[0-9]+)/$',
-#        views.ajax_add_eotp, name="ajax_add_eotp"),
-
     url(r'^admin/', include(admin.site.urls)),
 
 ]
