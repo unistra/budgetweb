@@ -176,18 +176,18 @@ label {
   vertical-align: top;
 }
 
-thead td {
+.table-pluri thead td {
   text-align: center;
   font-weight: bold;
   border: 3px solid #000000;
 }
 
-tbody tr {
+.table-pluri tbody tr {
   border-right: 3px solid #000000;
   border-left: 3px solid #000000;
 }
 
-tbody td {
+.table-pluri tbody td {
     border: 1px solid #000000;
 }
 
@@ -204,4 +204,12 @@ tbody td {
   width: 50px;
   text-align: right;
   vertical-align: middle;
+}
+
+.formset thead th{
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top:5px;
+  padding-bottom: 5px;
+  font-size: 1.2em;
 }

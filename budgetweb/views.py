@@ -293,7 +293,6 @@ def liste_pfi_avec_depenses_recettes(request):
 #        raise Http404
 
 
-
 @login_required
 def show_tree(request, type_affichage):
     listeCF = generateTree(request)
@@ -384,15 +383,28 @@ def depense(request, pfiid):
     if request.method == "POST":
         formset = DepenseFormSet(request.POST)
         if formset.is_valid():
-            for data in formset.cleaned_data:
-                if data:
-                    obj = Depense(**data)
-                    obj.save()
+            for form in formset:
+                if form.is_valid():
+                    try:
+                        if form.cleaned_data.get('DELETE') and \
+                           form.instance.pk:
+                            form.instance.delete()
+                        else:
+                            instance = form.save(commit=False)
+                            instance.save()
+                    except DatabaseError:
+                        messages.error(request, "Database error. \
+                                                 Please try again")
+                # for data in formset.cleaned_data:
+                # if data:\
+                    # obj = Depense(**data)
+                    # obj = Depense.objects.update_or_create(data)
+                    # obj.save(commit=False)
+                    # obj.save()
         else:
             print('EEE : %s' % formset.errors)
 
     context = {
-        'test': 'TEST',
         'PFI': pfi,
         'formset': formset
     }
@@ -416,14 +428,13 @@ def recette(request, pfiid):
         if formset.is_valid():
             for data in formset.cleaned_data:
                 if data:
-                    obj = Recette(**data)
-                    print(obj)
+                    # obj = Recette(**data)
+                    obj = Recette.objects.update_or_create(data)
                     obj.save()
         else:
             print('EEE : %s' % formset.errors)
 
     context = {
-        'test': 'TEST',
         'PFI': pfi,
         'formset': formset
     }

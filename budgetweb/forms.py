@@ -62,10 +62,18 @@ class RecetteForm(forms.ModelForm):
 
 class DepenseForm(forms.ModelForm):
 
-    montantDC = forms.DecimalField(widget=forms.NumberInput(
-                         attrs={'style': 'width:100px;',
-                                'step': ''}))
-    montantAE = montantCP = montantDC
+    montantDC = forms.DecimalField(label='Montant DC',
+                                   widget=forms.NumberInput(
+                                     attrs={'style': 'width:100px;',
+                                            'step': ''}))
+    montantAE = forms.DecimalField(label='Montant AE',
+                                   widget=forms.NumberInput(
+                                     attrs={'style': 'width:100px;',
+                                            'step': ''}))
+    montantCP = forms.DecimalField(label='Montant CP',
+                                   widget=forms.NumberInput(
+                                     attrs={'style': 'width:100px;',
+                                            'step': ''}))
 
     class Meta:
         model = Depense

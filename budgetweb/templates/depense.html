@@ -11,7 +11,7 @@
     <form method="POST" action="{% url 'depense' pfiid=PFI.id%}">
       {% csrf_token %}
       {{ formset.management_form }}
-    <table id='supertable' border=1>
+    <table class="formset" id='supertable' border=1>
         {% for form in formset %}
         {% if forloop.counter = 1 %}
         <thead>
@@ -40,6 +40,8 @@
 </div>
 {% endblock %}
 {% block foot-javascript %}
+<script src="{% static 'js/moment/moment-with-locales.min.js' %}"></script>
+<script src="{% static 'js/bootstrap-datetimepicker.min.js' %}"></script>
 <script src="{% static 'js/budgetweb.js' %}"></script>
 <script src="{% static 'js/formset.js' %}"></script>
 {% endblock %}
