@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block head-additional %}
+  <link rel="stylesheet" href="{% static 'css/budgetweb.css' %}"/>
+{% endblock %}
+
+{% block content %}
+  <div class="col-md-12">
+    {% include "detailspfi.html" %}
+
+    <table class="table-pluri">
+      <thead>
+        <tr>
+          <td>PFI</td>
+          <td>CF</td>
+          <td>Fonds</td>
+          <td>Année</td>
+          <td>Domaine Fonctionnel</td>
+          <td>Nature Comptable</td>
+          <td>Période Budgétaire</td>
+          <td>M. DC</td>
+          <td>M. CP</td>
+          <td>M. AE</td>
+          <td>Comm.</td>
+          <td>PJ.</td>
+        </tr>
+      </thead>
+      <tbody>
+        {% for depense in listeDepense %}
+          <tr>
+            <td>{{ depense.pfi }}</td>
+            <td>{{ depense.structure }}</td>
+            <td>{{ depense.fonds }}</td>
+            <td>{{ depense.annee }}</td>
+            <td>{{ depense.domainefonctionnel }}</td>
+            <td>{{ depense.naturecomptabledepense }}</td>
+            <td>{{ depense.periodebudget }}</td>
+            <td>{{ depense.montantDC }} &euro;</td>
+            <td>{{ depense.montantCP }} &euro;</td>
+            <td>{{ depense.montantAE }} &euro;</td>
+            <td>{{ depense.commentaire }}</td>
+            <td>{{ depense.lienpiecejointe }}</td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="12">Aucune recette trouvé pour cette PFI</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <br />
+    <br />
+    <table class="table-pluri">
+      <thead>
+        <tr>
+          <td>PFI</td>
+          <td>CF</td>
+          <td>Année</td>
+          <td>Domaine Fonctionnel</td>
+          <td>Nature Comptable</td>
+          <td>Période Budgétaire</td>
+          <td>M. DC</td>
+          <td>M. AR</td>
+          <td>M. RE</td>
+          <td>Comm.</td>
+          <td>PJ.</td>
+        </tr>
+      </thead>
+      <tbody>
+        {% for recette in listeRecette %}
+          <tr>
+            <td>{{ recette.pfi }}</td>
+            <td>{{ recette.structure }}</td>
+            <td>{{ recette.annee }}</td>
+            <td>{{ recette.domainefonctionnel }}</td>
+            <td>{{ recette.naturecomptablerecette }}</td>
+            <td>{{ recette.periodebudget }}</td>
+            <td>{{ recette.montantDC }} &euro;</td>
+            <td>{{ recette.montantAR }} &euro;</td>
+            <td>{{ recette.montantRE }} &euro;</td>
+            <td>{{ recette.commentaire }}</td>
+            <td>{{ recette.lienpiecejointe }}</td>
+          </tr>
+          {% empty %}
+            <tr><td colspan="11">Aucune recette trouvé pour cette PFI</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </form>
+</div>
+{% endblock %}
+{% block foot-javascript %}
+<script src="{% static 'js/budgetweb.js' %}"></script>
+<script src="{% static 'js/moment/moment-with-locales.min.js' %}"></script>
+<script src="{% static 'js/bootstrap-datetimepicker.min.js' %}"></script>
+{% endblock %}

@@ -8,33 +8,34 @@
 {% block content %}
   <div class="col-md-12">
     {% include "detailspfi.html" %}
-    <form method="POST" action="{% url 'depense' pfiid=PFI.id%}">
-      {% csrf_token %}
-      {{ formset.management_form }}
-    <table class="formset" id='supertable' border=1>
+    <form id="formset" method="POST" action="{% url 'depense' pfiid=PFI.id%}">
+    {% csrf_token %}
+    <table class='supertable' id='supertable' border=1>
         {% for form in formset %}
         {% if forloop.counter = 1 %}
-        <thead>
-            <tr>
-            {% for field in form.visible_fields %}
+          <thead>
+              <tr>
+              {% for field in form.visible_fields %}
                 <th style="white-space:nowrap;">{{ field.label }}</th>
-            {% endfor %}
-            </tr>
-        </thead>
-          <tbody>
-        {% endif %}
-        <tr>
-            {% for field in form.visible_fields %}
-                <td style="line-height:1; white-space:nowrap;" >{{ field }}</td>
-            {% endfor %}
+              {% endfor %}
+                <th>Suppr.</th>
+              </tr>
+          </thead>
+        <tbody>
+          {% endif %}
+          <tr>
             {% for hidden in form.hidden_fields %}
-			    {{ hidden }}
-			{% endfor %}
-			        </tr>
+             {{ hidden }}
+            {% endfor %}
+            {% for field in form.visible_fields %}
+                    <td style="line-height:1; white-space:nowrap;" >{{ field }}</td>
+                {% endfor %}
+              <td align='center'>&nbsp;</td>
+  			  </tr>
         {% endfor %}
         </tbody>
     </table>
-    <input type="button" value="Ajouter" id="add_form">
+    {{ formset.management_form }}
     <button type="submit" class="save btn btn-primary">Enregistrer</button>
   </form>
 </div>
@@ -43,5 +44,11 @@
 <script src="{% static 'js/moment/moment-with-locales.min.js' %}"></script>
 <script src="{% static 'js/bootstrap-datetimepicker.min.js' %}"></script>
 <script src="{% static 'js/budgetweb.js' %}"></script>
-<script src="{% static 'js/formset.js' %}"></script>
+<script src="{% static 'js/jquery.formset.js' %}"></script>
+<script>
+    $('#formset tbody tr').formset({
+        addText: 'add link',
+        deleteText: '<span class="glyphicon glyphicon-trash"></span>',
+    });
+</script>
 {% endblock %}

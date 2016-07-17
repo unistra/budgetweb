@@ -59,6 +59,9 @@ urlpatterns = [
     # Pluriannuel
     url(r'^pluriannuel/(?P<pfiid>\w+)$', views.pluriannuel,
         name="pluriannuel"),
+    # Détails d'un PFI
+    url(r'^detailspfi/(?P<pfiid>\w+)$', views.detailspfi,
+        name="detailspfi"),
     url(r'^depense/(?P<pfiid>\w+)/', views.depense, name="depense"),
     url(r'^recette/(?P<pfiid>\w+)/', views.recette, name="recette"),
 

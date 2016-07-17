@@ -36,7 +36,8 @@ class RecetteForm(forms.ModelForm):
         widgets = {
             'commentaire': forms.Textarea(attrs={'cols': 40, 'rows': 2}),
             'annee': forms.NumberInput(attrs={
-                        'style': 'width:50px;-moz-appearance: textfield;'}),
+                        'style': 'width:50px;-moz-appearance: textfield;',
+                        'class': 'toto'}),
             'pfi': forms.HiddenInput(),
             'structure': forms.HiddenInput(),
             'periodebudget': forms.HiddenInput(),
@@ -85,7 +86,8 @@ class DepenseForm(forms.ModelForm):
             'commentaire': forms.Textarea(attrs={'cols': 40, 'rows': 2}),
             'pfi': forms.HiddenInput(),
             'annee': forms.NumberInput(attrs={
-                        'style': 'width:50px;-moz-appearance: textfield;'}),
+                        'style': 'width:50px;-moz-appearance: textfield;',
+                        'class': 'toto'}),
             'structure': forms.HiddenInput(),
             'periodebudget': forms.HiddenInput(),
         }
@@ -126,5 +128,4 @@ class PlanFinancementPluriForm(forms.ModelForm):
 
         if date_fin and date_debut and date_fin < date_debut:
             raise forms.ValidationError(
-                "La date de début est inférieur à la date de fin !"
-            )
+                "La date de début est inférieur à la date de fin !")

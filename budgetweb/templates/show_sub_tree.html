@@ -2,8 +2,8 @@
 {% load staticfiles %}
 {% for node in listePFI %}
    <li>
-  	<span style="width:160px;" toto="{{ node.code }}">
-      {{ node.code }}
+  	<span style="width:160px;" class="pfi">
+      <a href="{% url 'detailspfi' pfiid=node.id %}">{{ node.code }}</a>
       {% if node.is_pluriannuel %}
       <a href="{% url 'pluriannuel' pfiid=node.id %}">D.&amp; R.</a>&nbsp;
       {% else %}
@@ -27,7 +27,7 @@
 {% endfor %}
 {% for node in listeCF %}
    <li>
-  	<span style="width:auto;" toto="{{ node.code }}">
+  	<span style="width:auto;" class="cf" toto="{{ node.code }}">
   		<i class="glyphicon glyphicon-plus"></i>
   		{{ node.code }}
   	</span>

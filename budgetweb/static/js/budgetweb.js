@@ -13,9 +13,9 @@ function initDateTimePicker() {
 $(document).ready(function() {
 	initDateTimePicker();
 
-	$('.tree li:has(ul)').addClass('parent_li').find(' > span').attr('title', 'Ouvrir cette branche');
-	$('span').unbind('click');
-	$('.tree li.parent_li').on('click', 'span', function (e) {
+	$('.tree li:has(ul)').addClass('parent_li').find(' > span.cf').attr('title', 'Ouvrir cette branche');
+	$('span.cf').unbind('click');
+	$('.tree li.parent_li').on('click', 'span.cf', function (e) {
 		var children = $(this).parent('li.parent_li').find(' > ul > li');
 		if (children.is(":visible")) {
 			children.hide('fast');
