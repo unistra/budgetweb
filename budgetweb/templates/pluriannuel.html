@@ -56,7 +56,7 @@
 					<td rowspan="3">CP</td>
 					{% for value in rangeYear %}
 						<td nowrap><label class="pluri">Fonct. :</label><input type="text" size="10" value="100 000 &euro;"></td>
-						<td rowspan="4" class="table-details">Détails (obligatoire)</td>
+						<td rowspan="4" class="table-details"><a href="{% url 'depense' pfiid=PFI.id %}">Détails (obligatoire)</a></td>
 					{% endfor %}
 					<td nowrap><label class="pluri">Total :</label><input type="text" size="10" value="100 000 &euro;"></td>
 				</tr>
@@ -90,7 +90,7 @@
 					<td rowspan="3">AE</td>
 					{% for value in rangeYear %}
 						<td nowrap><label class="pluri">Fonct. :</label><input type="text" size="10" value="100 000 &euro;"></td>
-						<td rowspan="4" class="table-details">Détails (obligatoire)</td>
+						<td rowspan="4" class="table-details"><a href="{% url 'depense' pfiid=PFI.id %}">Détails (obligatoire)</a></td>
 					{% endfor %}
 					<td nowrap><label class="pluri">Total :</label><input type="text" size="10" value="100 000 &euro;"></td>
 				</tr>
@@ -124,7 +124,7 @@
 					<td rowspan="3">DC</td>
 					{% for value in rangeYear %}
 						<td nowrap><label class="pluri">Fonct. :</label><input type="text" size="10" value="100 000 &euro;"></td>
-						<td rowspan="4" class="table-details">Détails (obligatoire)</td>
+						<td rowspan="4" class="table-details"><a href="{% url 'depense' pfiid=PFI.id %}">Détails (obligatoire)</a></td>
 					{% endfor %}
 					<td nowrap><label class="pluri">Total :</label><input type="text" size="10" value="100 000 &euro;"></td>
 				</tr>
@@ -174,7 +174,7 @@
 					<td rowspan="3">RE</td>
 					{% for value in rangeYear %}
 						<td nowrap><label class="pluri">F + I :</label><input type="text" size="10" value="100 000 &euro;"></td>
-						<td rowspan="3" class="table-details">Détails (obligatoire)</td>
+						<td rowspan="3" class="table-details"><a href="{% url 'recette' pfiid=PFI.id %}">Détails (obligatoire)</a></td>
 					{% endfor %}
 				</tr>
 				<tr>
@@ -198,7 +198,7 @@
 					<td rowspan="3">DC</td>
 					{% for value in rangeYear %}
 						<td nowrap><label class="pluri">F + I :</label><input type="text" size="10" value="100 000 &euro;"></td>
-						<td rowspan="3" class="table-details">Détails (obligatoire)</td>
+						<td rowspan="3" class="table-details"><a href="{% url 'recette' pfiid=PFI.id %}">Détails (obligatoire)</a></td>
 					{% endfor %}
 				</tr>
 				<tr>
@@ -222,7 +222,7 @@
 					<td rowspan="3">AR</td>
 					{% for value in rangeYear %}
 						<td nowrap><label class="pluri">F + I :</label><input type="text" size="10" value="100 000 &euro;"></td>
-						<td rowspan="3" class="table-details">Détails (obligatoire)</td>
+						<td rowspan="3" class="table-details"><a href="{% url 'recette' pfiid=PFI.id %}">Détails (obligatoire)</a></td>
 					{% endfor %}
 				</tr>
 				<tr>

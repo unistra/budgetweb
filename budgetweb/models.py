@@ -34,12 +34,13 @@ class DomaineFonctionnel(models.Model):
     Gestion des domaines fonctionnels. En cours de précisions
     """
     code = models.CharField('Code', max_length=100, default="", unique=True)
-    label = models.CharField('Libellé', max_length=100, default="",
-                             unique=True)
+    label = models.CharField('Libellé', max_length=100, default="")
+    label_court = models.CharField('Libellé court', max_length=100, default="",
+                                   null=True, blank=True,)
     is_active = models.BooleanField('Actif', max_length=100, default=True)
 
     def __str__(self):
-        return '{0.code} -- {0.label}'.format(self)
+        return '{0.label_court}'.format(self)
 
 
 class Structure(models.Model):

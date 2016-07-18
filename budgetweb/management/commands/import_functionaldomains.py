@@ -18,7 +18,10 @@ class Command(BaseCommand):
                 total = 0
                 for row in reader:
                     created = DomaineFonctionnel.objects.update_or_create(
-                        code=row[0], label=row[1], defaults={'is_active': True}
+                        code=row[0], defaults={'is_active': True,
+                                               'label': row[1],
+                                               'label_court': row[2]}
                     )[1]
                     total += int(created)
-                print('Functional Domains created with %s : %s' % (filename, total))
+                print('Functional Domains created with %s : %s'
+                      % (filename, total))
