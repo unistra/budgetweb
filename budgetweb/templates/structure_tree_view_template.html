@@ -1,9 +1,0 @@
-      {% if node.parent %} 
-          {%with node=node.parent template_name="structure_tree_view_template.html" %}
-                   {%include template_name%}
-          {%endwith%}
-      {% endif  %}
-<table border = 5 bordercolor=blue>
-   <tr><td>     {{node.name}} -- {{node.label}} 
-   </tr></td>
-</table>     
