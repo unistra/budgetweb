@@ -7,8 +7,8 @@
       {% if node.is_pluriannuel %}
       <a href="{% url 'pluriannuel' pfiid=node.id %}">D.&amp; R.</a>&nbsp;
       {% else %}
-        <a href="{% url 'depense' pfiid=node.id %}">D</a>&nbsp;
-        <a href="{% url 'recette' pfiid=node.id %}">R</a>
+        <a href="{% url 'depense' pfiid=node.id annee=currentYear %}">D</a>&nbsp;
+        <a href="{% url 'recette' pfiid=node.id annee=currentYear %}">R</a>
       {% endif %}
   	</span>
     {% if typeAffichage == "gbcp" %}

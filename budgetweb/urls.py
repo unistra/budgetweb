@@ -61,8 +61,10 @@ urlpatterns = [
     # Détails d'un PFI
     url(r'^detailspfi/(?P<pfiid>\w+)$', views.detailspfi,
         name="detailspfi"),
-    url(r'^depense/(?P<pfiid>\w+)/', views.depense, name="depense"),
-    url(r'^recette/(?P<pfiid>\w+)/', views.recette, name="recette"),
+    url(r'^depense/(?P<pfiid>\w+)/(?P<annee>\w+)$',
+        views.depense, name="depense"),
+    url(r'^recette/(?P<pfiid>\w+)/(?P<annee>\w+)$',
+        views.recette, name="recette"),
 
     url(r'^admin/', include(admin.site.urls)),
 

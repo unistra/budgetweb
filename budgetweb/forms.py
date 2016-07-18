@@ -46,6 +46,7 @@ class RecetteForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         pfi = kwargs.pop('pfi')
         periodebudget = kwargs.pop('periodebudget')
+        annee = kwargs.pop('annee')
         super(RecetteForm, self).__init__(*args, **kwargs)
         is_fleche = pfi.is_fleche
         structure = pfi.structure
@@ -58,7 +59,7 @@ class RecetteForm(forms.ModelForm):
         self.fields['periodebudget'].initial = periodebudget.pk
         self.fields['periodebudget'].widget.attrs['readonly'] = True
         self.fields['annee'].widget.attrs['readonly'] = True
-        self.fields['annee'].initial = 2017
+        self.fields['annee'].initial = annee
 
 
 class DepenseForm(forms.ModelForm):
@@ -95,6 +96,7 @@ class DepenseForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         pfi = kwargs.pop('pfi')
         periodebudget = kwargs.pop('periodebudget')
+        annee = kwargs.pop('annee')
         super(DepenseForm, self).__init__(*args, **kwargs)
         is_fleche = pfi.is_fleche
         structure = pfi.structure
@@ -107,7 +109,7 @@ class DepenseForm(forms.ModelForm):
         self.fields['periodebudget'].initial = periodebudget.pk
         self.fields['periodebudget'].widget.attrs['readonly'] = True
         self.fields['annee'].widget.attrs['readonly'] = True
-        self.fields['annee'].initial = 2017
+        self.fields['annee'].initial = annee
 
 
 class PlanFinancementPluriForm(forms.ModelForm):

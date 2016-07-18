@@ -8,7 +8,7 @@
 {% block content %}
   <div class="col-md-12">
     {% include "detailspfi.html" %}
-    <form id="formset" method="POST" action="{% url 'depense' pfiid=PFI.id%}">
+    <form id="formset" method="POST" action="{% url 'depense' pfiid=PFI.id annee=currentYear %}">
     {% csrf_token %}
     <table class='supertable' id='supertable' border=1>
         {% for form in formset %}

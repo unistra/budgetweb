@@ -25,7 +25,7 @@ from django.shortcuts import get_object_or_404, redirect
 #from django.core.urlresolvers import reverse
 
 
-from budgetweb.libs.node import generateTree
+from budgetweb.libs.node import getCurrentYear, generateTree
 from .forms import (BaseRecetteFormSet, DepenseForm, PlanFinancementPluriForm,
                     RecetteForm)
 from .models import (Authorisation, Depense, DomaineFonctionnel, PeriodeBudget,
@@ -47,17 +47,6 @@ logger = logging.getLogger(__name__)
 # @login_required
 def home(request):
     return redirect('show_tree', type_affichage='gbcp')
-
-
-def current_budget():
-    return PeriodeBudget.objects.filter(is_active=True).first()\
-        if PeriodeBudget.objects.filter(is_active=True).first()\
-        else 'Pas de période de budget ouverte'
-#
-#"""-------------------------------------------------
-# class Authorisation(models.Model):
-#
-#-----------------------------------------------------"""
 
 
 @login_required
@@ -290,7 +279,8 @@ def authorisation_list(request):
 def show_tree(request, type_affichage):
     listeCF = generateTree(request)
     return render(request, 'showtree.html', {'listeCF': listeCF,
-                                             'typeAffichage': type_affichage})
+                                             'typeAffichage': type_affichage,
+                                             'currentYear': getCurrentYear})
 
 
 @login_required
@@ -325,7 +315,8 @@ def show_sub_tree(request, type_affichage, structid):
                                 somme=Sum('montant_dc'))
 
     context = {'listeCF': listeCF, 'listePFI': listePFI,
-               'typeAffichage': type_affichage}
+               'typeAffichage': type_affichage,
+               'currentYear': getCurrentYear}
     return render(request, 'show_sub_tree.html', context)
 
 
@@ -348,7 +339,9 @@ def pluriannuel(request, pfiid):
         while start <= pfi.date_fin.year:
             range_year[start] = True
             start = start + 1
-    context = {'PFI': pfi, 'form': form, 'rangeYear': sorted(range_year)}
+    context = {'PFI': pfi, 'form': form,
+               'rangeYear': sorted(range_year),
+               'currentYear': getCurrentYear}
     return render(request, 'pluriannuel.html', context)
 
 
@@ -361,13 +354,14 @@ def modelformset_factory_with_kwargs(cls, **formset_kwargs):
 
 
 @login_required
-def depense(request, pfiid):
+def depense(request, pfiid, annee):
     pfi = PlanFinancement.objects.get(pk=pfiid)
     periodebudget = PeriodeBudget.objects.filter(is_active=True).first()
     DepenseFormSet = modelformset_factory(
         Depense,
         form=modelformset_factory_with_kwargs(DepenseForm, pfi=pfi,
-                                              periodebudget=periodebudget),
+                                              periodebudget=periodebudget,
+                                              annee=annee),
         exclude=[],
         extra=1,
         can_delete=True
@@ -383,13 +377,14 @@ def depense(request, pfiid):
 
     context = {
         'PFI': pfi,
-        'formset': formset
+        'formset': formset,
+        'currentYear': getCurrentYear,
     }
     return render(request, 'depense.html', context)
 
 
 @login_required
-def recette(request, pfiid):
+def recette(request, pfiid, annee):
     pfi = PlanFinancement.objects.get(pk=pfiid)
     periodebudget = PeriodeBudget.objects.filter(is_active=True).first()
     RecetteFormSet = modelformset_factory(
@@ -411,7 +406,8 @@ def recette(request, pfiid):
 
     context = {
         'PFI': pfi,
-        'formset': formset
+        'formset': formset,
+        'currentYear': getCurrentYear,
     }
     return render(request, 'recette.html', context)
 
