@@ -105,7 +105,12 @@ def test():
     env.goal = 'test'
     env.socket_port = '8037'
     env.socket_host = '127.0.0.1'
-    env.map_settings = {}
+    env.map_settings = {
+        'default_db_host': "DATABASES['default']['HOST']",
+        'default_db_user': "DATABASES['default']['USER']",
+        'default_db_password': "DATABASES['default']['PASSWORD']",
+        'default_db_name': "DATABASES['default']['NAME']",
+    }
     execute(build_env)
 
 
