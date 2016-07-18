@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
 from django.forms import formset_factory
 from django.forms.models import modelformset_factory
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, render_to_response
 
 
@@ -369,16 +370,15 @@ def depense(request, pfiid):
         form=modelformset_factory_with_kwargs(DepenseForm, pfi=pfi,
                                               periodebudget=periodebudget),
         exclude=[],
-        extra=1
+        extra=1,
+        can_delete=True
     )
     formset = DepenseFormSet(queryset=Depense.objects.filter(pfi=pfi))
     if request.method == "POST":
         formset = DepenseFormSet(request.POST)
         if formset.is_valid():
-            for data in formset.cleaned_data:
-                if data:
-                    obj = Depense(**data)
-                    obj.save()
+            formset.save()
+            return HttpResponseRedirect('/detailspfi/%s' % pfi.pk)
         else:
             print('EEE : %s' % formset.errors)
 
@@ -398,16 +398,15 @@ def recette(request, pfiid):
         form=modelformset_factory_with_kwargs(RecetteForm, pfi=pfi,
                                               periodebudget=periodebudget),
         exclude=[],
-        extra=1
+        extra=1,
+        can_delete=True
     )
     formset = RecetteFormSet(queryset=Recette.objects.filter(pfi=pfi))
     if request.method == "POST":
         formset = RecetteFormSet(request.POST)
         if formset.is_valid():
-            for data in formset.cleaned_data:
-                if data:
-                    obj = Recette(**data)
-                    obj.save()
+            formset.save()
+            return HttpResponseRedirect('/detailspfi/%s' % pfi.pk)
         else:
             print('EEE : %s' % formset.errors)
 
