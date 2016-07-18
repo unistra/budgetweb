@@ -38,7 +38,7 @@
 	</form>
 </fieldset>
 	<fieldset>
-		<legend>Liste des dépenses {{ rangeYear }}</legend>
+		<legend>Liste des dépenses</legend>
 		<table class='table-pluri'>
 			<thead>
 				<tr>
@@ -52,8 +52,8 @@
 			</thead>
 			<tbody>
 				<tr>
-					<td rowspan="3">BP</td>
-					<td rowspan="3">CP</td>
+					<td rowspan="4">BP</td>
+					<td rowspan="4">CP</td>
 					{% for value in rangeYear %}
 						<td nowrap><label class="pluri">Fonct. :</label><input type="text" size="10" value="100 000 &euro;"></td>
 						<td rowspan="4" class="table-details"><a href="{% url 'depense' pfiid=PFI.id %}">Détails (obligatoire)</a></td>
@@ -73,7 +73,7 @@
 					<td nowrap><label class="pluri">Total :</label><input type="text" size="10" value="100 000 &euro;"></td>
 				</tr>
 				<tr>
-					<td colspan="2">&nbsp;</td>
+					
 					{% for value in rangeYear %}
 						<td nowrap><label class="pluri">Total. :</label><input type="text" size="10" value="100 000 &euro;"></td>
 					{% endfor %}
@@ -86,8 +86,8 @@
 					{% endfor %}
 				</tr>
 				<tr>
-					<td rowspan="3">BP</td>
-					<td rowspan="3">AE</td>
+					<td rowspan="4">BP</td>
+					<td rowspan="4">AE</td>
 					{% for value in rangeYear %}
 						<td nowrap><label class="pluri">Fonct. :</label><input type="text" size="10" value="100 000 &euro;"></td>
 						<td rowspan="4" class="table-details"><a href="{% url 'depense' pfiid=PFI.id %}">Détails (obligatoire)</a></td>
@@ -107,7 +107,6 @@
 					<td nowrap><label class="pluri">Total :</label><input type="text" size="10" value="100 000 &euro;"></td>
 				</tr>
 				<tr>
-					<td colspan="2">&nbsp;</td>
 					{% for value in rangeYear %}
 						<td nowrap><label class="pluri">Total. :</label><input type="text" size="10" value="100 000 &euro;"></td>
 					{% endfor %}
@@ -120,8 +119,8 @@
 					{% endfor %}
 				</tr>
 				<tr>
-					<td rowspan="3">BP</td>
-					<td rowspan="3">DC</td>
+					<td rowspan="4">BP</td>
+					<td rowspan="4">DC</td>
 					{% for value in rangeYear %}
 						<td nowrap><label class="pluri">Fonct. :</label><input type="text" size="10" value="100 000 &euro;"></td>
 						<td rowspan="4" class="table-details"><a href="{% url 'depense' pfiid=PFI.id %}">Détails (obligatoire)</a></td>
@@ -141,7 +140,6 @@
 					<td nowrap><label class="pluri">Total :</label><input type="text" size="10" value="100 000 &euro;"></td>
 				</tr>
 				<tr>
-					<td colspan="2">&nbsp;</td>
 					{% for value in rangeYear %}
 						<td nowrap><label class="pluri">Total. :</label><input type="text" size="10" value="100 000 &euro;"></td>
 					{% endfor %}
