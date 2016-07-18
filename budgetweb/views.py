@@ -390,7 +390,8 @@ def recette(request, pfiid, annee):
     RecetteFormSet = modelformset_factory(
         Recette,
         form=modelformset_factory_with_kwargs(RecetteForm, pfi=pfi,
-                                              periodebudget=periodebudget),
+                                              periodebudget=periodebudget,
+                                              annee=annee),
         exclude=[],
         extra=1,
         can_delete=True
