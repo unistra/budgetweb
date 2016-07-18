@@ -29,28 +29,23 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">budgetweb</a>
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="#">Home</a></li>
+                    <li class="active"><a href="{% url 'home' %}">Home</a></li>
                        <li class="dropdown">
-                       <a class="dropdown-toggle" data-toggle="dropdown" href="#"> Menu BudgetWeb
+                       <a class="dropdown-toggle" data-toggle="dropdown" href="#">BudgetWeb
                        <span class="caret"></span></a>
                        <ul class="dropdown-menu">
-                            <li><a href="{% url 'liste_pfi_avec_depenses_recettes'%}">Menu PFI </a></li>
                             <li><a href="{% url 'show_tree' type_affichage='gbcp'%}">Menu GBCP</a></li>
                             <li><a href="{% url 'show_tree' type_affichage='dc'%}">Menu Droit Constaté</a></li>
                        </ul>
                     </li>
-		    {% if user.is_authenticated %}
-		    <li id="logout-menu"><a href="/accounts/logout/"><span class="glyphicon glyphicon-log-out"></span> ({{ request.user.username }})</a></li>
-		    {% else %}
-		    <li id="login-menu"><a href="/accounts/login/"><span class="glyphicon  glyphicon-log-out"></span></a></li>
-		    {% endif %}
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#contact">Contact</a></li>
-
+            		    {% if user.is_authenticated %}
+            		    <li id="logout-menu"><a href="/accounts/logout/"><span class="glyphicon glyphicon-log-out"></span> ({{ request.user.username }})</a></li>
+            		    {% else %}
+            		    <li id="login-menu"><a href="/accounts/login/"><span class="glyphicon  glyphicon-log-out"></span></a></li>
+            		    {% endif %}
                 </ul>
             </div>
         </div>

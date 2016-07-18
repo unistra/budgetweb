@@ -45,7 +45,7 @@ logger = logging.getLogger(__name__)
 
 # @login_required
 def home(request):
-    return render_to_response('base.html')
+    return redirect('show_tree', type_affichage='gbcp')
 
 
 def current_budget():
@@ -170,14 +170,6 @@ def authorisation_list(request):
 #
 #    return render(request, 'structure_lists.html', {'reponses':mystructures})
 #
-
-@login_required
-def liste_pfi_avec_depenses_recettes(request):
-    mypfi = PlanFinancement.objects.order_by('societe','cfassoc','ccassoc','cpassoc','myid')
-    mydepenses = Depense.objects.all()
-    myrecettes = Recette.objects.all()
-    return render(request, 'planfinancementavecdeprec_lists.html', {'reponses':mypfi,'depenses':mydepenses,'recettes':myrecettes})
-
 
 #---------------------------------------------------------
 # AJAX

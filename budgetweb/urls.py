@@ -25,7 +25,6 @@ urlpatterns = [
 ## classe PlanFinancement
 #    url(r'^planfinancement/new/$', views.planfinancement_new, name='planfinancement_new'),
 #    url(r'^planfinancement/$', views.planfinancement_list,name='planfinancement_list'),
-    url(r'^planfinancementavecrecdep/$', views.liste_pfi_avec_depenses_recettes,name='liste_pfi_avec_depenses_recettes'),
 #    url(r'^planfinancement/(?P<pkpfi>[0-9]+)/detail/$', views.planfinancement_detail, name='planfinancement_detail'),
 #    url(r'^planfinancement/(?P<pkpfi>[0-9]+)/delete/$', views.planfinancement_delete, name='planfinancement_delete'),
 #    url(r'^planfinancement/(?P<pkpfi>[0-9]+)/edit/$', views.planfinancement_edit, name='planfinancement_edit'),
@@ -50,7 +49,7 @@ urlpatterns = [
 #    url(r'^ajax/ajax_add_enveloppetype/(?P<pkstr1>[0-9]+)/$', views.ajax_add_enveloppetype,name="ajax_add_enveloppetype"),
 #    url(r'^ajax/ajax_recette_displaycompte/(?P<pkstr1>[0-9]+)/$', views.ajax_recette_displaycompte ,name="ajax_recette_displaycompte"),
 
-# Base de l'arbre.
+    # Base de l'arbre.
     url(r'^showtree/(?P<type_affichage>\w+)/$', views.show_tree,
         name="show_tree"),
     # Affichage AJAX.
