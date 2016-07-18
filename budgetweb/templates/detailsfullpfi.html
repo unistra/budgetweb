@@ -34,17 +34,30 @@
             <td>{{ depense.fonds }}</td>
             <td>{{ depense.annee }}</td>
             <td>{{ depense.domainefonctionnel }}</td>
-            <td>{{ depense.naturecomptabledepense }}</td>
+            <td>
+              <b>Enveloppe :</b> {{ depense.naturecomptabledepense.enveloppe }}<br />
+              <b>Code de la nature comptable secondaire :</b> {{ depense.naturecomptabledepense.code_nature_comptable }}<br />
+              <b>Désignation de la nature comptable secondaire :</b>{{ depense.naturecomptabledepense.label_nature_comptable }}<br />
+              <b>Code du compte budgétaire :</b> {{ depense.naturecomptabledepense.code_compte_budgetaire }}<br />
+              <b>Libellé du compte budgétaire :</b> {{ depense.naturecomptabledepense.label_compte_budgetaire }}<br />
+            </td>
             <td>{{ depense.periodebudget }}</td>
-            <td>{{ depense.montantDC }} &euro;</td>
-            <td>{{ depense.montantCP }} &euro;</td>
-            <td>{{ depense.montantAE }} &euro;</td>
+            <td nowrap>{{ depense.montantDC }} &euro;</td>
+            <td nowrap>{{ depense.montantCP }} &euro;</td>
+            <td nowrap>{{ depense.montantAE }} &euro;</td>
             <td>{{ depense.commentaire }}</td>
             <td>{{ depense.lienpiecejointe }}</td>
           </tr>
         {% empty %}
           <tr><td colspan="12">Aucune recette trouvé pour cette PFI</td></tr>
         {% endfor %}
+        <tr>
+          <td colspan="7">&nbsp;</td>
+          <td nowrap>{{ sommeDepense.sommeDC }} &euro;</td>
+          <td nowrap>{{ sommeDepense.sommeCP }} &euro;</td>
+          <td nowrap>{{ sommeDepense.sommeAE }} &euro;</td>
+          <td colspan="2">&nbsp;</td>
+        </tr>
       </tbody>
     </table>
     <br />
@@ -72,17 +85,32 @@
             <td>{{ recette.structure }}</td>
             <td>{{ recette.annee }}</td>
             <td>{{ recette.domainefonctionnel }}</td>
-            <td>{{ recette.naturecomptablerecette }}</td>
+            <td>
+              <b>Enveloppe :</b> {{ recette.naturecomptablerecette.enveloppe }}<br />
+              <b>Code du fonds :</b> {{ recette.naturecomptablerecette.code_fonds }}<br />
+              <b>Désignation du fonds :</b> {{ recette.naturecomptablerecette.label_fonds }}<br />
+              <b>Code de la nature comptable secondaire :</b> {{ recette.naturecomptablerecette.code_nature_comptable }}<br />
+              <b>Désignation de la nature comptable secondaire :</b>{{ recette.naturecomptablerecette.label_nature_comptable }}<br />
+              <b>Code du compte budgétaire :</b> {{ recette.naturecomptablerecette.code_compte_budgetaire }}<br />
+              <b>Libellé du compte budgétaire :</b> {{ recette.naturecomptablerecette.label_compte_budgetaire }}<br />
+            </td>
             <td>{{ recette.periodebudget }}</td>
-            <td>{{ recette.montantDC }} &euro;</td>
-            <td>{{ recette.montantAR }} &euro;</td>
-            <td>{{ recette.montantRE }} &euro;</td>
+            <td nowrap>{{ recette.montantDC }} &euro;</td>
+            <td nowrap>{{ recette.montantAR }} &euro;</td>
+            <td nowrap>{{ recette.montantRE }} &euro;</td>
             <td>{{ recette.commentaire }}</td>
             <td>{{ recette.lienpiecejointe }}</td>
           </tr>
           {% empty %}
             <tr><td colspan="11">Aucune recette trouvé pour cette PFI</td></tr>
         {% endfor %}
+          <tr>
+            <td colspan="6">&nbsp;</td>
+            <td nowrap>{{ sommeRecette.sommeDC }} &euro;</td>
+            <td nowrap>{{ sommeRecette.sommeAR }} &euro;</td>
+            <td nowrap>{{ sommeRecette.sommeRE }} &euro;</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
       </tbody>
     </table>
   </form>

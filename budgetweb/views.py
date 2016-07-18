@@ -429,12 +429,19 @@ def recette(request, pfiid):
 @login_required
 def detailspfi(request, pfiid):
     pfi = PlanFinancement.objects.get(pk=pfiid)
-    listeDepense = Depense.objects.filter(pfi=pfi)
-    listeRecette = Recette.objects.filter(pfi=pfi)
-
+    listeDepense = Depense.objects.filter(
+        pfi=pfi).prefetch_related('naturecomptabledepense')
+    listeRecette = Recette.objects.filter(
+        pfi=pfi).prefetch_related('naturecomptablerecette')
+    sommeDepense = listeDepense.aggregate(sommeDC=Sum('montantDC'),
+                                          sommeAE=Sum('montantAE'),
+                                          sommeCP=Sum('montantCP'))
+    sommeRecette = listeRecette.aggregate(sommeDC=Sum('montantDC'),
+                                          sommeAR=Sum('montantAR'),
+                                          sommeRE=Sum('montantRE'))
     context = {
         'PFI': pfi,
-        'listeDepense': listeDepense,
-        'listeRecette': listeRecette,
+        'listeDepense': listeDepense, 'listeRecette': listeRecette,
+        'sommeDepense': sommeDepense, 'sommeRecette': sommeRecette,
     }
     return render(request, 'detailsfullpfi.html', context)

@@ -58,7 +58,7 @@ class Structure(models.Model):
         ordering = ['code']
 
     def __str__(self):
-        return '{0.code} -- {0.label}'.format(self)
+        return '{0.code}'.format(self)
 
 
 class PlanFinancement(models.Model):
@@ -86,7 +86,7 @@ class PlanFinancement(models.Model):
         ordering = ['label']
 
     def __str__(self):
-        return '{0.code} -- {0.label} ({0.structure})'.format(self)
+        return '{0.code}-({0.structure})'.format(self)
 
 
 class NatureComptableDepense(models.Model):
