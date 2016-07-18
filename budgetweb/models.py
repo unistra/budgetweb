@@ -139,12 +139,12 @@ class Depense(models.Model):
                             verbose_name='Programme de financement')
     structure = models.ForeignKey('Structure',
                                   verbose_name='Centre financier')
-    montantDC = models.DecimalField(max_digits=12, decimal_places=2,
-                                    blank=True, null=True)
-    montantCP = models.DecimalField(verbose_name='Montant Crédit de Paiement',
-                                    max_digits=12, decimal_places=2,
-                                    blank=True, null=True)
-    montantAE = models.DecimalField(
+    montant_dc = models.DecimalField(max_digits=12, decimal_places=2,
+                                     blank=True, null=True)
+    montant_cp = models.DecimalField(verbose_name='Montant Crédit de Paiement',
+                                     max_digits=12, decimal_places=2,
+                                     blank=True, null=True)
+    montant_ae = models.DecimalField(
         verbose_name='Montant Autorisation d\'Engagement',
         max_digits=12, decimal_places=2, blank=True, null=True)
     fonds = models.CharField(max_length=100, default='NA', editable=False)
@@ -200,12 +200,12 @@ class Recette(models.Model):
                             verbose_name='Programme de financement')
     structure = models.ForeignKey('Structure',
                                   verbose_name='Centre financier')
-    montantDC = models.DecimalField(max_digits=12, decimal_places=2,
-                                    blank=True, null=True)
-    montantRE = models.DecimalField(verbose_name='Montant Recette Encaissable',
-                                    max_digits=12, decimal_places=2,
-                                    blank=True, null=True)
-    montantAR = models.DecimalField(
+    montant_dc = models.DecimalField(max_digits=12, decimal_places=2,
+                                     blank=True, null=True)
+    montant_re = models.DecimalField(
+        verbose_name='Montant Recette Encaissable',
+        max_digits=12, decimal_places=2, blank=True, null=True)
+    montant_ar = models.DecimalField(
         verbose_name='Montant Autorisation de Recette', max_digits=12,
         decimal_places=2, blank=True, null=True)
     domainefonctionnel = models.CharField(max_length=100, default='NA',

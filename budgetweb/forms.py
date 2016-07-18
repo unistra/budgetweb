@@ -22,16 +22,16 @@ class BaseRecetteFormSet(BaseFormSet):
 
 class RecetteForm(forms.ModelForm):
 
-    montantDC = forms.DecimalField(widget=forms.NumberInput(
+    montant_dc = forms.DecimalField(widget=forms.NumberInput(
                      attrs={'style': 'width:100px;',
                             'step': ''}))
-    montantAR = montantRE = montantDC
+    montant_ar = montant_re = montant_dc
 
     class Meta:
         model = Recette
         fields = ('pfi', 'structure', 'periodebudget',
                   'naturecomptablerecette', 'annee',
-                  'montantAR', 'montantRE', 'montantDC', 'commentaire',
+                  'montant_ar', 'montant_re', 'montant_dc', 'commentaire',
                   'lienpiecejointe')
         widgets = {
             'commentaire': forms.Textarea(attrs={'cols': 40, 'rows': 2}),
@@ -63,16 +63,16 @@ class RecetteForm(forms.ModelForm):
 
 class DepenseForm(forms.ModelForm):
 
-    montantDC = forms.DecimalField(label='Montant DC',
-                                   widget=forms.NumberInput(
+    montant_dc = forms.DecimalField(label='Montant DC',
+                                    widget=forms.NumberInput(
                                      attrs={'style': 'width:100px;',
                                             'step': ''}))
-    montantAE = forms.DecimalField(label='Montant AE',
-                                   widget=forms.NumberInput(
+    montant_ae = forms.DecimalField(label='Montant AE',
+                                    widget=forms.NumberInput(
                                      attrs={'style': 'width:100px;',
                                             'step': ''}))
-    montantCP = forms.DecimalField(label='Montant CP',
-                                   widget=forms.NumberInput(
+    montant_cp = forms.DecimalField(label='Montant CP',
+                                    widget=forms.NumberInput(
                                      attrs={'style': 'width:100px;',
                                             'step': ''}))
 
@@ -80,7 +80,7 @@ class DepenseForm(forms.ModelForm):
         model = Depense
         fields = ('pfi', 'structure', 'domainefonctionnel',
                   'periodebudget', 'naturecomptabledepense', 'annee',
-                  'montantAE', 'montantCP', 'montantDC', 'commentaire',
+                  'montant_ae', 'montant_cp', 'montant_dc', 'commentaire',
                   'lienpiecejointe')
         widgets = {
             'commentaire': forms.Textarea(attrs={'cols': 40, 'rows': 2}),

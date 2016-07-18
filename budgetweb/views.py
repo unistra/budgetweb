@@ -307,22 +307,22 @@ def show_sub_tree(request, type_affichage, structid):
     for pfi in listePFI:
         pfi['sommeDepenseAE'] = Depense.objects.filter(
                                 pfi__id=pfi['id']).aggregate(
-                                somme=Sum('montantAE'))
+                                somme=Sum('montant_ae'))
         pfi['sommeDepenseCP'] = Depense.objects.filter(
                                 pfi__id=pfi['id']).aggregate(
-                                somme=Sum('montantCP'))
+                                somme=Sum('montant_cp'))
         pfi['sommeDepenseDC'] = Depense.objects.filter(
                                 pfi__id=pfi['id']).aggregate(
-                                somme=Sum('montantDC'))
+                                somme=Sum('montant_dc'))
         pfi['sommeRecetteAR'] = Recette.objects.filter(
                                 pfi__id=pfi['id']).aggregate(
-                                somme=Sum('montantAR'))
+                                somme=Sum('montant_ar'))
         pfi['sommeRecetteRE'] = Recette.objects.filter(
                                 pfi__id=pfi['id']).aggregate(
-                                somme=Sum('montantRE'))
+                                somme=Sum('montant_re'))
         pfi['sommeRecetteDC'] = Recette.objects.filter(
                                 pfi__id=pfi['id']).aggregate(
-                                somme=Sum('montantDC'))
+                                somme=Sum('montant_dc'))
 
     context = {'listeCF': listeCF, 'listePFI': listePFI,
                'typeAffichage': type_affichage}
@@ -335,7 +335,6 @@ def pluriannuel(request, pfiid):
     if request.method == "POST":
         form = PlanFinancementPluriForm(request.POST, instance=pfi)
         if form.is_valid():
-            print(form)
             post = form.save(commit=False)
             post.save()
             return redirect('pluriannuel', pfiid=pfi.id)
@@ -424,12 +423,12 @@ def detailspfi(request, pfiid):
         pfi=pfi).prefetch_related('naturecomptabledepense')
     listeRecette = Recette.objects.filter(
         pfi=pfi).prefetch_related('naturecomptablerecette')
-    sommeDepense = listeDepense.aggregate(sommeDC=Sum('montantDC'),
-                                          sommeAE=Sum('montantAE'),
-                                          sommeCP=Sum('montantCP'))
-    sommeRecette = listeRecette.aggregate(sommeDC=Sum('montantDC'),
-                                          sommeAR=Sum('montantAR'),
-                                          sommeRE=Sum('montantRE'))
+    sommeDepense = listeDepense.aggregate(sommeDC=Sum('montant_dc'),
+                                          sommeAE=Sum('montant_ae'),
+                                          sommeCP=Sum('montant_cp'))
+    sommeRecette = listeRecette.aggregate(sommeDC=Sum('montant_dc'),
+                                          sommeAR=Sum('montant_ar'),
+                                          sommeRE=Sum('montant_re'))
     context = {
         'PFI': pfi,
         'listeDepense': listeDepense, 'listeRecette': listeRecette,
