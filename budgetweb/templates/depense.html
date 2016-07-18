@@ -28,7 +28,7 @@
              {{ hidden }}
             {% endfor %}
             {% for field in form.visible_fields %}
-                    <td style="line-height:1; white-space:nowrap;" >{{ field }}</td>
+                    <td style="line-height:1; white-space:nowrap;" >{{ field }}{{ field.errors }}</td>
                 {% endfor %}
               <td align='center'>&nbsp;</td>
   			  </tr>

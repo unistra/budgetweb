@@ -21,7 +21,7 @@ class PeriodeBudget(models.Model):
     sont saisies pour une période
     """
     code = models.CharField('Libellé court', max_length=20)
-    label = models.CharField('Libellé long', max_length=100)
+    label = models.CharField('Libellé long', max_length=255)
     annee = models.PositiveIntegerField('Année')
     is_active = models.BooleanField('Activé (oui/,non)', default=True)
 
@@ -34,7 +34,7 @@ class DomaineFonctionnel(models.Model):
     Gestion des domaines fonctionnels. En cours de précisions
     """
     code = models.CharField('Code', max_length=100, default="", unique=True)
-    label = models.CharField('Libellé', max_length=100, default="")
+    label = models.CharField('Libellé', max_length=255, default="")
     label_court = models.CharField('Libellé court', max_length=100, default="",
                                    null=True, blank=True,)
     is_active = models.BooleanField('Actif', max_length=100, default=True)
@@ -49,7 +49,7 @@ class Structure(models.Model):
     """
     type = models.CharField('Type', max_length=100)
     code = models.CharField('Code', max_length=100, unique=True)
-    label = models.CharField('Libellé', max_length=100)
+    label = models.CharField('Libellé', max_length=255)
     parent = models.ForeignKey(
         'Structure', blank=True, null=True, related_name='fils',
         verbose_name=u'Lien direct vers la structure parent')
@@ -69,7 +69,7 @@ class PlanFinancement(models.Model):
     structure = models.ForeignKey('Structure',
                                   verbose_name='Lien direct vers le CF')
     code = models.CharField('Code du PFI', max_length=100, default='NA')
-    label = models.CharField('Libellé', max_length=100)
+    label = models.CharField('Libellé', max_length=255)
     eotp = models.CharField("Code court de l'eotp", max_length=100)
     centrecoutderive = models.CharField('Centre de coût associé',
                                         max_length=100)
@@ -94,13 +94,13 @@ class NatureComptableDepense(models.Model):
 
     enveloppe = models.CharField(max_length=100, verbose_name='Enveloppe')
     label_nature_comptable = models.CharField(
-        max_length=100, verbose_name='Désignation de la nature comptable')
+        max_length=255, verbose_name='Désignation de la nature comptable')
     code_nature_comptable = models.CharField(
         max_length=100, verbose_name='Code de la nature comptable')
     code_compte_budgetaire = models.CharField(
         max_length=100, verbose_name='Code du compte budgétaire')
     label_compte_budgetaire = models.CharField(
-        max_length=100, verbose_name='Désignation du compte budgétaire')
+        max_length=255, verbose_name='Désignation du compte budgétaire')
     is_fleche = models.BooleanField('Fleché', max_length=100, default=True)
     is_decalage_tresorerie = models.BooleanField(
         max_length=100, verbose_name='Décalage trésorerie')
@@ -115,17 +115,17 @@ class NatureComptableRecette(models.Model):
 
     enveloppe = models.CharField(max_length=100, verbose_name='Enveloppe')
     label_fonds = models.CharField(
-        max_length=100,
+        max_length=255,
         verbose_name='Désignation de la nature comptable')
     code_fonds = models.CharField(max_length=100, verbose_name='Code du fond')
     code_nature_comptable = models.CharField(
         max_length=100, verbose_name='Code de la nature comptable')
     label_nature_comptable = models.CharField(
-        max_length=100, verbose_name='Désignation du compte budgétaire')
+        max_length=255, verbose_name='Désignation du compte budgétaire')
     code_compte_budgetaire = models.CharField(
         max_length=100, verbose_name='Code du compte budgétaire')
     label_compte_budgetaire = models.CharField(
-        max_length=100, verbose_name='Désignation du compte budgétaire')
+        max_length=255, verbose_name='Désignation du compte budgétaire')
     is_fleche = models.BooleanField('Fleché', max_length=100, default=True)
     is_active = models.BooleanField('Actif', max_length=100, default=True)
 
