@@ -9,10 +9,18 @@ from .models import (Depense, NatureComptableDepense, NatureComptableRecette,
 
 class RecetteForm(forms.ModelForm):
 
-    montant_dc = forms.DecimalField(widget=forms.NumberInput(
-                     attrs={'style': 'width:100px;',
-                            'step': ''}))
-    montant_ar = montant_re = montant_dc
+    montant_dc = forms.DecimalField(label='DC',
+                                    widget=forms.NumberInput(
+                                     attrs={'style': 'width:90px;\
+                                            -moz-appearance: textfield;'}))
+    montant_ar = forms.DecimalField(label='AR',
+                                    widget=forms.NumberInput(
+                                     attrs={'style': 'width:90px;\
+                                            -moz-appearance: textfield;'}))
+    montant_re = forms.DecimalField(label='RE',
+                                    widget=forms.NumberInput(
+                                     attrs={'style': 'width:90px;\
+                                            -moz-appearance: textfield;'}))
 
     class Meta:
         model = Recette
@@ -51,18 +59,18 @@ class RecetteForm(forms.ModelForm):
 
 class DepenseForm(forms.ModelForm):
 
-    montant_dc = forms.DecimalField(label='Montant DC',
+    montant_dc = forms.DecimalField(label='DC',
                                     widget=forms.NumberInput(
-                                     attrs={'style': 'width:100px;',
-                                            'step': ''}))
-    montant_ae = forms.DecimalField(label='Montant AE',
+                                     attrs={'style': 'width:90px;\
+                                            -moz-appearance: textfield;'}))
+    montant_ae = forms.DecimalField(label='AE',
                                     widget=forms.NumberInput(
-                                     attrs={'style': 'width:100px;',
-                                            'step': ''}))
-    montant_cp = forms.DecimalField(label='Montant CP',
+                                     attrs={'style': 'width:90px;\
+                                            -moz-appearance: textfield;'}))
+    montant_cp = forms.DecimalField(label='CP',
                                     widget=forms.NumberInput(
-                                     attrs={'style': 'width:100px;',
-                                            'step': ''}))
+                                     attrs={'style': 'width:90px;\
+                                            -moz-appearance: textfield;'}))
 
     class Meta:
         model = Depense
@@ -74,8 +82,7 @@ class DepenseForm(forms.ModelForm):
             'commentaire': forms.Textarea(attrs={'cols': 40, 'rows': 2}),
             'pfi': forms.HiddenInput(),
             'annee': forms.NumberInput(attrs={
-                        'style': 'width:50px;-moz-appearance: textfield;',
-                        'class': 'toto'}),
+                        'style': 'width:45px;-moz-appearance: textfield;'}),
             'structure': forms.HiddenInput(),
             'periodebudget': forms.HiddenInput(),
         }
