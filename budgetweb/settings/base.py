@@ -316,5 +316,3 @@ CAS_SERVER_URL = 'https://cas.unistra.fr/cas/login'
 CAS_LOGOUT_REQUEST_ALLOWED = ('cas1.u-strasbg.fr', 'cas2.u-strasbg.fr')
 CAS_USER_CREATION = True
 CAS_USERNAME_FORMAT = lambda username: username.lower()
-
-

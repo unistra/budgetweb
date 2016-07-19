@@ -3,21 +3,8 @@ from django.forms.formsets import BaseFormSet
 from django.forms.models import modelformset_factory, BaseModelFormSet
 from django.http import Http404, HttpResponse
 
-from .models import (Authorisation, Depense, DomaineFonctionnel,
-                     NatureComptableDepense, NatureComptableRecette,
-                     PeriodeBudget, PlanFinancement, Recette, Structure)
-
-
-# class AuthorisationForm(forms.ModelForm):
-#
-#    class Meta:
-#        model = Authorisation
-#        fields = ('username', 'myobject')
-
-
-class BaseRecetteFormSet(BaseFormSet):
-    def clean(self):
-        pass
+from .models import (Depense, NatureComptableDepense, NatureComptableRecette,
+                     PlanFinancement, Recette)
 
 
 class RecetteForm(forms.ModelForm):

@@ -3,11 +3,15 @@
 """
 """
 
+from django import forms
 from django.contrib import admin
+from django.contrib.admin.widgets import FilteredSelectMultiple
+from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.models import User
 
 from .models import (Depense, DomaineFonctionnel, NatureComptableDepense,
                      NatureComptableRecette, PeriodeBudget, PlanFinancement,
-                     Recette, Structure)
+                     Recette, Structure, StructureAuthorizations)
 
 
 class DepenseAdmin(admin.ModelAdmin):
@@ -48,3 +52,48 @@ admin.site.register(Recette, RecetteAdmin)
 class StructureAdmin(admin.ModelAdmin):
     pass
 admin.site.register(Structure, StructureAdmin)
+
+
+class StructureAuthorizationsForm(forms.ModelForm):
+    structures = forms.MultipleChoiceField(
+        widget=FilteredSelectMultiple(
+            verbose_name='User field permissions',
+            is_stacked=False,
+        ),
+        help_text='Structures autorisées pour cet utilisateur. Ajouter un '
+                  'utilisateur à une structure lui donnera automatiquement '
+                  'accès à toutes ses structures filles.'
+    )
+
+    class Meta:
+        model = StructureAuthorizations
+        exclude = []
+
+    def tree(self, nodes, i=0):
+        result = []
+        for node in nodes:
+            result.append((node.pk, '%s %s' % ('--' * i, node.code)))
+            result.extend(self.tree(node.get_sons(), i + 1))
+        return result
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        nodes = Structure.objects.filter(parent__isnull=True)
+        choices = self.tree(nodes)
+        self.fields['structures'].choices = choices
+
+
+class StructureAuthorizationsAdmin(admin.ModelAdmin):
+    list_display = ('user',)
+    search_fields = ('user__username',)
+    form = StructureAuthorizationsForm
+
+    def save_related(self, request, form, formsets, change):
+        super().save_related(request, form, formsets, change)
+        structures = form.instance.structures.all()
+        for structure in structures:
+            for child in structure.get_children():
+                form.instance.structures.add(child)
+
+admin.site.register(StructureAuthorizations, StructureAuthorizationsAdmin)

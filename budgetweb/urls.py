@@ -13,23 +13,6 @@ urlpatterns = [
     url(r'^accounts/logout/$', 'django_cas.views.logout'),
     # Examples:
     url(r'^$', home, name='home'),
-## classe Authorisation
-#    url(r'^authorisation/new/$', views.authorisation_new, name='authorisation_new'),
-    url(r'^authorisation/$', views.authorisation_list,name='authorisation_list'),
-#    url(r'^authorisationuser/$', views.authorisation_user,name='authorisation_user'),
-#    url(r'^authorisation/(?P<pkauth>[0-9]+)/detail/$', views.authorisation_detail, name='authorisation_detail'),
-#    url(r'^authorisation/(?P<pkauth>[0-9]+)/delete/$', views.authorisation_delete, name='authorisation_delete'),
-#    url(r'^authorisation/import/$', views.authorisation_importcsv,name='authorisation_importcsv'),
-#    url(r'^authorisation/deleteall/$', views.authorisation_deleteall, name='authorisation_deleteall'),
-
-## classe PlanFinancement
-#    url(r'^planfinancement/new/$', views.planfinancement_new, name='planfinancement_new'),
-#    url(r'^planfinancement/$', views.planfinancement_list,name='planfinancement_list'),
-#    url(r'^planfinancement/(?P<pkpfi>[0-9]+)/detail/$', views.planfinancement_detail, name='planfinancement_detail'),
-#    url(r'^planfinancement/(?P<pkpfi>[0-9]+)/delete/$', views.planfinancement_delete, name='planfinancement_delete'),
-#    url(r'^planfinancement/(?P<pkpfi>[0-9]+)/edit/$', views.planfinancement_edit, name='planfinancement_edit'),
-#    url(r'^planfinancement/import/$', views.planfinancement_importcsv,name='planfinancement_importcsv'),
-#    url(r'^planfinancement/deleteall/$', views.planfinancement_deleteall, name='planfinancement_deleteall'),
 
 ##Ajax depenses
 #    url(r'^ajax/ajax_add/(?P<pkstr1>[0-9]+)/$', views.ajax_add_todo1,name="ajax_add_todo1"),

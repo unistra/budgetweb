@@ -1,17 +1,26 @@
 from django import forms
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 
-class Authorisation(models.Model):
+class StructureAuthorizations(models.Model):
     """
     Gestion des autorisations utilisateurs sur les CF
     Possibilités: * P* PAIE* ou un nom précis
     """
-    username = models.CharField(max_length=100)
-    myobject = models.CharField(max_length=100)
+    user = models.OneToOneField(to=settings.AUTH_USER_MODEL)
+    structures = models.ManyToManyField('Structure',
+        related_name='authorized_structures')
+
+    class Meta:
+        verbose_name = 'structure authorization'
+        verbose_name_plural = 'structures authorizations'
+
+    def __str__(self):
+        return self.user.username
 
 
 class PeriodeBudget(models.Model):
@@ -60,6 +69,19 @@ class Structure(models.Model):
 
     def __str__(self):
         return '{0.code}'.format(self)
+
+    def get_children(self):
+        children = []
+        for sons in self.get_sons():
+            children.append(sons)
+            children.extend(sons.get_children())
+        return children
+
+    def get_sons(self):
+        return self.fils.filter(is_active=True).order_by('code')
+
+    def get_subtree(self):
+        return ({son: son.get_subtree()} for son in self.get_sons())
 
 
 class PlanFinancement(models.Model):
