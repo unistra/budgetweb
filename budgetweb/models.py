@@ -13,7 +13,7 @@ class StructureAuthorizations(models.Model):
     """
     user = models.OneToOneField(to=settings.AUTH_USER_MODEL)
     structures = models.ManyToManyField('Structure',
-        related_name='authorized_structures')
+                                        related_name='authorized_structures')
 
     class Meta:
         verbose_name = 'structure authorization'
