@@ -15,42 +15,97 @@ from .models import (Depense, DomaineFonctionnel, NatureComptableDepense,
 
 
 class DepenseAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('pfi', 'structure', 'domainefonctionnel',
+                    'naturecomptabledepense', 'periodebudget', 'annee',
+                    'montant_ae', 'montant_cp', 'montant_dc')
+    search_fields = ['pfi', 'structure', 'domainefonctionnel',
+                     'naturecomptabledepense', 'periodebudget', 'annee']
 admin.site.register(Depense, DepenseAdmin)
 
 
 class DomaineFonctionnelAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('code', 'label_court', 'label')
+    search_fields = ['code', 'label_court', 'label']
 admin.site.register(DomaineFonctionnel, DomaineFonctionnelAdmin)
 
 
 class NatureComptableDepenseAdmin(admin.ModelAdmin):
-    pass
+    field = ('is_fleche', 'enveloppe', 'label_nature_comptable',
+             'code_nature_comptable', 'code_compte_budgetaire',
+             'label_compte_budgetaire',
+             'is_decalage_tresorerie', 'is_active')
+    list_display = ('is_fleche', 'enveloppe', 'label_nature_comptable',
+                    'code_nature_comptable', 'code_compte_budgetaire',
+                    'label_compte_budgetaire',
+                    'is_decalage_tresorerie', 'is_active')
+    search_fields = ['enveloppe', 'label_nature_comptable',
+                     'code_nature_comptable', 'code_compte_budgetaire',
+                     'label_compte_budgetaire', 'is_fleche',
+                     'is_decalage_tresorerie', 'is_active']
+
+    class Meta:
+        ordering = ['is_fleche', 'enveloppe']
 admin.site.register(NatureComptableDepense, NatureComptableDepenseAdmin)
 
 
 class NatureComptableRecetteAdmin(admin.ModelAdmin):
-    pass
+    field = ('is_fleche', 'enveloppe', 'code_fonds', 'label_fonds',
+             'code_nature_comptable', 'label_nature_comptable',
+             'code_compte_budgetaire', 'label_compte_budgetaire',
+             'is_active')
+    list_display = ('is_fleche', 'enveloppe', 'code_fonds', 'label_fonds',
+                    'code_nature_comptable', 'label_nature_comptable',
+                    'code_compte_budgetaire', 'label_compte_budgetaire',
+                    'is_active')
+    search_fields = ['is_fleche', 'enveloppe', 'code_fonds', 'label_fonds',
+                     'code_nature_comptable', 'label_nature_comptable',
+                     'code_compte_budgetaire', 'label_compte_budgetaire',
+                     'is_active']
+
+    class Meta:
+        ordering = ['is_fleche', 'enveloppe']
 admin.site.register(NatureComptableRecette, NatureComptableRecetteAdmin)
 
 
 class PeriodeBudgetAdmin(admin.ModelAdmin):
-    pass
+    field = ('code', 'label', 'annee', 'is_active')
+    list_display = ('code', 'label', 'annee', 'is_active')
+    search_fields = ['code', 'label', 'annee', 'is_active']
 admin.site.register(PeriodeBudget, PeriodeBudgetAdmin)
 
 
 class PlanFinancementAdmin(admin.ModelAdmin):
-    pass
+    field = ('structure', 'code', 'eotp', 'centrecoutderive',
+             'centreprofitderive', 'is_fleche', 'is_pluriannuel', 'is_active',
+             'date_debut', 'date_fin')
+    list_display = ('structure', 'code', 'eotp', 'centrecoutderive',
+                    'centreprofitderive', 'is_fleche', 'is_pluriannuel',
+                    'is_active', 'date_debut', 'date_fin')
+    search_fields = ['structure', 'code', 'eotp', 'centrecoutderive',
+                     'centreprofitderive', 'is_fleche', 'is_pluriannuel',
+                     'is_active', 'date_debut', 'date_fin']
+
+    class Meta:
+        ordering = ['is_fleche', 'structure']
 admin.site.register(PlanFinancement, PlanFinancementAdmin)
 
 
 class RecetteAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('pfi', 'structure',
+                    'naturecomptablerecette', 'periodebudget', 'annee',
+                    'montant_ar', 'montant_re', 'montant_dc')
+    search_fields = ['pfi', 'structure', 'naturecomptablerecette',
+                     'periodebudget', 'annee']
 admin.site.register(Recette, RecetteAdmin)
 
 
 class StructureAdmin(admin.ModelAdmin):
-    pass
+    field = ('code', 'parent', 'type', 'label', 'is_active')
+    list_display = ('code', 'parent', 'type', 'label', 'is_active')
+    search_fields = ['type', 'code', 'label']
+
+    class Meta:
+        ordering = ['is_active', 'code']
 admin.site.register(Structure, StructureAdmin)
 
 
