@@ -10,10 +10,11 @@
     {% include "detailspfi.html" %}
     <form id="formset" method="POST" action="{% url 'depense' pfiid=PFI.id annee=currentYear %}">
     {% csrf_token %}
-    <table class='supertable' id='supertable' border="1">
+    <table class='supertable depense' id='supertable' border="1">
     {% for form in formset %}
         {% if forloop.counter = 1 %}
         <thead>
+            <tr><th colspan="9" align="center">Formulaire de saisies des dépenses.</th></tr>
             <tr>
             {% for field in form.visible_fields %}
                 <th style="white-space:nowrap;">
@@ -24,19 +25,19 @@
                 {% endif %}
                 </th>
             {% endfor %}
-          </tr>
+            </tr>
         </thead>
         <tbody>
-        {% endif %}
-        <tr>
-        {% for hidden in form.hidden_fields %}
-            {{ hidden }}
-        {% endfor %}
-        {% for field in form.visible_fields %}
-            <td style="line-height:1; white-space:nowrap" align="center">{{ field }}{{ field.errors }}</td>
-        {% endfor %}
-     </tr>
-    {% endfor %}
+	    {% endif %}
+	        <tr class="{% cycle 'row1' 'row2' %}">
+	        {% for hidden in form.hidden_fields %}
+	            {{ hidden }}
+	        {% endfor %}
+	        {% for field in form.visible_fields %}
+	            <td style="line-height:1; white-space:nowrap" align="center">{{ field }}{{ field.errors }}</td>
+	        {% endfor %}
+	        </tr>
+	    {% endfor %}
         </tbody>
     </table>
     {{ formset.management_form }}
@@ -52,6 +53,7 @@
 <script>
     $('#formset tbody tr').formset({
         addText: 'Ajouter une dépense',
+        addCssClass: 'btn-primary btn',
         deleteText: '<span class="danger glyphicon glyphicon-trash"></span>',
     });
 </script>

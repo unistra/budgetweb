@@ -1,9 +1,15 @@
 <fieldset>
 	<legend>Caractérisque du PFI : {{ PFI.code }} ({{ PFI.label }})</legend>
-	<div style="display: inline-block;">Structure de rattachement : {{ PFI.structure.code }}</div>
-	<div style="display: inline-block;">Code de l'EOTP : {{ PFI.eotp }}</div>
-	<div style="display: inline-block;">Centre de coût dérivé : {{ PFI.centrecoutderive }}</div>
-	<div style="display: inline-block;">Centre de profit dérivé : {{ PFI.centreprofitderive }}</div>
-	<div style="display: inline-block;">PFI fléché : {% if PFI.is_fleche %}Oui{% else %}Non{% endif %}</div>
-	<div style="display: inline-block;">PFI pluriannuel : {% if PFI.is_pluriannuel %}Oui{% else %}Non{% endif %}</div>
+	<div style="display: inline-block;">
+		<div style="display: inline-block;"><label style="width:250px;margin-bottom:0px;">Structure de rattachement :</label>{{ PFI.structure.code }}</div>
+		<div style="display: inline-block;"><label style="width:250px;margin-bottom:0px;">Code de l'EOTP :</label>{{ PFI.eotp }}</div>
+	<div>
+	</div>
+		<div style="display: inline-block;"><label style="width:250px;margin-bottom:0px;">Centre de coût dérivé : </label>{{ PFI.centrecoutderive }}</div>
+		<div style="display: inline-block;"><label style="width:250px;">Centre de profit dérivé : </label>{{ PFI.centreprofitderive }}</div>
+	<div>
+	</div>
+		<div style="display: inline-block;"><label style="width:250px;margin-bottom:0px;">PFI fléché : </label>{% if PFI.is_fleche %}Oui{% else %}Non{% endif %}</div>
+		<div style="display: inline-block;"><label style="width:250px;margin-bottom:0px;">PFI pluriannuel : </label>{% if PFI.is_pluriannuel %}Oui{% else %}Non{% endif %}</div>
+ </div>
 </fieldset>

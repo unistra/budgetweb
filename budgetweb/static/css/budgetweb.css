@@ -142,14 +142,38 @@ label {
   vertical-align: middle;
 }
 
+.supertable {
+    margin-bottom: 20px;
+    width:100%;
+}
+.supertable tbody td{
+    padding: 2px;
+}
 .supertable thead th{
   padding-left: 10px;
   padding-right: 10px;
   padding-top:5px;
   padding-bottom: 5px;
-  font-size: 1.2em;
+  font-size: 1.1em;
 }
-
+.depense thead th {
+  background-color: #66ff66
+}
+.depense tr.row1 {
+  background-color: #ccffcc;
+}
+.depense tr.row2 {
+  background-color: #99ff99;
+}
+.recette thead th {
+  background-color: #ff6666
+}
+.recette tr.row1 {
+  background-color: #ffcccc;
+}
+.recette tr.row2 {
+  background-color: #ff9999;
+}
 ul.errorlist {
     color: #F00;
     font-weight: bold;
