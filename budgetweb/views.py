@@ -10,6 +10,7 @@ from django.shortcuts import (get_object_or_404, redirect, render,
 
 
 from budgetweb.libs.node import getCurrentYear, generateTree
+from .decorators import is_authorized_structure
 from .forms import DepenseForm, PlanFinancementPluriForm, RecetteForm
 from .models import (Depense, PeriodeBudget, PlanFinancement, Recette,
                      Structure)
@@ -185,6 +186,7 @@ def show_sub_tree(request, type_affichage, structid):
 
 
 @login_required
+@is_authorized_structure
 def pluriannuel(request, pfiid):
     pfi = get_object_or_404(PlanFinancement, pk=pfiid)
     if request.method == "POST":
@@ -218,6 +220,7 @@ def modelformset_factory_with_kwargs(cls, **formset_kwargs):
 
 
 @login_required
+@is_authorized_structure
 def depense(request, pfiid, annee):
     pfi = PlanFinancement.objects.get(pk=pfiid)
     periodebudget = PeriodeBudget.objects.filter(is_active=True).first()
@@ -236,8 +239,6 @@ def depense(request, pfiid, annee):
         if formset.is_valid():
             formset.save()
             return HttpResponseRedirect('/detailspfi/%s' % pfi.pk)
-        else:
-            print('EEE : %s' % formset.errors)
 
     context = {
         'PFI': pfi,
@@ -248,6 +249,7 @@ def depense(request, pfiid, annee):
 
 
 @login_required
+@is_authorized_structure
 def recette(request, pfiid, annee):
     pfi = PlanFinancement.objects.get(pk=pfiid)
     periodebudget = PeriodeBudget.objects.filter(is_active=True).first()
@@ -266,8 +268,6 @@ def recette(request, pfiid, annee):
         if formset.is_valid():
             formset.save()
             return HttpResponseRedirect('/detailspfi/%s' % pfi.pk)
-        else:
-            print('EEE : %s' % formset.errors)
 
     context = {
         'PFI': pfi,
@@ -278,6 +278,7 @@ def recette(request, pfiid, annee):
 
 
 @login_required
+@is_authorized_structure
 def detailspfi(request, pfiid):
     pfi = PlanFinancement.objects.get(pk=pfiid)
     listeDepense = Depense.objects.filter(
