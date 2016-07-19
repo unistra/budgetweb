@@ -75,10 +75,10 @@ admin.site.register(PeriodeBudget, PeriodeBudgetAdmin)
 
 
 class PlanFinancementAdmin(admin.ModelAdmin):
-    field = ('structure', 'code', 'eotp', 'centrecoutderive',
+    field = ('structure', 'code', 'label', 'eotp', 'centrecoutderive',
              'centreprofitderive', 'is_fleche', 'is_pluriannuel', 'is_active',
              'date_debut', 'date_fin')
-    list_display = ('structure', 'code', 'eotp', 'centrecoutderive',
+    list_display = ('structure', 'code', 'label', 'eotp', 'centrecoutderive',
                     'centreprofitderive', 'is_fleche', 'is_pluriannuel',
                     'is_active', 'date_debut', 'date_fin')
     search_fields = ['structure', 'code', 'eotp', 'centrecoutderive',
