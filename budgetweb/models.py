@@ -109,7 +109,7 @@ class PlanFinancement(models.Model):
         ordering = ['label']
 
     def __str__(self):
-        return '{0.code}-({0.structure})'.format(self)
+        return '{0.code}'.format(self)
 
 
 class NatureComptableDepense(models.Model):
@@ -152,8 +152,8 @@ class NatureComptableRecette(models.Model):
     is_active = models.BooleanField('Actif', max_length=100, default=True)
 
     def __str__(self):
-        return '{0.code_nature_comptable} - {0.label_nature_comptable}'\
-            .format(self)
+        return '{0.code_nature_comptable} - \
+                {0.label_nature_comptable}'.format(self)
 
 
 class Depense(models.Model):
