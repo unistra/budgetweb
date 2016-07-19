@@ -109,7 +109,7 @@ label {
   vertical-align: top;
 }
 
-.table-pluri thead td {
+.table-pluri thead th {
   text-align: center;
   font-weight: bold;
   border: 3px solid #000000;
@@ -122,9 +122,11 @@ label {
 }
 
 .table-pluri tbody td {
-    border-left: 1px solid #000000;
-    border-right: 1px solid #000000;
+    border: 1px solid #000000;
     padding: 5px;
+}
+.table-pluri tbody {
+    border-bottom: 3px solid #000000;
 }
 
 .table-details {

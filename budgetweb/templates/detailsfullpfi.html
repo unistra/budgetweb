@@ -9,26 +9,29 @@
   <div class="col-md-12">
     {% include "detailspfi.html" %}
 
-    <table class="table-pluri">
+    <table class="table-pluri depense">
       <thead>
         <tr>
-          <td>PFI</td>
-          <td>CF</td>
-          <td>Fonds</td>
-          <td>Année</td>
-          <td>Domaine Fonctionnel</td>
-          <td>Nature Comptable</td>
-          <td>Période Budgétaire</td>
-          <td>M. DC</td>
-          <td>M. CP</td>
-          <td>M. AE</td>
-          <td>Comm.</td>
-          <td>PJ.</td>
+          <th colspan="12" style="text-align:left;padding-left:50px;">Liste des dépenses</th>
+        </tr>
+        <tr>
+          <th>PFI</th>
+          <th>CF</th>
+          <th>Fonds</th>
+          <th>Année</th>
+          <th>Domaine Fonctionnel</th>
+          <th>Nature Comptable</th>
+          <th>Période Budgétaire</th>
+          <th>M. DC</th>
+          <th>M. CP</th>
+          <th>M. AE</th>
+          <th>Comm.</th>
+          <th>PJ.</th>
         </tr>
       </thead>
       <tbody>
         {% for depense in listeDepense %}
-          <tr>
+          <tr class="{% cycle 'row1' 'row2' %}">
             <td>{{ depense.pfi }}</td>
             <td>{{ depense.structure }}</td>
             <td>{{ depense.fonds }}</td>
@@ -42,9 +45,9 @@
               <b>Libellé du compte budgétaire :</b> {{ depense.naturecomptabledepense.label_compte_budgetaire }}<br />
             </td>
             <td>{{ depense.periodebudget }}</td>
-            <td nowrap>{{ depense.montantDC }} &euro;</td>
-            <td nowrap>{{ depense.montantCP }} &euro;</td>
-            <td nowrap>{{ depense.montantAE }} &euro;</td>
+            <td nowrap>{{ depense.montant_dc }} &euro;</td>
+            <td nowrap>{{ depense.montant_cp }} &euro;</td>
+            <td nowrap>{{ depense.montant_ae }} &euro;</td>
             <td>{{ depense.commentaire }}</td>
             <td>{{ depense.lienpiecejointe }}</td>
           </tr>
@@ -52,35 +55,37 @@
           <tr><td colspan="12">Aucune recette trouvé pour cette PFI</td></tr>
         {% endfor %}
         <tr>
-          <td colspan="7">&nbsp;</td>
-          <td nowrap>{{ sommeDepense.sommeDC }} &euro;</td>
-          <td nowrap>{{ sommeDepense.sommeCP }} &euro;</td>
-          <td nowrap>{{ sommeDepense.sommeAE }} &euro;</td>
+          <td colspan="7" style="text-align:right;padding-right:20px;font-weight:bold;">Total :</td>
+          <td nowrap style="background-color:#66ff66;font-weight:bold;">{{ sommeDepense.sommeDC }} &euro;</td>
+          <td nowrap style="background-color:#66ff66;font-weight:bold;">{{ sommeDepense.sommeCP }} &euro;</td>
+          <td nowrap style="background-color:#66ff66;font-weight:bold;">{{ sommeDepense.sommeAE }} &euro;</td>
           <td colspan="2">&nbsp;</td>
         </tr>
       </tbody>
     </table>
     <br />
     <br />
-    <table class="table-pluri">
+    <table class="table-pluri recette">
       <thead>
         <tr>
-          <td>PFI</td>
-          <td>CF</td>
-          <td>Année</td>
-          <td>Domaine Fonctionnel</td>
-          <td>Nature Comptable</td>
-          <td>Période Budgétaire</td>
-          <td>M. DC</td>
-          <td>M. AR</td>
-          <td>M. RE</td>
-          <td>Comm.</td>
-          <td>PJ.</td>
+          <th colspan="11" style="text-align:left;padding-left:50px;">Liste des recettes</th>
+        <tr>
+          <th>PFI</th>
+          <th>CF</th>
+          <th>Année</th>
+          <th>Domaine Fonctionnel</th>
+          <th>Nature Comptable</th>
+          <th>Période Budgétaire</th>
+          <th>M. DC</th>
+          <th>M. AR</th>
+          <th>M. RE</th>
+          <th>Comm.</th>
+          <th>PJ.</th>
         </tr>
       </thead>
       <tbody>
         {% for recette in listeRecette %}
-          <tr>
+          <tr class="{% cycle 'row1' 'row2' %}">
             <td>{{ recette.pfi }}</td>
             <td>{{ recette.structure }}</td>
             <td>{{ recette.annee }}</td>
@@ -95,9 +100,9 @@
               <b>Libellé du compte budgétaire :</b> {{ recette.naturecomptablerecette.label_compte_budgetaire }}<br />
             </td>
             <td>{{ recette.periodebudget }}</td>
-            <td nowrap>{{ recette.montantDC }} &euro;</td>
-            <td nowrap>{{ recette.montantAR }} &euro;</td>
-            <td nowrap>{{ recette.montantRE }} &euro;</td>
+            <td nowrap>{{ recette.montant_dc }} &euro;</td>
+            <td nowrap>{{ recette.montant_ar }} &euro;</td>
+            <td nowrap>{{ recette.montant_re }} &euro;</td>
             <td>{{ recette.commentaire }}</td>
             <td>{{ recette.lienpiecejointe }}</td>
           </tr>
@@ -105,10 +110,10 @@
             <tr><td colspan="11">Aucune recette trouvé pour cette PFI</td></tr>
         {% endfor %}
           <tr>
-            <td colspan="6">&nbsp;</td>
-            <td nowrap>{{ sommeRecette.sommeDC }} &euro;</td>
-            <td nowrap>{{ sommeRecette.sommeAR }} &euro;</td>
-            <td nowrap>{{ sommeRecette.sommeRE }} &euro;</td>
+            <td colspan="6" style="text-align:right;padding-right:20px;font-weight:bold;">Total :</td>
+            <td nowrap style="background-color:#ff6666;font-weight:bold;">{{ sommeRecette.sommeDC }} &euro;</td>
+            <td nowrap style="background-color:#ff6666;font-weight:bold;">{{ sommeRecette.sommeAR }} &euro;</td>
+            <td nowrap style="background-color:#ff6666;font-weight:bold;">{{ sommeRecette.sommeRE }} &euro;</td>
             <td colspan="2">&nbsp;</td>
           </tr>
       </tbody>
