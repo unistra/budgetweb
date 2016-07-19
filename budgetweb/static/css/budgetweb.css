@@ -193,3 +193,18 @@ legend {
   width: auto;
   border: 0px solid;
 }
+
+.recette-color {
+  color: #775500;
+}
+
+.depense-color {
+  color: #009900;
+}
+.pluri-color {
+  color: #9900ff;
+}
+
+.cf {
+  color: #0000bb;
+}

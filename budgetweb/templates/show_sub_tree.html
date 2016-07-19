@@ -5,10 +5,10 @@
   	<span style="width:160px;" class="pfi">
       <a href="{% url 'detailspfi' pfiid=node.id %}">{{ node.code }}</a>
       {% if node.is_pluriannuel %}
-      <a href="{% url 'pluriannuel' pfiid=node.id %}">D.&amp; R.</a>&nbsp;
+      <a class="pluri-color" href="{% url 'pluriannuel' pfiid=node.id %}">Dép. &amp; Rec.</a>&nbsp;
       {% else %}
-        <a href="{% url 'depense' pfiid=node.id annee=currentYear %}">D</a>&nbsp;
-        <a href="{% url 'recette' pfiid=node.id annee=currentYear %}">R</a>
+        <a class="depense-color" href="{% url 'depense' pfiid=node.id annee=currentYear %}">Dép.</a>&nbsp;
+        <a class="recette-color" href="{% url 'recette' pfiid=node.id annee=currentYear %}">Rec.</a>
       {% endif %}
   	</span>
     {% if typeAffichage == "gbcp" %}

@@ -9,6 +9,8 @@
 		<div class="col-md-12">
 		{% include "detailspfi.html" %}
 <fieldset>
+	<legend><a data-toggle="collapse" data-target="#caracpfi">Modification des propriétés du PFI pluriannuel</a></legend>
+	<div class="row collapse in" id="caracpfi">
 	<form id="editPFI" name="editPFI" method="POST" class="post-form">
 			{% csrf_token %}
 			{% if form.errors %}
@@ -34,12 +36,16 @@
 						<label for="{{ PFI.date_fin.id_for_label }}">Date de fin :</label>
 						{{ form.date_fin }}
 			</div>
-			<button id="submit" type="submit" class="save btn btn-primary">Modifier</button>
+			<div>
+				<button style="margin-left:50px;" id="submit" type="submit" class="save btn btn-primary">Modifier</button>
+			</div>
 	</form>
+</div>
 </fieldset>
 	<fieldset>
-		<legend>Liste des dépenses</legend>
-		<table class='table-pluri'>
+		<legend><a data-toggle="collapse" data-target="#listedep">Liste des dépenses</a></legend>
+		<div class="row collapse in" id="listedep">
+			<table class='table-pluri'>
 			<thead>
 				<tr>
 					<td>Etape</td>
@@ -153,10 +159,12 @@
 				</tr>
 			</tbody>
 		</table>
+	</div>
 	</fieldset>
 	<fieldset>
-		<legend>Liste des recettes</legend>
-		<table class='table-pluri'>
+		<legend><a data-toggle="collapse" data-target="#listerec">Liste des recettes</a></legend>
+		<div class="row collapse in" id="listerec">
+			<table class='table-pluri'>
 			<thead>
 				<tr>
 					<td>Etape</td>
@@ -241,11 +249,7 @@
 				</tr>
 			</tbody>
 		</table>
-		<br />
-		<br />
-		<br />
-		<br />
+	</div>
 	</fieldset>
 </div>
-
 {% endblock %}

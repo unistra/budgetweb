@@ -1,15 +1,17 @@
 <fieldset>
-	<legend>Caractérisque du PFI : {{ PFI.code }} ({{ PFI.label }})</legend>
-	<div style="display: inline-block;">
-		<div style="display: inline-block;"><label style="width:250px;margin-bottom:0px;">Structure de rattachement :</label>{{ PFI.structure.code }}</div>
-		<div style="display: inline-block;"><label style="width:250px;margin-bottom:0px;">Code de l'EOTP :</label>{{ PFI.eotp }}</div>
-	<div>
-	</div>
-		<div style="display: inline-block;"><label style="width:250px;margin-bottom:0px;">Centre de coût dérivé : </label>{{ PFI.centrecoutderive }}</div>
-		<div style="display: inline-block;"><label style="width:250px;">Centre de profit dérivé : </label>{{ PFI.centreprofitderive }}</div>
-	<div>
-	</div>
-		<div style="display: inline-block;"><label style="width:250px;margin-bottom:0px;">PFI fléché : </label>{% if PFI.is_fleche %}Oui{% else %}Non{% endif %}</div>
-		<div style="display: inline-block;"><label style="width:250px;margin-bottom:0px;">PFI pluriannuel : </label>{% if PFI.is_pluriannuel %}Oui{% else %}Non{% endif %}</div>
+	<legend><a data-toggle="collapse" data-target="#detailspfi">Caractérisque du PFI : {{ PFI.code }} ({{ PFI.label }})</a></legend>
+	<div class="row collapse" id="detailspfi">
+		<div style="display: inline-block;">
+			<div style="display: inline-block;"><label style="width:250px;margin-bottom:0px;">Structure de rattachement :</label>{{ PFI.structure.code }}</div>
+			<div style="display: inline-block;"><label style="width:250px;margin-bottom:0px;">Code de l'EOTP :</label>{{ PFI.eotp }}</div>
+		<div>
+		</div>
+			<div style="display: inline-block;"><label style="width:250px;margin-bottom:0px;">Centre de coût dérivé : </label>{{ PFI.centrecoutderive }}</div>
+			<div style="display: inline-block;"><label style="width:250px;">Centre de profit dérivé : </label>{{ PFI.centreprofitderive }}</div>
+		<div>
+		</div>
+			<div style="display: inline-block;"><label style="width:250px;margin-bottom:0px;">PFI fléché : </label>{% if PFI.is_fleche %}Oui{% else %}Non{% endif %}</div>
+			<div style="display: inline-block;"><label style="width:250px;margin-bottom:0px;">PFI pluriannuel : </label>{% if PFI.is_pluriannuel %}Oui{% else %}Non{% endif %}</div>
+	 </div>
  </div>
 </fieldset>
