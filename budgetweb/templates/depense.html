@@ -2,46 +2,46 @@
 {% load staticfiles %}
 
 {% block head-additional %}
-  <link rel="stylesheet" href="{% static 'css/budgetweb.css' %}"/>
+<link rel="stylesheet" href="{% static 'css/budgetweb.css' %}"/>
 {% endblock %}
 
 {% block content %}
-  <div class="col-md-12">
+<div class="col-md-12">
     {% include "detailspfi.html" %}
     <form id="formset" method="POST" action="{% url 'depense' pfiid=PFI.id annee=currentYear %}">
     {% csrf_token %}
-    <table class='supertable' id='supertable' border=1>
-        {% for form in formset %}
+    <table class='supertable' id='supertable' border="1">
+    {% for form in formset %}
         {% if forloop.counter = 1 %}
-          <thead>
-              <tr>
-              {% for field in form.visible_fields %}
-              <th style="white-space:nowrap;">
-                {% if field.label = "Supprimer" %}
-                  <span class="danger glyphicon glyphicon-trash"></span>
-                {% else %}
-                  {{ field.label }}
-                {% endif %}
-              </th>
-              {% endfor %}
-              </tr>
-          </thead>
-        <tbody>
-          {% endif %}
-          <tr>
-            {% for hidden in form.hidden_fields %}
-             {{ hidden }}
-            {% endfor %}
+        <thead>
+            <tr>
             {% for field in form.visible_fields %}
-                    <td style="line-height:1; white-space:nowrap" align="center">{{ field }}{{ field.errors }}</td>
+                <th style="white-space:nowrap;">
+                {% if field.name = "DELETE" %}
+                    <span class="danger glyphicon glyphicon-trash"></span>
+                {% else %}
+                    {{ field.label }}
+                {% endif %}
+                </th>
             {% endfor %}
-  			  </tr>
+          </tr>
+        </thead>
+        <tbody>
+        {% endif %}
+        <tr>
+        {% for hidden in form.hidden_fields %}
+            {{ hidden }}
         {% endfor %}
+        {% for field in form.visible_fields %}
+            <td style="line-height:1; white-space:nowrap" align="center">{{ field }}{{ field.errors }}</td>
+        {% endfor %}
+     </tr>
+    {% endfor %}
         </tbody>
     </table>
     {{ formset.management_form }}
     <button type="submit" class="save btn btn-primary">Enregistrer</button>
-  </form>
+    </form>
 </div>
 {% endblock %}
 {% block foot-javascript %}
