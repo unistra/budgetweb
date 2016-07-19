@@ -1,9 +1,9 @@
 <fieldset>
 	<legend>Caractérisque du PFI : {{ PFI.code }} ({{ PFI.label }})</legend>
-	<div>Structure de rattachement : {{ PFI.structure.code }}</div>
-	<div>Code de l'EOTP : {{ PFI.eotp }}</div>
-	<div>Centre de coût dérivé : {{ PFI.centrecoutderive }}</div>
-	<div>Centre de profit dérivé : {{ PFI.centreprofitderive }}</div>
-	<div>PFI fléché : {% if PFI.is_fleche %}Oui{% else %}Non{% endif %}</div>
-	<div>PFI pluriannuel : {% if PFI.is_pluriannuel %}Oui{% else %}Non{% endif %}</div>
+	<div style="display: inline-block;">Structure de rattachement : {{ PFI.structure.code }}</div>
+	<div style="display: inline-block;">Code de l'EOTP : {{ PFI.eotp }}</div>
+	<div style="display: inline-block;">Centre de coût dérivé : {{ PFI.centrecoutderive }}</div>
+	<div style="display: inline-block;">Centre de profit dérivé : {{ PFI.centreprofitderive }}</div>
+	<div style="display: inline-block;">PFI fléché : {% if PFI.is_fleche %}Oui{% else %}Non{% endif %}</div>
+	<div style="display: inline-block;">PFI pluriannuel : {% if PFI.is_pluriannuel %}Oui{% else %}Non{% endif %}</div>
 </fieldset>
