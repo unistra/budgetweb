@@ -11,7 +11,6 @@ class RecetteForm(forms.ModelForm):
 
     enveloppe = forms.ChoiceField(required=False, widget=forms.Select(
         attrs={'class': 'form-enveloppe'}))
-#    naturecomptablerecette = forms.ModelChoiceField(required=False, queryset=None)
     montant_dc = forms.DecimalField(
         label='DC', widget=forms.TextInput(attrs={'style': 'width:90px;'}))
     montant_ar = forms.DecimalField(
@@ -20,6 +19,8 @@ class RecetteForm(forms.ModelForm):
         label='RE', widget=forms.TextInput(attrs={'style': 'width:90px;'}))
     lienpiecejointe = forms.CharField(
         label='PJ', widget=forms.TextInput(attrs={'style': 'width:2px;'}))
+
+    modal_fields = ('commentaire', 'lienpiecejointe')
 
     class Meta:
         model = Recette
@@ -51,6 +52,7 @@ class RecetteForm(forms.ModelForm):
         is_fleche = pfi.is_fleche
         structure = pfi.structure
         natures = NatureComptableRecette.active.filter(is_fleche=is_fleche)
+        
 
         # Fields initialization
         enveloppes = natures.values_list('enveloppe', flat=True)
@@ -64,7 +66,7 @@ class RecetteForm(forms.ModelForm):
         self.fields['structure'].initial = structure.pk
         self.fields['pfi'].initial = pfi.pk
         self.fields['periodebudget'].initial = periodebudget.pk
-        self.fields['annee'].initial = annee
+        self.fields['annee'].initial = int(annee)
 
         if instance and instance.pk:
             nature = instance.naturecomptablerecette
