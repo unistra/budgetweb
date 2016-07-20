@@ -239,7 +239,6 @@ def depense(request, pfiid, annee):
         if formset.is_valid():
             formset.save()
             return HttpResponseRedirect('/detailspfi/%s' % pfi.pk)
-
     context = {
         'PFI': pfi,
         'formset': formset,
@@ -266,6 +265,7 @@ def recette(request, pfiid, annee):
     if request.method == "POST":
         formset = RecetteFormSet(request.POST)
         if formset.is_valid():
+            print("ici")
             formset.save()
             return HttpResponseRedirect('/detailspfi/%s' % pfi.pk)
 

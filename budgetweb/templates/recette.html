@@ -18,11 +18,15 @@
             <tr>
             {% for field in form.visible_fields %}
                 <th style="white-space:nowrap;">
-                {% if field.name = "DELETE" %}
-                    <span class="danger glyphicon glyphicon-trash"></span>
-                {% else %}
-                    {{ field.label }}
-                {% endif %}
+                  {% if field.name = "DELETE" %}
+                      <span class="danger glyphicon glyphicon-trash"></span>
+                  {% else %}
+                    {% if field.name = "commentaire" %}
+                        <span class="danger glyphicon glyphicon-comment"></span>
+                    {% else %}
+                          {{ field.label }}
+                    {% endif %}
+                  {% endif %}
                 </th>
             {% endfor %}
             </tr>
@@ -34,8 +38,15 @@
                 {{ hidden }}
             {% endfor %}
             {% for field in form.visible_fields %}
+              {% if field.name = "commentaire" or field.name = "lienpiecejointe" %}
+                <td align="center">
+                  <span data-backdrop="false" data-toggle="modal" data-target="#modalCommentaire" data-formid="{{ field.id_for_label }}" class="glyphicon glyphicon-comment"></span>
+                  <div style="visibility:hidden;height:0px;width:0px;">{{ field }}</div>
+                </td>
+              {% else %}
                 <td style="line-height:1; white-space:nowrap" align="center">{{ field }}{{ field.errors }}</td>
-            {% endfor %}
+              {% endif %}
+  	        {% endfor %}
             </tr>
         {% endfor %}
         </tbody>
@@ -44,6 +55,25 @@
     <button type="submit" class="save btn btn-primary">Enregistrer</button>
     </form>
 </div>
+
+<div class="modal fade model-wide" id="modalCommentaire" role="dialog">
+<div class="modal-dialog">
+   <!-- Modal content-->
+   <div class="modal-content">
+     <div class="modal-header">
+       <h4 class="modal-title">Commentaire</h4>
+     </div>
+     <div class="modal-body">
+       <textarea cols="60" id="modalcomm" name="modalcomm" rows="10"></textarea>
+       <input type="textfield" size="10" id="inputformid" name="inputformid" hidden />
+       <button id="modal-submit" data-dismiss="modal" type="submit" class="save btn btn-primary">Valider</button>
+     </div>
+     <div class="modal-footer">
+       <button type="submit" class="btn btn-default" data-dismiss="modal">Close</button>
+     </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
 {% block foot-javascript %}
 <script src="{% static 'js/moment/moment-with-locales.min.js' %}"></script>
@@ -51,6 +81,16 @@
 <script src="{% static 'js/budgetweb.js' %}"></script>
 <script src="{% static 'js/jquery.formset.js' %}"></script>
 <script>
+    $(document).ready(function() {
+        $('#modalCommentaire').on('show.bs.modal', function(e) {
+           $('#inputformid').attr('value', $(e.relatedTarget).data('formid'));
+           $('#modalcomm').val($('#' + $(e.relatedTarget).data('formid')).val());
+        });
+        $('#modal-submit').on('click', function(e) {
+          dest = $('#inputformid').attr('value');
+          $('#' + dest).val($('#modalcomm').val());
+        });
+    });
     $('#formset tbody tr').formset({
         addText: 'Ajouter une recette',
         addCssClass: 'btn-primary btn',

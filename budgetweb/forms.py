@@ -21,6 +21,9 @@ class RecetteForm(forms.ModelForm):
                                     widget=forms.NumberInput(
                                      attrs={'style': 'width:90px;\
                                             -moz-appearance: textfield;'}))
+    lienpiecejointe = forms.CharField(label='PJ',
+                                      widget=forms.TextInput(
+                                         attrs={'style': 'width:2px;'}))
 
     class Meta:
         model = Recette
@@ -29,7 +32,7 @@ class RecetteForm(forms.ModelForm):
                   'montant_ar', 'montant_re', 'montant_dc', 'commentaire',
                   'lienpiecejointe')
         widgets = {
-            'commentaire': forms.Textarea(attrs={'cols': 40, 'rows': 2}),
+            'commentaire': forms.Textarea(attrs={'cols': 1, 'rows': 1}),
             'annee': forms.NumberInput(attrs={
                         'style': 'width:50px;-moz-appearance: textfield;',
                         'class': 'toto'}),
@@ -71,6 +74,9 @@ class DepenseForm(forms.ModelForm):
                                     widget=forms.NumberInput(
                                      attrs={'style': 'width:90px;\
                                             -moz-appearance: textfield;'}))
+    lienpiecejointe = forms.CharField(label='PJ',
+                                      widget=forms.TextInput(
+                                         attrs={'style': 'width:2px;'}))
 
     class Meta:
         model = Depense
@@ -79,7 +85,7 @@ class DepenseForm(forms.ModelForm):
                   'montant_ae', 'montant_cp', 'montant_dc', 'commentaire',
                   'lienpiecejointe')
         widgets = {
-            'commentaire': forms.Textarea(attrs={'cols': 40, 'rows': 2}),
+            'commentaire': forms.Textarea(attrs={'cols': 1, 'rows': 1},),
             'pfi': forms.HiddenInput(),
             'annee': forms.NumberInput(attrs={
                         'style': 'width:45px;-moz-appearance: textfield;'}),
