@@ -14,13 +14,13 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='depense',
             name='periodebudget',
-            field=models.ForeignKey(verbose_name='Période budgétaire', related_name='periodebudgetdepense', default='toto', to='budgetweb.PeriodeBudget'),
+            field=models.ForeignKey(verbose_name='Période budgétaire', related_name='periodebudgetdepense', default='', to='budgetweb.PeriodeBudget'),
             preserve_default=False,
         ),
         migrations.AlterField(
             model_name='recette',
             name='periodebudget',
-            field=models.ForeignKey(verbose_name='Période budgétaire', related_name='periodebudgetrecette', default='toto', to='budgetweb.PeriodeBudget'),
+            field=models.ForeignKey(verbose_name='Période budgétaire', related_name='periodebudgetrecette', default='', to='budgetweb.PeriodeBudget'),
             preserve_default=False,
         ),
     ]
