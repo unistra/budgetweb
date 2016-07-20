@@ -33,7 +33,7 @@ class Command(BaseCommand):
                             structure = Structure.objects.get(code=structure)
                             users.setdefault(username, []).append(structure)
                         except Structure.DoesNotExist:
-                            missing_structures.update(structure)
+                            missing_structures.update([structure])
                             continue
                     except IndexError:
                         pass

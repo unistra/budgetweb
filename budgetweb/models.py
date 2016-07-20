@@ -29,9 +29,10 @@ class StructureAuthorizations(models.Model):
         return self.user.username
 
     def save(self, *args, **kwargs):
-        for structure in self.structures.all():
-            for children in structure.get_children():
-                self.structures.add(children)
+        if self.pk:
+            for structure in self.structures.all():
+                for children in structure.get_children():
+                    self.structures.add(children)
         super().save(*args, **kwargs)
 
 
