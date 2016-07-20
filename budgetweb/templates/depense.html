@@ -14,18 +14,16 @@
     {% for form in formset %}
         {% if forloop.counter = 1 %}
         <thead>
-            <tr><th colspan="9" align="center">Formulaire de saisies des dépenses.</th></tr>
+            <tr><th colspan="10" align="center">Formulaire de saisies des dépenses.</th></tr>
             <tr>
             {% for field in form.visible_fields %}
                 <th style="white-space:nowrap;">
                 {% if field.name = "DELETE" %}
                     <span class="danger glyphicon glyphicon-trash"></span>
+                {% elif field.name = "commentaire" %}
+                    <span class="danger glyphicon glyphicon-comment"></span>
                 {% else %}
-                  {% if field.name = "commentaire" %}
-                      <span class="danger glyphicon glyphicon-comment"></span>
-                  {% else %}
-                        {{ field.label }}
-                  {% endif %}
+                    {{ field.label }}
                 {% endif %}
                 </th>
             {% endfor %}
@@ -35,17 +33,18 @@
 	    {% endif %}
 	        <tr class="{% cycle 'row1' 'row2' %}">
 	        {% for hidden in form.hidden_fields %}
-              {{ hidden }}
+                {{ hidden }}
 	        {% endfor %}
 	        {% for field in form.visible_fields %}
-            {% if field.name = "commentaire" or field.name = "lienpiecejointe" %}
-              <td align="center">
-                <span data-backdrop="false" data-toggle="modal" data-target="#modalCommentaire" data-formid="{{ field.id_for_label }}" class="glyphicon glyphicon-comment"></span>
-                <div style="visibility:hidden;height:0px;width:0px;">{{ field }}</div>
-              </td>
-            {% else %}
-              <td style="line-height:1; white-space:nowrap" align="center">{{ field }}{{ field.errors }}</td>
-            {% endif %}
+	            <td style="line-height:1; white-space:nowrap" align="center">
+                {% if field.name in form.modal_fields %}
+                    <span data-backdrop="false" data-toggle="modal" data-target="#modalCommentaire" data-formid="{{ field.id_for_label }}" class="glyphicon glyphicon-{% if field.value %}edit{% else %}pencil{% endif %}" title="{% if field.value %}Modifier{% else %}Ajouter{% endif %}"></span>
+                    <div style="visibility:hidden;height:0px;width:0px;">{{ field }}</div>
+                {% else %}
+                    {{ field }}
+                {% endif %}
+                {{ field.errors }}
+                </td>
 	        {% endfor %}
 	        </tr>
 	    {% endfor %}

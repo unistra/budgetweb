@@ -61,8 +61,16 @@ $(document).ready(function() {
 		var idRegex = /id_form-(\d+).*/;
 		var form_id = idRegex.exec(this.id)[1];
 		var pfi_id = $("#id_form-" + form_id + "-pfi").attr("value");
-		var $nature = $("#id_form-" + form_id + "-naturecomptablerecette");
-	    var url = "/api/fund_designation/enveloppe/" + this.value + "/"+ pfi_id;
+		var models = ["naturecomptablerecette", "naturecomptabledepense"];
+		for (var i=0; i < models.length; i++) {
+			var model = models[i];
+			var $nature = $("#id_form-" + form_id + "-" + model);
+			if ($nature.length) {
+				break;
+			}
+		}	
+		
+	    var url = "/api/"+ model +"/enveloppe/" + this.value + "/"+ pfi_id;
 	    changeOptions(url, $nature);
 	});
 	

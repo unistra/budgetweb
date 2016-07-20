@@ -18,15 +18,13 @@
             <tr>
             {% for field in form.visible_fields %}
                 <th style="white-space:nowrap;">
-                  {% if field.name = "DELETE" %}
-                      <span class="danger glyphicon glyphicon-trash"></span>
-                  {% else %}
-                    {% if field.name = "commentaire" %}
-                        <span class="danger glyphicon glyphicon-comment"></span>
-                    {% else %}
-                        {{ field.label }}
-                    {% endif %}
-                  {% endif %}
+                {% if field.name = "DELETE" %}
+                    <span class="danger glyphicon glyphicon-trash"></span>
+                {% elif field.name = "commentaire" %}
+                    <span class="danger glyphicon glyphicon-comment"></span>
+                {% else %}
+                    {{ field.label }}
+                {% endif %}
                 </th>
             {% endfor %}
             </tr>
@@ -92,6 +90,7 @@
           $('#' + dest).val($('#modalcomm').val());
         });
     });
+    
     $('#formset tbody tr').formset({
         addText: 'Ajouter une recette',
         addCssClass: 'btn-primary btn',

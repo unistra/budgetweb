@@ -273,10 +273,3 @@ class Recette(models.Model):
     modifiele = models.DateTimeField(verbose_name='Date de modification',
                                      auto_now=True, blank=True)
     modifiepar = models.CharField(max_length=100, blank=True, null=True)
-
-    # def clean(self):
-    #    pass
-    #
-    # def save(self, *args, **kwargs):
-    #    self.full_clean()
-    #    super(RecetteFull, self).save(*args, **kwargs)

@@ -14,9 +14,9 @@ urlpatterns = [
     url(r'^$', home, name='home'),
 
     # Ajax
-    url(r'^api/fund_designation/enveloppe/(?P<enveloppe>\w+)/(?P<pfiid>\w+)$',
-        views.api_fund_designation_by_enveloppe,
-        name='api-fund-designation-by-enveloppe'
+    url(r'^api/(?P<model>naturecomptablerecette|naturecomptabledepense)/enveloppe/(?P<enveloppe>\w+)/(?P<pfiid>\w+)$',
+        views.api_fund_designation_by_nature_and_enveloppe,
+        name='api-fund-designation-by-nature-and-enveloppe'
     ),
 
     # Base de l'arbre.

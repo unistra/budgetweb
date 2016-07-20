@@ -52,7 +52,6 @@ class RecetteForm(forms.ModelForm):
         is_fleche = pfi.is_fleche
         structure = pfi.structure
         natures = NatureComptableRecette.active.filter(is_fleche=is_fleche)
-        
 
         # Fields initialization
         enveloppes = natures.values_list('enveloppe', flat=True)
@@ -80,6 +79,8 @@ class RecetteForm(forms.ModelForm):
 
 class DepenseForm(forms.ModelForm):
 
+    enveloppe = forms.ChoiceField(required=False, widget=forms.Select(
+        attrs={'class': 'form-enveloppe'}))
     montant_dc = forms.DecimalField(
         label='DC', widget=forms.TextInput(attrs={'style': 'width:90px;'}))
     montant_ae = forms.DecimalField(
@@ -89,10 +90,12 @@ class DepenseForm(forms.ModelForm):
     lienpiecejointe = forms.CharField(
         label='PJ', widget=forms.TextInput(attrs={'style': 'width:2px;'}))
 
+    modal_fields = ('commentaire', 'lienpiecejointe')
+
     class Meta:
         model = Depense
-        fields = ('pfi', 'structure', 'domainefonctionnel',
-                  'periodebudget', 'naturecomptabledepense', 'annee',
+        fields = ('pfi', 'structure', 'domainefonctionnel', 'annee',
+                  'periodebudget', 'enveloppe', 'naturecomptabledepense',
                   'montant_ae', 'montant_cp', 'montant_dc', 'commentaire',
                   'lienpiecejointe')
         widgets = {
@@ -104,21 +107,43 @@ class DepenseForm(forms.ModelForm):
             }),
             'structure': forms.HiddenInput(attrs={'readonly': 'readonly'}),
             'periodebudget': forms.HiddenInput(attrs={'readonly': 'readonly'}),
+            'naturecomptablerecette': forms.Select(attrs={
+                'style': 'width:100%;'
+            }),
         }
 
     def __init__(self, *args, **kwargs):
         pfi = kwargs.pop('pfi')
         periodebudget = kwargs.pop('periodebudget')
         annee = kwargs.pop('annee')
-        super(DepenseForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
+
+        instance = self.instance
         is_fleche = pfi.is_fleche
         structure = pfi.structure
-        nc = NatureComptableDepense.objects.filter(is_fleche=is_fleche)
-        self.fields['naturecomptabledepense'].queryset = nc
+        natures = NatureComptableDepense.objects.filter(is_fleche=is_fleche)
+
+        # Fields initialization
+        enveloppes = natures.values_list('enveloppe', flat=True)
+        enveloppe_choices = [('', '---------')] + sorted([
+            (e, e) for e in set(enveloppes)])
+        self.fields['enveloppe'].choices = enveloppe_choices
+        self.fields['naturecomptabledepense'].queryset = natures
+
+        # Set the initial values
         self.fields['structure'].initial = structure.pk
         self.fields['pfi'].initial = pfi.pk
         self.fields['periodebudget'].initial = periodebudget.pk
-        self.fields['annee'].initial = annee
+        self.fields['annee'].initial = int(annee)
+
+        if instance and instance.pk:
+            nature = instance.naturecomptabledepense
+            self.fields['enveloppe'].initial = nature.enveloppe
+            natures = NatureComptableDepense.active.filter(
+                is_fleche=is_fleche, enveloppe=nature.enveloppe)
+            self.fields['naturecomptabledepense'].choices += [
+                (n.pk, str(n)) for n in natures]
+            self.fields['naturecomptabledepense'].initial = nature
 
 
 class PlanFinancementPluriForm(forms.ModelForm):

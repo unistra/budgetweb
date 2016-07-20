@@ -29,13 +29,18 @@ def home(request):
 
 # AJAX
 @is_ajax_get
-def api_fund_designation_by_enveloppe(request, enveloppe, pfiid):
+def api_fund_designation_by_nature_and_enveloppe(request, model, enveloppe, pfiid):
     pfi = PlanFinancement.objects.get(pk=pfiid)
-    model = NatureComptableRecette
-    natures = model.active.filter(is_fleche=pfi.is_fleche, enveloppe=enveloppe)
+    models = {
+        'naturecomptablerecette': NatureComptableRecette,
+        'naturecomptabledepense': NatureComptableDepense,
+    }
+    natures = models[model].active.filter(
+        is_fleche=pfi.is_fleche, enveloppe=enveloppe)
     response_data = [
         {"id": nature.pk, "label": str(nature)} for nature in natures]
-    return HttpResponse(json.dumps(response_data), content_type='application/json')
+    return HttpResponse(
+        json.dumps(response_data), content_type='application/json')
 
 
 @login_required
