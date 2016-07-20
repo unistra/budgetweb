@@ -202,7 +202,7 @@ class Depense(models.Model):
     lienpiecejointe = models.CharField(max_length=255,
                                        verbose_name='Lien vers un fichier',
                                        validators=[URLValidator()],
-                                       blank=True)
+                                       blank=True, null=True)
     periodebudget = models.ForeignKey('PeriodeBudget',
                                       verbose_name='Période budgétaire',
                                       blank=True, null=True,
@@ -262,7 +262,7 @@ class Recette(models.Model):
     lienpiecejointe = models.CharField(max_length=255,
                                        verbose_name='Lien vers un fichier',
                                        validators=[URLValidator()],
-                                       blank=True)
+                                       blank=True, null=True)
     periodebudget = models.ForeignKey('PeriodeBudget',
                                       verbose_name='Période budgétaire',
                                       blank=True, null=True,
