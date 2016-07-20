@@ -10,7 +10,6 @@ admin.autodiscover()
 urlpatterns = [
     url(r'^accounts/login/$', 'django_cas.views.login'),
     url(r'^accounts/logout/$', 'django_cas.views.logout'),
-    # Examples:
     url(r'^$', home, name='home'),
 
     # Ajax
@@ -20,14 +19,15 @@ urlpatterns = [
     ),
 
     # Base de l'arbre.
+    url(r'^showtree/(?P<type_affichage>\w+)/(?P<structid>\w+)$',
+        views.show_tree, name="show_tree_structid"),
     url(r'^showtree/(?P<type_affichage>\w+)/$', views.show_tree,
         name="show_tree"),
-    # Affichage AJAX.
-    url(r'^showtree/(?P<type_affichage>\w+)/getsubtree/(?P<structid>\w+)$',
-        views.show_sub_tree, name="show_sub_tree"),
+
     # Pluriannuel
     url(r'^pluriannuel/(?P<pfiid>\w+)$', views.pluriannuel,
         name="pluriannuel"),
+
     # Détails d'un PFI
     url(r'^detailspfi/(?P<pfiid>\w+)$', views.detailspfi,
         name="detailspfi"),

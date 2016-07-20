@@ -4,7 +4,6 @@ import json
 
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
-from django.forms import formset_factory
 from django.forms.models import modelformset_factory
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import (get_object_or_404, redirect, render,
@@ -12,9 +11,9 @@ from django.shortcuts import (get_object_or_404, redirect, render,
 
 from .decorators import is_ajax_get, is_authorized_structure
 from .forms import DepenseForm, PlanFinancementPluriForm, RecetteForm
-from .libs.node import getCurrentYear, generateTree
 from .models import (Depense, NatureComptableDepense, NatureComptableRecette,
                      PeriodeBudget, PlanFinancement, Recette, Structure)
+from .utils import getCurrentYear
 
 
 # @login_required
@@ -39,24 +38,13 @@ def api_fund_designation_by_nature_and_enveloppe(request, model, enveloppe, pfii
 
 
 @login_required
-def show_tree(request, type_affichage):
-    listeCF = generateTree(request)
-    return render(request, 'showtree.html', {'listeCF': listeCF,
-                                             'typeAffichage': type_affichage,
-                                             'currentYear': getCurrentYear})
-
-
-@login_required
-def show_sub_tree(request, type_affichage, structid):
-
-    # On récupère l'ID sur PAPA
-    structure = Structure.objects.get(code=structid)
-    # On récupère la liste des CF fils.
-    listeCF = Structure.objects.filter(parent=structure)
-    # print('LCF : %s' % listeCF)
+def show_tree(request, type_affichage, structid=None):
+    queryset = {'parent__code': structid} if structid else {'parent': None}
+    listeCF = Structure.objects.filter(**queryset)
 
     # Et enfin on ajoute les PFI, si jamais il y en a.
-    listePFI = PlanFinancement.objects.filter(structure=structure).values()
+    listePFI = PlanFinancement.objects.filter(
+        structure__code=structid).values()
     for pfi in listePFI:
         pfi['sommeDepenseAE'] = Depense.objects.filter(
                                 pfi__id=pfi['id']).aggregate(
@@ -77,10 +65,14 @@ def show_sub_tree(request, type_affichage, structid):
                                 pfi__id=pfi['id']).aggregate(
                                 somme=Sum('montant_dc'))
 
-    context = {'listeCF': listeCF, 'listePFI': listePFI,
-               'typeAffichage': type_affichage,
-               'currentYear': getCurrentYear}
-    return render(request, 'show_sub_tree.html', context)
+    context = {
+        'listeCF': listeCF,
+        'listePFI': listePFI,
+        'typeAffichage': type_affichage,
+        'currentYear': getCurrentYear
+    }
+    template = 'show_sub_tree.html' if request.is_ajax() else 'showtree.html'
+    return render(request, template, context)
 
 
 @login_required
@@ -165,9 +157,6 @@ def recette(request, pfiid, annee):
         if formset.is_valid():
             formset.save()
             return HttpResponseRedirect('/detailspfi/%s' % pfi.pk)
-        # DEBUG
-        else:
-            print('EEE : %s' % formset.errors)
 
     context = {
         'PFI': pfi,

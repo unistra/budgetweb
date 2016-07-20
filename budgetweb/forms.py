@@ -165,4 +165,4 @@ class PlanFinancementPluriForm(forms.ModelForm):
 
         if date_fin and date_debut and date_fin < date_debut:
             raise forms.ValidationError(
-                "La date de début est inférieur à la date de fin !")
+                "La date de début est inférieure à la date de fin !")

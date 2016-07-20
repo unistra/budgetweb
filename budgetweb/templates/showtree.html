@@ -6,27 +6,26 @@
 {% endblock %}
 
 {% block content %}
-		<div class="col-md-12">
-			<div class="title">
-				{% if typeAffichage == "gbcp" %}
- 					<div class="showTree" style="margin-right:20px;">&sum; Rec. RE</div>
- 					<div class="showTree">&sum; Rec. AR</div>
- 					<div class="showTree">&nbsp;</div>
- 					<div class="showTree">&sum; Dép. CP</div>
- 					<div class="showTree">&sum; Dép. AE</div>
- 				{% else %}
- 					<div class="showTree" style="margin-right:20px;">&sum; Rec. DC</div>
- 					<div class="showTree">&nbsp;</div>
- 					<div class="showTree">&sum; Dép. DC</div>
-				{% endif %}
-			</div>
-			<div class="tree well">
-
-			<ul>
-			{%for node in listeCF.getChild %}
-				{%include "show_tree_template.html" %}
-			{%endfor%}
-			</ul>
-			</div>
-		</div>
+<div class="col-md-12">
+	<div class="title">
+	{% if typeAffichage == "gbcp" %}
+		<div class="showTree" style="margin-right:20px;">&sum; Rec. RE</div>
+		<div class="showTree">&sum; Rec. AR</div>
+		<div class="showTree">&nbsp;</div>
+		<div class="showTree">&sum; Dép. CP</div>
+		<div class="showTree">&sum; Dép. AE</div>
+	{% else %}
+		<div class="showTree" style="margin-right:20px;">&sum; Rec. DC</div>
+		<div class="showTree">&nbsp;</div>
+		<div class="showTree">&sum; Dép. DC</div>
+	{% endif %}
+	</div>
+	<div class="tree well">
+		<ul>
+		{% for node in listeCF %}
+			{% include "show_sub_tree.html" %}
+		{% endfor %}
+		</ul>
+	</div>
+</div>
 {% endblock %}

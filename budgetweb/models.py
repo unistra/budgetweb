@@ -278,3 +278,26 @@ class Recette(models.Model):
     modifiele = models.DateTimeField(verbose_name='Date de modification',
                                      auto_now=True, blank=True)
     modifiepar = models.CharField(max_length=100, blank=True, null=True)
+
+
+class StructureMontant(models.Model):
+    structure = models.OneToOneField(Structure)
+    depense_montant_dc = models.DecimalField(
+        max_digits=12, decimal_places=2, blank=True, null=True)
+    depense_montant_cp = models.DecimalField(
+        max_digits=12, decimal_places=2, blank=True, null=True)
+    depense_montant_ae = models.DecimalField(
+        max_digits=12, decimal_places=2, blank=True, null=True)
+    recette_montant_dc = models.DecimalField(
+        max_digits=12, decimal_places=2, blank=True, null=True)
+    recette_montant_re = models.DecimalField(
+        max_digits=12, decimal_places=2, blank=True, null=True)
+    recette_montant_ar = models.DecimalField(
+        max_digits=12, decimal_places=2, blank=True, null=True)
+    modification_date = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+
+

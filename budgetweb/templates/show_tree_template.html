@@ -15,10 +15,10 @@
 		<div class="showTree">50 000,00 &euro;</div>
 	{% endif %}
 		<ul id="{{ node.title }}">
-         {%for ch in node.getChild %}
-              {%with node=ch template_name="show_tree_template.html" %}
+         {% for ch in node.getChild %}
+              {% with node=ch template_name="show_tree_template.html" %}
                    {% include template_name with typeAffichage="typeAffichage" %}
-              {%endwith%}
+              {% endwith %}
          {%endfor%}
 		 </ul>
 </li>
