@@ -17,7 +17,7 @@ class RecetteForm(forms.ModelForm):
         label='AR', widget=forms.TextInput(attrs={'style': 'width:90px;'}))
     montant_re = forms.DecimalField(
         label='RE', widget=forms.TextInput(attrs={'style': 'width:90px;'}))
-    lienpiecejointe = forms.CharField(
+    lienpiecejointe = forms.CharField(required=False,
         label='PJ', widget=forms.TextInput(attrs={'style': 'width:2px;'}))
 
     modal_fields = ('commentaire', 'lienpiecejointe')
@@ -87,7 +87,7 @@ class DepenseForm(forms.ModelForm):
         label='AE', widget=forms.TextInput(attrs={'style': 'width:90px;'}))
     montant_cp = forms.DecimalField(
         label='CP', widget=forms.TextInput(attrs={'style': 'width:90px;'}))
-    lienpiecejointe = forms.CharField(
+    lienpiecejointe = forms.CharField(required=False,
         label='PJ', widget=forms.TextInput(attrs={'style': 'width:2px;'}))
 
     modal_fields = ('commentaire', 'lienpiecejointe')

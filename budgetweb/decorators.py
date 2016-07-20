@@ -40,7 +40,7 @@ def is_ajax_get(view_func):
     """
     @wraps(view_func)
     def wrapper(request, *args, **kwargs):
-        if True:#request.is_ajax() and request.method == 'GET':
+        if request.is_ajax() and request.method == 'GET':
             return view_func(request, *args, **kwargs)
         raise PermissionDenied()
     return wrapper

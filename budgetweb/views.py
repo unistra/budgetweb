@@ -16,11 +16,6 @@ from .libs.node import getCurrentYear, generateTree
 from .models import (Depense, NatureComptableDepense, NatureComptableRecette,
                      PeriodeBudget, PlanFinancement, Recette, Structure)
 
-# logging
-import logging
-# Get an instance of a logger
-logger = logging.getLogger(__name__)
-
 
 # @login_required
 def home(request):
@@ -170,6 +165,9 @@ def recette(request, pfiid, annee):
         if formset.is_valid():
             formset.save()
             return HttpResponseRedirect('/detailspfi/%s' % pfi.pk)
+        # DEBUG
+        else:
+            print('EEE : %s' % formset.errors)
 
     context = {
         'PFI': pfi,
