@@ -9,74 +9,83 @@ from .models import (Depense, NatureComptableDepense, NatureComptableRecette,
 
 class RecetteForm(forms.ModelForm):
 
-    montant_dc = forms.DecimalField(label='DC',
-                                    widget=forms.NumberInput(
-                                     attrs={'style': 'width:90px;\
-                                            -moz-appearance: textfield;'}))
-    montant_ar = forms.DecimalField(label='AR',
-                                    widget=forms.NumberInput(
-                                     attrs={'style': 'width:90px;\
-                                            -moz-appearance: textfield;'}))
-    montant_re = forms.DecimalField(label='RE',
-                                    widget=forms.NumberInput(
-                                     attrs={'style': 'width:90px;\
-                                            -moz-appearance: textfield;'}))
-    lienpiecejointe = forms.CharField(label='PJ',
-                                      widget=forms.TextInput(
-                                         attrs={'style': 'width:2px;'}))
+    enveloppe = forms.ChoiceField(required=False, widget=forms.Select(
+        attrs={'class': 'form-enveloppe'}))
+#    naturecomptablerecette = forms.ModelChoiceField(required=False, queryset=None)
+    montant_dc = forms.DecimalField(
+        label='DC', widget=forms.TextInput(attrs={'style': 'width:90px;'}))
+    montant_ar = forms.DecimalField(
+        label='AR', widget=forms.TextInput(attrs={'style': 'width:90px;'}))
+    montant_re = forms.DecimalField(
+        label='RE', widget=forms.TextInput(attrs={'style': 'width:90px;'}))
+    lienpiecejointe = forms.CharField(
+        label='PJ', widget=forms.TextInput(attrs={'style': 'width:2px;'}))
 
     class Meta:
         model = Recette
         fields = ('pfi', 'structure', 'periodebudget',
-                  'naturecomptablerecette', 'annee',
-                  'montant_ar', 'montant_re', 'montant_dc', 'commentaire',
+                  'annee', 'enveloppe', 'naturecomptablerecette', 'montant_ar',
+                  'montant_re', 'montant_dc', 'commentaire',
                   'lienpiecejointe')
         widgets = {
-            'commentaire': forms.Textarea(attrs={'cols': 1, 'rows': 1}),
-            'annee': forms.NumberInput(attrs={
-                        'style': 'width:50px;-moz-appearance: textfield;',
-                        'class': 'toto'}),
-            'pfi': forms.HiddenInput(),
-            'structure': forms.HiddenInput(),
-            'periodebudget': forms.HiddenInput(),
+            'commentaire': forms.Textarea(attrs={'cols': 40, 'rows': 2}),
+            'annee': forms.TextInput(attrs={
+                'style': 'width:50px;',
+                'readonly': 'readonly'
+            }),
+            'pfi': forms.HiddenInput(attrs={'readonly': 'readonly'}),
+            'structure': forms.HiddenInput(attrs={'readonly': 'readonly'}),
+            'periodebudget': forms.HiddenInput(attrs={'readonly': 'readonly'}),
+            'naturecomptablerecette': forms.Select(attrs={
+                'style': 'width:100%;'
+            }),
         }
 
     def __init__(self, *args, **kwargs):
         pfi = kwargs.pop('pfi')
         periodebudget = kwargs.pop('periodebudget')
         annee = kwargs.pop('annee')
-        super(RecetteForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
+
+        instance = self.instance
         is_fleche = pfi.is_fleche
         structure = pfi.structure
-        nc = NatureComptableRecette.objects.filter(is_fleche=is_fleche)
-        self.fields['naturecomptablerecette'].queryset = nc
+        natures = NatureComptableRecette.active.filter(is_fleche=is_fleche)
+
+        # Fields initialization
+        enveloppes = natures.values_list('enveloppe', flat=True)
+        enveloppe_choices = [('', '---------')] + sorted([
+            (e, e) for e in set(enveloppes)])
+        self.fields['enveloppe'].choices = enveloppe_choices
+        self.fields['naturecomptablerecette'].choices = [('', '---------')]
+        self.fields['naturecomptablerecette'].queryset = natures
+
+        # Set the initial values
         self.fields['structure'].initial = structure.pk
-        self.fields['structure'].widget.attrs['readonly'] = True
         self.fields['pfi'].initial = pfi.pk
-        self.fields['pfi'].widget.attrs['readonly'] = True
         self.fields['periodebudget'].initial = periodebudget.pk
-        self.fields['periodebudget'].widget.attrs['readonly'] = True
-        self.fields['annee'].widget.attrs['readonly'] = True
         self.fields['annee'].initial = annee
+
+        if instance and instance.pk:
+            nature = instance.naturecomptablerecette
+            self.fields['enveloppe'].initial = nature.enveloppe
+            natures = NatureComptableRecette.active.filter(
+                is_fleche=is_fleche, enveloppe=nature.enveloppe)
+            self.fields['naturecomptablerecette'].choices += [
+                (n.pk, str(n)) for n in natures]
+            self.fields['naturecomptablerecette'].initial = nature
 
 
 class DepenseForm(forms.ModelForm):
 
-    montant_dc = forms.DecimalField(label='DC',
-                                    widget=forms.NumberInput(
-                                     attrs={'style': 'width:90px;\
-                                            -moz-appearance: textfield;'}))
-    montant_ae = forms.DecimalField(label='AE',
-                                    widget=forms.NumberInput(
-                                     attrs={'style': 'width:90px;\
-                                            -moz-appearance: textfield;'}))
-    montant_cp = forms.DecimalField(label='CP',
-                                    widget=forms.NumberInput(
-                                     attrs={'style': 'width:90px;\
-                                            -moz-appearance: textfield;'}))
-    lienpiecejointe = forms.CharField(label='PJ',
-                                      widget=forms.TextInput(
-                                         attrs={'style': 'width:2px;'}))
+    montant_dc = forms.DecimalField(
+        label='DC', widget=forms.TextInput(attrs={'style': 'width:90px;'}))
+    montant_ae = forms.DecimalField(
+        label='AE', widget=forms.TextInput(attrs={'style': 'width:90px;'}))
+    montant_cp = forms.DecimalField(
+        label='CP', widget=forms.TextInput(attrs={'style': 'width:90px;'}))
+    lienpiecejointe = forms.CharField(
+        label='PJ', widget=forms.TextInput(attrs={'style': 'width:2px;'}))
 
     class Meta:
         model = Depense
@@ -85,12 +94,14 @@ class DepenseForm(forms.ModelForm):
                   'montant_ae', 'montant_cp', 'montant_dc', 'commentaire',
                   'lienpiecejointe')
         widgets = {
-            'commentaire': forms.Textarea(attrs={'cols': 1, 'rows': 1},),
-            'pfi': forms.HiddenInput(),
-            'annee': forms.NumberInput(attrs={
-                        'style': 'width:45px;-moz-appearance: textfield;'}),
-            'structure': forms.HiddenInput(),
-            'periodebudget': forms.HiddenInput(),
+            'commentaire': forms.Textarea(attrs={'cols': 40, 'rows': 2}),
+            'pfi': forms.HiddenInput(attrs={'readonly': 'readonly'}),
+            'annee': forms.TextInput(attrs={
+                'style': 'width:50px;',
+                'readonly': 'readonly'
+            }),
+            'structure': forms.HiddenInput(attrs={'readonly': 'readonly'}),
+            'periodebudget': forms.HiddenInput(attrs={'readonly': 'readonly'}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -103,12 +114,8 @@ class DepenseForm(forms.ModelForm):
         nc = NatureComptableDepense.objects.filter(is_fleche=is_fleche)
         self.fields['naturecomptabledepense'].queryset = nc
         self.fields['structure'].initial = structure.pk
-        self.fields['structure'].widget.attrs['readonly'] = True
         self.fields['pfi'].initial = pfi.pk
-        self.fields['pfi'].widget.attrs['readonly'] = True
         self.fields['periodebudget'].initial = periodebudget.pk
-        self.fields['periodebudget'].widget.attrs['readonly'] = True
-        self.fields['annee'].widget.attrs['readonly'] = True
         self.fields['annee'].initial = annee
 
 

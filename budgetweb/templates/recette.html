@@ -14,7 +14,7 @@
     {% for form in formset %}
         {% if forloop.counter = 1 %}
         <thead>
-            <tr><th colspan="8" align="center">Formulaire de saisies des recettes.</th></tr>
+            <tr><th colspan="10" align="center">Formulaire de saisies des recettes.</th></tr>
             <tr>
             {% for field in form.visible_fields %}
                 <th style="white-space:nowrap;">
@@ -42,6 +42,7 @@
                 <td align="center">
                   <span data-backdrop="false" data-toggle="modal" data-target="#modalCommentaire" data-formid="{{ field.id_for_label }}" class="glyphicon glyphicon-comment"></span>
                   <div style="visibility:hidden;height:0px;width:0px;">{{ field }}</div>
+                  {{ field.errors }}
                 </td>
               {% else %}
                 <td style="line-height:1; white-space:nowrap" align="center">{{ field }}{{ field.errors }}</td>

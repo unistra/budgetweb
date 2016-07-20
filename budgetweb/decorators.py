@@ -1,5 +1,6 @@
 from functools import wraps
 
+from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseForbidden
 
 from .exceptions import StructureUnauthorizedException
@@ -30,4 +31,16 @@ def is_authorized_structure(func):
             return HttpResponseForbidden(
                 StructureUnauthorizedException().message)
         return func(request, *args, **kwargs)
+    return wrapper
+
+
+def is_ajax_get(view_func):
+    """
+    Check if the request is and ajax GET request
+    """
+    @wraps(view_func)
+    def wrapper(request, *args, **kwargs):
+        if True:#request.is_ajax() and request.method == 'GET':
+            return view_func(request, *args, **kwargs)
+        raise PermissionDenied()
     return wrapper

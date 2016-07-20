@@ -6,6 +6,12 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 
+class ActiveManager(models.Manager):
+    def get_queryset(self):
+        return super(ActiveManager, self).get_queryset()\
+            .filter(is_active=True)
+
+
 class StructureAuthorizations(models.Model):
     """
     Gestion des autorisations utilisateurs sur les CF
@@ -34,6 +40,9 @@ class PeriodeBudget(models.Model):
     annee = models.PositiveIntegerField('Année')
     is_active = models.BooleanField('Activé (oui/,non)', default=True)
 
+    objects = models.Manager()
+    active = ActiveManager()
+
     def __str__(self):
         return '{0.code} -- {0.label} -- {0.annee}'.format(self)
 
@@ -47,6 +56,9 @@ class DomaineFonctionnel(models.Model):
     label_court = models.CharField('Libellé court', max_length=100, default="",
                                    null=True, blank=True,)
     is_active = models.BooleanField('Actif', max_length=100, default=True)
+
+    objects = models.Manager()
+    active = ActiveManager()
 
     def __str__(self):
         return '{0.label_court}'.format(self)
@@ -63,6 +75,9 @@ class Structure(models.Model):
         'Structure', blank=True, null=True, related_name='fils',
         verbose_name=u'Lien direct vers la structure parent')
     is_active = models.BooleanField('Actif', max_length=100, default=True)
+
+    objects = models.Manager()
+    active = ActiveManager()
 
     class Meta:
         ordering = ['code']
@@ -105,6 +120,9 @@ class PlanFinancement(models.Model):
     date_fin = models.DateField('Date de fin', null=True, blank=True,
                                 help_text='Date de fin')
 
+    objects = models.Manager()
+    active = ActiveManager()
+
     class Meta:
         ordering = ['label']
 
@@ -128,6 +146,9 @@ class NatureComptableDepense(models.Model):
         max_length=100, verbose_name='Décalage trésorerie')
     is_active = models.BooleanField('Actif', max_length=100, default=True)
 
+    objects = models.Manager()
+    active = ActiveManager()
+
     def __str__(self):
         return '{0.code_nature_comptable} - \
                 {0.label_nature_comptable}'.format(self)
@@ -150,6 +171,9 @@ class NatureComptableRecette(models.Model):
         max_length=255, verbose_name='Désignation du compte budgétaire')
     is_fleche = models.BooleanField('Fleché', max_length=100, default=True)
     is_active = models.BooleanField('Actif', max_length=100, default=True)
+
+    objects = models.Manager()
+    active = ActiveManager()
 
     def __str__(self):
         return '{0.code_nature_comptable} - \

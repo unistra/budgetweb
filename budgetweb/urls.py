@@ -13,6 +13,12 @@ urlpatterns = [
     # Examples:
     url(r'^$', home, name='home'),
 
+    # Ajax
+    url(r'^api/fund_designation/enveloppe/(?P<enveloppe>\w+)/(?P<pfiid>\w+)$',
+        views.api_fund_designation_by_enveloppe,
+        name='api-fund-designation-by-enveloppe'
+    ),
+
     # Base de l'arbre.
     url(r'^showtree/(?P<type_affichage>\w+)/$', views.show_tree,
         name="show_tree"),

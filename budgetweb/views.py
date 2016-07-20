@@ -1,19 +1,20 @@
 # -*- coding: utf-8 -*-
 
+import json
+
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
 from django.forms import formset_factory
 from django.forms.models import modelformset_factory
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import (get_object_or_404, redirect, render,
                               render_to_response)
 
-
-from budgetweb.libs.node import getCurrentYear, generateTree
-from .decorators import is_authorized_structure
+from .decorators import is_ajax_get, is_authorized_structure
 from .forms import DepenseForm, PlanFinancementPluriForm, RecetteForm
-from .models import (Depense, PeriodeBudget, PlanFinancement, Recette,
-                     Structure)
+from .libs.node import getCurrentYear, generateTree
+from .models import (Depense, NatureComptableDepense, NatureComptableRecette,
+                     PeriodeBudget, PlanFinancement, Recette, Structure)
 
 # logging
 import logging
@@ -26,118 +27,15 @@ def home(request):
     return redirect('show_tree', type_affichage='gbcp')
 
 
-#---------------------------------------------------------
 # AJAX
-#--------------------------------------------------------
-
-#def ajax_add_eotp(request,pkstr1):
-#    if request.is_ajax():
-#        myname=Structure.objects.get(id=pkstr1).name
-#        myname=myname.strip()
-#
-#        planfi = PlanFinancement.objects.filter(cfassoc=myname,pluriannuel=False)
-#        todo_items=[]
-#
-#        for s in planfi:
-#            todo_items.append(str(s.id)+"-----"+str(s.name))
-#        data = json.dumps(todo_items)
-#        return HttpResponse(data, content_type='application/json')
-#    else:
-#        raise Http404
-#
-#
-##Pour les recettes
-#def ajax_add_enveloppe(request,pkstr1,lenveloppe):
-#    recette='rec'
-#    if request.is_ajax():
-#        isfleche=PlanFinancement.objects.get(id=pkstr1).fleche
-#        naturecompta = NatureComptable.objects.filter(pfifleche=isfleche,nctype=recette,enveloppe=lenveloppe)
-#        todo_items=[]
-#        for s in naturecompta:
-#            todo_items.append(
-#                '{0.id}-----{0.enveloppe}-----{0.fondbudget_recette}-----{0.ccbd}'.format(s))
-#        data = json.dumps(todo_items)
-#        return HttpResponse(data, content_type='application/json')
-#    else:
-#        raise Http404
-#
-##pour les depenses
-#def ajax_recette_displaycompte(request,pkstr1):
-#    if request.is_ajax():
-#        naturecompta = NatureComptable.objects.get(id=pkstr1)
-#        todo_items=[]
-#        todo_items.append(str(naturecompta.ccbd))
-#
-#        data = json.dumps(todo_items)
-#        return HttpResponse(data, content_type='application/json')
-#    else:
-#        raise Http404
-#
-#
-#
-#
-##Pour les recettes
-#def ajax_add_enveloppetype(request,pkstr1):
-#    recette='rec'
-#    if request.is_ajax():
-#        isfleche=PlanFinancement.objects.get(id=pkstr1).fleche
-#        naturecompta = NatureComptable.objects.filter(pfifleche=isfleche,nctype=recette)
-#        todo_items=[]
-#        for s in naturecompta:
-#            if not (s.enveloppe in todo_items ):
-#                      todo_items.append(str(s.enveloppe))
-#
-#        data = json.dumps(todo_items)
-#        return HttpResponse(data, content_type='application/json')
-#    else:
-#        raise Http404
-#
-#
-##Pour les depenses
-#def ajax_add_enveloppetype_depense(request,pkstr1):
-#    depense='dep'
-#    if request.is_ajax():
-#        isfleche=PlanFinancement.objects.get(id=pkstr1).fleche
-#        naturecompta = NatureComptable.objects.filter(pfifleche=isfleche,nctype=depense)
-#        todo_items=[]
-#        for s in naturecompta:
-#            if not (s.enveloppe in todo_items ):
-#                todo_items.append(str(s.enveloppe))
-#        data = json.dumps(todo_items)
-#        return HttpResponse(data, content_type='application/json')
-#    else:
-#        raise Http404
-#
-#def ajax_add_enveloppe_depense(request,pkstr1,lenveloppe):
-#    #print ("calling_add_enveloppe pour::" + str(pkstr1))
-#    depense='dep'
-#    if request.is_ajax():
-#        isfleche=PlanFinancement.objects.get(id=pkstr1).fleche
-#        naturecompta = NatureComptable.objects.filter(pfifleche=isfleche,nctype=depense,enveloppe=lenveloppe)
-#        todo_items=[]
-#        for s in naturecompta:
-#            todo_items.append(str(s.id)+"-----"+str(s.enveloppe)+"-----"+str(s.naturec_dep)+str(s.ccbd))
-#        data = json.dumps(todo_items)
-#        return HttpResponse(data, content_type='application/json')
-#    else:
-#        raise Http404
-#
-##Pour les depenses
-#def ajax_get_enveloppe_decalage(request,pkstr1):
-#    depense='dep'
-#    print("go")
-#    if request.is_ajax():
-#        naturec=NatureComptable.objects.get(id=pkstr1)
-#        print("Nature C: "+ str(naturec))
-#        print(str(naturec.decalagetresocpae))
-#        decalageyesno=str(naturec.decalagetresocpae)
-#        print("on decale ou pas:" + decalageyesno)
-#        todo_items=[]
-#        todo_items.append(decalageyesno)
-#        data = json.dumps(todo_items)
-#        return HttpResponse(data, content_type='application/json')
-#    else:
-#        raise Http404
+@is_ajax_get
+def api_fund_designation_by_enveloppe(request, enveloppe, pfiid):
+    pfi = PlanFinancement.objects.get(pk=pfiid)
+    model = NatureComptableRecette
+    natures = model.active.filter(is_fleche=pfi.is_fleche, enveloppe=enveloppe)
+    response_data = [
+        {"id": nature.pk, "label": str(nature)} for nature in natures]
+    return HttpResponse(json.dumps(response_data), content_type='application/json')
 
 
 @login_required
@@ -265,7 +163,6 @@ def recette(request, pfiid, annee):
     if request.method == "POST":
         formset = RecetteFormSet(request.POST)
         if formset.is_valid():
-            print("ici")
             formset.save()
             return HttpResponseRedirect('/detailspfi/%s' % pfi.pk)
 

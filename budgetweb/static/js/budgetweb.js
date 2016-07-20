@@ -55,4 +55,32 @@ $(document).ready(function() {
 		}
 		e.stopPropagation();
 	});
+	
+	// NatureComptable choice fields in RecetteForm and DepenseForm
+	$('.form-enveloppe').change(function() {
+		var idRegex = /id_form-(\d+).*/;
+		var form_id = idRegex.exec(this.id)[1];
+		var pfi_id = $("#id_form-" + form_id + "-pfi").attr("value");
+		var $nature = $("#id_form-" + form_id + "-naturecomptablerecette");
+	    var url = "/api/fund_designation/enveloppe/" + this.value + "/"+ pfi_id;
+	    changeOptions(url, $nature);
+	});
+	
+	function changeOptions(url, dest) {
+		$.getJSON(url, function(data) {
+	    	dest.empty();
+	        appendOptions(dest, '', '---------')
+	        $.each(data, function(index, obj) {
+	            appendOptions(dest, obj.id, obj.label);
+	        });
+	        dest.focus();
+	    });
+	};
+	
+	function appendOptions(parent, value, html) {
+	    $('<option/>', {
+	        'value': value,
+	        'html': html
+	    }).appendTo(parent);
+	};
 });
