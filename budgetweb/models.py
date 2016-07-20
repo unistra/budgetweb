@@ -205,7 +205,6 @@ class Depense(models.Model):
                                        blank=True, null=True)
     periodebudget = models.ForeignKey('PeriodeBudget',
                                       verbose_name='Période budgétaire',
-                                      blank=True, null=True,
                                       related_name='periodebudgetdepense')
     annee = models.PositiveIntegerField(verbose_name='Année')
     creele = models.DateTimeField(auto_now_add=True, blank=True)
@@ -265,7 +264,6 @@ class Recette(models.Model):
                                        blank=True, null=True)
     periodebudget = models.ForeignKey('PeriodeBudget',
                                       verbose_name='Période budgétaire',
-                                      blank=True, null=True,
                                       related_name='periodebudgetrecette')
     annee = models.PositiveIntegerField(verbose_name='Année')
     creele = models.DateTimeField(auto_now_add=True, blank=True)
