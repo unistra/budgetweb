@@ -38,7 +38,7 @@
             {% for field in form.visible_fields %}
                 <td style="line-height:1; white-space:nowrap" align="center">
                 {% if field.name in form.modal_fields %}
-                    <span data-backdrop="false" data-toggle="modal" data-target="#modalCommentaire" data-formid="{{ field.id_for_label }}" class="glyphicon glyphicon-{% if field.value %}edit{% else %}pencil{% endif %}" title="{% if field.value %}Modifier{% else %}Ajouter{% endif %}"></span>
+                    <a href="#"><span data-backdrop="false" data-toggle="modal" data-target="#modalCommentaire" data-formid="{{ field.id_for_label }}" class="glyphicon glyphicon-{% if field.value %}edit{% else %}pencil{% endif %}" title="{% if field.value %}Modifier{% else %}Ajouter{% endif %}"></span></a>
                     <div style="visibility:hidden;height:0px;width:0px;">{{ field }}</div>
                 {% else %}
                     {{ field }}
