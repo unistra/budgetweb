@@ -107,7 +107,7 @@ class DepenseForm(forms.ModelForm):
             }),
             'structure': forms.HiddenInput(attrs={'readonly': 'readonly'}),
             'periodebudget': forms.HiddenInput(attrs={'readonly': 'readonly'}),
-            'naturecomptablerecette': forms.Select(attrs={
+            'naturecomptabledepense': forms.Select(attrs={
                 'style': 'width:100%;'
             }),
         }
@@ -128,6 +128,7 @@ class DepenseForm(forms.ModelForm):
         enveloppe_choices = [('', '---------')] + sorted([
             (e, e) for e in set(enveloppes)])
         self.fields['enveloppe'].choices = enveloppe_choices
+        self.fields['naturecomptabledepense'].choices = [('', '---------')]
         self.fields['naturecomptabledepense'].queryset = natures
 
         # Set the initial values
