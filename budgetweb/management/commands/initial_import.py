@@ -24,10 +24,11 @@ class Command(NoArgsCommand):
             call_command('import_naturecomptablerecette',
                          join(datapath, 'naturecomptablerecette.csv'))
             print('***** Import Financial Plans *****')
-            call_command('import_pfi',
-                         join(datapath, 'planfinancement.csv'))
+            call_command('import_pfi', join(datapath, 'planfinancement.csv'))
             print('***** Import PeriodeBudget *****')
             call_command('import_periodebudget')
+            print('***** Import Authorizations *****')
+            call_command('import_authorizations', join(datapath, 'lda.txt'))
 
         except Exception as e:
             print(e)

@@ -28,6 +28,12 @@ class StructureAuthorizations(models.Model):
     def __str__(self):
         return self.user.username
 
+    def save(self, *args, **kwargs):
+        for structure in self.structures.all():
+            for children in structure.get_children():
+                self.structures.add(children)
+        super().save(*args, **kwargs)
+
 
 class PeriodeBudget(models.Model):
     """
