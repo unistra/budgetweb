@@ -187,9 +187,9 @@ def recette(request, pfiid, annee):
 def detailspfi(request, pfiid):
     pfi = PlanFinancement.objects.get(pk=pfiid)
     listeDepense = Depense.objects.filter(
-        pfi=pfi).prefetch_related('naturecomptabledepense')
+        pfi=pfi).prefetch_related('naturecomptabledepense').prefetch_related('periodebudget')
     listeRecette = Recette.objects.filter(
-        pfi=pfi).prefetch_related('naturecomptablerecette')
+        pfi=pfi).prefetch_related('naturecomptablerecette').prefetch_related('periodebudget')
     sommeDepense = listeDepense.aggregate(sommeDC=Sum('montant_dc'),
                                           sommeAE=Sum('montant_ae'),
                                           sommeCP=Sum('montant_cp'))
