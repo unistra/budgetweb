@@ -13,27 +13,27 @@ urlpatterns = [
     url(r'^$', home, name='home'),
 
     # Ajax
-    url(r'^api/(?P<model>naturecomptablerecette|naturecomptabledepense)/enveloppe/(?P<enveloppe>\w+)/(?P<pfiid>\w+)$',
+    url(r'^api/(?P<model>naturecomptablerecette|naturecomptabledepense)/enveloppe/(?P<enveloppe>\w+)/(?P<pfiid>\w+)/$',
         views.api_fund_designation_by_nature_and_enveloppe,
         name='api-fund-designation-by-nature-and-enveloppe'
     ),
 
     # Base de l'arbre.
-    url(r'^showtree/(?P<type_affichage>\w+)/(?P<structid>\w+)$',
+    url(r'^showtree/(?P<type_affichage>\w+)/(?P<structid>\w+)/$',
         views.show_tree, name="show_tree_structid"),
     url(r'^showtree/(?P<type_affichage>\w+)/$', views.show_tree,
         name="show_tree"),
 
     # Pluriannuel
-    url(r'^pluriannuel/(?P<pfiid>\w+)$', views.pluriannuel,
+    url(r'^pluriannuel/(?P<pfiid>\w+)/$', views.pluriannuel,
         name="pluriannuel"),
 
     # Détails d'un PFI
-    url(r'^detailspfi/(?P<pfiid>\w+)$', views.detailspfi,
+    url(r'^detailspfi/(?P<pfiid>\w+)/$', views.detailspfi,
         name="detailspfi"),
-    url(r'^depense/(?P<pfiid>\w+)/(?P<annee>\w+)$',
+    url(r'^depense/(?P<pfiid>\w+)/(?P<annee>\w+)/$',
         views.depense, name="depense"),
-    url(r'^recette/(?P<pfiid>\w+)/(?P<annee>\w+)$',
+    url(r'^recette/(?P<pfiid>\w+)/(?P<annee>\w+)/$',
         views.recette, name="recette"),
 
     url(r'^admin/', include(admin.site.urls)),

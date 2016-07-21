@@ -25,7 +25,7 @@ $(document).ready(function() {
 			$(this).attr('title', 'Collapse this branch').find(' > i').addClass('glyphicon-minus').removeClass('glyphicon-plus');
 			cf = $(this).attr('toto');
 			$.ajax({
-				url : window.location.href + cf, // the endpoint,commonly same url
+				url : window.location.href + cf + "/", // the endpoint,commonly same url
 				type : "GET", // http method
 				data : { }, // data sent with the post request
 				// handle a successful response
