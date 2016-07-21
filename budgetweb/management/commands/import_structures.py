@@ -17,19 +17,20 @@ class Command(BaseCommand):
         # Parent nodes
         node = Structure.objects.update_or_create(
             code='ETAB', type='Etablissement',
-            label='Université de Strasbourg', defaults={'is_active': True}
+            label='Université de Strasbourg', depth=1,
+            defaults={'is_active': True}
         )[0]
         Structure.objects.update_or_create(
             code='RCH', type='Recherche', label='Recherche', parent=node,
-            defaults={'is_active': True}
+            depth=2, defaults={'is_active': True}
         )
         Structure.objects.update_or_create(
             code='SCX', type='Services Centraux', label='Services Centraux',
-            parent=node, defaults={'is_active': True}
+            parent=node, depth=2, defaults={'is_active': True}
         )
         Structure.objects.update_or_create(
             code='PAIE', type='Paie', label='Paie',
-            parent=node, defaults={'is_active': True}
+            parent=node, depth=2, defaults={'is_active': True}
         )
 
         for filename in options.get('filename'):
@@ -53,6 +54,7 @@ class Command(BaseCommand):
                         try:
                             parent = Structure.objects.get(code=structure['parent'])
                             structure['parent'] = parent
+                            structure['depth'] = parent.depth + 1
                             created = Structure.objects.update_or_create(**structure)[1]
                             treated.append(code)
                             total += int(created)

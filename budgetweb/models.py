@@ -82,6 +82,8 @@ class Structure(models.Model):
         'Structure', blank=True, null=True, related_name='fils',
         verbose_name=u'Lien direct vers la structure parent')
     is_active = models.BooleanField('Actif', max_length=100, default=True)
+    # Depth: 1 == root
+    depth = models.PositiveIntegerField()
 
     objects = models.Manager()
     active = ActiveManager()
@@ -91,6 +93,11 @@ class Structure(models.Model):
 
     def __str__(self):
         return '{0.code}'.format(self)
+
+    def save(self, *args, **kwargs):
+        parent = self.parent
+        self.depth = parent.depth + 1 if parent else 1
+        super().save(*args, **kwargs)
 
     def get_children(self):
         children = []
