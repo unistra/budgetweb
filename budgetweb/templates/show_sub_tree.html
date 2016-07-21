@@ -1,34 +1,36 @@
 {% for node in listePFI %}
-   <li>
-    <span style="width:160px;" class="pfi">
-      <a href="{% url 'detailspfi' pfiid=node.id %}">{{ node.code }}</a>
-      {% if node.is_pluriannuel %}
-      <a class="pluri-color" href="{% url 'pluriannuel' pfiid=node.id %}">Dép. &amp; Rec.</a>&nbsp;
-      {% else %}
-        <a class="depense-color" href="{% url 'depense' pfiid=node.id annee=currentYear %}">Dép.</a>&nbsp;
-        <a class="recette-color" href="{% url 'recette' pfiid=node.id annee=currentYear %}">Rec.</a>
-      {% endif %}
-    </span>
-    {% if typeAffichage == "gbcp" %}
-       <div class="showTree">{% firstof node.sommeRecetteRE.somme "0,00" %} &euro;</div>
-       <div class="showTree">{% firstof node.sommeRecetteAR.somme "0,00" %} &euro;</div>
-       <div class="showTree">&nbsp;</div>
-       <div class="showTree">{% firstof node.sommeDepenseCP.somme "0,00" %} &euro;</div>
-       <div class="showTree">{% firstof node.sommeDepenseAE.somme "0,00" %} &euro;</div>
-     {% else %}
-       <div class="showTree">{% firstof node.sommeRecetteDC.somme "0,00" %} &euro;</div>
-       <div class="showTree">&nbsp;</div>
-       <div class="showTree">{% firstof node.sommeDepenseDC.somme "0,00" %} &euro;</div>
-    {% endif %}
-    <ul id="{{ node.code }}"></ul>
-  </li>
+	<li>
+	  <div>
+	    <span style="width:160px;" class="pfi">
+	      <a href="{% url 'detailspfi' pfiid=node.id %}">{{ node.code }}</a>
+	      {% if node.is_pluriannuel %}
+	      <a class="pluri-color" href="{% url 'pluriannuel' pfiid=node.id %}">Dép. &amp; Rec.</a>&nbsp;
+	      {% else %}
+	        <a class="depense-color" href="{% url 'depense' pfiid=node.id annee=currentYear %}">Dép.</a>&nbsp;
+	        <a class="recette-color" href="{% url 'recette' pfiid=node.id annee=currentYear %}">Rec.</a>
+	      {% endif %}
+	    </span>
+	    {% if typeAffichage == "gbcp" %}
+	       <div class="showTree">{% firstof node.sommeRecetteRE.somme "0,00" %} &euro;</div>
+	       <div class="showTree">{% firstof node.sommeRecetteAR.somme "0,00" %} &euro;</div>
+	       <div class="showTree">&nbsp;</div>
+	       <div class="showTree">{% firstof node.sommeDepenseCP.somme "0,00" %} &euro;</div>
+	       <div class="showTree">{% firstof node.sommeDepenseAE.somme "0,00" %} &euro;</div>
+	     {% else %}
+	       <div class="showTree">{% firstof node.sommeRecetteDC.somme "0,00" %} &euro;</div>
+	       <div class="showTree">&nbsp;</div>
+	       <div class="showTree">{% firstof node.sommeDepenseDC.somme "0,00" %} &euro;</div>
+	    {% endif %}
+	    <ul id="{{ node.code }}"></ul>
+	  </div>
+    </li>
 {% endfor %}
 {% for structid, infos in structures.items %}
     {% with structure=infos.structure montants=infos.montants %}
-       <li>
+    <li>
+      <div>
         <span style="width:auto;" class="cf" toto="{{ structure.code }}">
-            <i class="glyphicon glyphicon-plus"></i>
-            {{ structure }}
+          <i class="glyphicon glyphicon-plus"></i>{{ structure }}
         </span>
         {% if typeAffichage == "gbcp" %}
            <div class="showTree">{% firstof montants.recette_montant_re "0,00" %} &euro;</div>
@@ -41,7 +43,8 @@
            <div class="showTree">&nbsp;</div>
            <div class="showTree">{% firstof montants.depense_montant_dc "0,00" %} &euro;</div>
          {% endif %}
-        <ul id="{{ structure.code }}"></ul>
-      </li>
+      </div>
+      <ul id="{{ structure.code }}"></ul>
+    </li>
     {% endwith %}
 {% endfor %}
