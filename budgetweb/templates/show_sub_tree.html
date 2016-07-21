@@ -1,6 +1,6 @@
 {% for node in listePFI %}
    <li>
-  	<span style="width:160px;" class="pfi">
+    <span style="width:160px;" class="pfi">
       <a href="{% url 'detailspfi' pfiid=node.id %}">{{ node.code }}</a>
       {% if node.is_pluriannuel %}
       <a class="pluri-color" href="{% url 'pluriannuel' pfiid=node.id %}">Dép. &amp; Rec.</a>&nbsp;
@@ -8,7 +8,7 @@
         <a class="depense-color" href="{% url 'depense' pfiid=node.id annee=currentYear %}">Dép.</a>&nbsp;
         <a class="recette-color" href="{% url 'recette' pfiid=node.id annee=currentYear %}">Rec.</a>
       {% endif %}
-  	</span>
+    </span>
     {% if typeAffichage == "gbcp" %}
        <div class="showTree">{% if node.sommeRecetteRE.somme %}{{ node.sommeRecetteRE.somme }}{% else %}0,00{% endif %} &euro;</div>
        <div class="showTree">{% if node.sommeRecetteAR.somme %}{{ node.sommeRecetteAR.somme }}{% else %}0,00{% endif %} &euro;</div>
@@ -20,26 +20,28 @@
        <div class="showTree">&nbsp;</div>
        <div class="showTree">{% if node.sommeDepenseDC.somme %}{{ node.sommeDepenseDC.somme }}{% else %}0,00{% endif %} &euro;</div>
     {% endif %}
-  	<ul id="{{ node.code }}"></ul>
-  </li>
-{% endfor %}
-{% for node in listeCF %}
-   <li>
-  	<span style="width:auto;" class="cf" toto="{{ node.code }}">
-  		<i class="glyphicon glyphicon-plus"></i>
-  		{{ node.code }}
-  	</span>
-  	{% if typeAffichage == "gbcp" %}
-       <div class="showTree">100 000,00 &euro;</div>
-       <div class="showTree">200 000,00 &euro;</div>
-       <div class="showTree">&nbsp;</div>
-       <div class="showTree">300 000,00 &euro;</div>
-       <div class="showTree">400 000,00 &euro;</div>
-     {% else %}
-       <div class="showTree">250 000,00 &euro;</div>
-       <div class="showTree">&nbsp;</div>
-       <div class="showTree">250 000,00 &euro;</div>
-     {% endif %}
     <ul id="{{ node.code }}"></ul>
   </li>
+{% endfor %}
+{% for structid, infos in structures.items %}
+    {% with structure=infos.structure montant=infos.montant %}
+       <li>
+        <span style="width:auto;" class="cf" toto="{{ structure.code }}">
+            <i class="glyphicon glyphicon-plus"></i>
+            {{ structure }}
+        </span>
+        {% if typeAffichage == "gbcp" %}
+           <div class="showTree">{% firstof montant.recette_montant_re "0,00" %} &euro;</div>
+           <div class="showTree">{% firstof montant.recette_montant_ar "0,00" %} &euro;</div>
+           <div class="showTree">&nbsp;</div>
+           <div class="showTree">{% firstof montant.depense_montant_cp "0,00" %} &euro;</div>
+           <div class="showTree">{% firstof montant.depense_montant_ae "0,00" %} &euro;</div>
+         {% else %}
+           <div class="showTree">{% firstof montant.recette_montant_dc "0,00" %} &euro;</div>
+           <div class="showTree">&nbsp;</div>
+           <div class="showTree">{% firstof montant.depense_montant_dc "0,00" %} &euro;</div>
+         {% endif %}
+        <ul id="{{ structure.code }}"></ul>
+      </li>
+    {% endwith %}
 {% endfor %}

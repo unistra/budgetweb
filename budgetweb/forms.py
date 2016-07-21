@@ -37,9 +37,6 @@ class RecetteForm(forms.ModelForm):
             'pfi': forms.HiddenInput(attrs={'readonly': 'readonly'}),
             'structure': forms.HiddenInput(attrs={'readonly': 'readonly'}),
             'periodebudget': forms.HiddenInput(attrs={'readonly': 'readonly'}),
-            'naturecomptablerecette': forms.Select(attrs={
-                'style': 'width:100%;'
-            }),
         }
 
     def __init__(self, *args, **kwargs):
@@ -107,9 +104,6 @@ class DepenseForm(forms.ModelForm):
             }),
             'structure': forms.HiddenInput(attrs={'readonly': 'readonly'}),
             'periodebudget': forms.HiddenInput(attrs={'readonly': 'readonly'}),
-            'naturecomptabledepense': forms.Select(attrs={
-                'style': 'width:100%;'
-            }),
         }
 
     def __init__(self, *args, **kwargs):
