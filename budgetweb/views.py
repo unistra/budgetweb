@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from collections import OrderedDict
 import json
 
 from django.contrib.auth.decorators import login_required
@@ -12,7 +13,8 @@ from django.shortcuts import (get_object_or_404, redirect, render,
 from .decorators import is_ajax_get, is_authorized_structure
 from .forms import DepenseForm, PlanFinancementPluriForm, RecetteForm
 from .models import (Depense, NatureComptableDepense, NatureComptableRecette,
-                     PeriodeBudget, PlanFinancement, Recette, Structure)
+                     PeriodeBudget, PlanFinancement, Recette, Structure,
+                     StructureMontant)
 from .utils import getCurrentYear
 
 
@@ -40,12 +42,24 @@ def api_fund_designation_by_nature_and_enveloppe(request, model, enveloppe, pfii
 @login_required
 def show_tree(request, type_affichage, structid=None):
     queryset = {'parent__code': structid} if structid else {'parent': None}
-    listeCF = Structure.objects.filter(**queryset)
+    structures = OrderedDict(
+        [(s.pk, {'structure': s}) for s in Structure.objects.filter(
+            **queryset).order_by('code')
+        ]
+    )
+
+    # TODO: select_related ?
 
     # Et enfin on ajoute les PFI, si jamais il y en a.
-    listePFI = PlanFinancement.objects.filter(
+    liste_pfi = PlanFinancement.objects.filter(
         structure__code=structid).values()
-    for pfi in listePFI:
+
+    cf_montants = StructureMontant.objects.filter(
+        structure__pk__in=structures.keys())
+    for cf_montant in cf_montants:
+        structures[cf_montant.structure.pk]['montants'] = cf_montant
+
+    for pfi in liste_pfi:
         pfi['sommeDepenseAE'] = Depense.objects.filter(
                                 pfi__id=pfi['id']).aggregate(
                                 somme=Sum('montant_ae'))
@@ -66,11 +80,12 @@ def show_tree(request, type_affichage, structid=None):
                                 somme=Sum('montant_dc'))
 
     context = {
-        'listeCF': listeCF,
-        'listePFI': listePFI,
+        'structures': structures,
+        'listePFI': liste_pfi,
         'typeAffichage': type_affichage,
         'currentYear': getCurrentYear
     }
+
     template = 'show_sub_tree.html' if request.is_ajax() else 'showtree.html'
     return render(request, template, context)
 
@@ -129,6 +144,7 @@ def depense(request, pfiid, annee):
         if formset.is_valid():
             formset.save()
             return HttpResponseRedirect('/detailspfi/%s' % pfi.pk)
+
     context = {
         'PFI': pfi,
         'formset': formset,
