@@ -1,3 +1,4 @@
+{% load budgetweb_tags %}
 {% for node in listePFI %}
 	<li>
 	  <div>
@@ -11,15 +12,15 @@
 	      {% endif %}
 	    </span>
 	    {% if typeAffichage == "gbcp" %}
-	       <div class="showTree">{% firstof node.sommeRecetteRE.somme "0,00" %} &euro;</div>
-	       <div class="showTree">{% firstof node.sommeRecetteAR.somme "0,00" %} &euro;</div>
+	       <div class="showTree">{% firstof node.sommeRecetteRE.somme|intspace "0,00" %} &euro;</div>
+	       <div class="showTree">{% firstof node.sommeRecetteAR.somme|intspace "0,00" %} &euro;</div>
 	       <div class="showTree">&nbsp;</div>
-	       <div class="showTree">{% firstof node.sommeDepenseCP.somme "0,00" %} &euro;</div>
-	       <div class="showTree">{% firstof node.sommeDepenseAE.somme "0,00" %} &euro;</div>
+	       <div class="showTree">{% firstof node.sommeDepenseCP.somme|intspace "0,00" %} &euro;</div>
+	       <div class="showTree">{% firstof node.sommeDepenseAE.somme|intspace "0,00" %} &euro;</div>
 	     {% else %}
-	       <div class="showTree">{% firstof node.sommeRecetteDC.somme "0,00" %} &euro;</div>
+	       <div class="showTree">{% firstof node.sommeRecetteDC.somme|intspace "0,00" %} &euro;</div>
 	       <div class="showTree">&nbsp;</div>
-	       <div class="showTree">{% firstof node.sommeDepenseDC.somme "0,00" %} &euro;</div>
+	       <div class="showTree">{% firstof node.sommeDepenseDC.somme|intspace "0,00" %} &euro;</div>
 	    {% endif %}
 	    <ul id="{{ node.code }}"></ul>
 	  </div>
@@ -33,15 +34,15 @@
           <i class="glyphicon glyphicon-plus"></i>{{ structure }}
         </span>
         {% if typeAffichage == "gbcp" %}
-           <div class="showTree">{% firstof montants.recette_montant_re "0,00" %} &euro;</div>
-           <div class="showTree">{% firstof montants.recette_montant_ar "0,00" %} &euro;</div>
+           <div class="showTree">{% firstof montants.recette_montant_re|intspace "0,00" %} &euro;</div>
+           <div class="showTree">{% firstof montants.recette_montant_ar|intspace "0,00" %} &euro;</div>
            <div class="showTree">&nbsp;</div>
-           <div class="showTree">{% firstof montants.depense_montant_cp "0,00" %} &euro;</div>
-           <div class="showTree">{% firstof montants.depense_montant_ae "0,00" %} &euro;</div>
+           <div class="showTree">{% firstof montants.depense_montant_cp|intspace "0,00" %} &euro;</div>
+           <div class="showTree">{% firstof montants.depense_montant_ae|intspace "0,00" %} &euro;</div>
          {% else %}
-           <div class="showTree">{% firstof montants.recette_montant_dc "0,00" %} &euro;</div>
+           <div class="showTree">{% firstof montants.recette_montant_dc|intspace "0,00" %} &euro;</div>
            <div class="showTree">&nbsp;</div>
-           <div class="showTree">{% firstof montants.depense_montant_dc "0,00" %} &euro;</div>
+           <div class="showTree">{% firstof montants.depense_montant_dc|intspace "0,00" %} &euro;</div>
          {% endif %}
       </div>
       <ul id="{{ structure.code }}"></ul>
