@@ -33,7 +33,7 @@ ul {
     width:0px;
 }
 .tree li>div:hover {
-	background-color: #cbcbcb; 
+	background-color: #cbcbcb;
 }
 .tree li span {
     /*-moz-border-radius:5px;
@@ -178,4 +178,8 @@ legend {
 
 .cf {
   color: #0000bb;
+}
+
+.montant {
+	text-align: right;
 }

@@ -197,7 +197,7 @@ def detailspfi(request, pfiid):
                                           sommeAR=Sum('montant_ar'),
                                           sommeRE=Sum('montant_re'))
     context = {
-        'PFI': pfi,
+        'PFI': pfi, 'currentYear': getCurrentYear,
         'listeDepense': listeDepense, 'listeRecette': listeRecette,
         'sommeDepense': sommeDepense, 'sommeRecette': sommeRecette,
     }
