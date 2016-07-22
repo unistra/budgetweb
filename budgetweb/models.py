@@ -1,16 +1,24 @@
+from decimal import Decimal
+
 from django import forms
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
-from django.db import models
-from django.utils.translation import ugettext_lazy as _
+from django.db import models, transaction
 from django.db.models import Sum
+from django.utils.translation import ugettext_lazy as _
 
 
 class ActiveManager(models.Manager):
     def get_queryset(self):
         return super(ActiveManager, self).get_queryset()\
             .filter(is_active=True)
+
+
+class ActivePeriodManager(models.Manager):
+    def get_queryset(self):
+        return super(ActiveManager, self).get_queryset()\
+            .filter(periodebudget__is_active=True)
 
 
 class StructureAuthorizations(models.Model):
@@ -99,6 +107,10 @@ class Structure(models.Model):
         parent = self.parent
         self.depth = parent.depth + 1 if parent else 1
         super().save(*args, **kwargs)
+
+    def get_ancestors(self):
+        parent = self.parent
+        return [parent] + parent.get_ancestors() if parent else []
 
     def get_children(self):
         children = []
@@ -252,6 +264,64 @@ class Depense(models.Model):
                                      auto_now=True, blank=True)
     modifiepar = models.CharField(max_length=100, blank=True, null=True)
 
+    objects = models.Manager()
+    active_period = ActivePeriodManager()
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        initial_values = ('montant_dc', 'montant_cp', 'montant_ae')
+        list(map(lambda x: setattr(self, 'initial_%s' % x, getattr(self, x)),
+            initial_values))
+
+    @transaction.atomic
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        structures = [self.structure] + self.structure.get_ancestors()
+        for structure in structures:
+            diff_dc = self.montant_dc - (self.initial_montant_dc or Decimal(0))
+            diff_cp = self.montant_cp - (self.initial_montant_cp or Decimal(0))
+            diff_ae = self.montant_ae - (self.initial_montant_ae or Decimal(0))
+
+            try:
+                obj = StructureMontant.objects.get(
+                    structure=structure, periodebudget=self.periodebudget
+                )
+                updated_values = {
+                    'depense_montant_dc': obj.depense_montant_dc + diff_dc,
+                    'depense_montant_cp': obj.depense_montant_cp + diff_cp,
+                    'depense_montant_ae': obj.depense_montant_ae + diff_ae,
+                }
+                for key, value in updated_values.items():
+                    setattr(obj, key, value)
+                obj.save()
+            except StructureMontant.DoesNotExist:
+                updated_values = {
+                    'depense_montant_dc': diff_dc,
+                    'depense_montant_cp': diff_cp,
+                    'depense_montant_ae': diff_ae,
+                    'structure': structure,
+                    'periodebudget': self.periodebudget
+                }
+                obj = StructureMontant(**updated_values)
+                obj.save()
+
+    @transaction.atomic
+    def delete(self):
+        structures = [self.structure] + self.structure.get_ancestors()
+        for structure in structures:
+            montant = StructureMontant.objects.get(
+                structure=structure, periodebudget=self.periodebudget)
+            updated_values = {
+                'depense_montant_dc': montant.depense_montant_dc - self.montant_dc,
+                'depense_montant_cp': montant.depense_montant_cp - self.montant_cp,
+                'depense_montant_ae': montant.depense_montant_ae - self.montant_ae,
+            }
+            for key, value in updated_values.items():
+                setattr(montant, key, value)
+            montant.save()
+
+        super().delete()
+
     # def clean(self):
     #    montantae = self.montantae
     #    montantcp = self.montantcp
@@ -311,9 +381,69 @@ class Recette(models.Model):
                                      auto_now=True, blank=True)
     modifiepar = models.CharField(max_length=100, blank=True, null=True)
 
+    objects = models.Manager()
+    active_period = ActivePeriodManager()
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        initial_values = ('montant_dc', 'montant_re', 'montant_ar')
+        list(map(lambda x: setattr(self, 'initial_%s' % x, getattr(self, x)),
+            initial_values))
+
+    @transaction.atomic
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        structures = [self.structure] + self.structure.get_ancestors()
+        for structure in structures:
+            diff_dc = self.montant_dc - (self.initial_montant_dc or Decimal(0))
+            diff_re = self.montant_re - (self.initial_montant_re or Decimal(0))
+            diff_ar = self.montant_ar - (self.initial_montant_ar or Decimal(0))
+
+            try:
+                obj = StructureMontant.objects.get(
+                    structure=structure, periodebudget=self.periodebudget
+                )
+                updated_values = {
+                    'recette_montant_dc': obj.recette_montant_dc + diff_dc,
+                    'recette_montant_re': obj.recette_montant_re + diff_re,
+                    'recette_montant_ar': obj.recette_montant_ar + diff_ar,
+                }
+                for key, value in updated_values.items():
+                    setattr(obj, key, value)
+                obj.save()
+            except StructureMontant.DoesNotExist:
+                updated_values = {
+                    'recette_montant_dc': diff_dc,
+                    'recette_montant_re': diff_re,
+                    'recette_montant_ar': diff_ar,
+                    'structure': structure,
+                    'periodebudget': self.periodebudget
+                }
+                obj = StructureMontant(**updated_values)
+                obj.save()
+
+    @transaction.atomic
+    def delete(self):
+        structures = [self.structure] + self.structure.get_ancestors()
+        for structure in structures:
+            montant = StructureMontant.objects.get(
+                structure=structure, periodebudget=self.periodebudget)
+            updated_values = {
+                'recette_montant_dc': montant.recette_montant_dc - self.montant_dc,
+                'recette_montant_re': montant.recette_montant_re - self.montant_re,
+                'recette_montant_ar': montant.recette_montant_ar - self.montant_ar,
+            }
+            for key, value in updated_values.items():
+                setattr(montant, key, value)
+            montant.save()
+
+        super().delete()
+
 
 class StructureMontant(models.Model):
-    structure = models.OneToOneField(Structure)
+    structure = models.ForeignKey(Structure)
+    periodebudget = models.ForeignKey('PeriodeBudget',
+                                      related_name='periodebudgetmontants')
     depense_montant_dc = models.DecimalField(
         max_digits=12, decimal_places=2, blank=True, null=True)
     depense_montant_cp = models.DecimalField(
@@ -328,5 +458,8 @@ class StructureMontant(models.Model):
         max_digits=12, decimal_places=2, blank=True, null=True)
     modification_date = models.DateTimeField(auto_now=True)
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
+    objects = models.Manager()
+    active_period = ActivePeriodManager()
+
+    class Meta:
+        unique_together = (('structure', 'periodebudget'),)

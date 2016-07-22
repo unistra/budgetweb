@@ -23,6 +23,8 @@ def intspace(value, use_l10n=True):
             return intspace(value, False)
         else:
             return number_format(value, force_grouping=True)
+    if value is None:
+        return value
     orig = force_text(value)
     new = re.sub("^(-?\d+)(\d{3})", '\g<1> \g<2>', orig)
     if orig == new:
