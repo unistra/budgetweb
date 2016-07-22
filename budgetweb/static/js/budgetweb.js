@@ -70,7 +70,7 @@ $(document).ready(function() {
 			}
 		}	
 		
-	    var url = "/api/"+ model +"/enveloppe/" + this.value + "/"+ pfi_id;
+	    var url = "/api/"+ model +"/enveloppe/" + this.value + "/"+ pfi_id + "/";
 	    changeOptions(url, $nature);
 	});
 	
