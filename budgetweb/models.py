@@ -287,9 +287,9 @@ class Depense(models.Model):
                     structure=structure, periodebudget=self.periodebudget
                 )
                 updated_values = {
-                    'depense_montant_dc': obj.depense_montant_dc + diff_dc,
-                    'depense_montant_cp': obj.depense_montant_cp + diff_cp,
-                    'depense_montant_ae': obj.depense_montant_ae + diff_ae,
+                    'depense_montant_dc': diff_dc + (obj.depense_montant_dc or Decimal(0)),
+                    'depense_montant_cp': diff_cp + (obj.depense_montant_cp or Decimal(0)),
+                    'depense_montant_ae': diff_ae + (obj.depense_montant_ae or Decimal(0)),
                 }
                 for key, value in updated_values.items():
                     setattr(obj, key, value)
@@ -404,9 +404,9 @@ class Recette(models.Model):
                     structure=structure, periodebudget=self.periodebudget
                 )
                 updated_values = {
-                    'recette_montant_dc': obj.recette_montant_dc + diff_dc,
-                    'recette_montant_re': obj.recette_montant_re + diff_re,
-                    'recette_montant_ar': obj.recette_montant_ar + diff_ar,
+                    'recette_montant_dc': diff_dc + (obj.recette_montant_dc or Decimal(0)),
+                    'recette_montant_re': diff_re + (obj.recette_montant_re or Decimal(0)),
+                    'recette_montant_ar': diff_ar + (obj.recette_montant_ar or Decimal(0)),
                 }
                 for key, value in updated_values.items():
                     setattr(obj, key, value)
