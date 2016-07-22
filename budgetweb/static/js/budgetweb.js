@@ -57,7 +57,7 @@ $(document).ready(function() {
 	});
 	
 	// NatureComptable choice fields in RecetteForm and DepenseForm
-	$('.form-enveloppe').change(function() {
+	$("#supertable").on("change", ".form-enveloppe", function (e) {
 		var idRegex = /id_form-(\d+).*/;
 		var form_id = idRegex.exec(this.id)[1];
 		var pfi_id = $("#id_form-" + form_id + "-pfi").attr("value");
