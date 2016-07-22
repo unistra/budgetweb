@@ -186,10 +186,16 @@ def recette(request, pfiid, annee):
 @is_authorized_structure
 def detailspfi(request, pfiid):
     pfi = PlanFinancement.objects.get(pk=pfiid)
+
+    # A completer.
+    listeDepenseRecette = pfi.getTotal()
+
     listeDepense = Depense.objects.filter(
-        pfi=pfi).prefetch_related('naturecomptabledepense').prefetch_related('periodebudget')
+        pfi=pfi).prefetch_related('naturecomptabledepense')\
+                .prefetch_related('periodebudget')
     listeRecette = Recette.objects.filter(
-        pfi=pfi).prefetch_related('naturecomptablerecette').prefetch_related('periodebudget')
+        pfi=pfi).prefetch_related('naturecomptablerecette')\
+                .prefetch_related('periodebudget')
     sommeDepense = listeDepense.aggregate(sommeDC=Sum('montant_dc'),
                                           sommeAE=Sum('montant_ae'),
                                           sommeCP=Sum('montant_cp'))
@@ -200,5 +206,6 @@ def detailspfi(request, pfiid):
         'PFI': pfi, 'currentYear': getCurrentYear,
         'listeDepense': listeDepense, 'listeRecette': listeRecette,
         'sommeDepense': sommeDepense, 'sommeRecette': sommeRecette,
+        'listeDepenseRecette': listeDepenseRecette,
     }
     return render(request, 'detailsfullpfi.html', context)

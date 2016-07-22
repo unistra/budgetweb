@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.db.models import Sum
 
 
 class ActiveManager(models.Manager):
@@ -142,6 +143,30 @@ class PlanFinancement(models.Model):
 
     def __str__(self):
         return '{0.code}'.format(self)
+
+    # Retourne un tableau avec l'année, la
+    #
+    def getTotal(self):
+        # select annee, periodebudget_id, enveloppe, sum(montantae) as sommeae,
+        # sum(montantcp) as sommecp, sum(montantdc) as sommedc
+        # from budgetweb_depense, budgetweb_naturecomptabledepense
+        # where budgetweb_naturecomptabledepense.id = \
+        #       budgetweb_depense.naturecomptabledepense_id
+        # and pfi_id=30 group by annee, periodebudget_id, enveloppe;
+        depense = Depense.objects.filter(pfi=self.id) \
+               .values('annee', 'periodebudget',
+                       'naturecomptabledepense__enveloppe') \
+               .annotate(sommeDepenseAE=Sum('montant_ae'),
+                         sommeDepenseCP=Sum('montant_cp'),
+                         sommeDepenseDC=Sum('montant_dc'))
+        recette = Recette.objects.filter(pfi=self.id) \
+               .values('annee', 'periodebudget',
+                       'naturecomptablerecette__enveloppe') \
+               .annotate(sommeRecetteAE=Sum('montant_ar'),
+                         sommeRecetteCP=Sum('montant_re'),
+                         sommeRecetteDC=Sum('montant_dc'))
+
+        return depense, recette
 
 
 class NatureComptableDepense(models.Model):
@@ -305,6 +330,3 @@ class StructureMontant(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-
-
-
