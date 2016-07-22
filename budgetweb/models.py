@@ -229,11 +229,92 @@ class NatureComptableRecette(models.Model):
                 {0.label_nature_comptable}'.format(self)
 
 
-class Depense(models.Model):
+class Comptabilite(models.Model):
     pfi = models.ForeignKey('PlanFinancement',
                             verbose_name='Programme de financement')
     structure = models.ForeignKey('Structure',
                                   verbose_name='Centre financier')
+    commentaire = models.TextField(blank=True, null=True)
+    lienpiecejointe = models.CharField(max_length=255,
+                                       verbose_name='Lien vers un fichier',
+                                       validators=[URLValidator()],
+                                       blank=True, null=True)
+    periodebudget = models.ForeignKey('PeriodeBudget',
+                                      verbose_name='Période budgétaire')
+    annee = models.PositiveIntegerField(verbose_name='Année')
+    creele = models.DateTimeField(auto_now_add=True, blank=True)
+    creepar = models.CharField(max_length=100, blank=True, null=True)
+    modifiele = models.DateTimeField(verbose_name='Date de modification',
+                                     auto_now=True, blank=True)
+    modifiepar = models.CharField(max_length=100, blank=True, null=True)
+
+    objects = models.Manager()
+    active_period = ActivePeriodManager()
+
+    class Meta:
+        abstract = True
+
+    def __init__(self, *args, **kwargs):
+        self.initial_montants = kwargs.pop('initial_montants', ())
+        super().__init__(*args, **kwargs)
+        list(map(lambda x: setattr(self, 'initial_%s' % x, getattr(self, x)),
+            self.initial_montants))
+
+    @transaction.atomic
+    def save(self, *args, **kwargs):
+        """
+        Change all the StructureMontant of the structure's asending hierarchy
+        """
+        comptabilite = kwargs.pop('comptabilite_type')
+
+        super().save(*args, **kwargs)
+        structures = [self.structure] + self.structure.get_ancestors()
+        diffs = {m: getattr(self, m) - (
+            getattr(self, 'initial_%s' % m) or Decimal(0))\
+                for m in self.initial_montants}
+
+        montant_name = lambda x: '%s_%s' % (comptabilite, x)
+        for structure in structures:
+            try:
+                obj = StructureMontant.objects.get(
+                    structure=structure, periodebudget=self.periodebudget
+                )
+                updated_values = {montant_name(k): v + (
+                    getattr(obj, montant_name(k)) or Decimal(0))\
+                        for k, v in diffs.items()}
+                for key, value in updated_values.items():
+                    setattr(obj, key, value)
+                obj.save()
+            except StructureMontant.DoesNotExist:
+                updated_values = {montant_name(k): v for k, v in diffs.items()}
+                updated_values.update({
+                    'structure': structure,
+                    'periodebudget': self.periodebudget
+                })
+                obj = StructureMontant(**updated_values)
+                obj.save()
+
+    @transaction.atomic
+    def delete(self, **kwargs):
+        """
+        Change all the StructureMontant of the structure's asending hierarchy
+        """
+        comptabilite = kwargs.pop('comptabilite_type')
+        montant_name = lambda x: '%s_%s' % (comptabilite, x)
+
+        structures = [self.structure] + self.structure.get_ancestors()
+        for structure in structures:
+            montant = StructureMontant.objects.get(
+                structure=structure, periodebudget=self.periodebudget)
+            updated_values = {
+                montant_name(m): getattr(montant, montant_name(m))\
+                    - getattr(self, m) for m in self.initial_montants}
+            for key, value in updated_values.items():
+                setattr(montant, key, value)
+            montant.save()
+
+
+class Depense(Comptabilite):
     montant_dc = models.DecimalField(max_digits=12, decimal_places=2,
                                      blank=True, null=True)
     montant_cp = models.DecimalField(verbose_name='Montant Crédit de Paiement',
@@ -247,78 +328,23 @@ class Depense(models.Model):
                                            verbose_name='Domaine fonctionnel')
     naturecomptabledepense = models.ForeignKey(
         'NatureComptableDepense', verbose_name='Nature Comptable')
-    commentaire = models.TextField(blank=True, null=True)
-    lienpiecejointe = models.CharField(max_length=255,
-                                       verbose_name='Lien vers un fichier',
-                                       validators=[URLValidator()],
-                                       blank=True, null=True)
-    periodebudget = models.ForeignKey('PeriodeBudget',
-                                      verbose_name='Période budgétaire',
-                                      related_name='periodebudgetdepense')
-    annee = models.PositiveIntegerField(verbose_name='Année')
-    creele = models.DateTimeField(auto_now_add=True, blank=True)
-    creepar = models.CharField(max_length=100, blank=True, null=True)
-    modifiele = models.DateTimeField(verbose_name='Date de modification',
-                                     auto_now=True, blank=True)
-    modifiepar = models.CharField(max_length=100, blank=True, null=True)
 
-    objects = models.Manager()
-    active_period = ActivePeriodManager()
+    initial_montants = ('montant_dc', 'montant_cp', 'montant_ae')
 
     def __init__(self, *args, **kwargs):
+        kwargs.update(
+            {'initial_montants': ('montant_dc', 'montant_cp', 'montant_ae')})
         super().__init__(*args, **kwargs)
-        initial_values = ('montant_dc', 'montant_cp', 'montant_ae')
-        list(map(lambda x: setattr(self, 'initial_%s' % x, getattr(self, x)),
-            initial_values))
 
     @transaction.atomic
     def save(self, *args, **kwargs):
+        kwargs.update({'comptabilite_type': 'depense'})
         super().save(*args, **kwargs)
-        structures = [self.structure] + self.structure.get_ancestors()
-        for structure in structures:
-            diff_dc = self.montant_dc - (self.initial_montant_dc or Decimal(0))
-            diff_cp = self.montant_cp - (self.initial_montant_cp or Decimal(0))
-            diff_ae = self.montant_ae - (self.initial_montant_ae or Decimal(0))
-
-            try:
-                obj = StructureMontant.objects.get(
-                    structure=structure, periodebudget=self.periodebudget
-                )
-                updated_values = {
-                    'depense_montant_dc': diff_dc + (obj.depense_montant_dc or Decimal(0)),
-                    'depense_montant_cp': diff_cp + (obj.depense_montant_cp or Decimal(0)),
-                    'depense_montant_ae': diff_ae + (obj.depense_montant_ae or Decimal(0)),
-                }
-                for key, value in updated_values.items():
-                    setattr(obj, key, value)
-                obj.save()
-            except StructureMontant.DoesNotExist:
-                updated_values = {
-                    'depense_montant_dc': diff_dc,
-                    'depense_montant_cp': diff_cp,
-                    'depense_montant_ae': diff_ae,
-                    'structure': structure,
-                    'periodebudget': self.periodebudget
-                }
-                obj = StructureMontant(**updated_values)
-                obj.save()
 
     @transaction.atomic
-    def delete(self):
-        structures = [self.structure] + self.structure.get_ancestors()
-        for structure in structures:
-            montant = StructureMontant.objects.get(
-                structure=structure, periodebudget=self.periodebudget)
-            updated_values = {
-                'depense_montant_dc': montant.depense_montant_dc - self.montant_dc,
-                'depense_montant_cp': montant.depense_montant_cp - self.montant_cp,
-                'depense_montant_ae': montant.depense_montant_ae - self.montant_ae,
-            }
-            for key, value in updated_values.items():
-                setattr(montant, key, value)
-            montant.save()
-
-        super().delete()
+    def delete(self, **kwargs):
+        kwargs.update({'comptabilite_type': 'depense'})
+        super().delete(**kwargs)
 
     # def clean(self):
     #    montantae = self.montantae
@@ -347,11 +373,7 @@ class Depense(models.Model):
     #    super(DepenseFull, self).save(*args, **kwargs)
 
 
-class Recette(models.Model):
-    pfi = models.ForeignKey('PlanFinancement',
-                            verbose_name='Programme de financement')
-    structure = models.ForeignKey('Structure',
-                                  verbose_name='Centre financier')
+class Recette(Comptabilite):
     montant_dc = models.DecimalField(max_digits=12, decimal_places=2,
                                      blank=True, null=True)
     montant_re = models.DecimalField(
@@ -364,78 +386,21 @@ class Recette(models.Model):
                                           editable=False)
     naturecomptablerecette = models.ForeignKey(
         'NatureComptableRecette', verbose_name='Nature Comptable')
-    commentaire = models.TextField(blank=True, null=True)
-    lienpiecejointe = models.CharField(max_length=255,
-                                       verbose_name='Lien vers un fichier',
-                                       validators=[URLValidator()],
-                                       blank=True, null=True)
-    periodebudget = models.ForeignKey('PeriodeBudget',
-                                      verbose_name='Période budgétaire',
-                                      related_name='periodebudgetrecette')
-    annee = models.PositiveIntegerField(verbose_name='Année')
-    creele = models.DateTimeField(auto_now_add=True, blank=True)
-    creepar = models.CharField(max_length=100, blank=True, null=True)
-    modifiele = models.DateTimeField(verbose_name='Date de modification',
-                                     auto_now=True, blank=True)
-    modifiepar = models.CharField(max_length=100, blank=True, null=True)
-
-    objects = models.Manager()
-    active_period = ActivePeriodManager()
 
     def __init__(self, *args, **kwargs):
+        kwargs.update(
+            {'initial_montants': ('montant_dc', 'montant_re', 'montant_ar')})
         super().__init__(*args, **kwargs)
-        initial_values = ('montant_dc', 'montant_re', 'montant_ar')
-        list(map(lambda x: setattr(self, 'initial_%s' % x, getattr(self, x)),
-            initial_values))
 
     @transaction.atomic
     def save(self, *args, **kwargs):
+        kwargs.update({'comptabilite_type': 'recette'})
         super().save(*args, **kwargs)
-        structures = [self.structure] + self.structure.get_ancestors()
-        for structure in structures:
-            diff_dc = self.montant_dc - (self.initial_montant_dc or Decimal(0))
-            diff_re = self.montant_re - (self.initial_montant_re or Decimal(0))
-            diff_ar = self.montant_ar - (self.initial_montant_ar or Decimal(0))
-
-            try:
-                obj = StructureMontant.objects.get(
-                    structure=structure, periodebudget=self.periodebudget
-                )
-                updated_values = {
-                    'recette_montant_dc': diff_dc + (obj.recette_montant_dc or Decimal(0)),
-                    'recette_montant_re': diff_re + (obj.recette_montant_re or Decimal(0)),
-                    'recette_montant_ar': diff_ar + (obj.recette_montant_ar or Decimal(0)),
-                }
-                for key, value in updated_values.items():
-                    setattr(obj, key, value)
-                obj.save()
-            except StructureMontant.DoesNotExist:
-                updated_values = {
-                    'recette_montant_dc': diff_dc,
-                    'recette_montant_re': diff_re,
-                    'recette_montant_ar': diff_ar,
-                    'structure': structure,
-                    'periodebudget': self.periodebudget
-                }
-                obj = StructureMontant(**updated_values)
-                obj.save()
 
     @transaction.atomic
-    def delete(self):
-        structures = [self.structure] + self.structure.get_ancestors()
-        for structure in structures:
-            montant = StructureMontant.objects.get(
-                structure=structure, periodebudget=self.periodebudget)
-            updated_values = {
-                'recette_montant_dc': montant.recette_montant_dc - self.montant_dc,
-                'recette_montant_re': montant.recette_montant_re - self.montant_re,
-                'recette_montant_ar': montant.recette_montant_ar - self.montant_ar,
-            }
-            for key, value in updated_values.items():
-                setattr(montant, key, value)
-            montant.save()
-
-        super().delete()
+    def delete(self, **kwargs):
+        kwargs.update({'comptabilite_type': 'recette'})
+        super().delete(**kwargs)
 
 
 class StructureMontant(models.Model):

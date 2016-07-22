@@ -142,6 +142,7 @@ def depense(request, pfiid, annee):
     if request.method == "POST":
         formset = DepenseFormSet(request.POST)
         if formset.is_valid():
+            print('FDV : {}'.format(formset.cleaned_data))
             formset.save()
             return HttpResponseRedirect('/detailspfi/%s' % pfi.pk)
 
