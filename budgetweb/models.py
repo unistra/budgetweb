@@ -11,14 +11,12 @@ from django.utils.translation import ugettext_lazy as _
 
 class ActiveManager(models.Manager):
     def get_queryset(self):
-        return super(ActiveManager, self).get_queryset()\
-            .filter(is_active=True)
+        return super().get_queryset().filter(is_active=True)
 
 
 class ActivePeriodManager(models.Manager):
     def get_queryset(self):
-        return super(ActiveManager, self).get_queryset()\
-            .filter(periodebudget__is_active=True)
+        return super().get_queryset().filter(periodebudget__is_active=True)
 
 
 class StructureAuthorizations(models.Model):

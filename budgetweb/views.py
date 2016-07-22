@@ -54,7 +54,7 @@ def show_tree(request, type_affichage, structid=None):
     liste_pfi = PlanFinancement.objects.filter(
         structure__code=structid).values()
 
-    cf_montants = StructureMontant.objects.filter(
+    cf_montants = StructureMontant.active_period.filter(
         structure__pk__in=structures.keys())
     for cf_montant in cf_montants:
         structures[cf_montant.structure.pk]['montants'] = cf_montant
