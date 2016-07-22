@@ -149,8 +149,9 @@ def depense(request, pfiid, annee):
         'PFI': pfi,
         'formset': formset,
         'currentYear': getCurrentYear,
+        'form_template': 'depense.html'
     }
-    return render(request, 'depense.html', context)
+    return render(request, 'comptabilite.html', context)
 
 
 @login_required
@@ -178,8 +179,9 @@ def recette(request, pfiid, annee):
         'PFI': pfi,
         'formset': formset,
         'currentYear': getCurrentYear,
+        'form_template': 'recette.html'
     }
-    return render(request, 'recette.html', context)
+    return render(request, 'comptabilite.html', context)
 
 
 @login_required
