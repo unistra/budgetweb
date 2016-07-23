@@ -30,7 +30,7 @@
     {% with structure=infos.structure montants=infos.montants %}
     <li>
       <div>
-        <span style="width:auto;" class="cf" toto="{{ structure.code }}">
+        <span style="width:auto;" class="cf" structcode="{{ structure.code }}" title="Ouvrir cette branche">
           <i class="glyphicon glyphicon-plus"></i>{{ structure }}
         </span>
         {% if typeAffichage == "gbcp" %}
