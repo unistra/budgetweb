@@ -41,9 +41,9 @@
                        </ul>
                     </li>
             		    {% if user.is_authenticated %}
-            		    <li id="logout-menu"><a href="/accounts/logout/"><span class="glyphicon glyphicon-log-out"></span> ({{ request.user.username }})</a></li>
+            		    <li id="logout-menu"><a href="/accounts/logout/" title="Déconnexion"><span class="glyphicon glyphicon-log-out"></span> ({{ request.user.username }})</a></li>
             		    {% else %}
-            		    <li id="login-menu"><a href="/accounts/login/"><span class="glyphicon  glyphicon-log-out"></span></a></li>
+            		    <li id="login-menu"><a href="/accounts/login/" title="Connexion"><span class="glyphicon  glyphicon-log-out"></span></a></li>
             		    {% endif %}
                 </ul>
             </div>
