@@ -268,7 +268,9 @@ class Comptabilite(models.Model):
         comptabilite = kwargs.pop('comptabilite_type')
 
         super().save(*args, **kwargs)
+        # Get the ascending hierarchy
         structures = [self.structure] + self.structure.get_ancestors()
+        # Difference with the original values
         diffs = {m: getattr(self, m) - (
             getattr(self, 'initial_%s' % m) or Decimal(0))\
                 for m in self.initial_montants}
@@ -302,6 +304,7 @@ class Comptabilite(models.Model):
         comptabilite = kwargs.pop('comptabilite_type')
         montant_name = lambda x: '%s_%s' % (comptabilite, x)
 
+        # Get the ascending hierarchy
         structures = [self.structure] + self.structure.get_ancestors()
         for structure in structures:
             montant = StructureMontant.objects.get(
@@ -328,8 +331,6 @@ class Depense(Comptabilite):
                                            verbose_name='Domaine fonctionnel')
     naturecomptabledepense = models.ForeignKey(
         'NatureComptableDepense', verbose_name='Nature Comptable')
-
-    initial_montants = ('montant_dc', 'montant_cp', 'montant_ae')
 
     def __init__(self, *args, **kwargs):
         kwargs.update(
