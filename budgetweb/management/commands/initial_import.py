@@ -12,6 +12,8 @@ class Command(NoArgsCommand):
         datapath = join(settings.SITE_ROOT, 'datas')
 
         try:
+            print('***** Import PeriodeBudget *****')
+            call_command('import_periodebudget')
             print('***** Import structures *****')
             call_command('import_structures', join(datapath, 'structures.csv'))
             print('***** Import functional domains *****')
@@ -25,8 +27,6 @@ class Command(NoArgsCommand):
                          join(datapath, 'naturecomptablerecette.csv'))
             print('***** Import Financial Plans *****')
             call_command('import_pfi', join(datapath, 'planfinancement.csv'))
-            print('***** Import PeriodeBudget *****')
-            call_command('import_periodebudget')
             print('***** Import Authorizations *****')
             call_command('import_authorizations', join(datapath, 'lda.txt'))
 

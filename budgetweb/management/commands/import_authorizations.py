@@ -7,6 +7,16 @@ from django.core.management.base import BaseCommand
 from budgetweb.models import Structure, StructureAuthorizations
 
 
+ADMINS = (('ludovic.hutin', 'ludovic.hutin@unistra.fr'),)
+
+
+def is_admin(username):
+    for admin in ADMINS:
+        if username == admin[0]:
+            return admin
+    return None
+
+
 class Command(BaseCommand):
     help = 'Import the functional domains from a csv file'
 
@@ -27,7 +37,14 @@ class Command(BaseCommand):
                         try:
                             User.objects.get(username=username)
                         except User.DoesNotExist:
-                            User.objects.create_user(username, password='!')
+                            func = 'create_user'
+                            extra_params = {}
+                            admin_infos = is_admin(username)
+                            if admin_infos:
+                                func = 'create_superuser'
+                                extra_params = {'email': admin_infos[1]}
+                            getattr(User.objects, func)(
+                                username, password='!', **extra_params)
 
                         try:
                             structure = Structure.objects.get(code=structure)

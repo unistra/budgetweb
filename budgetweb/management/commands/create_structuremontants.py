@@ -1,8 +1,9 @@
 from contextlib import contextmanager
-import decimal
+from decimal import Decimal
 import multiprocessing as mp
 import random
 
+from django import db
 from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.core.management import call_command
@@ -14,9 +15,9 @@ from budgetweb.models import (Depense, DomaineFonctionnel,
                               Structure, StructureMontant)
 
 
-NUMBER_ENTRIES = 200
-PROCESS_ENTRIES = 100
-MAX_MONTANT = 10000
+NUMBER_ENTRIES = 100
+PROCESS_ENTRIES = 25
+MAX_MONTANT = 100000
 
 
 def get_random_object(object_list, qs=None):
@@ -49,6 +50,18 @@ class Command(BaseCommand):
             default=False,
             help='Delete previous Recette, Depense and StructureMontant objects',
         )
+        parser.add_argument(
+            '-e',
+            dest='number_entries',
+            default=NUMBER_ENTRIES,
+            help='Total number of created StuctureMontant',
+        )
+        parser.add_argument(
+            '-p',
+            dest='process_entries',
+            default=PROCESS_ENTRIES,
+            help='Number of created StuctureMontant by process',
+        )
 
     def handle(self, *args, **options):
         if options['delete']:
@@ -61,22 +74,27 @@ class Command(BaseCommand):
         self.naturecomptabledepenses = NatureComptableDepense.active.all()
         self.naturecomptablerecettes = NatureComptableRecette.active.all()
         self.pfis = PlanFinancement.active.all()
+        print('OPTS : %s' % options)
+        self.number_entries = int(options['number_entries'])
+        self.process_entries = int(options['process_entries'])
 
         index = 0
         jobs = []
         created = mp.Value('i', 0)
 
-        with temporary_settings():
-            while index < NUMBER_ENTRIES:
-                end = min(NUMBER_ENTRIES, index + PROCESS_ENTRIES)
-                p = mp.Process(
-                    target=self.worker_entry,
-                    name='montants_%s' % index,
-                    args=(index, end, created))
-                jobs.append(p)
-                p.start()
+        # Prevents SSL Error with the database connection before fork
+        db.close_old_connections()
+        # with temporary_settings():
+        while index < self.number_entries:
+            end = min(self.number_entries, index + self.process_entries)
+            p = mp.Process(
+                target=self.worker_entry,
+                name='montants_%s' % index,
+                args=(index, end, created))
+            jobs.append(p)
+            p.start()
 
-                index += PROCESS_ENTRIES
+            index += self.process_entries
 
         for j in jobs:
             j.join()
@@ -118,7 +136,7 @@ class Command(BaseCommand):
                 obj = model(**values)
                 montants = obj.initial_montants
                 for montant in montants:
-                    value = decimal.Decimal(random.randrange(MAX_MONTANT * 100)) / 100
+                    value = Decimal(random.randrange(MAX_MONTANT * 100)) / 100
                     setattr(obj, montant, value)
                 obj.save()
 

@@ -5,8 +5,10 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
 from django.db import models, transaction
-from django.db.models import Sum
+from django.db.models import F, Sum
 from django.utils.translation import ugettext_lazy as _
+
+from .decorators import require_lock
 
 
 class ActiveManager(models.Manager):
@@ -229,6 +231,31 @@ class NatureComptableRecette(models.Model):
                 {0.label_nature_comptable}'.format(self)
 
 
+class StructureMontant(models.Model):
+    structure = models.ForeignKey(Structure)
+    periodebudget = models.ForeignKey('PeriodeBudget',
+                                      related_name='periodebudgetmontants')
+    depense_montant_dc = models.DecimalField(
+        max_digits=12, decimal_places=2, default=Decimal(0))
+    depense_montant_cp = models.DecimalField(
+        max_digits=12, decimal_places=2, default=Decimal(0))
+    depense_montant_ae = models.DecimalField(
+        max_digits=12, decimal_places=2, default=Decimal(0))
+    recette_montant_dc = models.DecimalField(
+        max_digits=12, decimal_places=2, default=Decimal(0))
+    recette_montant_re = models.DecimalField(
+        max_digits=12, decimal_places=2, default=Decimal(0))
+    recette_montant_ar = models.DecimalField(
+        max_digits=12, decimal_places=2, default=Decimal(0))
+    modification_date = models.DateTimeField(auto_now=True)
+
+    objects = models.Manager()
+    active_period = ActivePeriodManager()
+
+    class Meta:
+        unique_together = (('structure', 'periodebudget'),)
+
+
 class Comptabilite(models.Model):
     pfi = models.ForeignKey('PlanFinancement',
                             verbose_name='Programme de financement')
@@ -261,6 +288,7 @@ class Comptabilite(models.Model):
             self.initial_montants))
 
     @transaction.atomic
+    @require_lock(StructureMontant)
     def save(self, *args, **kwargs):
         """
         Change all the StructureMontant of the structure's asending hierarchy
@@ -281,9 +309,8 @@ class Comptabilite(models.Model):
                 obj = StructureMontant.objects.get(
                     structure=structure, periodebudget=self.periodebudget
                 )
-                updated_values = {montant_name(k): v + (
-                    getattr(obj, montant_name(k)) or Decimal(0))\
-                        for k, v in diffs.items()}
+                updated_values = {montant_name(k): (F(montant_name(k)) + v)\
+                    for k, v in diffs.items()}
                 for key, value in updated_values.items():
                     setattr(obj, key, value)
                 obj.save()
@@ -337,12 +364,10 @@ class Depense(Comptabilite):
             {'initial_montants': ('montant_dc', 'montant_cp', 'montant_ae')})
         super().__init__(*args, **kwargs)
 
-    @transaction.atomic
     def save(self, *args, **kwargs):
         kwargs.update({'comptabilite_type': 'depense'})
         super().save(*args, **kwargs)
 
-    @transaction.atomic
     def delete(self, **kwargs):
         kwargs.update({'comptabilite_type': 'depense'})
         super().delete(**kwargs)
@@ -393,37 +418,10 @@ class Recette(Comptabilite):
             {'initial_montants': ('montant_dc', 'montant_re', 'montant_ar')})
         super().__init__(*args, **kwargs)
 
-    @transaction.atomic
     def save(self, *args, **kwargs):
         kwargs.update({'comptabilite_type': 'recette'})
         super().save(*args, **kwargs)
 
-    @transaction.atomic
     def delete(self, **kwargs):
         kwargs.update({'comptabilite_type': 'recette'})
         super().delete(**kwargs)
-
-
-class StructureMontant(models.Model):
-    structure = models.ForeignKey(Structure)
-    periodebudget = models.ForeignKey('PeriodeBudget',
-                                      related_name='periodebudgetmontants')
-    depense_montant_dc = models.DecimalField(
-        max_digits=12, decimal_places=2, blank=True, null=True)
-    depense_montant_cp = models.DecimalField(
-        max_digits=12, decimal_places=2, blank=True, null=True)
-    depense_montant_ae = models.DecimalField(
-        max_digits=12, decimal_places=2, blank=True, null=True)
-    recette_montant_dc = models.DecimalField(
-        max_digits=12, decimal_places=2, blank=True, null=True)
-    recette_montant_re = models.DecimalField(
-        max_digits=12, decimal_places=2, blank=True, null=True)
-    recette_montant_ar = models.DecimalField(
-        max_digits=12, decimal_places=2, blank=True, null=True)
-    modification_date = models.DateTimeField(auto_now=True)
-
-    objects = models.Manager()
-    active_period = ActivePeriodManager()
-
-    class Meta:
-        unique_together = (('structure', 'periodebudget'),)

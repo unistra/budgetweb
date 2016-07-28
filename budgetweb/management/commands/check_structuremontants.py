@@ -62,8 +62,8 @@ class Command(NoArgsCommand):
                 montant_name = lambda x: '%s_%s' % (comptabilite, x)
                 comptabilite_montants += list(map(montant_name, infos['model']().initial_montants))
             for montant in comptabilite_montants:
-                result1 = check_result[montant]
-                result2 = getattr(structure_montant, montant)
+                result1 = check_result.get(montant, Decimal(0))
+                result2 = getattr(structure_montant, montant) or Decimal(0)
                 if result1 != result2:
                     error_str = 'StructureMontant (pk={0.pk}). {1} : {2} - Calculated : {3}'.format(
                         structure_montant, montant, result1, result2)
