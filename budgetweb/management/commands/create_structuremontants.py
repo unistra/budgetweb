@@ -74,7 +74,6 @@ class Command(BaseCommand):
         self.naturecomptabledepenses = NatureComptableDepense.active.all()
         self.naturecomptablerecettes = NatureComptableRecette.active.all()
         self.pfis = PlanFinancement.active.all()
-        print('OPTS : %s' % options)
         self.number_entries = int(options['number_entries'])
         self.process_entries = int(options['process_entries'])
 

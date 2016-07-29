@@ -1,5 +1,6 @@
 from functools import wraps
 
+from django.conf import settings
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.http import HttpResponseForbidden
@@ -71,13 +72,14 @@ def require_lock(model, lock='ACCESS EXCLUSIVE'):
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
-            if lock not in POSTGRESQL_LOCK_MODES:
-                raise ValueError('%s is not a PostgreSQL supported lock mode.')
-            from django.db import connection
-            cursor = connection.cursor()
-            cursor.execute(
-                'LOCK TABLE %s IN %s MODE' % (model._meta.db_table, lock)
-            )
+            if settings.DATABASES['default']['ENGINE'].endswith('psycopg2'):
+                if lock not in POSTGRESQL_LOCK_MODES:
+                    raise ValueError('%s is not a PostgreSQL supported lock mode.')
+                from django.db import connection
+                cursor = connection.cursor()
+                cursor.execute(
+                    'LOCK TABLE %s IN %s MODE' % (model._meta.db_table, lock)
+                )
             return func(*args, **kwargs)
         return wrapper
     return decorator
