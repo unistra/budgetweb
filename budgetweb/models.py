@@ -93,6 +93,8 @@ class Structure(models.Model):
     is_active = models.BooleanField('Actif', max_length=100, default=True)
     # Depth: 1 == root
     depth = models.PositiveIntegerField()
+    # Path: id_root/id_ancestor1/id_ancestor2/...
+    path = models.TextField(_('Path'), blank=True)
 
     objects = models.Manager()
     active = ActiveManager()
@@ -124,6 +126,17 @@ class Structure(models.Model):
 
     def get_subtree(self):
         return ({son: son.get_subtree()} for son in self.get_sons())
+
+    @property
+    def full_path(self):
+        return '{0.path}/{0.pk}'.format(self)
+
+    def get_full_path(self, order=True):
+        ids = self.full_path.split('/')[1:]
+        structures = list(Structure.objects.filter(pk__in=ids))
+        if order:
+            structures.sort(key=lambda s: ids.index(str(s.pk)))
+        return structures
 
 
 class PlanFinancement(models.Model):

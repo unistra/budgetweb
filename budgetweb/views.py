@@ -14,8 +14,8 @@ from .decorators import is_ajax_get, is_authorized_structure
 from .forms import DepenseForm, PlanFinancementPluriForm, RecetteForm
 from .models import (Depense, NatureComptableDepense, NatureComptableRecette,
                      PeriodeBudget, PlanFinancement, Recette, Structure,
-                     StructureMontant)
-from .utils import getCurrentYear
+                     StructureAuthorizations, StructureMontant)
+from .utils import get_authorized_structures_ids, getCurrentYear
 
 
 # @login_required
@@ -42,11 +42,11 @@ def api_fund_designation_by_nature_and_enveloppe(request, model, enveloppe, pfii
 @login_required
 def show_tree(request, type_affichage, structid=None):
     queryset = {'parent__code': structid} if structid else {'parent': None}
+    sl = Structure.objects.filter(**queryset).order_by('code')
+    authorized_structures = get_authorized_structures_ids(
+        request.user, hierarchy=True)
     structures = OrderedDict(
-        [(s.pk, {'structure': s}) for s in Structure.objects.filter(
-            **queryset).order_by('code')
-        ]
-    )
+        [(s.pk, {'structure': s}) for s in sl if s.pk in authorized_structures])
 
     # TODO: select_related ?
 
