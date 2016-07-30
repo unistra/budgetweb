@@ -4,7 +4,7 @@ from collections import OrderedDict
 import json
 
 from django.contrib.auth.decorators import login_required
-from django.db.models import Sum
+from django.db.models import Prefetch, Sum
 from django.forms.models import modelformset_factory
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import (get_object_or_404, redirect, render,
@@ -41,47 +41,30 @@ def api_fund_designation_by_nature_and_enveloppe(request, model, enveloppe, pfii
 
 @login_required
 def show_tree(request, type_affichage, structid=None):
+    # Authorized structures list
     queryset = {'parent__code': structid} if structid else {'parent': None}
-    sl = Structure.objects.filter(**queryset).order_by('code')
     authorized_structures = get_authorized_structures_ids(
         request.user, hierarchy=True)
-    structures = OrderedDict(
-        [(s.pk, {'structure': s}) for s in sl if s.pk in authorized_structures])
+    structures = Structure.objects.prefetch_related(Prefetch(
+        'structuremontant_set',
+        queryset=StructureMontant.active_period.all(),
+        to_attr='montants')
+    ).filter(pk__in=authorized_structures, **queryset).order_by('code')
 
-    # TODO: select_related ?
-
-    # Et enfin on ajoute les PFI, si jamais il y en a.
-    liste_pfi = PlanFinancement.objects.filter(
-        structure__code=structid).values()
-
-    cf_montants = StructureMontant.active_period.filter(
-        structure__pk__in=structures.keys())
-    for cf_montant in cf_montants:
-        structures[cf_montant.structure.pk]['montants'] = cf_montant
-
-    for pfi in liste_pfi:
-        pfi['sommeDepenseAE'] = Depense.objects.filter(
-                                pfi__id=pfi['id']).aggregate(
-                                somme=Sum('montant_ae'))
-        pfi['sommeDepenseCP'] = Depense.objects.filter(
-                                pfi__id=pfi['id']).aggregate(
-                                somme=Sum('montant_cp'))
-        pfi['sommeDepenseDC'] = Depense.objects.filter(
-                                pfi__id=pfi['id']).aggregate(
-                                somme=Sum('montant_dc'))
-        pfi['sommeRecetteAR'] = Recette.objects.filter(
-                                pfi__id=pfi['id']).aggregate(
-                                somme=Sum('montant_ar'))
-        pfi['sommeRecetteRE'] = Recette.objects.filter(
-                                pfi__id=pfi['id']).aggregate(
-                                somme=Sum('montant_re'))
-        pfi['sommeRecetteDC'] = Recette.objects.filter(
-                                pfi__id=pfi['id']).aggregate(
-                                somme=Sum('montant_dc'))
+    # PFI list
+    pfis = PlanFinancement.objects.filter(structure__code=structid)\
+        .annotate(
+            sum_depense_ae=Sum('depense__montant_ae'),
+            sum_depense_cp=Sum('depense__montant_cp'),
+            sum_depense_dc=Sum('depense__montant_dc'),
+            sum_recette_ar=Sum('recette__montant_ar'),
+            sum_recette_re=Sum('recette__montant_re'),
+            sum_recette_dc=Sum('recette__montant_dc')
+        )
 
     context = {
         'structures': structures,
-        'listePFI': liste_pfi,
+        'pfis': pfis,
         'typeAffichage': type_affichage,
         'currentYear': getCurrentYear
     }

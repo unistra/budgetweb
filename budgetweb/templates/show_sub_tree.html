@@ -1,5 +1,5 @@
 {% load budgetweb_tags %}
-{% for node in listePFI %}
+{% for node in pfis %}
 	<li>
 	  <div>
 	    <span style="width:160px;" class="pfi">
@@ -12,22 +12,22 @@
 	      {% endif %}
 	    </span>
 	    {% if typeAffichage == "gbcp" %}
-	       <div class="showTree">{% firstof node.sommeRecetteRE.somme|intspace "0,00" %} &euro;</div>
-	       <div class="showTree">{% firstof node.sommeRecetteAR.somme|intspace "0,00" %} &euro;</div>
+	       <div class="showTree">{% firstof node.sum_recette_re|intspace "0,00" %} &euro;</div>
+	       <div class="showTree">{% firstof node.sum_recette_ar|intspace "0,00" %} &euro;</div>
 	       <div class="showTree">&nbsp;</div>
-	       <div class="showTree">{% firstof node.sommeDepenseCP.somme|intspace "0,00" %} &euro;</div>
-	       <div class="showTree">{% firstof node.sommeDepenseAE.somme|intspace "0,00" %} &euro;</div>
+	       <div class="showTree">{% firstof node.sum_depense_cp|intspace "0,00" %} &euro;</div>
+	       <div class="showTree">{% firstof node.sum_depense_ae|intspace "0,00" %} &euro;</div>
 	     {% else %}
-	       <div class="showTree">{% firstof node.sommeRecetteDC.somme|intspace "0,00" %} &euro;</div>
+	       <div class="showTree">{% firstof node.sum_recette_dc|intspace "0,00" %} &euro;</div>
 	       <div class="showTree">&nbsp;</div>
-	       <div class="showTree">{% firstof node.sommeDepenseDC.somme|intspace "0,00" %} &euro;</div>
+	       <div class="showTree">{% firstof node.sum_depense_dc|intspace "0,00" %} &euro;</div>
 	    {% endif %}
 	    <ul id="{{ node.code }}"></ul>
 	  </div>
     </li>
 {% endfor %}
-{% for structid, infos in structures.items %}
-    {% with structure=infos.structure montants=infos.montants %}
+{% for structure in structures %}
+    {% with montants=structure.montants.0 %}
     <li>
       <div>
         <span style="width:auto;" class="cf" structcode="{{ structure.code }}" title="Ouvrir cette branche">
