@@ -28,7 +28,7 @@
 {% endfor %}
 {% for structure in structures %}
     {% with montants=structure.montants.0 %}
-    <li>
+    <li class="parent_li">
       <div>
         <span style="width:auto;" class="cf" structcode="{{ structure.code }}" title="Ouvrir cette branche">
           <i class="glyphicon glyphicon-plus"></i>{{ structure }}
