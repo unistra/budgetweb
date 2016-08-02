@@ -17,15 +17,16 @@ class RecetteForm(forms.ModelForm):
         label='AR', widget=forms.TextInput(attrs={'style': 'width:90px;'}))
     montant_re = forms.DecimalField(
         label='RE', widget=forms.TextInput(attrs={'style': 'width:90px;'}))
-    lienpiecejointe = forms.CharField(required=False,
+    lienpiecejointe = forms.CharField(
+        required=False,
         label='PJ', widget=forms.TextInput(attrs={'style': 'width:2px;'}))
 
     modal_fields = ('commentaire', 'lienpiecejointe')
 
     class Meta:
         model = Recette
-        fields = ('pfi', 'structure', 'periodebudget',
-                  'annee', 'enveloppe', 'naturecomptablerecette', 'montant_ar',
+        fields = ('annee', 'enveloppe', 'naturecomptablerecette',
+                  'pfi', 'structure', 'periodebudget', 'montant_ar',
                   'montant_re', 'montant_dc', 'commentaire',
                   'lienpiecejointe')
         widgets = {
@@ -84,15 +85,18 @@ class DepenseForm(forms.ModelForm):
         label='AE', widget=forms.TextInput(attrs={'style': 'width:90px;'}))
     montant_cp = forms.DecimalField(
         label='CP', widget=forms.TextInput(attrs={'style': 'width:90px;'}))
-    lienpiecejointe = forms.CharField(required=False,
+    lienpiecejointe = forms.CharField(
+        required=False,
         label='PJ', widget=forms.TextInput(attrs={'style': 'width:2px;'}))
 
     modal_fields = ('commentaire', 'lienpiecejointe')
 
     class Meta:
         model = Depense
-        fields = ('pfi', 'structure', 'domainefonctionnel', 'annee',
-                  'periodebudget', 'enveloppe', 'naturecomptabledepense',
+        fields = ('annee', 'enveloppe', 'naturecomptabledepense',
+                  'pfi', 'structure',
+                  'domainefonctionnel',
+                  'periodebudget',
                   'montant_ae', 'montant_cp', 'montant_dc', 'commentaire',
                   'lienpiecejointe')
         widgets = {
