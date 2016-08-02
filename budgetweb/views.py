@@ -177,10 +177,14 @@ def detailspfi(request, pfiid):
 
     listeDepense = Depense.objects.filter(
         pfi=pfi).prefetch_related('naturecomptabledepense')\
-                .prefetch_related('periodebudget')
+                .prefetch_related('periodebudget')\
+                .prefetch_related('pfi')\
+                .prefetch_related('pfi__structure')
     listeRecette = Recette.objects.filter(
         pfi=pfi).prefetch_related('naturecomptablerecette')\
-                .prefetch_related('periodebudget')
+                .prefetch_related('periodebudget')\
+                .prefetch_related('pfi')\
+                .prefetch_related('pfi__structure')
     sommeDepense = listeDepense.aggregate(sommeDC=Sum('montant_dc'),
                                           sommeAE=Sum('montant_ae'),
                                           sommeCP=Sum('montant_cp'))
