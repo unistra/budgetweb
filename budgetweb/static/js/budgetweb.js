@@ -5,11 +5,11 @@ jQuery(document).ready(function($) {
     }
 
     function getOpenStructures() {
-        return JSON.parse(sessionStorage.getItem("open_structures") || "[]");
+        return JSON.parse(localStorage.getItem("open_structures") || "[]");
     }
 
     function setOpenStructures(open_structures) {
-        sessionStorage.setItem("open_structures", JSON.stringify(open_structures));
+        localStorage.setItem("open_structures", JSON.stringify(open_structures));
     }
 
     function removeOpenStructure(open_structures, code) {
@@ -29,12 +29,12 @@ jQuery(document).ready(function($) {
             // handle a successful response
             success : function(json) {
                 var $ul_cf = $("#" + cf);
-                // Get the parent span for the structures loaded from sessionStorage
+                // Get the parent span for the structures loaded from localStorage
                 elt = (typeof elt !== 'undefined' ? elt : $ul_cf.siblings("div").children("span.cf"));
                 elt.attr('title', 'Fermer cette branche').find(' > i').addClass('glyphicon-minus').removeClass('glyphicon-plus');
                 $ul_cf.empty().append(json);
 
-                // Add the cf to sessionStorage
+                // Add the cf to localStorage
                 var openStructures = getOpenStructures();
                 openStructures.push(cf);
                 // Add an unique structure code
@@ -69,7 +69,7 @@ jQuery(document).ready(function($) {
         locale:'fr'
     });
 
-    // Open the CF stored in sessionStorage
+    // Open the CF stored in localStorage
     loadSessionCF();
 
     $('.tree li:has(ul)').addClass('parent_li');
@@ -82,7 +82,7 @@ jQuery(document).ready(function($) {
             children.hide('fast');
             $this.attr('title', 'Ouvrir cette branche').find(' > i').addClass('glyphicon-plus').removeClass('glyphicon-minus');
 
-            // Remove the closed CF and its children from sessionStorage
+            // Remove the closed CF and its children from localStorage
             var open_structures = getOpenStructures();
             removeOpenStructure(open_structures, struct_code);
             $.each(children.find("[structcode]"), function(index) {
