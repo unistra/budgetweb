@@ -57,7 +57,7 @@ def is_ajax_get(view_func):
     return wrapper
 
 
-def require_lock(model, lock='ACCESS EXCLUSIVE'):
+def require_lock(model, lock='ACCESS EXCLUSIVE'):  # pragma: no cover
     """
     https://www.caktusgroup.com/blog/2009/05/26/explicit-table-locking-with-postgresql-and-django/
     Decorator for PostgreSQL's table-level lock functionality

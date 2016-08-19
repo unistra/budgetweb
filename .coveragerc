@@ -2,3 +2,8 @@
 source = budgetweb/
 omit = budgetweb/settings/*
        budgetweb/wsgi.py
+       */tests/*
+       setup.py
+       fabfile.py
+       */commands/*
+       */migrations/*

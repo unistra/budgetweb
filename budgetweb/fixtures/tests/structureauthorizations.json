@@ -1,0 +1,17 @@
+[{
+    "pk": 100,
+    "model": "auth.user",
+    "fields": {
+        "username": "user100",
+        "password": "1234"
+    }
+},
+
+	{
+	"pk": 1,
+	"model": "budgetweb.structureauthorizations",
+	"fields": {
+		"user": 100,
+		"structures": [4]
+	}
+}]

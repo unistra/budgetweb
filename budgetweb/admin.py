@@ -127,7 +127,8 @@ class StructureAuthorizationsForm(forms.ModelForm):
     def tree(self, nodes, i=0):
         result = []
         for node in nodes:
-            result.append((node.pk, '%s %s' % ('--' * i, node.code)))
+            result.append(
+                (node.pk, '%s%s%s' % ('--' * i, ' ' if i else '', node.code)))
             result.extend(self.tree(node.get_sons(), i + 1))
         return result
 

@@ -31,7 +31,7 @@
     <li class="parent_li">
       <div>
         <span style="width:auto;" class="cf" structcode="{{ structure.code }}" title="Ouvrir cette branche">
-          <i class="glyphicon glyphicon-plus"></i>{{ structure }}
+          <i class="glyphicon glyphicon-plus"></i>{{ structure.code }}
         </span>
         {% if typeAffichage == "gbcp" %}
            <div class="showTree">{% firstof montants.recette_montant_re|intspace "0,00" %} &euro;</div>

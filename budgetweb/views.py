@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from collections import OrderedDict
+from datetime import datetime
 import json
 
 from django.contrib.auth.decorators import login_required
@@ -15,7 +16,7 @@ from .forms import DepenseForm, PlanFinancementPluriForm, RecetteForm
 from .models import (Depense, NatureComptableDepense, NatureComptableRecette,
                      PeriodeBudget, PlanFinancement, Recette, Structure,
                      StructureAuthorizations, StructureMontant)
-from .utils import get_authorized_structures_ids, getCurrentYear
+from .utils import get_authorized_structures_ids, get_current_year
 
 
 # @login_required
@@ -32,7 +33,8 @@ def api_fund_designation_by_nature_and_enveloppe(request, model, enveloppe, pfii
         'naturecomptabledepense': NatureComptableDepense,
     }
     natures = models[model].active.filter(
-        is_fleche=pfi.is_fleche, enveloppe=enveloppe)
+        is_fleche=pfi.is_fleche, enveloppe=enveloppe
+    ).order_by('code_nature_comptable')
     response_data = [
         {"id": nature.pk, "label": str(nature)} for nature in natures]
     return HttpResponse(
@@ -52,7 +54,7 @@ def show_tree(request, type_affichage, structid=None):
     ).filter(pk__in=authorized_structures, **queryset).order_by('code')
 
     # PFI list
-    pfis = PlanFinancement.objects.filter(structure__code=structid)\
+    pfis = PlanFinancement.active.filter(structure__code=structid)\
         .annotate(
             sum_depense_ae=Sum('depense__montant_ae'),
             sum_depense_cp=Sum('depense__montant_cp'),
@@ -66,7 +68,7 @@ def show_tree(request, type_affichage, structid=None):
         'structures': structures,
         'pfis': pfis,
         'typeAffichage': type_affichage,
-        'currentYear': getCurrentYear
+        'currentYear': get_current_year
     }
 
     template = 'show_sub_tree.html' if request.is_ajax() else 'showtree.html'
@@ -87,15 +89,12 @@ def pluriannuel(request, pfiid):
         form = PlanFinancementPluriForm(instance=pfi)
 
     # On a une date de debut et de fin, on prépare un tableau
-    range_year = {}
+    range_year = []
     if pfi.date_debut and pfi.date_fin:
-        start = pfi.date_debut.year
-        while start <= pfi.date_fin.year:
-            range_year[start] = True
-            start = start + 1
+        range_year = range(pfi.date_debut.year, pfi.date_fin.year + 1)
     context = {'PFI': pfi, 'form': form,
-               'rangeYear': sorted(range_year),
-               'currentYear': getCurrentYear}
+               'rangeYear': range_year,
+               'currentYear': get_current_year}
     return render(request, 'pluriannuel.html', context)
 
 
@@ -131,7 +130,7 @@ def depense(request, pfiid, annee):
     context = {
         'PFI': pfi,
         'formset': formset,
-        'currentYear': getCurrentYear,
+        'currentYear': get_current_year,
         'form_template': 'depense.html'
     }
     return render(request, 'comptabilite.html', context)
@@ -161,7 +160,7 @@ def recette(request, pfiid, annee):
     context = {
         'PFI': pfi,
         'formset': formset,
-        'currentYear': getCurrentYear,
+        'currentYear': get_current_year,
         'form_template': 'recette.html'
     }
     return render(request, 'comptabilite.html', context)
@@ -173,18 +172,18 @@ def detailspfi(request, pfiid):
     pfi = PlanFinancement.objects.get(pk=pfiid)
 
     # A completer.
-    listeDepenseRecette = pfi.getTotal()
+    listeDepenseRecette = pfi.get_total()
 
     listeDepense = Depense.objects.filter(
         pfi=pfi).prefetch_related('naturecomptabledepense')\
                 .prefetch_related('periodebudget')\
                 .prefetch_related('pfi')\
-                .prefetch_related('pfi__structure')
+                .prefetch_related('pfi__structure').order_by('annee')
     listeRecette = Recette.objects.filter(
         pfi=pfi).prefetch_related('naturecomptablerecette')\
                 .prefetch_related('periodebudget')\
                 .prefetch_related('pfi')\
-                .prefetch_related('pfi__structure')
+                .prefetch_related('pfi__structure').order_by('annee')
     sommeDepense = listeDepense.aggregate(sommeDC=Sum('montant_dc'),
                                           sommeAE=Sum('montant_ae'),
                                           sommeCP=Sum('montant_cp'))
@@ -192,7 +191,7 @@ def detailspfi(request, pfiid):
                                           sommeAR=Sum('montant_ar'),
                                           sommeRE=Sum('montant_re'))
     context = {
-        'PFI': pfi, 'currentYear': getCurrentYear,
+        'PFI': pfi, 'currentYear': get_current_year,
         'listeDepense': listeDepense, 'listeRecette': listeRecette,
         'sommeDepense': sommeDepense, 'sommeRecette': sommeRecette,
         'listeDepenseRecette': listeDepenseRecette,

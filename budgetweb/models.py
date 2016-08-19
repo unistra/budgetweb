@@ -93,7 +93,7 @@ class Structure(models.Model):
     is_active = models.BooleanField('Actif', max_length=100, default=True)
     # Depth: 1 == root
     depth = models.PositiveIntegerField()
-    # Path: id_root/id_ancestor1/id_ancestor2/...
+    # Path: /id_root/id_ancestor1/id_ancestor2/...
     path = models.TextField(_('Path'), blank=True)
 
     objects = models.Manager()
@@ -103,10 +103,11 @@ class Structure(models.Model):
         ordering = ['code']
 
     def __str__(self):
-        return '{0.code}'.format(self)
+        return '{0.code} - {0.label}'.format(self)
 
     def save(self, *args, **kwargs):
         parent = self.parent
+        self.path = '{0.path}/{0.id}'.format(parent) if parent else ''
         self.depth = parent.depth + 1 if parent else 1
         super().save(*args, **kwargs)
 
@@ -123,9 +124,6 @@ class Structure(models.Model):
 
     def get_sons(self):
         return self.fils.filter(is_active=True).order_by('code')
-
-    def get_subtree(self):
-        return ({son: son.get_subtree()} for son in self.get_sons())
 
     @property
     def full_path(self):
@@ -171,7 +169,7 @@ class PlanFinancement(models.Model):
 
     # Retourne un tableau avec l'année, la
     #
-    def getTotal(self):
+    def get_total(self):
         # select annee, periodebudget_id, enveloppe, sum(montantae) as sommeae,
         # sum(montantcp) as sommecp, sum(montantdc) as sommedc
         # from budgetweb_depense, budgetweb_naturecomptabledepense
@@ -187,8 +185,8 @@ class PlanFinancement(models.Model):
         recette = Recette.objects.filter(pfi=self.id) \
                .values('annee', 'periodebudget',
                        'naturecomptablerecette__enveloppe') \
-               .annotate(sommeRecetteAE=Sum('montant_ar'),
-                         sommeRecetteCP=Sum('montant_re'),
+               .annotate(sommeRecetteAR=Sum('montant_ar'),
+                         sommeRecetteRE=Sum('montant_re'),
                          sommeRecetteDC=Sum('montant_dc'))
 
         return depense, recette
@@ -214,8 +212,8 @@ class NatureComptableDepense(models.Model):
     active = ActiveManager()
 
     def __str__(self):
-        return '{0.code_nature_comptable} - \
-                {0.label_nature_comptable}'.format(self)
+        return '{0.code_nature_comptable} - {0.label_nature_comptable}'\
+            .format(self)
 
 
 class NatureComptableRecette(models.Model):
@@ -240,8 +238,8 @@ class NatureComptableRecette(models.Model):
     active = ActiveManager()
 
     def __str__(self):
-        return '{0.code_nature_comptable} - \
-                {0.label_nature_comptable}'.format(self)
+        return '{0.code_nature_comptable} - {0.label_nature_comptable}'\
+            .format(self)
 
 
 class StructureMontant(models.Model):
@@ -297,7 +295,11 @@ class Comptabilite(models.Model):
     def __init__(self, *args, **kwargs):
         self.initial_montants = kwargs.pop('initial_montants', ())
         super().__init__(*args, **kwargs)
-        list(map(lambda x: setattr(self, 'initial_%s' % x, getattr(self, x)),
+        # Set the initial montants values for the difference calculation.
+        # The values are set to 0 if it is a new object.
+        list(map(lambda x: setattr(
+                self, 'initial_%s' % x,
+                getattr(self, x) if self.id else Decimal(0)),
             self.initial_montants))
 
     @transaction.atomic
@@ -355,6 +357,7 @@ class Comptabilite(models.Model):
             for key, value in updated_values.items():
                 setattr(montant, key, value)
             montant.save()
+        super().delete(**kwargs)
 
 
 class Depense(Comptabilite):
