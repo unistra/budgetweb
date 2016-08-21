@@ -108,9 +108,14 @@ label {
 
 .pluri {
   display: inline-block;
-  width: 50px;
+  width: 150px;
   text-align: right;
   vertical-align: middle;
+  font-weight: bold;
+}
+
+.pluri.total {
+  width: 50px;
 }
 
 .supertable {

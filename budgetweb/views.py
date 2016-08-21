@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from collections import OrderedDict
 from datetime import datetime
+from decimal import Decimal
 import json
 
 from django.contrib.auth.decorators import login_required
@@ -88,13 +88,11 @@ def pluriannuel(request, pfiid):
     else:
         form = PlanFinancementPluriForm(instance=pfi)
 
-    # On a une date de debut et de fin, on prépare un tableau
-    range_year = []
-    if pfi.date_debut and pfi.date_fin:
-        range_year = range(pfi.date_debut.year, pfi.date_fin.year + 1)
-    context = {'PFI': pfi, 'form': form,
-               'rangeYear': range_year,
-               'currentYear': get_current_year}
+    depense, recette = pfi.get_total_types_and_years()
+    context = {
+        'PFI': pfi, 'form': form, 'depense': depense, 'recette': recette,
+        'currentYear': get_current_year
+    }
     return render(request, 'pluriannuel.html', context)
 
 

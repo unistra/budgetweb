@@ -176,20 +176,69 @@ class PlanFinancement(models.Model):
         # where budgetweb_naturecomptabledepense.id = \
         #       budgetweb_depense.naturecomptabledepense_id
         # and pfi_id=30 group by annee, periodebudget_id, enveloppe;
-        depense = Depense.objects.filter(pfi=self.id) \
-               .values('annee', 'periodebudget',
-                       'naturecomptabledepense__enveloppe') \
-               .annotate(sommeDepenseAE=Sum('montant_ae'),
-                         sommeDepenseCP=Sum('montant_cp'),
-                         sommeDepenseDC=Sum('montant_dc'))
-        recette = Recette.objects.filter(pfi=self.id) \
-               .values('annee', 'periodebudget',
-                       'naturecomptablerecette__enveloppe') \
-               .annotate(sommeRecetteAR=Sum('montant_ar'),
-                         sommeRecetteRE=Sum('montant_re'),
-                         sommeRecetteDC=Sum('montant_dc'))
+        depense = Depense.objects.filter(pfi=self.id)\
+            .annotate(enveloppe=F('naturecomptabledepense__enveloppe'))\
+            .values('annee', 'periodebudget', 'enveloppe')\
+            .annotate(sum_depense_ae=Sum('montant_ae'),
+                      sum_depense_cp=Sum('montant_cp'),
+                      sum_depense_dc=Sum('montant_dc'))
+
+        recette = Recette.objects.filter(pfi=self.id)\
+            .annotate(enveloppe=F('naturecomptablerecette__enveloppe'))\
+            .values('annee', 'periodebudget', 'enveloppe')\
+            .annotate(sum_recette_ar=Sum('montant_ar'),
+                      sum_recette_re=Sum('montant_re'),
+                      sum_recette_dc=Sum('montant_dc'))
 
         return depense, recette
+
+
+    def get_total_types_and_years(self):
+        """
+        Output format example for "depense":
+        (
+            {'AE': [
+                {'Investissement': [
+                    {2017: Decimal(1), 2018: Decimal(2)},
+                    Decimal(3)],  # Total per "Investissement"
+                'Personnel': [
+                    {2017: Decimal(10), 2018: Decimal(20)},
+                    Decimal(30)],  # Total per "Personnal"
+                'Fonctionnement': [
+                    {2017: Decimal(100), 2018: Decimal(200)},
+                    Decimal(300)]  # Total per "Fonctionnement"
+                },
+                {2017: Decimal(111), 2018: Decimal(222)}],  # Totals per year
+            'CP': [...]},
+            (2017, 2018)  # Years having montants
+        )
+        """
+        types = []
+        for comptabilite in self.get_total():
+            compta_types = {}
+            # Years with montants
+            years_set = set()
+            for c in comptabilite:
+                fields = [k for k in c.keys() if k.startswith('sum_')]
+                for field in fields:
+                    montant = c[field]
+                    annee = c['annee']
+                    field_name = field.split('_')[-1].upper()
+                    type_dict = compta_types.setdefault(field_name, [{}, {}])
+                    nature_dict = type_dict[0].setdefault(
+                        c['enveloppe'], [{}, Decimal(0)])
+                    nature_dict[0][annee] = montant
+                    years_set.add(annee)
+
+                    # Total per enveloppe
+                    nature_dict[1] += montant
+
+                    # Total per type
+                    type_dict[1].setdefault(annee, Decimal(0))
+                    type_dict[1][annee] += montant
+            types.append((compta_types, years_set))
+
+        return types
 
 
 class NatureComptableDepense(models.Model):

@@ -191,12 +191,12 @@ class PlanFinancementModelTest(TestCase):
         )
         total_depense, total_recette = self.pfi_ecp.get_total()
 
-        self.assertEqual(total_depense[0]['sommeDepenseDC'], Decimal(11))
-        self.assertEqual(total_depense[0]['sommeDepenseCP'], Decimal(22))
-        self.assertEqual(total_depense[0]['sommeDepenseAE'], Decimal(33))
-        self.assertEqual(total_recette[0]['sommeRecetteDC'], Decimal(44))
-        self.assertEqual(total_recette[0]['sommeRecetteRE'], Decimal(55))
-        self.assertEqual(total_recette[0]['sommeRecetteAR'], Decimal(66))
+        self.assertEqual(total_depense[0]['sum_depense_dc'], Decimal(11))
+        self.assertEqual(total_depense[0]['sum_depense_cp'], Decimal(22))
+        self.assertEqual(total_depense[0]['sum_depense_ae'], Decimal(33))
+        self.assertEqual(total_recette[0]['sum_recette_dc'], Decimal(44))
+        self.assertEqual(total_recette[0]['sum_recette_re'], Decimal(55))
+        self.assertEqual(total_recette[0]['sum_recette_ar'], Decimal(66))
 
 
 class NatureComptableDepenseModelTest(TestCase):

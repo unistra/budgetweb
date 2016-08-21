@@ -1,8 +1,10 @@
+from collections import OrderedDict
 from decimal import Decimal
 import re
 
 from django import template
 from django.conf import settings
+from django.template.base import Variable, VariableDoesNotExist
 from django.utils.encoding import force_text
 from django.utils.formats import number_format
 
@@ -31,3 +33,11 @@ def intspace(value, use_l10n=True):
         return new
     else:
         return intspace(new, use_l10n)
+
+
+@register.filter(is_safe=True)
+def itemssortbykey(value):
+    """
+    Sort a dict by its keys and return its items.
+    """
+    return OrderedDict(sorted(value.items(), key=lambda t: t[0])).items()

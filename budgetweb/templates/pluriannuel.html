@@ -6,8 +6,8 @@
 {% endblock %}
 
 {% block content %}
-		<div class="col-md-12">
-		{% include "detailspfi.html" %}
+<div class="col-md-12">
+{% include "detailspfi.html" %}
 <fieldset>
 	<legend><a data-toggle="collapse" data-target="#caracpfi">Modification des propriétés du PFI pluriannuel</a></legend>
 	<div class="row collapse in" id="caracpfi">
@@ -29,229 +29,20 @@
 			{% endif %}
 			<input type="hidden" name="pk" value="{{ PFI.pk }}">
 			<div class="fieldWrapper">
-						<label for="{{ PFI.date_debut.id_for_label }}">Date de début :</label>
-						{{ form.date_debut }}
+				<label for="{{ PFI.date_debut.id_for_label }}">Date de début :</label>
+				{{ form.date_debut }}
 			</div>
 			<div class="fieldWrapper">
-						<label for="{{ PFI.date_fin.id_for_label }}">Date de fin :</label>
-						{{ form.date_fin }}
+				<label for="{{ PFI.date_fin.id_for_label }}">Date de fin :</label>
+				{{ form.date_fin }}
 			</div>
 			<div>
 				<button style="margin-left:50px;" id="submit" type="submit" class="save btn btn-primary">Modifier</button>
 			</div>
 	</form>
-</div>
-</fieldset>
-{% if rangeYear %}
-	<fieldset>
-		<legend><a data-toggle="collapse" data-target="#listedep">Liste des dépenses</a></legend>
-		<div class="collapse in" id="listedep">
-		<table class='table-pluri depense'>
-			<thead>
-				<tr>
-					<th>Etape</th>
-					<th>Type</th>
-					{% for value in rangeYear %}
-						<th colspan="2">{{ value }}</th>
-					{% endfor %}
-					<th>Total</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td rowspan="4">BP</td>
-					<td rowspan="4">CP</td>
-					{% for value in rangeYear %}
-						<td nowrap><label class="pluri">Fonct. :</label><input type="text" size="10" value="100 000 &euro;"></td>
-						<td rowspan="4" class="table-details"><a href="{% url 'depense' pfiid=PFI.id annee=value %}">Détails<br />(obligatoire)</a></td>
-					{% endfor %}
-					<td nowrap><label class="pluri">Total :</label><input type="text" size="10" value="100 000 &euro;"></td>
-				</tr>
-				<tr>
-					{% for value in rangeYear %}
-						<td nowrap><label class="pluri">Inves. :</label><input type="text" size="10" value="100 000 &euro;"></td>
-					{% endfor %}
-					<td nowrap><label class="pluri">Total :</label><input type="text" size="10" value="100 000 &euro;"></td>
-				</tr>
-				<tr>
-					{% for value in rangeYear %}
-						<td nowrap><label class="pluri">Pers. :</label><input type="text" size="10" value="100 000 &euro;"></td>
-					{% endfor %}
-					<td nowrap><label class="pluri">Total :</label><input type="text" size="10" value="100 000 &euro;"></td>
-				</tr>
-				<tr>
-
-					{% for value in rangeYear %}
-						<td nowrap><label class="pluri">Total. :</label><input type="text" size="10" value="100 000 &euro;"></td>
-					{% endfor %}
-					<td>&nbsp;</td>
-				</tr>
-				<tr style="line-height: 0px;border:2px solid #000000;">
-					<td colspan="2">&nbsp;</td>
-					{% for value in rangeYear %}
-						<td nowrap>&nbsp;</td>
-					{% endfor %}
-				</tr>
-				<tr>
-					<td rowspan="4">BP</td>
-					<td rowspan="4">AE</td>
-					{% for value in rangeYear %}
-						<td nowrap><label class="pluri">Fonct. :</label><input type="text" size="10" value="100 000 &euro;"></td>
-						<td rowspan="4" class="table-details"><a href="{% url 'depense' pfiid=PFI.id annee=value %}">Détails<br />(obligatoire)</a></td>
-					{% endfor %}
-					<td nowrap><label class="pluri">Total :</label><input type="text" size="10" value="100 000 &euro;"></td>
-				</tr>
-				<tr>
-					{% for value in rangeYear %}
-						<td nowrap><label class="pluri">Inves. :</label><input type="text" size="10" value="100 000 &euro;"></td>
-					{% endfor %}
-					<td nowrap><label class="pluri">Total :</label><input type="text" size="10" value="100 000 &euro;"></td>
-				</tr>
-				<tr>
-					{% for value in rangeYear %}
-						<td nowrap><label class="pluri">Pers. :</label><input type="text" size="10" value="100 000 &euro;"></td>
-					{% endfor %}
-					<td nowrap><label class="pluri">Total :</label><input type="text" size="10" value="100 000 &euro;"></td>
-				</tr>
-				<tr>
-					{% for value in rangeYear %}
-						<td nowrap><label class="pluri">Total. :</label><input type="text" size="10" value="100 000 &euro;"></td>
-					{% endfor %}
-					<td>&nbsp;</td>
-				</tr>
-				<tr style="line-height: 0px;border:2px solid #000000;">
-					<td colspan="2">&nbsp;</td>
-					{% for value in rangeYear %}
-						<td nowrap>&nbsp;</td>
-					{% endfor %}
-				</tr>
-				<tr>
-					<td rowspan="4">BP</td>
-					<td rowspan="4">DC</td>
-					{% for value in rangeYear %}
-						<td nowrap><label class="pluri">Fonct. :</label><input type="text" size="10" value="100 000 &euro;"></td>
-						<td rowspan="4" class="table-details"><a href="{% url 'depense' pfiid=PFI.id annee=value %}">Détails<br />(obligatoire)</a></td>
-					{% endfor %}
-					<td nowrap><label class="pluri">Total :</label><input type="text" size="10" value="100 000 &euro;"></td>
-				</tr>
-				<tr>
-					{% for value in rangeYear %}
-						<td nowrap><label class="pluri">Inves. :</label><input type="text" size="10" value="100 000 &euro;"></td>
-					{% endfor %}
-					<td nowrap><label class="pluri">Total :</label><input type="text" size="10" value="100 000 &euro;"></td>
-				</tr>
-				<tr>
-					{% for value in rangeYear %}
-						<td nowrap><label class="pluri">Pers. :</label><input type="text" size="10" value="100 000 &euro;"></td>
-					{% endfor %}
-					<td nowrap><label class="pluri">Total :</label><input type="text" size="10" value="100 000 &euro;"></td>
-				</tr>
-				<tr>
-					{% for value in rangeYear %}
-						<td nowrap><label class="pluri">Total. :</label><input type="text" size="10" value="100 000 &euro;"></td>
-					{% endfor %}
-					<td>&nbsp;</td>
-				</tr>
-				<tr style="line-height: 0px;border:2px solid #000000;">
-					<td colspan="2">&nbsp;</td>
-					{% for value in rangeYear %}
-						<td nowrap>&nbsp;</td>
-					{% endfor %}
-				</tr>
-			</tbody>
-		</table>
-	  </div>
-	</fieldset>
-	<fieldset>
-		<legend><a data-toggle="collapse" data-target="#listerec">Liste des recettes</a></legend>
-		<div class="collapse in" id="listerec">
-			<table class='table-pluri recette'>
-			<thead>
-				<tr>
-					<th>Etape</th>
-					<th>Type</th>
-					{% for value in rangeYear %}
-						<th colspan="2">{{ value }}</th>
-					{% endfor %}
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td rowspan="3">BP</td>
-					<td rowspan="3">RE</td>
-					{% for value in rangeYear %}
-						<td nowrap><label class="pluri">F + I :</label><input type="text" size="10" value="100 000 &euro;"></td>
-						<td rowspan="3" class="table-details"><a href="{% url 'recette' pfiid=PFI.id annee=value %}">Détails<br />(obligatoire)</a></td>
-					{% endfor %}
-				</tr>
-				<tr>
-					{% for value in rangeYear %}
-						<td nowrap><label class="pluri">Pers. :</label><input type="text" size="10" value="100 000 &euro;"></td>
-					{% endfor %}
-				</tr>
-				<tr>
-					{% for value in rangeYear %}
-						<td nowrap><label class="pluri">Total. :</label><input type="text" size="10" value="100 000 &euro;"></td>
-					{% endfor %}
-				</tr>
-				<tr style="line-height: 0px;border:2px solid #000000;">
-					<td colspan="2">&nbsp;</td>
-					{% for value in rangeYear %}
-						<td nowrap>&nbsp;</td>
-					{% endfor %}
-				</tr>
-				<tr>
-					<td rowspan="3">BP</td>
-					<td rowspan="3">DC</td>
-					{% for value in rangeYear %}
-						<td nowrap><label class="pluri">F + I :</label><input type="text" size="10" value="100 000 &euro;"></td>
-						<td rowspan="3" class="table-details"><a href="{% url 'recette' pfiid=PFI.id annee=value %}">Détails<br />(obligatoire)</a></td>
-					{% endfor %}
-				</tr>
-				<tr>
-					{% for value in rangeYear %}
-						<td nowrap><label class="pluri">Pers. :</label><input type="text" size="10" value="100 000 &euro;"></td>
-					{% endfor %}
-				</tr>
-				<tr>
-					{% for value in rangeYear %}
-						<td nowrap><label class="pluri">Total. :</label><input type="text" size="10" value="100 000 &euro;"></td>
-					{% endfor %}
-				</tr>
-				<tr style="line-height: 0px;border:2px solid #000000;">
-					<td colspan="2">&nbsp;</td>
-					{% for value in rangeYear %}
-						<td nowrap>&nbsp;</td>
-					{% endfor %}
-				</tr>
-				<tr>
-					<td rowspan="3">BP</td>
-					<td rowspan="3">AR</td>
-					{% for value in rangeYear %}
-						<td nowrap><label class="pluri">F + I :</label><input type="text" size="10" value="100 000 &euro;"></td>
-						<td rowspan="3" class="table-details"><a href="{% url 'recette' pfiid=PFI.id annee=value %}">Détails<br />(obligatoire)</a></td>
-					{% endfor %}
-				</tr>
-				<tr>
-					{% for value in rangeYear %}
-						<td nowrap><label class="pluri">Pers. :</label><input type="text" size="10" value="100 000 &euro;"></td>
-					{% endfor %}
-				</tr>
-				<tr>
-					{% for value in rangeYear %}
-						<td nowrap><label class="pluri">Total. :</label><input type="text" size="10" value="100 000 &euro;"></td>
-					{% endfor %}
-				</tr>
-				<tr style="line-height: 0px;border:2px solid #000000;">
-					<td colspan="2">&nbsp;</td>
-					{% for value in rangeYear %}
-						<td nowrap>&nbsp;</td>
-					{% endfor %}
-				</tr>
-			</tbody>
-		  </table>
 	</div>
-	</fieldset>
-{% endif %}
+</fieldset>
+{% include "pluriannuel.comptabilite.inc.html" with types=depense compta_type="depense" label="Liste des dépenses"%}
+{% include "pluriannuel.comptabilite.inc.html" with types=recette compta_type="recette" label="Liste des recettes"%}
 </div>
 {% endblock %}
