@@ -182,7 +182,6 @@ class PlanFinancement(models.Model):
             .annotate(sum_depense_ae=Sum('montant_ae'),
                       sum_depense_cp=Sum('montant_cp'),
                       sum_depense_dc=Sum('montant_dc'))
-
         recette = Recette.objects.filter(pfi=self.id)\
             .annotate(enveloppe=F('naturecomptablerecette__enveloppe'))\
             .values('annee', 'periodebudget', 'enveloppe')\
@@ -191,7 +190,6 @@ class PlanFinancement(models.Model):
                       sum_recette_dc=Sum('montant_dc'))
 
         return depense, recette
-
 
     def get_total_types_and_years(self):
         """
@@ -256,6 +254,8 @@ class NatureComptableDepense(models.Model):
     is_decalage_tresorerie = models.BooleanField(
         max_length=100, verbose_name='Décalage trésorerie')
     is_active = models.BooleanField('Actif', max_length=100, default=True)
+    priority = models.PositiveIntegerField('Ordre de tri pour les natures \
+                                            comptables', default=1)
 
     objects = models.Manager()
     active = ActiveManager()
@@ -282,6 +282,8 @@ class NatureComptableRecette(models.Model):
         max_length=255, verbose_name='Désignation du compte budgétaire')
     is_fleche = models.BooleanField('Fleché', max_length=100, default=True)
     is_active = models.BooleanField('Actif', max_length=100, default=True)
+    priority = models.PositiveIntegerField('Ordre de tri pour les natures \
+                                            comptables', default=1)
 
     objects = models.Manager()
     active = ActiveManager()

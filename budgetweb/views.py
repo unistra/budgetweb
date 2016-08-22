@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from datetime import datetime
-from decimal import Decimal
+from collections import OrderedDict
 import json
 
 from django.contrib.auth.decorators import login_required
@@ -18,6 +17,8 @@ from .models import (Depense, NatureComptableDepense, NatureComptableRecette,
                      StructureAuthorizations, StructureMontant)
 from .utils import get_authorized_structures_ids, get_current_year
 
+d = {"Fonctionnement": 1, "Personnel": 2, "Investissement": 3}
+
 
 # @login_required
 def home(request):
@@ -33,8 +34,7 @@ def api_fund_designation_by_nature_and_enveloppe(request, model, enveloppe, pfii
         'naturecomptabledepense': NatureComptableDepense,
     }
     natures = models[model].active.filter(
-        is_fleche=pfi.is_fleche, enveloppe=enveloppe
-    ).order_by('code_nature_comptable')
+        is_fleche=pfi.is_fleche, enveloppe=enveloppe)
     response_data = [
         {"id": nature.pk, "label": str(nature)} for nature in natures]
     return HttpResponse(
@@ -54,7 +54,7 @@ def show_tree(request, type_affichage, structid=None):
     ).filter(pk__in=authorized_structures, **queryset).order_by('code')
 
     # PFI list
-    pfis = PlanFinancement.active.filter(structure__code=structid)\
+    pfis = PlanFinancement.objects.filter(structure__code=structid)\
         .annotate(
             sum_depense_ae=Sum('depense__montant_ae'),
             sum_depense_cp=Sum('depense__montant_cp'),
@@ -118,7 +118,8 @@ def depense(request, pfiid, annee):
         extra=1,
         can_delete=True
     )
-    formset = DepenseFormSet(queryset=Depense.objects.filter(pfi=pfi))
+    formset = DepenseFormSet(queryset=Depense.objects.filter(pfi=pfi,
+                                                             annee=annee).order_by('naturecomptabledepense__priority', '-montant_ae'))
     if request.method == "POST":
         formset = DepenseFormSet(request.POST)
         if formset.is_valid():
@@ -148,7 +149,8 @@ def recette(request, pfiid, annee):
         extra=1,
         can_delete=True
     )
-    formset = RecetteFormSet(queryset=Recette.objects.filter(pfi=pfi))
+    formset = RecetteFormSet(queryset=Recette.objects.filter(pfi=pfi,
+                                                             annee=annee).order_by('naturecomptablerecette__priority', '-montant_ar'))
     if request.method == "POST":
         formset = RecetteFormSet(request.POST)
         if formset.is_valid():
@@ -176,18 +178,21 @@ def detailspfi(request, pfiid):
         pfi=pfi).prefetch_related('naturecomptabledepense')\
                 .prefetch_related('periodebudget')\
                 .prefetch_related('pfi')\
-                .prefetch_related('pfi__structure').order_by('annee')
+                .prefetch_related('pfi__structure')\
+                .order_by('naturecomptabledepense__priority')
     listeRecette = Recette.objects.filter(
         pfi=pfi).prefetch_related('naturecomptablerecette')\
                 .prefetch_related('periodebudget')\
                 .prefetch_related('pfi')\
-                .prefetch_related('pfi__structure').order_by('annee')
+                .prefetch_related('pfi__structure')\
+                .order_by('naturecomptablerecette__priority')
     sommeDepense = listeDepense.aggregate(sommeDC=Sum('montant_dc'),
                                           sommeAE=Sum('montant_ae'),
                                           sommeCP=Sum('montant_cp'))
     sommeRecette = listeRecette.aggregate(sommeDC=Sum('montant_dc'),
                                           sommeAR=Sum('montant_ar'),
                                           sommeRE=Sum('montant_re'))
+
     context = {
         'PFI': pfi, 'currentYear': get_current_year,
         'listeDepense': listeDepense, 'listeRecette': listeRecette,
