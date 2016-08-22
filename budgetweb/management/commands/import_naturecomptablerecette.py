@@ -18,7 +18,12 @@ class Command(BaseCommand):
                 total = 0
                 for row in reader:
                     pfi_is_fleche = (row[0] == 'PFI fléché')
-
+                    if row[1] == "Fonctionnement":
+                        priority_nc = 1
+                    else if row[1] == "Personnel":
+                        priority_nc = 2
+                    else:
+                        priority_nc = 3
                     created = NatureComptableRecette.objects.update_or_create(
                         enveloppe=row[1],
                         label_fonds=row[2],
@@ -28,6 +33,7 @@ class Command(BaseCommand):
                         code_compte_budgetaire=row[7],
                         label_compte_budgetaire=row[6],
                         is_fleche=pfi_is_fleche,
+                        priority=priority_nc,
                         defaults={'is_active': True}
                     )[1]
                     total += int(created)
