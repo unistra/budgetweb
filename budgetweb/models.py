@@ -207,6 +207,8 @@ class NatureComptableDepense(models.Model):
     is_decalage_tresorerie = models.BooleanField(
         max_length=100, verbose_name='Décalage trésorerie')
     is_active = models.BooleanField('Actif', max_length=100, default=True)
+    priority = models.PositiveIntegerField('Ordre de tri pour les natures \
+                                            comptables', default=1)
 
     objects = models.Manager()
     active = ActiveManager()
@@ -233,6 +235,8 @@ class NatureComptableRecette(models.Model):
         max_length=255, verbose_name='Désignation du compte budgétaire')
     is_fleche = models.BooleanField('Fleché', max_length=100, default=True)
     is_active = models.BooleanField('Actif', max_length=100, default=True)
+    priority = models.PositiveIntegerField('Ordre de tri pour les natures \
+                                            comptables', default=1)
 
     objects = models.Manager()
     active = ActiveManager()
