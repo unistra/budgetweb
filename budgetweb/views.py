@@ -33,7 +33,8 @@ def api_fund_designation_by_nature_and_enveloppe(request, model, enveloppe, pfii
         'naturecomptabledepense': NatureComptableDepense,
     }
     natures = models[model].active.filter(
-        is_fleche=pfi.is_fleche, enveloppe=enveloppe)
+        is_fleche=pfi.is_fleche, enveloppe=enveloppe
+    ).order_by('code_nature_comptable')
     response_data = [
         {"id": nature.pk, "label": str(nature)} for nature in natures]
     return HttpResponse(
@@ -87,7 +88,12 @@ def pluriannuel(request, pfiid):
     else:
         form = PlanFinancementPluriForm(instance=pfi)
 
-    depense, recette = pfi.get_total_types_and_years()
+    if pfi.date_debut and pfi.date_fin:
+        depense, recette = pfi.get_total_types_and_years()
+    else:
+        depense = {}
+        recette = {}
+
     context = {
         'PFI': pfi, 'form': form, 'depense': depense, 'recette': recette,
         'currentYear': get_current_year

@@ -19,14 +19,12 @@ class Command(BaseCommand):
                 for row in reader:
                     pfi_is_fleche = (row[0] == 'PFI fléché')
                     decalage = (row[6] == 'oui')
-                    if row[1] == "Fonctionnement":
-                        priority_nc = 1
-                    elif row[1] == "Personnel":
-                        priority_nc = 2
-                    else:
-                        priority_nc = 3
+                    enveloppe = row[1]
+                    priorities = ('Fonctionnement', 'Personnel')
+                    priority_nc = (priorities.index(enveloppe)\
+                        if enveloppe in priorities else len(priorities)) + 1
                     created = NatureComptableDepense.objects.update_or_create(
-                        enveloppe=row[1],
+                        enveloppe=enveloppe,
                         label_nature_comptable=row[2],
                         code_nature_comptable=row[3],
                         code_compte_budgetaire=row[4],

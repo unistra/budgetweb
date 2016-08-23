@@ -40,4 +40,6 @@ def itemssortbykey(value):
     """
     Sort a dict by its keys and return its items.
     """
-    return OrderedDict(sorted(value.items(), key=lambda t: t[0])).items()
+    if value:
+        return OrderedDict(sorted(value.items(), key=lambda t: t[0])).items()
+    return {}

@@ -42,7 +42,11 @@
 	</form>
 	</div>
 </fieldset>
+{% if depense %}
 {% include "pluriannuel.comptabilite.inc.html" with types=depense compta_type="depense" label="Liste des dépenses"%}
+{% endif %}
+{% if recette %}
 {% include "pluriannuel.comptabilite.inc.html" with types=recette compta_type="recette" label="Liste des recettes"%}
+{% endif %}
 </div>
 {% endblock %}

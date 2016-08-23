@@ -26,6 +26,10 @@ DEBUG = True
 
 DATABASES['default']['ENGINE'] = 'django.db.backends.sqlite3'
 DATABASES['default']['NAME'] = 'budgetweb.db'
+# DATABASES['default']['HOST'] = environ.get('DEFAULT_DB_HOST', 'localhost')
+# DATABASES['default']['USER'] = environ.get('DEFAULT_DB_USER', '')
+# DATABASES['default']['PASSWORD'] = environ.get('DEFAULT_DB_PASSWORD', '')
+# DATABASES['default']['NAME'] = environ.get('DEFAULT_DB_NAME', 'budgetweb')
 
 
 #####################
