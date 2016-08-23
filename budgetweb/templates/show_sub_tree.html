@@ -31,8 +31,8 @@
     <li class="parent_li">
       <div>
         <span style="width:auto;" class="cf" structcode="{{ structure.code }}" title="Ouvrir cette branche">
-          <i class="glyphicon glyphicon-plus"></i>{{ structure.code }}
-        </span>
+          <i class="glyphicon glyphicon-plus"></i>{{ structure.code }}{% if structure.depth > 2 %}</span> - <a href="{% url 'detailscf' structid=structure.id %}">Détails</a>{% endif %}
+
         {% if typeAffichage == "gbcp" %}
            <div class="showTree">{% firstof montants.recette_montant_re|intspace "0,00" %} &euro;</div>
            <div class="showTree">{% firstof montants.recette_montant_ar|intspace "0,00" %} &euro;</div>

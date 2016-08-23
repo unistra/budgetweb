@@ -31,6 +31,8 @@ urlpatterns = [
     # Détails d'un PFI
     url(r'^detailspfi/(?P<pfiid>\w+)/$', views.detailspfi,
         name="detailspfi"),
+    url(r'^detailscf/(?P<structid>\w+)/$', views.detailscf,
+        name="detailscf"),
     url(r'^depense/(?P<pfiid>\w+)/(?P<annee>\w+)/$',
         views.depense, name="depense"),
     url(r'^recette/(?P<pfiid>\w+)/(?P<annee>\w+)/$',

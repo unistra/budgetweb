@@ -16,8 +16,7 @@ from .models import (Depense, NatureComptableDepense, NatureComptableRecette,
                      PeriodeBudget, PlanFinancement, Recette, Structure,
                      StructureAuthorizations, StructureMontant)
 from .utils import get_authorized_structures_ids, get_current_year
-
-d = {"Fonctionnement": 1, "Personnel": 2, "Investissement": 3}
+from decimal import Decimal
 
 
 # @login_required
@@ -200,3 +199,52 @@ def detailspfi(request, pfiid):
         'listeDepenseRecette': listeDepenseRecette,
     }
     return render(request, 'detailsfullpfi.html', context)
+
+
+@login_required
+def detailscf(request, structid):
+    structparent = Structure.objects.get(id=structid)
+    liste_structure = structparent.get_children()
+    liste_structure.insert(0, structparent)
+    liste_depense = []
+    liste_recette = []
+    somme_depense = { 'sommeAE' : Decimal(0.00), 'sommeCP': Decimal(0.00), 'sommeDC': Decimal(0.00)}
+    somme_recette = { 'sommeAR' : Decimal(0.00), 'sommeRE': Decimal(0.00), 'sommeDC': Decimal(0.00)}
+    for struct in liste_structure:
+        liste_pfi = PlanFinancement.objects.filter(structure=struct.pk)
+        for pfi in liste_pfi:
+            listeDepense = Depense.objects.filter(
+                        pfi=pfi).prefetch_related('naturecomptabledepense')\
+                                .prefetch_related('periodebudget')\
+                                .prefetch_related('pfi')\
+                                .prefetch_related('pfi__structure')\
+                                .order_by('naturecomptabledepense__priority')
+            listeRecette = Recette.objects.filter(
+                        pfi=pfi).prefetch_related('naturecomptablerecette')\
+                                .prefetch_related('periodebudget')\
+                                .prefetch_related('pfi')\
+                                .prefetch_related('pfi__structure')\
+                                .order_by('naturecomptablerecette__priority')
+            sommeDepense = listeDepense.aggregate(sommeDC=Sum('montant_dc'),
+                                                  sommeAE=Sum('montant_ae'),
+                                                  sommeCP=Sum('montant_cp'))
+            sommeRecette = listeRecette.aggregate(sommeDC=Sum('montant_dc'),
+                                                  sommeAR=Sum('montant_ar'),
+                                                  sommeRE=Sum('montant_re'))
+            for key, values in sommeDepense.items():
+                if values is not None:
+                    somme_depense[key] += Decimal(values)
+            for key, values in sommeRecette.items():
+                if values is not None:
+                    somme_recette[key] += Decimal(values)
+            liste_depense += listeDepense
+            liste_recette += listeRecette
+            # somme_depense += sommeDepense
+            # somme_recette += sommeRecette
+
+    context = {
+        'currentYear': get_current_year,
+        'listeDepense': liste_depense, 'listeRecette': liste_recette,
+        'sommeDepense': somme_depense, 'sommeRecette': somme_recette,
+    }
+    return render(request, 'detailscf.html', context)
