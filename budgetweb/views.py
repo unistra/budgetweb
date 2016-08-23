@@ -37,6 +37,7 @@ def api_fund_designation_by_nature_and_enveloppe(request, model, enveloppe, pfii
     ).order_by('code_nature_comptable')
     response_data = [
         {"id": nature.pk, "label": str(nature)} for nature in natures]
+    print('RD : %s' % response_data)
     return HttpResponse(
         json.dumps(response_data), content_type='application/json')
 
@@ -89,14 +90,13 @@ def pluriannuel(request, pfiid):
         form = PlanFinancementPluriForm(instance=pfi)
 
     if pfi.date_debut and pfi.date_fin:
-        depense, recette = pfi.get_total_types_and_years()
+        depense, recette = pfi.get_total_types()
     else:
-        depense = {}
-        recette = {}
+        depense = recette = {}
 
     context = {
         'PFI': pfi, 'form': form, 'depense': depense, 'recette': recette,
-        'currentYear': get_current_year
+        'currentYear': get_current_year, 'years': pfi.get_years()
     }
     return render(request, 'pluriannuel.html', context)
 
@@ -180,17 +180,13 @@ def detailspfi(request, pfiid):
     listeDepenseRecette = pfi.get_total()
 
     listeDepense = Depense.objects.filter(
-        pfi=pfi).prefetch_related('naturecomptabledepense')\
-                .prefetch_related('periodebudget')\
-                .prefetch_related('pfi')\
-                .prefetch_related('pfi__structure')\
-                .order_by('naturecomptabledepense__priority')
+        pfi=pfi).prefetch_related(
+            'naturecomptabledepense', 'periodebudget', 'pfi', 'pfi__structure'
+        ).order_by('naturecomptabledepense__priority')
     listeRecette = Recette.objects.filter(
-        pfi=pfi).prefetch_related('naturecomptablerecette')\
-                .prefetch_related('periodebudget')\
-                .prefetch_related('pfi')\
-                .prefetch_related('pfi__structure')\
-                .order_by('naturecomptablerecette__priority')
+        pfi=pfi).prefetch_related(
+            'naturecomptablerecette', 'periodebudget', 'pfi', 'pfi__structure'
+        ).order_by('naturecomptablerecette__priority')
     sommeDepense = listeDepense.aggregate(sommeDC=Sum('montant_dc'),
                                           sommeAE=Sum('montant_ae'),
                                           sommeCP=Sum('montant_cp'))
