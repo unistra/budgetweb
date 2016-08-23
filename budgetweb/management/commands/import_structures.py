@@ -16,23 +16,25 @@ class Command(BaseCommand):
 
         # Parent nodes
         node = Structure.objects.update_or_create(
-            code='ETAB', type='Etablissement',
+            code='1010', type='Etablissement',
             label='Université de Strasbourg', depth=1,
             defaults={'is_active': True}
         )[0]
-        Structure.objects.update_or_create(
-            code='RCH', type='Recherche', label='Recherche', parent=node,
-            depth=2, defaults={'is_active': True}
-        )
-        Structure.objects.update_or_create(
-            code='SCX', type='Services Centraux', label='Services Centraux',
-            parent=node, depth=2, defaults={'is_active': True}
-        )
-        Structure.objects.update_or_create(
-            code='PAIE', type='Paie', label='Paie',
-            parent=node, depth=2, defaults={'is_active': True}
-        )
-
+        node = Structure.objects.update_or_create(
+            code='1020', type='Etablissement',
+            label='Université de Strasbourg', depth=1,
+            defaults={'is_active': True}
+        )[0]
+        node = Structure.objects.update_or_create(
+            code='1030', type='Etablissement',
+            label='Université de Strasbourg', depth=1,
+            defaults={'is_active': True}
+        )[0]
+        node = Structure.objects.update_or_create(
+            code='1040', type='Etablissement',
+            label='Université de Strasbourg', depth=1,
+            defaults={'is_active': True}
+        )[0]
         for filename in options.get('filename'):
             with open(filename) as h:
                 reader = csv.DictReader(h, delimiter=';', quotechar='"')
@@ -40,10 +42,11 @@ class Command(BaseCommand):
                 structures = {}
                 for row in reader:
                     code = row['CF']
+                    print(code)
                     structures[code] = {
                         'code': code,
                         'type': row['Groupe1'],
-                        'label': row['Désignation  CF'],
+                        'label': row['Designation CF'],
                         'parent': row['CF Sup. sifac']
                     }
 

@@ -12,6 +12,7 @@ class Command(BaseCommand):
         parser.add_argument('filename', nargs='+')
 
     def handle(self, *args, **options):
+        struct_probleme = []
         for filename in options.get('filename'):
             with open(filename) as h:
                 reader = csv.reader(h, delimiter=';', quotechar='"')
@@ -20,18 +21,22 @@ class Command(BaseCommand):
                     pfi_is_fleche = (row[3] == 'oui')
                     pluri = (row[4] == 'oui')
                     struct_code = row[0]
-
-                    struct = Structure.objects.get(code=struct_code)
-                    created = PlanFinancement.objects.update_or_create(
-                        structure=struct,
-                        code=row[1],
-                        label=row[2],
-                        eotp=row[5],
-                        centrecoutderive=row[6],
-                        centreprofitderive=row[7],
-                        is_fleche=pfi_is_fleche,
-                        is_pluriannuel=pluri,
-                        defaults={'is_active': True}
-                    )[1]
-                    total += int(created)
-                print('Financials Plans created with %s : %s' % (filename, total))
+                    try:
+                        struct = Structure.objects.get(code=struct_code)
+                        created = PlanFinancement.objects.update_or_create(
+                            structure=struct,
+                            code=row[1],
+                            label=row[2],
+                            eotp=row[5],
+                            centrecoutderive=row[6],
+                            centreprofitderive=row[7],
+                            is_fleche=pfi_is_fleche,
+                            is_pluriannuel=pluri,
+                            defaults={'is_active': True}
+                        )[1]
+                        total += int(created)
+                    except Structure.DoesNotExist:
+                        struct_probleme.append(struct_code)
+                        pass
+                print('Financials Plans created with %s : %s\n\tMissing: %s' %
+                      (filename, total, ', '.join(struct_probleme)))
