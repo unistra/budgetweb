@@ -30,7 +30,7 @@
 				{% else %}
 			<tr>
 				{% for year, montant in year_values.0|itemssortbykey %}
-				<td nowrap><span class="pluri">{{ enveloppe }} :</span> {{ montant }} &euro;</td>
+				<td nowrap><span class="pluri">{{ enveloppe }} :</span> {{ montant|intspace }} &euro;</td>
 				{% endfor %}
 				<td nowrap><span class="pluri total">Total :</span> {{ year_values.1|intspace }} &euro;</td>
 				{% endif %}
