@@ -197,6 +197,7 @@ class PlanFinancement(models.Model):
         return []
 
     def get_total_types(self):
+        # FIXME: docstring
         """
         Output format example for "depense":
         [
@@ -215,22 +216,28 @@ class PlanFinancement(models.Model):
             'CP': [...]}
         ]
         """
+        montants_dict = {'gbcp': ('AE', 'CP', 'AR', 'RE'), 'dc': ('DC',)}
+        montant_type = lambda x: [
+            k for k, v in montants_dict.items() if x in v][0]
         types = []
         years = self.get_years()
+
         for comptabilite in self.get_total():
-            compta_types = {}
+            compta_types = {k: {} for k in montants_dict.keys()}
             for c in comptabilite:
                 fields = [k for k in c.keys() if k.startswith('sum_')]
                 for field in fields:
                     montant = c[field]
                     annee = c['annee']
                     field_name = field.split('_')[-1].upper()
-                    type_dict = compta_types.setdefault(
+                    mt = montant_type(field_name)
+                    ct = compta_types[mt]
+                    type_dict = ct.setdefault(
                         field_name, [{}, dict.fromkeys(years, Decimal(0))])
                     nature_dict = type_dict[0].setdefault(
                         c['enveloppe'], [dict.fromkeys(years, Decimal(0)), Decimal(0)])
                     nature_dict[0][annee] = montant
-
+                    nature_dict[0][annee] = montant
                     # Total per enveloppe
                     nature_dict[1] += montant
 
@@ -238,7 +245,7 @@ class PlanFinancement(models.Model):
                     type_dict[1].setdefault(annee, Decimal(0))
                     type_dict[1][annee] += montant
             types.append(compta_types)
-
+        print(types)
         return types
 
 

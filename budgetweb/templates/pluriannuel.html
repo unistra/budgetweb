@@ -42,11 +42,27 @@
 	</form>
 	</div>
 </fieldset>
-{% if depense %}
-{% include "pluriannuel.comptabilite.inc.html" with types=depense compta_type="depense" label="Liste des dépenses"%}
-{% endif %}
-{% if recette %}
-{% include "pluriannuel.comptabilite.inc.html" with types=recette compta_type="recette" label="Liste des recettes"%}
-{% endif %}
+<ul class="nav nav-tabs" role="tablist" id="pluri-tabs">
+    <li role="presentation" class="active"><a href="#gbcp" role="tab" data-toggle="tab">GBCP</a></li>
+    <li role="presentation"><a href="#dc" role="tab" data-toggle="tab">Droit Constaté</a></li>
+</ul>
+<div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="gbcp">
+	{% if depense %}
+	{% include "pluriannuel.comptabilite.inc.html" with types=depense.gbcp compta_type="depense" label="Liste des dépenses"%}
+	{% endif %}
+	{% if recette %}
+	{% include "pluriannuel.comptabilite.inc.html" with types=recette.gbcp compta_type="recette" label="Liste des recettes"%}
+    {% endif %}
+    </div>
+    <div role="tabpanel" class="tab-pane" id="dc">
+    {% if depense %}
+    {% include "pluriannuel.comptabilite.inc.html" with types=depense.dc compta_type="depense" label="Liste des dépenses"%}
+    {% endif %}
+    {% if recette %}
+    {% include "pluriannuel.comptabilite.inc.html" with types=recette.dc compta_type="recette" label="Liste des recettes"%}
+    {% endif %}
+    </div>
+</div>
 </div>
 {% endblock %}
