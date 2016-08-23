@@ -20,7 +20,7 @@ class Command(BaseCommand):
                     pfi_is_fleche = (row[0] == 'PFI fléché')
                     if row[1] == "Fonctionnement":
                         priority_nc = 1
-                    else if row[1] == "Personnel":
+                    elif row[1] == "Personnel":
                         priority_nc = 2
                     else:
                         priority_nc = 3
