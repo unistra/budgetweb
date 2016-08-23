@@ -1,0 +1,68 @@
+/* ==========================================================================
+   Author's custom styles
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   404 page
+   -------------------------------------------------------------------------- */
+.banner_404 {
+	margin-top:10px;
+}
+
+.banner_404 .span8 {
+	height:150px;
+	background-color: #005CA8;
+ 	border-radius: 5px 5px 5px 5px;
+}
+
+.banner_404 .span8 h1 {
+	color: white;
+	margin-top:45px;
+}
+
+.spacer_404 {
+	margin-top:40px;
+}
+
+
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  margin-bottom: 40px; /* Margin bottom by footer height */
+  padding-top: 40px; /* Padding top by header height */
+}
+
+body > .container {
+  padding-top: 20px;
+}
+
+footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 40px;
+  background-color: #005CA8;
+  text-align:center;
+  color:white;
+}
+
+.credit {
+	margin:10px 0;
+}
+
+/* Lastly, apply responsive CSS fixes as necessary */
+@media (max-width: 767px) {
+	.credit {
+		margin:0 0;
+	}
+}
+
+.spacer {
+	margin-top:40px;
+}
