@@ -7,14 +7,14 @@
 			<tr>
 				<th>Etape</th>
 				<th>Type</th>
-				{% for value in types.1 %}
-					<th colspan="2">{{ value }}</th>
+				{% for year in years %}
+					<th colspan="2">{{ year }}</th>
 				{% endfor %}
 				<th>Total</th>
 			</tr>
 		</thead>
 		<tbody>
-		{% for type, enveloppe_values in types.0|itemssortbykey %}
+		{% for type, enveloppe_values in types|itemssortbykey %}
 			{% with rowspan=enveloppe_values.0|length|add:1 %}
 			<tr>
 				<td rowspan="{{ rowspan }}">BP</td>

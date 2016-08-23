@@ -191,10 +191,15 @@ class PlanFinancement(models.Model):
 
         return depense, recette
 
-    def get_total_types_and_years(self):
+    def get_years(self):
+        if self.date_debut and self.date_fin:
+            return list(range(self.date_debut.year, self.date_fin.year + 1))
+        return []
+
+    def get_total_types(self):
         """
         Output format example for "depense":
-        (
+        [
             {'AE': [
                 {'Investissement': [
                     {2017: Decimal(1), 2018: Decimal(2)},
@@ -207,26 +212,24 @@ class PlanFinancement(models.Model):
                     Decimal(300)]  # Total per "Fonctionnement"
                 },
                 {2017: Decimal(111), 2018: Decimal(222)}],  # Totals per year
-            'CP': [...]},
-            (2017, 2018)  # Years having montants
-        )
+            'CP': [...]}
+        ]
         """
         types = []
+        years = self.get_years()
         for comptabilite in self.get_total():
             compta_types = {}
-            # Years with montants
-            years_set = set()
             for c in comptabilite:
                 fields = [k for k in c.keys() if k.startswith('sum_')]
                 for field in fields:
                     montant = c[field]
                     annee = c['annee']
                     field_name = field.split('_')[-1].upper()
-                    type_dict = compta_types.setdefault(field_name, [{}, {}])
+                    type_dict = compta_types.setdefault(
+                        field_name, [{}, dict.fromkeys(years, Decimal(0))])
                     nature_dict = type_dict[0].setdefault(
-                        c['enveloppe'], [{}, Decimal(0)])
+                        c['enveloppe'], [dict.fromkeys(years, Decimal(0)), Decimal(0)])
                     nature_dict[0][annee] = montant
-                    years_set.add(annee)
 
                     # Total per enveloppe
                     nature_dict[1] += montant
@@ -234,7 +237,7 @@ class PlanFinancement(models.Model):
                     # Total per type
                     type_dict[1].setdefault(annee, Decimal(0))
                     type_dict[1][annee] += montant
-            types.append((compta_types, years_set))
+            types.append(compta_types)
 
         return types
 
