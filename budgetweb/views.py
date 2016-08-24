@@ -51,8 +51,17 @@ def api_get_details_nature_by_code(request, model, id_nature):
     nature = models[model].active.filter(id=id_nature).first()
     response_data = [
         {"code_compte_budgetaire": nature.code_compte_budgetaire,
-         "label_compte_budgetaire": nature.label_compte_budgetaire}
-                    ]
+         "label_compte_budgetaire": nature.label_compte_budgetaire}]
+    return HttpResponse(
+        json.dumps(response_data), content_type='application/json')
+
+
+@is_ajax_get
+def api_get_decalage_tresorerie_by_id(request, id_naturecomptabledepense):
+    nature = NatureComptableDepense.active.filter(id=id_naturecomptabledepense).first()
+    response_data = [
+        {"is_decalage_tresorerie": nature.is_decalage_tresorerie}]
+
     return HttpResponse(
         json.dumps(response_data), content_type='application/json')
 

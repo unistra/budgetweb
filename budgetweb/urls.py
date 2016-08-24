@@ -20,6 +20,9 @@ urlpatterns = [
     url(r'^api/(?P<model>naturecomptablerecette|naturecomptabledepense)/(?P<id_nature>\w+)/$',
         views.api_get_details_nature_by_code,
         name='api_get_details_nature_by_code'),
+    url(r'^api/naturecomptabledepense/is_decalage_tresorerie/(?P<id_naturecomptabledepense>\w+)/$',
+        views.api_get_decalage_tresorerie_by_id,
+        name='api_get_decalage_tresorerie_by_id'),
 
     # Base de l'arbre.
     url(r'^showtree/(?P<type_affichage>\w+)/(?P<structid>\w+)/$',
