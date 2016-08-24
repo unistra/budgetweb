@@ -95,9 +95,11 @@ class DepenseForm(forms.ModelForm):
     montant_dc = forms.DecimalField(
         label='DC', widget=forms.TextInput(attrs={'style': 'width:90px;'}))
     montant_ae = forms.DecimalField(
-        label='AE', widget=forms.TextInput(attrs={'style': 'width:90px;'}))
+        label='AE', widget=forms.TextInput(attrs={'style': 'width:90px;',
+                                                  'class': 'form-naturecomptabledepense'}))
     montant_cp = forms.DecimalField(
-        label='CP', widget=forms.TextInput(attrs={'style': 'width:90px;'}))
+        label='CP', widget=forms.TextInput(attrs={'style': 'width:90px;',
+                                                  'class': 'form-naturecomptabledepense'}))
     lienpiecejointe = forms.CharField(
         required=False,
         label='PJ', widget=forms.TextInput(attrs={'style': 'width:2px;'}))
@@ -142,7 +144,8 @@ class DepenseForm(forms.ModelForm):
         self.fields['enveloppe'].choices = enveloppe_choices
         self.fields['naturecomptabledepense'].choices = [('', '---------')]
         self.fields['naturecomptabledepense'].queryset = natures
-        self.fields['naturecomptabledepense'].widget.attrs['class'] = 'form-naturecomptable'
+        self.fields['naturecomptabledepense'].widget.attrs['class'] = \
+            'form-naturecomptable form-naturecomptabledepense'
 
         # Set the initial values
         self.fields['structure'].initial = structure.pk
