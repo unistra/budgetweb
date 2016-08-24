@@ -45,3 +45,15 @@ Installation des prerequis du projets
 * On configure l'environnement et on ajoute 
 
     export DJANGO_SETTINGS_MODULE=budgetweb.settings.dev
+    
+    workon budgetweb
+    cdproject # Si la commande est installé pour se trouver dans le bon répertoire.
+    
+    # Configuration du modèle.
+    python manage.py migrate
+    
+    # Permet de générer un jeu de test
+    python manage.py initial_import
+    
+    # Permet de générer des écritures aléatoires.
+    python manage.py create_structuremontants
