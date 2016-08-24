@@ -160,12 +160,16 @@ class DepenseForm(forms.ModelForm):
 
         if instance and instance.pk:
             nature = instance.naturecomptabledepense
+
             self.fields['enveloppe'].initial = nature.enveloppe
             natures = NatureComptableDepense.active.filter(
                 is_fleche=is_fleche, enveloppe=nature.enveloppe)
             self.fields['naturecomptabledepense'].choices += [
                 (n.pk, str(n)) for n in natures]
             self.fields['naturecomptabledepense'].initial = nature
+            print(nature.is_decalage_tresorerie)
+            if not nature.is_decalage_tresorerie:
+                self.fields['montant_cp'].widget.attrs['readonly'] = True
 
     def clean_montant_dc(self):
         montant_dc = self.cleaned_data.get("montant_dc", None)
