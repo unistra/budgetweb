@@ -5,6 +5,7 @@ from django.core.management.base import NoArgsCommand
 from django.core.management import call_command
 from django.contrib.auth.models import Group
 
+
 class Command(NoArgsCommand):
     help = 'Initial import for BudgetWeb'
 
