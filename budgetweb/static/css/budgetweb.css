@@ -188,3 +188,7 @@ legend {
 .montant {
 	text-align: right;
 }
+
+td.blank_row {
+    line-height:20px;
+}

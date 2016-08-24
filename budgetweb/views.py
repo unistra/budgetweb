@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from collections import OrderedDict
+from itertools import chain, groupby
 import json
 
 from django.contrib.auth.decorators import login_required
-from django.db.models import Prefetch, Sum
+from django.db.models import F, Prefetch, Sum
 from django.forms.models import modelformset_factory
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import (get_object_or_404, redirect, render,
@@ -191,31 +191,58 @@ def recette(request, pfiid, annee):
 @login_required
 @is_authorized_structure
 def detailspfi(request, pfiid):
+    to_dict = lambda x: {k: list(v) for k, v in x}
     pfi = PlanFinancement.objects.get(pk=pfiid)
 
-    # A completer.
-    listeDepenseRecette = pfi.get_total()
+    depenses = Depense.objects.filter(
+        pfi=pfi).prefetch_related(
+            'naturecomptabledepense', 'periodebudget', 'pfi', 'pfi__structure')\
+        .annotate(enveloppe=F('naturecomptabledepense__enveloppe'))\
+        .order_by('annee', 'naturecomptabledepense__priority')
+    print('DEPENSE : {}'.format([d.annee for d in depenses]))
+    recettes = Recette.objects.filter(
+        pfi=pfi).prefetch_related(
+            'naturecomptablerecette', 'periodebudget', 'pfi', 'pfi__structure')\
+        .annotate(enveloppe=F('naturecomptablerecette__enveloppe'))\
+        .order_by('annee', 'naturecomptablerecette__priority')
 
-    listeDepense = Depense.objects.filter(
-        pfi=pfi).prefetch_related(
-            'naturecomptabledepense', 'periodebudget', 'pfi', 'pfi__structure'
-        ).order_by('naturecomptabledepense__priority')
-    listeRecette = Recette.objects.filter(
-        pfi=pfi).prefetch_related(
-            'naturecomptablerecette', 'periodebudget', 'pfi', 'pfi__structure'
-        ).order_by('naturecomptablerecette__priority')
-    sommeDepense = listeDepense.aggregate(sommeDC=Sum('montant_dc'),
-                                          sommeAE=Sum('montant_ae'),
-                                          sommeCP=Sum('montant_cp'))
-    sommeRecette = listeRecette.aggregate(sommeDC=Sum('montant_dc'),
-                                          sommeAR=Sum('montant_ar'),
-                                          sommeRE=Sum('montant_re'))
+    year_depenses = depenses.values(
+            'annee', 'enveloppe', 'periodebudget__code')\
+        .annotate(
+            sum_dc=Sum('montant_dc'),
+            sum_ae=Sum('montant_ae'),
+            sum_cp=Sum('montant_cp'))
+    year_recettes = recettes.values(
+            'annee', 'enveloppe', 'periodebudget__code')\
+        .annotate(
+            sum_dc=Sum('montant_dc'),
+            sum_ar=Sum('montant_ar'),
+            sum_re=Sum('montant_re'))
+
+    depenses = to_dict(groupby(depenses, lambda x: x.annee))
+    recettes = to_dict(groupby(recettes, lambda x: x.annee))
+    years = depenses.keys() | recettes.keys()
+
+    sum_depenses = Depense.objects.filter(pfi=pfi).values('annee').annotate(
+        sum_dc=Sum('montant_dc'),
+        sum_ae=Sum('montant_ae'),
+        sum_cp=Sum('montant_cp'))
+    sum_depenses = to_dict(groupby(sum_depenses, lambda x: x['annee']))
+    sum_recettes = Recette.objects.filter(pfi=pfi).values('annee').annotate(
+        sum_dc=Sum('montant_dc'),
+        sum_ar=Sum('montant_ar'),
+        sum_re=Sum('montant_re'))
+    sum_recettes = to_dict(groupby(sum_recettes, lambda x: x['annee']))
+
+    resume_depenses, resume_recettes = pfi.get_detail_pfi_by_period(
+        [year_depenses, year_recettes])
 
     context = {
         'PFI': pfi, 'currentYear': get_current_year,
-        'listeDepense': listeDepense, 'listeRecette': listeRecette,
-        'sommeDepense': sommeDepense, 'sommeRecette': sommeRecette,
-        'listeDepenseRecette': listeDepenseRecette,
+        'listeDepense': depenses, 'listeRecette': recettes,
+        'sommeDepense': sum_depenses, 'sommeRecette': sum_recettes,
+        'resume_depenses': resume_depenses, 'resume_recettes': resume_recettes,
+        'years': years
     }
     return render(request, 'detailsfullpfi.html', context)
 

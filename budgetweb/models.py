@@ -1,4 +1,5 @@
 from decimal import Decimal
+from itertools import groupby
 
 from django import forms
 from django.conf import settings
@@ -245,8 +246,47 @@ class PlanFinancement(models.Model):
                     type_dict[1].setdefault(annee, Decimal(0))
                     type_dict[1][annee] += montant
             types.append(compta_types)
-        print(types)
         return types
+
+    def get_detail_pfi_by_period(self, totals):
+        # FIXME: docstring
+        montants_dict = {'gbcp': ('AE', 'CP', 'AR', 'RE'), 'dc': ('DC',)}
+        montant_type = lambda x: [
+            k for k, v in montants_dict.items() if x in v][0]
+        details = []
+
+        # Group by year
+        for compta in totals:
+            compta_details = {}
+            for year, year_values in groupby(compta, lambda x: x['annee']):
+                print(year)
+                compta_types = {k: [{}, {}] for k in montants_dict.keys()}
+                periodes_set = set()
+                for c in year_values:
+                    periode = c['periodebudget__code']
+                    periodes_set.add(periode)
+                    fields = [k for k in c.keys() if k.startswith('sum_')]
+                    for field in fields:
+                        montant = c[field]
+                        field_name = field.split('_')[-1].upper()
+                        mt = montant_type(field_name)
+                        ct = compta_types[mt]
+                        nature_dict = ct[0].setdefault(
+                            c['enveloppe'], [{}, Decimal(0)])
+                        nature_dict[0][periode] =\
+                            nature_dict[0].get(periode, Decimal(0)) + montant
+
+                        # Total per enveloppe
+                        nature_dict[1] += montant
+
+                        # Total per periode
+                        ct[1].setdefault(periode, Decimal(0))
+                        ct[1][periode] += montant
+
+                # TODO: order periodes_set
+                compta_details[year] = (compta_types, periodes_set)
+            details.append(compta_details)
+        return details
 
 
 class NatureComptableDepense(models.Model):

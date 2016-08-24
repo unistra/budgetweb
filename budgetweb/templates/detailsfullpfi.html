@@ -1,162 +1,21 @@
 {% extends "base.html" %}
-{% load budgetweb_tags %}
 {% load staticfiles %}
+{% load budgetweb_tags %}
 
 {% block head-additional %}
   <link rel="stylesheet" href="{% static 'css/budgetweb.css' %}"/>
 {% endblock %}
 
 {% block content %}
-  <div class="col-md-12">
+ <div class="col-md-12">
     {% include "detailspfi.html" %}
-    {{ montantPFI }}
-    <table class="resume">
-      <thead>
-        <th></th>
-        <th></th>
-        <th></th>
-      </thead>
-      <tbody>
-      </tbody>
-    </table>
-    <table class="table-pluri depense">
-      <thead>
-        <tr>
-          <th colspan="13" style="text-align:left;padding-left:50px;">
-            <a href="{% url 'depense' pfiid=PFI.id annee=currentYear %}">Liste des dépenses.</a>
-          </th>
-        </tr>
-        <tr>
-          <th>Année</th>
-          <th>Période</th>
-          <th>PFI</th>
-          <th>CF</th>
-          <th>Enveloppe</th>
-          <th>Nature Comptable</th>
-          <th>Compte Budgétaire</th>
-          <th>Domaine Fonctionnel</th>
-          <th>AE</th>
-          <th>CP</th>
-          <th>DC</th>
-          <th>Comm.</th>
-          <th>PJ</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for depense in listeDepense %}
-          <tr class="{% cycle 'row1' 'row2' %}">
-            <td>{{ depense.annee }}</td>
-            <td>{{ depense.periodebudget.code }}</td>
-            <td>{{ depense.pfi.code }}</td>
-            <td>{{ depense.pfi.structure.code }}</td>
-            <td>{{ depense.naturecomptabledepense.enveloppe }}</td>
-            <td>{{ depense.naturecomptabledepense.label_nature_comptable }}</td>
-            <td>{{ depense.naturecomptabledepense.code_compte_budgetaire }}</td>
-            <td>{{ depense.domainefonctionnel.code }}</td>
-            <td class="montant" nowrap>{{ depense.montant_ae|intspace }} &euro;</td>
-            <td class="montant" nowrap>{{ depense.montant_cp|intspace }} &euro;</td>
-            <td class="montant" nowrap>{{ depense.montant_dc|intspace }} &euro;</td>
-            <td align="center">
-              {% if depense.commentaire %}
-                <a href="#">
-                  <span data-backdrop="false" data-toggle="modal" data-target="#modalCommentaire" data-formid="{{ depense.lienpiecejointe }}" class="glyphicon glyphicon-paperclip" title="Afficher"></span>
-                </a>
-              {% else %}
-                  &nbsp;
-              {% endif %}
-            </td>
-            <td align="center">
-                {% if recette.lienpiecejointe %}
-                <a href="#">
-                  <span data-backdrop="false" data-toggle="modal" data-target="#modalPieceJointe" data-formid="{{ depense.lienpiecejointe }}" class="glyphicon glyphicon-paperclip" title="Afficher"></span>
-                </a>
-                {% else %}
-                  &nbsp;
-                {% endif %}
-            </td>
-          </tr>
-        {% empty %}
-          <tr><td colspan="13">Aucune dépense trouvée pour ce PFI</td></tr>
-        {% endfor %}
-        <tr>
-          <td colspan="8" style="text-align:right;padding-right:20px;font-weight:bold;">Total :</td>
-          <td nowrap style="background-color:#66ff66;font-weight:bold;">{{ sommeDepense.sommeAE|intspace }} &euro;</td>
-          <td nowrap style="background-color:#66ff66;font-weight:bold;">{{ sommeDepense.sommeCP|intspace }} &euro;</td>
-          <td nowrap style="background-color:#66ff66;font-weight:bold;">{{ sommeDepense.sommeDC|intspace }} &euro;</td>
-          <td colspan="2">&nbsp;</td>
-        </tr>
-      </tbody>
-    </table>
-    <br />
-    <br />
-    <table class="table-pluri recette">
-      <thead>
-        <tr>
-          <th colspan="13" style="text-align:left;padding-left:50px;">
-            <a href="{% url 'recette' pfiid=PFI.id annee=currentYear %}">Liste des recettes.</a>
-          </th>
-        <tr>
-          <th>Année</th>
-          <th>Période</th>
-          <th>PFI</th>
-          <th>CF</th>
-          <th>Enveloppe</th>
-          <th>Nature Comptable</th>
-          <th>Compte Budgétaire</th>
-          <th>Fonds</th>
-          <th>AR</th>
-          <th>RE</th>
-          <th>DC</th>
-          <th>Comm.</th>
-          <th>PJ.</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for recette in listeRecette %}
-          <tr class="{% cycle 'row1' 'row2' %}">
-            <td>{{ recette.annee }}</td>
-            <td>{{ recette.periodebudget.code }}</td>
-            <td>{{ recette.pfi.code }}</td>
-            <td>{{ recette.pfi.structure.code }}</td>
-            <td>{{ recette.naturecomptablerecette.enveloppe }}</td>
-            <td>{{ recette.naturecomptablerecette.label_nature_comptable }}</td>
-            <td>{{ recette.naturecomptablerecette.code_compte_budgetaire }}</td>
-            <td>{{ recette.naturecomptablerecette.code_fonds }}</td>
-            <td class="montant" nowrap>{{ recette.montant_dc|intspace }} &euro;</td>
-            <td class="montant" nowrap>{{ recette.montant_ar|intspace }} &euro;</td>
-            <td class="montant" nowrap>{{ recette.montant_re|intspace }} &euro;</td>
-            <td align="center">
-              {% if recette.commentaire %}
-                <a href="#">
-                  <span data-backdrop="false" data-toggle="modal" data-target="#modalCommentaire" data-formid="{{ recette.commentaire }}" class="glyphicon glyphicon-paperclip" title="Afficher"></span>
-                </a>
-              {% else %}
-                &nbsp;
-              {% endif %}
-            </td>
-            <td align="center">
-              {% if recette.lienpiecejointe %}
-                <a href="#">
-                  <span data-backdrop="false" data-toggle="modal" data-target="#modalPieceJointe" data-formid="{{ recette.lienpiecejointe }}" class="glyphicon glyphicon-paperclip" title="Afficher"></span>
-                </a>
-              {% else %}
-                &nbsp;
-              {% endif %}
-            </td>
-          </tr>
-          {% empty %}
-            <tr><td colspan="13">Aucune recette trouvé pour cette PFI</td></tr>
-        {% endfor %}
-          <tr>
-            <td colspan="8" style="text-align:right;padding-right:20px;font-weight:bold;">Total :</td>
-            <td nowrap style="background-color:#ff6666;font-weight:bold;">{{ sommeRecette.sommeDC|intspace }} &euro;</td>
-            <td nowrap style="background-color:#ff6666;font-weight:bold;">{{ sommeRecette.sommeAR|intspace }} &euro;</td>
-            <td nowrap style="background-color:#ff6666;font-weight:bold;">{{ sommeRecette.sommeRE|intspace }} &euro;</td>
-            <td colspan="2">&nbsp;</td>
-          </tr>
-      </tbody>
-    </table>
-  </form>
+    {% for year in years %}
+    <h3>{{ year }}</h3>
+	{% include "detailsfullpfi.resume.inc.html" with montant_type="gbcp" montant_type_label="GBCP" %}
+	{% include "detailsfullpfi.resume.inc.html" with montant_type="dc" montant_type_label="Droit constaté" %}
+	{% include "detailsfullpfi.depense.inc.html" with depenses=listeDepense|dictvalue:year sums=sommeDepense|dictvalue:year %}
+    {% include "detailsfullpfi.recette.inc.html" with recettes=listeRecette|dictvalue:year sums=sommeRecette|dictvalue:year %}
+    {% endfor %}
 </div>
 
 <div class="modal fade model-wide" id="modalCommentaire" role="dialog">
@@ -193,19 +52,4 @@
     </div>
   </div>
 </div>
-{% endblock %}
-{% block foot-javascript %}
-<script src="{% static 'js/budgetweb.js' %}"></script>
-<script src="{% static 'js/moment/moment-with-locales.min.js' %}"></script>
-<script src="{% static 'js/bootstrap-datetimepicker.min.js' %}"></script>
-<script>
-$(document).ready(function() {
-    $('#modalCommentaire').on('show.bs.modal', function(e) {
-       $('#modalcomm').val($(e.relatedTarget).data('formid'));
-    });
-    $('#modalPieceJointe').on('show.bs.modal', function(e) {
-       $('div#modalpiecejointe').empty().append($(e.relatedTarget).data('formid'));
-    });
-});
-</script>
 {% endblock %}

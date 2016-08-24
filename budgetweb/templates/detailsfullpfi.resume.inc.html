@@ -1,0 +1,60 @@
+{% load budgetweb_tags %}
+
+{% with resume=resume_depenses|dictvalue:year %}
+{% with resume_montant_type=resume.0|dictvalue:montant_type %}
+<table class="resume" style="border: 1px solid black; display: inline-table;">
+  <thead>
+    <tr>
+      <th colspan="{{ resume.1|length|add:2 }}" style="text-align: center;">{{ montant_type_label }}</th>
+    </tr>
+    <tr>
+      <th>Enveloppe</th>
+      {% for periode in resume.1 %}
+      <th>{{ periode }}</th>
+      {% endfor %}
+      <th>Total</th> 
+    </tr>
+  </thead>
+  <tbody>
+    {% for enveloppe, enveloppe_values in resume_montant_type.0.items %}
+    <tr>
+      <td>Dépense {{ enveloppe }}</td>
+      {% for periode in resume.1 %}
+      <td>{% firstof enveloppe_values.0|dictvalue:periode|intspace "0,00" %} &euro;</td>
+      {% endfor %}
+      <td>{{ enveloppe_values.1|intspace }} &euro;</td>
+    </tr>
+    {% endfor %}
+    <tr>
+    <td>Total</td>
+    {% for periode in resume.1 %}
+     <td>{% firstof resume_montant_type.1|dictvalue:periode|intspace "0,00" %} &euro;</td>
+    {% endfor %}
+    </tr>
+{% endwith %}
+{% endwith %}
+    <tr>
+      <td class="blank_row" colspan="{{ resume.1|length|add:2 }}">&nbsp;</td>
+    </tr>
+{% with resume=resume_recettes|dictvalue:year %}
+{% with resume_montant_type=resume.0|dictvalue:montant_type %}
+    <tr>
+    {% for enveloppe, enveloppe_values in resume_montant_type.0.items %}
+    <tr>
+      <td>Recette {{ enveloppe }}</td>
+      {% for periode in resume.1 %}
+      <td>{% firstof enveloppe_values.0|dictvalue:periode|intspace "0,00" %} &euro;</td>
+      {% endfor %}
+      <td>{{ enveloppe_values.1|intspace }} &euro;</td>
+    </tr>
+    {% endfor %}
+    <tr>
+    <td>Total</td>
+    {% for periode in resume.1 %}
+     <td>{% firstof resume_montant_type.1|dictvalue:periode|intspace "0,00" %} &euro;</td>
+    {% endfor %}
+    </tr>
+  </tbody>
+</table>
+{% endwith %}
+{% endwith %}
