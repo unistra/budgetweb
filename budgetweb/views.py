@@ -49,7 +49,6 @@ def api_get_details_nature_by_code(request, model, id_nature):
         'naturecomptabledepense': NatureComptableDepense,
     }
     nature = models[model].active.filter(id=id_nature).first()
-    print(nature)
     response_data = [
         {"code_compte_budgetaire": nature.code_compte_budgetaire,
          "label_compte_budgetaire": nature.label_compte_budgetaire}
