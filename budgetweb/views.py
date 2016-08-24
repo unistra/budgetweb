@@ -3,6 +3,7 @@
 from itertools import chain, groupby
 import json
 
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.db.models import F, Prefetch, Sum
 from django.forms.models import modelformset_factory
@@ -138,7 +139,7 @@ def modelformset_factory_with_kwargs(cls, **formset_kwargs):
 def depense(request, pfiid, annee):
     pfi = PlanFinancement.objects.get(pk=pfiid)
     periodebudget = PeriodeBudget.objects.filter(is_active=True).first()
-    is_dfi_member = request.user.groups.filter(name='DFI').exists()
+    is_dfi_member = request.user.groups.filter(name=settings.DFI_GROUP_NAME).exists()
     DepenseFormSet = modelformset_factory(
         Depense,
         form=modelformset_factory_with_kwargs(DepenseForm, pfi=pfi,
@@ -171,7 +172,7 @@ def depense(request, pfiid, annee):
 def recette(request, pfiid, annee):
     pfi = PlanFinancement.objects.get(pk=pfiid)
     periodebudget = PeriodeBudget.objects.filter(is_active=True).first()
-    is_dfi_member = request.user.groups.filter(name='DFI').exists()
+    is_dfi_member = request.user.groups.filter(name=settings.DFI_GROUP_NAME).exists()
     RecetteFormSet = modelformset_factory(
         Recette,
         form=modelformset_factory_with_kwargs(RecetteForm, pfi=pfi,

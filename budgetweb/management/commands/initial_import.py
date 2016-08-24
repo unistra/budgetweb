@@ -31,6 +31,6 @@ class Command(NoArgsCommand):
             call_command('import_authorizations', join(datapath, 'lda.txt'))
 
             # Creation du groupe DFI correspondant aux gestionnaires de budget.
-            Group.objects.update_or_create(name='DFI')
+            Group.objects.update_or_create(name=settings.DFI_GROUP_NAME)
         except Exception as e:
             print(e)
