@@ -49,9 +49,6 @@
 </div>
 {% endblock %}
 {% block foot-javascript %}
-<script src="{% static 'js/moment/moment-with-locales.min.js' %}"></script>
-<script src="{% static 'js/bootstrap-datetimepicker.min.js' %}"></script>
-<script src="{% static 'js/budgetweb.js' %}"></script>
 <script src="{% static 'js/jquery.formset.js' %}"></script>
 <script>
     $(document).ready(function() {
@@ -68,7 +65,7 @@
     }); 
 
     $('#formset tbody tr').formset({
-        addText: 'Ajouter une dépense',
+        addText: 'Ajouter',
         addCssClass: 'btn-primary btn',
         deleteText: '<span class="danger glyphicon glyphicon-trash"></span>',
     });
