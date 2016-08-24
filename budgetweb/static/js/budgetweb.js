@@ -52,6 +52,7 @@ jQuery(document).ready(function($) {
               if (!data[0].is_decalage_tresorerie) {
                 $("#id_form-" + form_id + "-montant_cp").prop("readonly", true);
                 $("#id_form-" + form_id + "-montant_cp").val($("#id_form-" + form_id + "-montant_ae").val());
+                $("#id_form-" + form_id + "-montant_dc").val($("#id_form-" + form_id + "-montant_ae").val());
               }
               else
                 $("#id_form-" + form_id + "-montant_cp").prop("readonly", false);
