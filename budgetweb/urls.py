@@ -15,8 +15,11 @@ urlpatterns = [
     # Ajax
     url(r'^api/(?P<model>naturecomptablerecette|naturecomptabledepense)/enveloppe/(?P<enveloppe>\w+)/(?P<pfiid>\w+)/$',
         views.api_fund_designation_by_nature_and_enveloppe,
-        name='api-fund-designation-by-nature-and-enveloppe'
-    ),
+        name='api-fund-designation-by-nature-and-enveloppe'),
+
+    url(r'^api/(?P<model>naturecomptablerecette|naturecomptabledepense)/(?P<id_nature>\w+)/$',
+        views.api_get_details_nature_by_code,
+        name='api_get_details_nature_by_code'),
 
     # Base de l'arbre.
     url(r'^showtree/(?P<type_affichage>\w+)/(?P<structid>\w+)/$',

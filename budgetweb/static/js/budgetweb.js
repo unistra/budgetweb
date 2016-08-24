@@ -8,7 +8,7 @@ jQuery(document).ready(function($) {
         maxDate: new Date(new Date().getFullYear() + 10, 11, 31),
         locale:'fr'
     });
-    
+
     // NatureComptable choice fields in RecetteForm and DepenseForm
     $("#supertable").on("change", ".form-enveloppe", function (e) {
         var idRegex = /id_form-(\d+).*/;
@@ -25,6 +25,30 @@ jQuery(document).ready(function($) {
 
         changeOptions("/api/"+ model +"/enveloppe/" + this.value + "/"+ pfi_id + "/", $nature);
     });
+
+    // NatureComptableDetails choice fields in RecetteForm and DepenseForm
+    $("#supertable").on("change", ".form-naturecomptable", function (e) {
+        var idRegex = /id_form-(\d+).*/;
+        var form_id = idRegex.exec(this.id)[1];
+        var models = ["naturecomptablerecette", "naturecomptabledepense"];
+        for (var i=0; i < models.length; i++) {
+            var model = models[i];
+            var $nature = $("#id_form-" + form_id + "-" + model);
+            if ($nature.length) {
+                break;
+            }
+        }
+        loadDetails("/api/"+ model + "/" + $nature.val() + "/", $nature);
+    });
+
+    function loadDetails(url, dest) {
+        $.getJSON(url, function(data) {
+            $.each(data, function(index, obj) {
+              dest.nextAll().empty();
+              dest.after("<span><br />Compte budgétaire : " + obj.code_compte_budgetaire + "-" + obj.label_compte_budgetaire + "</span>");
+            });
+        });
+    };
 
     function changeOptions(url, dest) {
         $.getJSON(url, function(data) {

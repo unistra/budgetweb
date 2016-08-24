@@ -26,7 +26,8 @@ def home(request):
 
 # AJAX
 @is_ajax_get
-def api_fund_designation_by_nature_and_enveloppe(request, model, enveloppe, pfiid):
+def api_fund_designation_by_nature_and_enveloppe(request, model,
+                                                 enveloppe, pfiid):
     pfi = PlanFinancement.objects.get(pk=pfiid)
     models = {
         'naturecomptablerecette': NatureComptableRecette,
@@ -37,7 +38,22 @@ def api_fund_designation_by_nature_and_enveloppe(request, model, enveloppe, pfii
     ).order_by('code_nature_comptable')
     response_data = [
         {"id": nature.pk, "label": str(nature)} for nature in natures]
-    print('RD : %s' % response_data)
+    return HttpResponse(
+        json.dumps(response_data), content_type='application/json')
+
+
+@is_ajax_get
+def api_get_details_nature_by_code(request, model, id_nature):
+    models = {
+        'naturecomptablerecette': NatureComptableRecette,
+        'naturecomptabledepense': NatureComptableDepense,
+    }
+    nature = models[model].active.filter(id=id_nature).first()
+    print(nature)
+    response_data = [
+        {"code_compte_budgetaire": nature.code_compte_budgetaire,
+         "label_compte_budgetaire": nature.label_compte_budgetaire}
+                    ]
     return HttpResponse(
         json.dumps(response_data), content_type='application/json')
 

@@ -59,6 +59,7 @@ class RecetteForm(forms.ModelForm):
         self.fields['enveloppe'].choices = enveloppe_choices
         self.fields['naturecomptablerecette'].choices = [('', '---------')]
         self.fields['naturecomptablerecette'].queryset = natures
+        self.fields['naturecomptablerecette'].widget.attrs['class'] = 'form-naturecomptable'
 
         # Set the initial values
         self.fields['structure'].initial = structure.pk
@@ -141,6 +142,7 @@ class DepenseForm(forms.ModelForm):
         self.fields['enveloppe'].choices = enveloppe_choices
         self.fields['naturecomptabledepense'].choices = [('', '---------')]
         self.fields['naturecomptabledepense'].queryset = natures
+        self.fields['naturecomptabledepense'].widget.attrs['class'] = 'form-naturecomptable'
 
         # Set the initial values
         self.fields['structure'].initial = structure.pk
