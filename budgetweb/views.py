@@ -118,7 +118,8 @@ def depense(request, pfiid, annee):
         Depense,
         form=modelformset_factory_with_kwargs(DepenseForm, pfi=pfi,
                                               periodebudget=periodebudget,
-                                              annee=annee),
+                                              annee=annee,
+                                              user=request.user),
         exclude=[],
         extra=1,
         can_delete=True
@@ -149,7 +150,8 @@ def recette(request, pfiid, annee):
         Recette,
         form=modelformset_factory_with_kwargs(RecetteForm, pfi=pfi,
                                               periodebudget=periodebudget,
-                                              annee=annee),
+                                              annee=annee,
+                                              user=request.user),
         exclude=[],
         extra=1,
         can_delete=True

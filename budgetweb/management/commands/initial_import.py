@@ -3,7 +3,7 @@ from os.path import dirname, join
 from django.conf import settings
 from django.core.management.base import NoArgsCommand
 from django.core.management import call_command
-
+from django.contrib.auth.models import Group
 
 class Command(NoArgsCommand):
     help = 'Initial import for BudgetWeb'
@@ -30,5 +30,7 @@ class Command(NoArgsCommand):
             print('***** Import Authorizations *****')
             call_command('import_authorizations', join(datapath, 'lda.txt'))
 
+            # Creation du groupe DFI correspondant aux gestionnaires de budget.
+            Group.objects.update_or_create(name='DFI')
         except Exception as e:
             print(e)

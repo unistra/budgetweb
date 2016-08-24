@@ -42,7 +42,6 @@ class Command(BaseCommand):
                 structures = {}
                 for row in reader:
                     code = row['CF']
-                    print(code)
                     structures[code] = {
                         'code': code,
                         'type': row['Groupe1'],
@@ -63,7 +62,7 @@ class Command(BaseCommand):
                             total += int(created)
                         except Structure.DoesNotExist:
                             pass
-                    structures = {k: v for k, v in structures.items()\
+                    structures = {k: v for k, v in structures.items()
                                   if k not in treated}
                     iteration += 1
 

@@ -443,6 +443,8 @@ class Depense(Comptabilite):
 
     def save(self, *args, **kwargs):
         kwargs.update({'comptabilite_type': 'depense'})
+        if not self.montant_dc:
+            self.montant_dc = self.montant_ae
         super().save(*args, **kwargs)
 
     def delete(self, **kwargs):
@@ -497,6 +499,9 @@ class Recette(Comptabilite):
 
     def save(self, *args, **kwargs):
         kwargs.update({'comptabilite_type': 'recette'})
+        print(self.montant_dc)
+        if not self.montant_dc:
+            self.montant_dc = self.montant_ar
         super().save(*args, **kwargs)
 
     def delete(self, **kwargs):

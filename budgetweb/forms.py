@@ -44,6 +44,7 @@ class RecetteForm(forms.ModelForm):
         pfi = kwargs.pop('pfi')
         periodebudget = kwargs.pop('periodebudget')
         annee = kwargs.pop('annee')
+        user = kwargs.pop('user')
         super().__init__(*args, **kwargs)
 
         instance = self.instance
@@ -65,6 +66,11 @@ class RecetteForm(forms.ModelForm):
         self.fields['periodebudget'].initial = periodebudget.pk
         self.fields['annee'].initial = int(annee)
 
+        # Règle de gestion, le champ DC n'est autorisé que pour la DFI.
+        if not user.groups.filter(name='DFI').exists():
+            self.fields['montant_dc'].widget.attrs['disabled'] = True
+            self.fields['montant_dc'].required = False
+
         if instance and instance.pk:
             nature = instance.naturecomptablerecette
             self.fields['enveloppe'].initial = nature.enveloppe
@@ -73,6 +79,12 @@ class RecetteForm(forms.ModelForm):
             self.fields['naturecomptablerecette'].choices += [
                 (n.pk, str(n)) for n in natures]
             self.fields['naturecomptablerecette'].initial = nature
+
+    def clean_montant_dc(self):
+        montant_dc = self.cleaned_data.get("montant_dc", None)
+        if montant_dc is None:
+            montant_dc = self.cleaned_data.get("montant_ae")
+        return montant_dc
 
 
 class DepenseForm(forms.ModelForm):
@@ -114,6 +126,7 @@ class DepenseForm(forms.ModelForm):
         pfi = kwargs.pop('pfi')
         periodebudget = kwargs.pop('periodebudget')
         annee = kwargs.pop('annee')
+        user = kwargs.pop('user')
         super().__init__(*args, **kwargs)
 
         instance = self.instance
@@ -135,6 +148,11 @@ class DepenseForm(forms.ModelForm):
         self.fields['periodebudget'].initial = periodebudget.pk
         self.fields['annee'].initial = int(annee)
 
+        # Règle de gestion, le champ DC n'est autorisé que pour la DFI.
+        if not user.groups.filter(name='DFI').exists():
+            self.fields['montant_dc'].widget.attrs['readonly'] = True
+            self.fields['montant_dc'].required = False
+
         if instance and instance.pk:
             nature = instance.naturecomptabledepense
             self.fields['enveloppe'].initial = nature.enveloppe
@@ -143,6 +161,12 @@ class DepenseForm(forms.ModelForm):
             self.fields['naturecomptabledepense'].choices += [
                 (n.pk, str(n)) for n in natures]
             self.fields['naturecomptabledepense'].initial = nature
+
+    def clean_montant_dc(self):
+        montant_dc = self.cleaned_data.get("montant_dc", None)
+        if montant_dc is None:
+            montant_dc = self.cleaned_data.get("montant_ae")
+        return montant_dc
 
 
 class PlanFinancementPluriForm(forms.ModelForm):
