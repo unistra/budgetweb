@@ -138,12 +138,13 @@ def modelformset_factory_with_kwargs(cls, **formset_kwargs):
 def depense(request, pfiid, annee):
     pfi = PlanFinancement.objects.get(pk=pfiid)
     periodebudget = PeriodeBudget.objects.filter(is_active=True).first()
+    is_dfi_member = request.user.groups.filter(name='DFI').exists()
     DepenseFormSet = modelformset_factory(
         Depense,
         form=modelformset_factory_with_kwargs(DepenseForm, pfi=pfi,
                                               periodebudget=periodebudget,
                                               annee=annee,
-                                              user=request.user),
+                                              is_dfi_member=is_dfi_member),
         exclude=[],
         extra=1,
         can_delete=True
@@ -170,12 +171,13 @@ def depense(request, pfiid, annee):
 def recette(request, pfiid, annee):
     pfi = PlanFinancement.objects.get(pk=pfiid)
     periodebudget = PeriodeBudget.objects.filter(is_active=True).first()
+    is_dfi_member = request.user.groups.filter(name='DFI').exists()
     RecetteFormSet = modelformset_factory(
         Recette,
         form=modelformset_factory_with_kwargs(RecetteForm, pfi=pfi,
                                               periodebudget=periodebudget,
                                               annee=annee,
-                                              user=request.user),
+                                              is_dfi_member=is_dfi_member),
         exclude=[],
         extra=1,
         can_delete=True

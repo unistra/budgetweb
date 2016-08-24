@@ -44,7 +44,7 @@ class RecetteForm(forms.ModelForm):
         pfi = kwargs.pop('pfi')
         periodebudget = kwargs.pop('periodebudget')
         annee = kwargs.pop('annee')
-        user = kwargs.pop('user')
+        is_dfi_member = kwargs.pop('is_dfi_member')
         super().__init__(*args, **kwargs)
 
         instance = self.instance
@@ -68,8 +68,8 @@ class RecetteForm(forms.ModelForm):
         self.fields['annee'].initial = int(annee)
 
         # Règle de gestion, le champ DC n'est autorisé que pour la DFI.
-        if not user.groups.filter(name='DFI').exists():
-            self.fields['montant_dc'].widget.attrs['disabled'] = True
+        if not is_dfi_member:
+            self.fields['montant_dc'].widget.attrs['readonly'] = True
             self.fields['montant_dc'].required = False
 
         if instance and instance.pk:
@@ -129,7 +129,7 @@ class DepenseForm(forms.ModelForm):
         pfi = kwargs.pop('pfi')
         periodebudget = kwargs.pop('periodebudget')
         annee = kwargs.pop('annee')
-        user = kwargs.pop('user')
+        is_dfi_member = kwargs.pop('is_dfi_member')
         super().__init__(*args, **kwargs)
 
         instance = self.instance
@@ -154,7 +154,7 @@ class DepenseForm(forms.ModelForm):
         self.fields['annee'].initial = int(annee)
 
         # Règle de gestion, le champ DC n'est autorisé que pour la DFI.
-        if not user.groups.filter(name='DFI').exists():
+        if not is_dfi_member:
             self.fields['montant_dc'].widget.attrs['readonly'] = True
             self.fields['montant_dc'].required = False
 
