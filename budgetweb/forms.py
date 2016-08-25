@@ -44,7 +44,7 @@ class RecetteForm(forms.ModelForm):
         pfi = kwargs.pop('pfi')
         periodebudget = kwargs.pop('periodebudget')
         annee = kwargs.pop('annee')
-        is_dfi_member = kwargs.pop('is_dfi_member')
+        is_dfi_member_or_admin = kwargs.pop('is_dfi_member_or_admin')
         super().__init__(*args, **kwargs)
 
         instance = self.instance
@@ -68,7 +68,7 @@ class RecetteForm(forms.ModelForm):
         self.fields['annee'].initial = int(annee)
 
         # Règle de gestion, le champ DC n'est autorisé que pour la DFI.
-        if not is_dfi_member:
+        if not is_dfi_member_or_admin:
             self.fields['montant_dc'].widget.attrs['readonly'] = True
             self.fields['montant_dc'].required = False
 
@@ -129,7 +129,7 @@ class DepenseForm(forms.ModelForm):
         pfi = kwargs.pop('pfi')
         periodebudget = kwargs.pop('periodebudget')
         annee = kwargs.pop('annee')
-        is_dfi_member = kwargs.pop('is_dfi_member')
+        is_dfi_member_or_admin = kwargs.pop('is_dfi_member_or_admin')
         super().__init__(*args, **kwargs)
 
         instance = self.instance
@@ -154,7 +154,7 @@ class DepenseForm(forms.ModelForm):
         self.fields['annee'].initial = int(annee)
 
         # Règle de gestion, le champ DC n'est autorisé que pour la DFI.
-        if not is_dfi_member:
+        if not is_dfi_member_or_admin:
             self.fields['montant_dc'].widget.attrs['readonly'] = True
             self.fields['montant_dc'].required = False
 
@@ -167,7 +167,6 @@ class DepenseForm(forms.ModelForm):
             self.fields['naturecomptabledepense'].choices += [
                 (n.pk, str(n)) for n in natures]
             self.fields['naturecomptabledepense'].initial = nature
-            print(nature.is_decalage_tresorerie)
             if not nature.is_decalage_tresorerie:
                 self.fields['montant_cp'].widget.attrs['readonly'] = True
 
