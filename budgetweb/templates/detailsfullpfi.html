@@ -63,3 +63,21 @@
   </div>
 </div>
 {% endblock %}
+{% block foot-javascript %}
+<script>
+$(document).ready(function() {
+    $('#modalCommentaire').on('show.bs.modal', function(e) {
+       var d = e;
+       var f = $(e.relatedTarget);
+       var g =f.data('formid');
+       $('#modalcomm').empty().val($(e.relatedTarget).data('formid'));
+    });
+    $('#modalPieceJointe').on('show.bs.modal', function(e) {
+    	var d = e;
+        var f = $(e.relatedTarget);
+        var g =f.data('formid');
+       $('#modalpiecejointe').empty().append($(e.relatedTarget).data('formid'));
+    });
+});
+</script>
+{% endblock %}

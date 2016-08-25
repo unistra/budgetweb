@@ -40,14 +40,14 @@
       <td align="center">
       {% if depense.commentaire %}
         <a href="#">
-          <span data-backdrop="false" data-toggle="modal" data-target="#modalCommentaire" data-bid="{{ depense.lienpiecejointe }}" class="glyphicon glyphicon-paperclip" title="Afficher"></span>
+          <span data-backdrop="false" data-toggle="modal" data-target="#modalCommentaire" data-formid="{{ depense.commentaire }}" class="glyphicon glyphicon-paperclip" title="Afficher"></span>
         </a>
       {% else %}
           &nbsp;
       {% endif %}
       </td>
       <td align="center">
-        {% if recette.lienpiecejointe %}
+        {% if depense.lienpiecejointe %}
         <a href="#">
           <span data-backdrop="false" data-toggle="modal" data-target="#modalPieceJointe" data-formid="{{ depense.lienpiecejointe }}" class="glyphicon glyphicon-paperclip" title="Afficher"></span>
         </a>
