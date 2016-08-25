@@ -31,14 +31,20 @@
       <td>Dépense {{ enveloppe }}</td>
       {% with enveloppes_montants=resume_montant_group.0|dictvalue:enveloppe %}
       {% for periode in resume.1 %}
+          {% if enveloppes_montants.0 %}
           {% with types_montants=enveloppes_montants.0|dictvalue:periode %}
-          {% for type in montants_types %}
+              {% for type in montants_types %}
       <td>{{ types_montants|dictvalue:type|intspace }} &euro;</td>
-          {% endfor %}
+              {% endfor %}
           {% endwith %}
+          {% else %}
+              {% for type in montants_types %}
+      <td>0,00 &euro;</td>
+              {% endfor %}
+          {% endif %}
       {% endfor %}
       {% for type in montants_types %}
-      <td>{{ enveloppes_montants.1|dictvalue:type|intspace }} &euro;</td>
+      <td>{% if enveloppes_montants.1 %}{{ enveloppes_montants.1|dictvalue:type|intspace }}{% else %}0,00{% endif %} &euro;</td>
       {% endfor %}
       {% endwith %}
     </tr>
@@ -87,14 +93,20 @@
       <td>Recette {{ enveloppe }}</td>
       {% with enveloppes_montants=resume_montant_group.0|dictvalue:enveloppe %}
       {% for periode in resume.1 %}
+          {% if enveloppes_montants.0 %}
           {% with types_montants=enveloppes_montants.0|dictvalue:periode %}
-          {% for type in montants_types %}
+              {% for type in montants_types %}
       <td>{{ types_montants|dictvalue:type|intspace }} &euro;</td>
-          {% endfor %}
+              {% endfor %}
           {% endwith %}
+          {% else %}
+              {% for type in montants_types %}
+      <td>0,00 &euro;</td>
+              {% endfor %}
+          {% endif %}
       {% endfor %}
       {% for type in montants_types %}
-      <td>{{ enveloppes_montants.1|dictvalue:type|intspace }} &euro;</td>
+      <td>{% if enveloppes_montants.1 %}{{ enveloppes_montants.1|dictvalue:type|intspace }}{% else %}0,00{% endif %} &euro;</td>
       {% endfor %}
       {% endwith %}
     </tr>

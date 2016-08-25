@@ -12,7 +12,7 @@ from django.db import transaction
 from budgetweb.models import (Depense, DomaineFonctionnel,
                               NatureComptableDepense, NatureComptableRecette,
                               PeriodeBudget, PlanFinancement, Recette,
-                              Structure, StructureMontant)
+                              StructureMontant)
 
 
 NUMBER_ENTRIES = 100
@@ -110,7 +110,7 @@ class Command(BaseCommand):
                 self.naturecomptabledepenses, qs={'is_fleche': pfi.is_fleche})
             naturecomptablerecette = get_random_object(
                 self.naturecomptablerecettes, qs={'is_fleche': pfi.is_fleche})
-            
+
             data = (
                 (Depense, {
                     'pfi': pfi,
@@ -134,8 +134,8 @@ class Command(BaseCommand):
             for model, values in data:
                 obj = model(**values)
                 montants = obj.initial_montants
+                value = Decimal(random.randrange(MAX_MONTANT * 100)) / 100
                 for montant in montants:
-                    value = Decimal(random.randrange(MAX_MONTANT * 100)) / 100
                     setattr(obj, montant, value)
                 obj.save()
 
