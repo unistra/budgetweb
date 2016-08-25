@@ -306,5 +306,6 @@ def detailscf(request, structid):
         'currentYear': get_current_year,
         'listeDepense': liste_depense, 'listeRecette': liste_recette,
         'sommeDepense': somme_depense, 'sommeRecette': somme_recette,
+        'cf': structparent
     }
     return render(request, 'detailscf.html', context)

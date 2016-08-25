@@ -1,6 +1,6 @@
 {% load budgetweb_tags %}
 
-<table class="table-pluri recette">
+<table class="table-pluri recette" style="width:100%;">
   <thead>
     <tr>
       <th colspan="13" style="text-align:left;padding-left:50px;">
@@ -60,9 +60,9 @@
     {% endfor %}
       <tr>
         <td colspan="8" style="text-align:right;padding-right:20px;font-weight:bold;">Total :</td>
-        <td nowrap style="background-color:#ff6666;font-weight:bold;">{{ sums.0.sum_dc|intspace }} &euro;</td>
-        <td nowrap style="background-color:#ff6666;font-weight:bold;">{{ sums.0.sum_ar|intspace }} &euro;</td>
-        <td nowrap style="background-color:#ff6666;font-weight:bold;">{{ sums.0.sum_re|intspace }} &euro;</td>
+        <td nowrap style="background-color:#ff6666;font-weight:bold;text-align:right;">{{ sums.0.sum_dc|intspace }} &euro;</td>
+        <td nowrap style="background-color:#ff6666;font-weight:bold;text-align:right;">{{ sums.0.sum_ar|intspace }} &euro;</td>
+        <td nowrap style="background-color:#ff6666;font-weight:bold;text-align:right;">{{ sums.0.sum_re|intspace }} &euro;</td>
         <td colspan="2">&nbsp;</td>
       </tr>
   </tbody>

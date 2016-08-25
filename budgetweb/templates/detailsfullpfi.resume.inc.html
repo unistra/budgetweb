@@ -6,21 +6,21 @@
 <table class="resumepfi">
   <thead>
     <tr>
-      <th colspan="{% resume_colspan resume.1 montants_types %}" style="text-align: center;">{{ montant_group_label }}</th>
+      <th colspan="{% resume_colspan resume.1 montants_types %}">{{ montant_group_label }}</th>
     </tr>
     <tr>
-      <th rowspan="2">Enveloppe</th>
+      <th rowspan="2">Dépense</th>
       {% for periode in resume.1 %}
-      <th colspan="{{ montants_types|length }}" style="text-align: center;">{{ periode }}</th>
+      <th colspan="{{ montants_types|length }}">{{ periode }}</th>
       {% endfor %}
-      <th colspan="{{ montants_types|length }}" style="text-align: center;">Total</th> 
+      <th colspan="{{ montants_types|length }}">Total</th>
     </tr>
     <tr>
       {% for type in montants_types %}
-      <th>{{ type }}</th>
+      <th>&sum;  {{ type }}</th>
       {% endfor %}
       {% for type in montants_types %}
-      <th>{{ type }}</th>
+      <th>&sum; {{ type }}</th>
       {% endfor %}
     </tr>
   </thead>
@@ -54,7 +54,7 @@
     {% for periode in resume.1 %}
         {% with total_enveloppes=resume_montant_group.1|dictvalue:periode %}
         {% for type in montants_types %}
-     <td>{% firstof total_enveloppes|dictvalue:type|intspace "0,00" %} &euro;</td>
+     <td class="bold">{% firstof total_enveloppes|dictvalue:type|intspace "0,00" %} &euro;</td>
         {% endfor %}
         {% endwith %}
     {% endfor %}
@@ -71,18 +71,18 @@
 {% with montants_types=montants_types_recette.split %}
   <thead>
     <tr>
-      <th rowspan="2">Enveloppe</th>
+      <th rowspan="2">Recette</th>
       {% for periode in resume.1 %}
       <th colspan="{{ montants_types|length }}" style="text-align: center;">{{ periode }}</th>
       {% endfor %}
-      <th colspan="{{ montants_types|length }}" style="text-align: center;">Total</th> 
+      <th colspan="{{ montants_types|length }}" style="text-align: center;">Total</th>
     </tr>
     <tr>
       {% for type in montants_types %}
-      <th>{{ type }}</th>
+      <th>&sum; {{ type }}</th>
       {% endfor %}
       {% for type in montants_types %}
-      <th>{{ type }}</th>
+      <th>&sum; {{ type }}</th>
       {% endfor %}
     </tr>
   </thead>
@@ -116,7 +116,7 @@
     {% for periode in resume.1 %}
         {% with total_enveloppes=resume_montant_group.1|dictvalue:periode %}
         {% for type in montants_types %}
-     <td>{% firstof total_enveloppes|dictvalue:type|intspace "0,00" %} &euro;</td>
+     <td class="bold">{% firstof total_enveloppes|dictvalue:type|intspace "0,00" %} &euro;</td>
         {% endfor %}
         {% endwith %}
     {% endfor %}
