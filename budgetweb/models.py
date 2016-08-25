@@ -259,7 +259,6 @@ class PlanFinancement(models.Model):
         for compta in totals:
             compta_details = {}
             for year, year_values in groupby(compta, lambda x: x['annee']):
-                print(year)
                 compta_types = {k: [{}, {}] for k in montants_dict.keys()}
                 periodes_set = set()
                 for c in year_values:
@@ -522,7 +521,6 @@ class Recette(Comptabilite):
 
     def save(self, *args, **kwargs):
         kwargs.update({'comptabilite_type': 'recette'})
-        print(self.montant_dc)
         if not self.montant_dc:
             self.montant_dc = self.montant_ar
         super().save(*args, **kwargs)
