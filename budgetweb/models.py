@@ -491,31 +491,12 @@ class Depense(Comptabilite):
         kwargs.update({'comptabilite_type': 'depense'})
         super().delete(**kwargs)
 
-    # def clean(self):
-    #    montantae = self.montantae
-    #    montantcp = self.montantcp
-    #
-    #    if self.structlev3:
-    #        pass
-    #    else:
-    #        raise ValidationError(
-    #            {'structlev3': u'Veuillez choisir la structure'})
-    #    if not self.plfi:
-    #        raise ValidationError({'plfi': u'Veuillez choisir le PFI'})
-    #    if self.cptdeplev1:
-    #        decalagetreso = self.cptdeplev1.decalagetresocpae
-    #        if decalagetreso == False:
-    #            if montantae != montantcp:
-    #                raise ValidationError({'montantae': u'Pas de décalage de
-    # trésorerie sur cette nature comptable.Veuillez vous assurrer que
-    # montantae=montantcp.'})
-    #    else:
-    #        raise ValidationError({'cptdeplev1':
-    #        u'Veuillez saisir la nature comptable'})
-    #
-    # def save(self, *args, **kwargs):
-    #    self.full_clean()
-    #    super(DepenseFull, self).save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+        if not self.naturecomptabledepense.is_decalage_tresorerie:
+            if self.montant_ae != self.montant_cp:
+                raise ValidationError({'montant_ae': 'Le décalagage de trésorerie n\'est pas possible sur cette nature comptable.'})
+        kwargs.update({'comptabilite_type': 'depense'})
+        super().save(**kwargs)
 
 
 class Recette(Comptabilite):
