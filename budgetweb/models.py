@@ -272,18 +272,20 @@ class PlanFinancement(models.Model):
                         mt = montant_type(field_name)
                         ct = compta_types[mt]
                         nature_dict = ct[0].setdefault(
-                            c['enveloppe'], [{}, Decimal(0)])
-                        nature_dict[0][periode] =\
-                            nature_dict[0].get(periode, Decimal(0)) + montant
+                            c['enveloppe'], [{}, {}])
+                        type_dict = nature_dict[0].setdefault(
+                            periode, {})
+                        type_dict[field_name] = montant
+
+                        # Total per periode and montant_type
+                        nature_dict[1].setdefault(field_name, Decimal(0))
+                        nature_dict[1][field_name] += montant
 
                         # Total per enveloppe
-                        nature_dict[1] += montant
+                        total_enveloppe = compta_types[mt][1].setdefault(periode, {})
+                        total_enveloppe[field_name] = total_enveloppe.get(field_name, Decimal(0)) + montant
 
-                        # Total per periode
-                        ct[1].setdefault(periode, Decimal(0))
-                        ct[1][periode] += montant
-
-                # TODO: order periodes_set
+                # TODO: order periodes_set and global periodes_set for depenses and recettes
                 compta_details[year] = (compta_types, periodes_set)
             details.append(compta_details)
         return details

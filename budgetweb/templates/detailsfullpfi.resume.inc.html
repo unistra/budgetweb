@@ -1,60 +1,117 @@
 {% load budgetweb_tags %}
 
 {% with resume=resume_depenses|dictvalue:year %}
-{% with resume_montant_type=resume.0|dictvalue:montant_type %}
-<table class="resume" style="border: 1px solid black; display: inline-table;">
+{% with resume_montant_group=resume.0|dictvalue:montant_group %}
+{% with montants_types=montants_types_depense.split %}
+<table class="resumepfi">
   <thead>
     <tr>
-      <th colspan="{{ resume.1|length|add:2 }}" style="text-align: center;">{{ montant_type_label }}</th>
+      <th colspan="{% resume_colspan resume.1 montants_types %}" style="text-align: center;">{{ montant_group_label }}</th>
     </tr>
     <tr>
-      <th>Enveloppe</th>
+      <th rowspan="2">Enveloppe</th>
       {% for periode in resume.1 %}
-      <th>{{ periode }}</th>
+      <th colspan="{{ montants_types|length }}" style="text-align: center;">{{ periode }}</th>
       {% endfor %}
-      <th>Total</th> 
+      <th colspan="{{ montants_types|length }}" style="text-align: center;">Total</th> 
+    </tr>
+    <tr>
+      {% for type in montants_types %}
+      <th>{{ type }}</th>
+      {% endfor %}
+      {% for type in montants_types %}
+      <th>{{ type }}</th>
+      {% endfor %}
     </tr>
   </thead>
   <tbody>
-    {% for enveloppe, enveloppe_values in resume_montant_type.0.items %}
+    {% with enveloppes='Fonctionnement Personnel Investissement' %}
+    {% for enveloppe in enveloppes.split %}
     <tr>
       <td>Dépense {{ enveloppe }}</td>
+      {% with enveloppes_montants=resume_montant_group.0|dictvalue:enveloppe %}
       {% for periode in resume.1 %}
-      <td>{% firstof enveloppe_values.0|dictvalue:periode|intspace "0,00" %} &euro;</td>
+          {% with types_montants=enveloppes_montants.0|dictvalue:periode %}
+          {% for type in montants_types %}
+      <td>{{ types_montants|dictvalue:type|intspace }} &euro;</td>
+          {% endfor %}
+          {% endwith %}
       {% endfor %}
-      <td>{{ enveloppe_values.1|intspace }} &euro;</td>
+      {% for type in montants_types %}
+      <td>{{ enveloppes_montants.1|dictvalue:type|intspace }} &euro;</td>
+      {% endfor %}
+      {% endwith %}
     </tr>
     {% endfor %}
     <tr>
     <td>Total</td>
     {% for periode in resume.1 %}
-     <td>{% firstof resume_montant_type.1|dictvalue:periode|intspace "0,00" %} &euro;</td>
+        {% with total_enveloppes=resume_montant_group.1|dictvalue:periode %}
+        {% for type in montants_types %}
+     <td>{% firstof total_enveloppes|dictvalue:type|intspace "0,00" %} &euro;</td>
+        {% endfor %}
+        {% endwith %}
     {% endfor %}
+    {% endwith %}
     </tr>
-{% endwith %}
-{% endwith %}
     <tr>
-      <td class="blank_row" colspan="{{ resume.1|length|add:2 }}">&nbsp;</td>
+      <td class="blank_row" colspan="{% resume_colspan resume.1 montants_types %}">&nbsp;</td>
     </tr>
+{% endwith %}
+{% endwith %}
+{% endwith %}
 {% with resume=resume_recettes|dictvalue:year %}
-{% with resume_montant_type=resume.0|dictvalue:montant_type %}
+{% with resume_montant_group=resume.0|dictvalue:montant_group %}
+{% with montants_types=montants_types_recette.split %}
+  <thead>
     <tr>
-    {% for enveloppe, enveloppe_values in resume_montant_type.0.items %}
+      <th rowspan="2">Enveloppe</th>
+      {% for periode in resume.1 %}
+      <th colspan="{{ montants_types|length }}" style="text-align: center;">{{ periode }}</th>
+      {% endfor %}
+      <th colspan="{{ montants_types|length }}" style="text-align: center;">Total</th> 
+    </tr>
+    <tr>
+      {% for type in montants_types %}
+      <th>{{ type }}</th>
+      {% endfor %}
+      {% for type in montants_types %}
+      <th>{{ type }}</th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    {% with enveloppes='Fonctionnement Investissement' %}
+    {% for enveloppe in enveloppes.split %}
     <tr>
       <td>Recette {{ enveloppe }}</td>
+      {% with enveloppes_montants=resume_montant_group.0|dictvalue:enveloppe %}
       {% for periode in resume.1 %}
-      <td>{% firstof enveloppe_values.0|dictvalue:periode|intspace "0,00" %} &euro;</td>
+          {% with types_montants=enveloppes_montants.0|dictvalue:periode %}
+          {% for type in montants_types %}
+      <td>{{ types_montants|dictvalue:type|intspace }} &euro;</td>
+          {% endfor %}
+          {% endwith %}
       {% endfor %}
-      <td>{{ enveloppe_values.1|intspace }} &euro;</td>
+      {% for type in montants_types %}
+      <td>{{ enveloppes_montants.1|dictvalue:type|intspace }} &euro;</td>
+      {% endfor %}
+      {% endwith %}
     </tr>
     {% endfor %}
     <tr>
     <td>Total</td>
     {% for periode in resume.1 %}
-     <td>{% firstof resume_montant_type.1|dictvalue:periode|intspace "0,00" %} &euro;</td>
+        {% with total_enveloppes=resume_montant_group.1|dictvalue:periode %}
+        {% for type in montants_types %}
+     <td>{% firstof total_enveloppes|dictvalue:type|intspace "0,00" %} &euro;</td>
+        {% endfor %}
+        {% endwith %}
     {% endfor %}
+    {% endwith %}
     </tr>
-  </tbody>
-</table>
+     </tbody>
+   </table>
+{% endwith %}
 {% endwith %}
 {% endwith %}

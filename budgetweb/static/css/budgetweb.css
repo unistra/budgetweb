@@ -192,3 +192,16 @@ legend {
 td.blank_row {
     line-height:20px;
 }
+
+.resumepfi {
+    border: 1px solid black;
+}
+
+.resumepfi th {
+    text-align: center;
+}
+
+.resumepfi td {
+    border: 1px solid #000000;
+    padding: 5px;
+}

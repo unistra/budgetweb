@@ -58,5 +58,12 @@ def dictitems(value, key):
     """
     Get a dict items by its key
     """
-#    print('\tV : {} ({})\n\t{}' .format(value, key, value.get(key)))
     return value.get(key).items()
+
+
+@register.simple_tag
+def resume_colspan(periodes, montants_types):
+    """
+    Return the resume colspan
+    """
+    return (1 + (len(montants_types) * (len(periodes) + 1)))
