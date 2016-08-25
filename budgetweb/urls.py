@@ -1,11 +1,16 @@
 from django.conf.urls import patterns, include, url
 from django.conf import settings
 from django.contrib import admin
+from django.views.i18n import javascript_catalog
 
 from .views import home
 from . import views
 
 admin.autodiscover()
+
+js_info_dict = {
+    'packages': ('your.app.package',),
+}
 
 urlpatterns = [
     url(r'^accounts/login/$', 'django_cas.views.login'),
@@ -45,7 +50,7 @@ urlpatterns = [
         views.recette, name="recette"),
 
     url(r'^admin/', include(admin.site.urls)),
-
+    url(r'^jsi18n/$', javascript_catalog, js_info_dict),
 ]
 # debug toolbar for dev
 if settings.DEBUG and 'debug_toolbar'in settings.INSTALLED_APPS:
