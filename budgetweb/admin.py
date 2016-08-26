@@ -3,6 +3,9 @@
 """
 """
 
+from collections import OrderedDict
+from functools import reduce
+
 from django import forms
 from django.contrib import admin
 from django.contrib.admin.widgets import FilteredSelectMultiple
@@ -124,20 +127,42 @@ class StructureAuthorizationsForm(forms.ModelForm):
         model = StructureAuthorizations
         exclude = []
 
-    def tree(self, nodes, i=0):
-        result = []
+    def structures_tree(self, nodes):
+        """
+        Return the structures choices.
+        """
+        def get_from_dict(data_dict, map_list):
+            """get from nested dict"""
+            return reduce(lambda d, k: d[k][1], map_list, data_dict)
+
+        def tree_nodes(node_tree, i=0):
+            """get the tree nodes as a tuple"""
+            result = []
+            for node_id, node in node_tree.items():
+                result.append((node_id, '%s%s%s'\
+                    % ('--' * i, ' ' if i else '', node[0])))
+                result.extend(tree_nodes(node[1], i + 1))
+            return result
+
+        # Build the structures dict
+        dict_tree = OrderedDict()
         for node in nodes:
-            result.append(
-                (node.pk, '%s%s%s' % ('--' * i, ' ' if i else '', node.code)))
-            result.extend(self.tree(node.get_sons(), i + 1))
+            pc = node.parent.pk if node.parent else ''
+            p = list(map(int, node.path.split('/')[1:-1]))
+            if not pc:
+                dict_tree[node.pk] = (node.code, OrderedDict())
+            else:
+                f = get_from_dict(dict_tree, p)
+                f[pc][1].setdefault(node.pk, (node.code, OrderedDict()))
+
+        # Transform the structures dict into a list
+        result = tree_nodes(dict_tree)
         return result
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        nodes = Structure.objects.filter(parent__isnull=True)
-        choices = self.tree(nodes)
-        self.fields['structures'].choices = choices
+        nodes = Structure.objects.all().select_related('parent').order_by('depth', 'code')
+        self.fields['structures'].choices = self.structures_tree(nodes)
 
 
 class StructureAuthorizationsAdmin(admin.ModelAdmin):
