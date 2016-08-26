@@ -100,7 +100,7 @@ def show_tree(request, type_affichage, structid=None):
         'pfis': pfis.all(),
         'pfi_depenses': pfi_depenses, 'pfi_recettes': pfi_recettes,
         'typeAffichage': type_affichage,
-        'currentYear': get_current_year
+        'currentYear': get_current_year()
     }
 
     template = 'show_sub_tree.html' if request.is_ajax() else 'showtree.html'
@@ -127,7 +127,7 @@ def pluriannuel(request, pfiid):
 
     context = {
         'PFI': pfi, 'form': form, 'depense': depense, 'recette': recette,
-        'currentYear': get_current_year, 'years': pfi.get_years()
+        'currentYear': get_current_year(), 'years': pfi.get_years()
     }
     return render(request, 'pluriannuel.html', context)
 
@@ -168,7 +168,7 @@ def depense(request, pfiid, annee):
     context = {
         'PFI': pfi,
         'formset': formset,
-        'currentYear': get_current_year,
+        'currentYear': get_current_year(),
         'form_template': 'depense.html'
     }
     return render(request, 'comptabilite.html', context)
@@ -202,7 +202,7 @@ def recette(request, pfiid, annee):
     context = {
         'PFI': pfi,
         'formset': formset,
-        'currentYear': get_current_year,
+        'currentYear': get_current_year(),
         'form_template': 'recette.html'
     }
     return render(request, 'comptabilite.html', context)
@@ -258,7 +258,7 @@ def detailspfi(request, pfiid):
         [year_depenses, year_recettes])
 
     context = {
-        'PFI': pfi, 'currentYear': get_current_year,
+        'PFI': pfi, 'currentYear': get_current_year(),
         'listeDepense': depenses, 'listeRecette': recettes,
         'sommeDepense': sum_depenses, 'sommeRecette': sum_recettes,
         'resume_depenses': resume_depenses, 'resume_recettes': resume_recettes,
@@ -309,7 +309,7 @@ def detailscf(request, structid):
             # somme_recette += sommeRecette
 
     context = {
-        'currentYear': get_current_year,
+        'currentYear': get_current_year(),
         'listeDepense': liste_depense, 'listeRecette': liste_recette,
         'sommeDepense': somme_depense, 'sommeRecette': somme_recette,
         'cf': structparent
