@@ -27,7 +27,7 @@
     {% with enveloppes='Fonctionnement Personnel Investissement' %}
     {% for enveloppe in enveloppes.split %}
     <tr>
-      <td>Dépense {{ enveloppe }}</td>
+      <td>{{ enveloppe }}</td>
       {% with enveloppes_montants=resume_montant_group.0|dictvalue:enveloppe %}
       {% for periode in depenses.1 %}
           {% if enveloppes_montants.0 %}
@@ -63,8 +63,8 @@
       <td class="blank_row" colspan="{% resume_colspan depenses.1 recettes.1 montants_types %}">&nbsp;</td>
     </tr>
   </tbody>
-    {% endwith %}
-    {% endif %}
+{% endwith %}
+{% endif %}
 {% endwith %}
 {% endwith %}
 
@@ -93,7 +93,7 @@
     {% with enveloppes='Fonctionnement Investissement' %}
     {% for enveloppe in enveloppes.split %}
     <tr>
-      <td>Recette {{ enveloppe }}</td>
+      <td>{{ enveloppe }}</td>
       {% with enveloppes_montants=resume_montant_group.0|dictvalue:enveloppe %}
       {% for periode in recettes.1 %}
           {% if enveloppes_montants.0 %}
