@@ -4,14 +4,19 @@
 		<div style="display: inline-block;">
 			<div style="display: inline-block;"><label style="width:250px;margin-bottom:0px;">Structure de rattachement :</label>{{ PFI.structure.code }}</div>
 			<div style="display: inline-block;"><label style="width:250px;margin-bottom:0px;">Code de l'EOTP :</label>{{ PFI.eotp }}</div>
-		<div>
 		</div>
+		<div>
 			<div style="display: inline-block;"><label style="width:250px;margin-bottom:0px;">Centre de coût dérivé : </label>{{ PFI.centrecoutderive }}</div>
 			<div style="display: inline-block;"><label style="width:250px;">Centre de profit dérivé : </label>{{ PFI.centreprofitderive }}</div>
-		<div>
 		</div>
+		<div>
 			<div style="display: inline-block;"><label style="width:250px;margin-bottom:0px;">PFI fléché : </label>{% if PFI.is_fleche %}Oui{% else %}Non{% endif %}</div>
 			<div style="display: inline-block;"><label style="width:250px;margin-bottom:0px;">PFI pluriannuel : </label>{% if PFI.is_pluriannuel %}Oui{% else %}Non{% endif %}</div>
 	 </div>
+	 {% if PFI.is_pluriannuel %}
+	 <div>
+		 <h4 style="display: inline-block;margin-left:20px;"><a class="pluri-color" href="{% url 'pluriannuel' pfiid=PFI.id %}">Voir le résumé du PFI.</a></h4>
+	 </div>
+	 {% endif %}
  </div>
 </fieldset>
