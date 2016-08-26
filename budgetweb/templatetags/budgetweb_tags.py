@@ -62,8 +62,8 @@ def dictitems(value, key):
 
 
 @register.simple_tag
-def resume_colspan(periodes, montants_types):
+def resume_colspan(periodes1, periodes2, montants_types):
     """
     Return the resume colspan
     """
-    return (1 + (len(montants_types) * (len(periodes) + 1)))
+    return (1 + (len(montants_types) * (len(periodes1 or periodes2) + 1)))
