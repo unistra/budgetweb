@@ -1,15 +1,11 @@
 {% load budgetweb_tags %}
 
 <table class="resumepfi">
-{% with recettes=resume_recettes|dictvalue:year %}
 {% with depenses=resume_depenses|dictvalue:year %}
 {% with montants_types=montants_types_depense.split %}
+{% if depenses.0 %}
+{% with resume_montant_group=depenses.0|dictvalue:montant_group %}
   <thead>
-    <tr>
-      <th colspan="{% resume_colspan depenses.1 recettes.1 montants_types %}">{{ montant_group_label }}</th>
-    </tr>
-    {% if depenses.0 %}
-    {% with resume_montant_group=depenses.0|dictvalue:montant_group %}
     <tr>
       <th rowspan="2">Dépense</th>
       {% for periode in depenses.1 %}
@@ -68,12 +64,11 @@
     </tr>
   </tbody>
     {% endwith %}
-    {% else %}
-  </thead>
     {% endif %}
 {% endwith %}
 {% endwith %}
 
+{% with recettes=resume_recettes|dictvalue:year %}
 {% with montants_types=montants_types_recette.split %}
 {% if recettes.0 %}
 {% with resume_montant_group=recettes.0|dictvalue:montant_group %}
