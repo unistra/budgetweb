@@ -8,7 +8,7 @@
 				<th>Etape</th>
 				<th>Type</th>
 				{% for year in years %}
-					<th colspan="2">{{ year }}</th>
+					<th colspan="2">{{ year }} <a href="/{{ compta_type }}/{{ PFI.id }}/{{ year }}/">Détails<br>(obligatoires)</a></th>
 				{% endfor %}
 				<th>Total</th>
 			</tr>
@@ -23,7 +23,7 @@
 				{% if forloop.counter == 1 %}
 				{% for year, montant in year_values.0|itemssortbykey %}
 				<td nowrap=""><span class="pluri">{{ enveloppe }} :</span> {{ montant|intspace }} &euro;</td>
-				<td rowspan="{{ rowspan }}" class="table-details"><a href="/{{ compta_type }}/{{ PFI.id }}/{{ year }}/">Détails<br>(obligatoire)</a></td>
+				<td rowspan="{{ rowspan }}" class="table-details"><a href="/{{ compta_type }}/{{ PFI.id }}/{{ year }}/">Détails<br>(obligatoires)</a></td>
 				{% endfor %}
 				<td nowrap><span class="pluri total">Total :</span> {{ year_values.1|intspace }} &euro;</td>
 			</tr>
