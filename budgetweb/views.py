@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from itertools import chain, groupby
+from collections import OrderedDict
+from itertools import groupby
 import json
 
 from django.conf import settings
@@ -80,19 +81,24 @@ def show_tree(request, type_affichage, structid=None):
     ).filter(pk__in=authorized_structures, **queryset).order_by('code')
 
     # PFI list
-    pfis = PlanFinancement.objects.filter(structure__code=structid)\
-        .annotate(
-            sum_depense_ae=Sum('depense__montant_ae'),
-            sum_depense_cp=Sum('depense__montant_cp'),
-            sum_depense_dc=Sum('depense__montant_dc'),
-            sum_recette_ar=Sum('recette__montant_ar'),
-            sum_recette_re=Sum('recette__montant_re'),
-            sum_recette_dc=Sum('recette__montant_dc')
-        )
-
+    pfis = PlanFinancement.active.filter(structure__code=structid)\
+            .values('code', 'id')
+    pfi_depenses = {pfi['id']: pfi for pfi in pfis\
+            .annotate(
+                sum_depense_ae=Sum('depense__montant_ae'),
+                sum_depense_cp=Sum('depense__montant_cp'),
+                sum_depense_dc=Sum('depense__montant_dc'))
+    }
+    pfi_recettes = {pfi['id']: pfi for pfi in pfis\
+            .annotate(
+                sum_recette_ar=Sum('recette__montant_ar'),
+                sum_recette_re=Sum('recette__montant_re'),
+                sum_recette_dc=Sum('recette__montant_dc'))
+    }
     context = {
         'structures': structures,
-        'pfis': pfis,
+        'pfis': pfis.all(),
+        'pfi_depenses': pfi_depenses, 'pfi_recettes': pfi_recettes,
         'typeAffichage': type_affichage,
         'currentYear': get_current_year
     }

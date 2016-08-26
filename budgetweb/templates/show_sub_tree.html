@@ -1,29 +1,33 @@
 {% load budgetweb_tags %}
 {% for node in pfis %}
-	<li>
-	  <div>
-	    <span style="width:160px;" class="pfi">
-	      <a href="{% url 'detailspfi' pfiid=node.id %}">{{ node.code }}</a>
-	      {% if node.is_pluriannuel %}
-	      <a class="pluri-color" href="{% url 'pluriannuel' pfiid=node.id %}">Dép. &amp; Rec.</a>&nbsp;
-	      {% else %}
-	        <a class="depense-color" href="{% url 'depense' pfiid=node.id annee=currentYear %}">Dép.</a>&nbsp;
-	        <a class="recette-color" href="{% url 'recette' pfiid=node.id annee=currentYear %}">Rec.</a>
-	      {% endif %}
-	    </span>
-	    {% if typeAffichage == "gbcp" %}
-	       <div class="showTree">{% firstof node.sum_recette_re|intspace "0,00" %} &euro;</div>
-	       <div class="showTree">{% firstof node.sum_recette_ar|intspace "0,00" %} &euro;</div>
-	       <div class="showTree">&nbsp;</div>
-	       <div class="showTree">{% firstof node.sum_depense_cp|intspace "0,00" %} &euro;</div>
-	       <div class="showTree">{% firstof node.sum_depense_ae|intspace "0,00" %} &euro;</div>
-	     {% else %}
-	       <div class="showTree">{% firstof node.sum_recette_dc|intspace "0,00" %} &euro;</div>
-	       <div class="showTree">&nbsp;</div>
-	       <div class="showTree">{% firstof node.sum_depense_dc|intspace "0,00" %} &euro;</div>
-	    {% endif %}
-	    <ul id="{{ node.code }}"></ul>
-	  </div>
+    <li>
+      <div>
+        <span style="width:160px;" class="pfi">
+          <a href="{% url 'detailspfi' pfiid=node.id %}">{{ node.code }}</a>
+          {% if node.is_pluriannuel %}
+          <a class="pluri-color" href="{% url 'pluriannuel' pfiid=node.id %}">Dép. &amp; Rec.</a>&nbsp;
+          {% else %}
+            <a class="depense-color" href="{% url 'depense' pfiid=node.id annee=currentYear %}">Dép.</a>&nbsp;
+            <a class="recette-color" href="{% url 'recette' pfiid=node.id annee=currentYear %}">Rec.</a>
+          {% endif %}
+        </span>
+        {% with depense=pfi_depenses|dictvalue:node.id %}
+        {% with recette=pfi_recettes|dictvalue:node.id %}
+        {% if typeAffichage == "gbcp" %}
+           <div class="showTree">{% firstof recette.sum_recette_re|intspace "0,00" %} &euro;</div>
+           <div class="showTree">{% firstof recette.sum_recette_ar|intspace "0,00" %} &euro;</div>
+           <div class="showTree">&nbsp;</div>
+           <div class="showTree">{% firstof depense.sum_depense_cp|intspace "0,00" %} &euro;</div>
+           <div class="showTree">{% firstof depense.sum_depense_ae|intspace "0,00" %} &euro;</div>
+         {% else %}
+           <div class="showTree">{% firstof recette.sum_recette_dc|intspace "0,00" %} &euro;</div>
+           <div class="showTree">&nbsp;</div>
+           <div class="showTree">{% firstof depense.sum_depense_dc|intspace "0,00" %} &euro;</div>
+        {% endif %}
+        {% endwith %}
+        {% endwith %}
+        <ul id="{{ node.code }}"></ul>
+      </div>
     </li>
 {% endfor %}
 {% for structure in structures %}
