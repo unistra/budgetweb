@@ -28,7 +28,7 @@ jQuery(document).ready(function($) {
             async: false,
             // handle a successful response
             success : function(json) {
-                var $ul_cf = $("#" + cf);
+            	var $ul_cf = $("#cf" + cf);
                 // Get the parent span for the structures loaded from localStorage
                 elt = (typeof elt !== 'undefined' ? elt : $ul_cf.siblings("div").children("span.cf"));
                 elt.attr('title', 'Fermer cette branche').find(' > i').addClass('glyphicon-minus').removeClass('glyphicon-plus');
@@ -43,7 +43,7 @@ jQuery(document).ready(function($) {
             },
             // handle a non-successful response
             error : function(xhr, errmsg, err) {
-                var $ul_cf = $("#" + cf);
+                var $ul_cf = $("#cf" + cf);
                 $ul_cf.empty().addClass("errorlist").append("Une erreur empêche la liste des centres financiers de s'afficher");
             }
         });
@@ -67,21 +67,21 @@ jQuery(document).ready(function($) {
     $('.tree li.parent_li').on('click', 'span.cf', function (e) {
         var $this = $(this);
         var children = $this.parent('div').parent('li.parent_li').find('> ul li');
-        var struct_code = $this.attr('structcode');
+        var struct_id = $this.attr('structid');
         if (children.is(":visible")) {
             children.hide('fast');
             $this.attr('title', 'Ouvrir cette branche').find(' > i').addClass('glyphicon-plus').removeClass('glyphicon-minus');
 
             // Remove the closed CF and its children from localStorage
             var open_structures = getOpenStructures();
-            removeOpenStructure(open_structures, struct_code);
-            $.each(children.find("[structcode]"), function(index) {
-                removeOpenStructure(open_structures, $(this).attr('structcode'));
+            removeOpenStructure(open_structures, struct_id);
+            $.each(children.find("[structid]"), function(index) {
+                removeOpenStructure(open_structures, $(this).attr('structid'));
             });
             setOpenStructures(open_structures);
         } else {
             children.show('fast');
-            loadChildrenCF(struct_code, $this);
+            loadChildrenCF(struct_id, $this);
         }
         e.stopPropagation();
     });

@@ -34,7 +34,7 @@
     {% with montants=structure.montants.0 %}
     <li class="parent_li">
       <div>
-        <span style="width:auto;" class="cf" structcode="{{ structure.code }}" title="Ouvrir cette branche">
+        <span style="width:auto;" class="cf" structid="{{ structure.id }}" title="Ouvrir cette branche">
           <i class="glyphicon glyphicon-plus"></i>{{ structure.code }}{% if structure.depth > 2 %}</span> - <a href="{% url 'detailscf' structid=structure.id %}">Détails</a>{% endif %}
 
         {% if typeAffichage == "gbcp" %}
@@ -49,7 +49,7 @@
            <div class="showTree">{% firstof montants.depense_montant_dc|intspace "0,00" %} &euro;</div>
          {% endif %}
       </div>
-      <ul id="{{ structure.code }}"></ul>
+      <ul id="cf{{ structure.id }}"></ul>
     </li>
     {% endwith %}
 {% endfor %}

@@ -69,35 +69,40 @@ def api_get_decalage_tresorerie_by_id(request, id_naturecomptabledepense):
 
 
 @login_required
-def show_tree(request, type_affichage, structid=None):
+def show_tree(request, type_affichage, structid=0):
     # Authorized structures list
-    queryset = {'parent__code': structid} if structid else {'parent': None}
-    authorized_structures = get_authorized_structures_ids(
-        request.user, hierarchy=True)
+    queryset = {'parent__id': structid} if structid else {'parent': None}
+    authorized_structures, hierarchy_structures =\
+        get_authorized_structures_ids(request.user)
     structures = Structure.objects.prefetch_related(Prefetch(
         'structuremontant_set',
         queryset=StructureMontant.active_period.all(),
         to_attr='montants')
-    ).filter(pk__in=authorized_structures, **queryset).order_by('code')
+    ).filter(pk__in=hierarchy_structures, **queryset).order_by('code')
 
-    # PFI list
-    pfis = PlanFinancement.active.filter(structure__code=structid)\
-            .values('code', 'id')
-    pfi_depenses = {pfi['id']: pfi for pfi in pfis\
-            .annotate(
-                sum_depense_ae=Sum('depense__montant_ae'),
-                sum_depense_cp=Sum('depense__montant_cp'),
-                sum_depense_dc=Sum('depense__montant_dc'))
-    }
-    pfi_recettes = {pfi['id']: pfi for pfi in pfis\
-            .annotate(
-                sum_recette_ar=Sum('recette__montant_ar'),
-                sum_recette_re=Sum('recette__montant_re'),
-                sum_recette_dc=Sum('recette__montant_dc'))
-    }
+    # if the PFI's strcture is in the authorized structures
+    if int(structid) in authorized_structures:
+        pfis = PlanFinancement.active.filter(structure__id=structid)\
+                .values('code', 'id')
+        pfi_depenses = {pfi['id']: pfi for pfi in pfis\
+                .annotate(
+                    sum_depense_ae=Sum('depense__montant_ae'),
+                    sum_depense_cp=Sum('depense__montant_cp'),
+                    sum_depense_dc=Sum('depense__montant_dc'))
+        }
+        pfi_recettes = {pfi['id']: pfi for pfi in pfis\
+                .annotate(
+                    sum_recette_ar=Sum('recette__montant_ar'),
+                    sum_recette_re=Sum('recette__montant_re'),
+                    sum_recette_dc=Sum('recette__montant_dc'))
+        }
+        pfis = pfis.all()
+    else:
+        pfis = pfi_depenses = pfi_recettes = []
+
     context = {
         'structures': structures,
-        'pfis': pfis.all(),
+        'pfis': pfis,
         'pfi_depenses': pfi_depenses, 'pfi_recettes': pfi_recettes,
         'typeAffichage': type_affichage,
         'currentYear': get_current_year()
@@ -268,6 +273,7 @@ def detailspfi(request, pfiid):
 
 
 @login_required
+@is_authorized_structure
 def detailscf(request, structid):
     structparent = Structure.objects.get(id=structid)
     liste_structure = structparent.get_children()
