@@ -78,7 +78,7 @@ class DomaineFonctionnel(models.Model):
     active = ActiveManager()
 
     def __str__(self):
-        return '{0.label_court}'.format(self)
+        return '{0.label.code} - {0.label_court}'.format(self)
 
 
 class Structure(models.Model):
