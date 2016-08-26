@@ -234,17 +234,18 @@ class PlanFinancement(models.Model):
                     mt = montant_type(field_name)
                     ct = compta_types[mt]
                     type_dict = ct.setdefault(
-                        field_name, [{}, dict.fromkeys(years, Decimal(0))])
+                        field_name, [{}, dict.fromkeys(years, None)])
                     nature_dict = type_dict[0].setdefault(
-                        c['enveloppe'], [dict.fromkeys(years, Decimal(0)), Decimal(0)])
+                        c['enveloppe'], [dict.fromkeys(years, None), None])
                     nature_dict[0][annee] = montant
                     nature_dict[0][annee] = montant
                     # Total per enveloppe
-                    nature_dict[1] += montant
+                    nature_dict[1] = (nature_dict[1] or Decimal(0)) + montant
 
                     # Total per type
-                    type_dict[1].setdefault(annee, Decimal(0))
-                    type_dict[1][annee] += montant
+                    type_dict[1].setdefault(annee, None)
+                    type_dict[1][annee] =\
+                        (type_dict[1][annee] or Decimal(0)) + montant
             types.append(compta_types)
         return types
 
