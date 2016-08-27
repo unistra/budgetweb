@@ -18,18 +18,18 @@ class UtilsTest(TestCase):
     def test_get_authorized_structures_ids(self):
         user = User.objects.get(pk=100)
         self.assertSetEqual(
-            get_authorized_structures_ids(user, hierarchy=False), {4})
+            get_authorized_structures_ids(user)[0], {4})
 
     def test_get_authorized_structures_ids_with_hierarchy(self):
         user = User.objects.get(pk=100)
         self.assertSetEqual(
-            get_authorized_structures_ids(user, hierarchy=True), {4, 1})
+            get_authorized_structures_ids(user)[1], {4, 1})
 
     def test_get_authorized_structures_superuser(self):
         admin_user = User.objects.create_superuser(
             'admin', email='admin@unistra.fr', password='pass')
         active_structures = Structure.objects.filter(is_active=True)
         self.assertEqual(
-            len(get_authorized_structures_ids(admin_user, hierarchy=False)),
+            len(get_authorized_structures_ids(admin_user)[0]),
             len(active_structures)
         )

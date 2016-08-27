@@ -37,6 +37,7 @@ class RecetteFormTest(TestCase):
             'annee': self.periode.annee,
             'periodebudget': self.periode,
             'pfi': self.pfi,
+            'is_dfi_member_or_admin': True,
         }
 
         form = RecetteForm(data=post_data, **form_kwargs)
@@ -54,6 +55,7 @@ class RecetteFormTest(TestCase):
             'annee': self.periode.annee,
             'periodebudget': self.periode,
             'pfi': self.pfi,
+            'is_dfi_member_or_admin': True,
         }
 
         form = RecetteForm(instance=recette, **form_kwargs)
@@ -75,7 +77,7 @@ class DepenseFormTest(TestCase):
         self.domaine = DomaineFonctionnel.objects.first()
         self.pfi = PlanFinancement.objects.get(structure__code='ECP')
         self.naturecomptable = NatureComptableDepense.objects.get(
-            code_nature_comptable='9DFLU', is_fleche=self.pfi.is_fleche)
+            code_nature_comptable='9DLOC', is_fleche=self.pfi.is_fleche)
 
     def test_add_depense(self):
         post_data = {
@@ -94,6 +96,7 @@ class DepenseFormTest(TestCase):
             'annee': self.periode.annee,
             'periodebudget': self.periode,
             'pfi': self.pfi,
+            'is_dfi_member_or_admin': True,
         }
 
         form = DepenseForm(data=post_data, **form_kwargs)
@@ -111,6 +114,7 @@ class DepenseFormTest(TestCase):
             'annee': self.periode.annee,
             'periodebudget': self.periode,
             'pfi': self.pfi,
+            'is_dfi_member_or_admin': True,
         }
 
         form = DepenseForm(instance=depense, **form_kwargs)

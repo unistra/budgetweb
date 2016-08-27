@@ -49,7 +49,8 @@ class DomaineFonctionnelModelTest(TestCase):
 
     def test_str(self):
         domaine = DomaineFonctionnel.objects.get(pk=1)
-        self.assertEqual(str(domaine), 'Form. Initial et continue Licence')
+        self.assertEqual(
+            str(domaine), 'D101 - Form. Initial et continue Licence')
 
 
 class StructureModelTest(TestCase):
@@ -150,11 +151,13 @@ class PlanFinancementModelTest(TestCase):
     def setUp(self):
         self.structure_ecp = Structure.objects.get(code='ECP')
         self.pfi_ecp = PlanFinancement.objects.get(
-            code='NA', structure=self.structure_ecp)
+            code='NA', structure__code='ECP')
         self.periode = PeriodeBudget.objects.first()
         self.annee = self.periode.annee
-        self.naturecomptabledepense = NatureComptableDepense.objects.get(pk=30)
-        self.naturecomptablerecette = NatureComptableRecette.objects.get(pk=30)
+        self.naturecomptabledepense = NatureComptableDepense.objects.get(
+            code_nature_comptable='9DLOC', is_fleche=self.pfi_ecp.is_fleche)
+        self.naturecomptablerecette = NatureComptableRecette.objects.get(
+            code_nature_comptable='9RSCS', is_fleche=self.pfi_ecp.is_fleche)
         self.domaine = DomaineFonctionnel.objects.get(pk=1)
 
     def test_str(self):
@@ -236,8 +239,10 @@ class ComptabiliteModelTest(TestCase):
             code='NA', structure=self.structure_ecp1)
         self.periode = PeriodeBudget.objects.first()
         self.annee = self.periode.annee
-        self.naturecomptabledepense = NatureComptableDepense.objects.get(pk=30)
-        self.naturecomptablerecette = NatureComptableRecette.objects.get(pk=30)
+        self.naturecomptabledepense = NatureComptableDepense.objects.get(
+            code_nature_comptable='9DLOC', is_fleche=self.pfi_ecp.is_fleche)
+        self.naturecomptablerecette = NatureComptableRecette.objects.get(
+            code_nature_comptable='9RSCS', is_fleche=self.pfi_ecp.is_fleche)
         self.domaine = DomaineFonctionnel.objects.get(pk=1)
         self.depense_ecp = Depense.objects.create(
             pfi=self.pfi_ecp, structure=self.structure_ecp, annee=self.annee,

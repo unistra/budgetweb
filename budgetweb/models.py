@@ -78,7 +78,7 @@ class DomaineFonctionnel(models.Model):
     active = ActiveManager()
 
     def __str__(self):
-        return '{0.label.code} - {0.label_court}'.format(self)
+        return '{0.code} - {0.label_court}'.format(self)
 
 
 class Structure(models.Model):
@@ -494,9 +494,11 @@ class Depense(Comptabilite):
         super().delete(**kwargs)
 
     def save(self, *args, **kwargs):
-        if not self.naturecomptabledepense.is_decalage_tresorerie:
-            if self.montant_ae != self.montant_cp:
-                raise ValidationError({'montant_ae': 'Le décalagage de trésorerie n\'est pas possible sur cette nature comptable.'})
+        if not self.naturecomptabledepense.is_decalage_tresorerie\
+                and self.montant_ae != self.montant_cp:
+            raise ValidationError({
+                'montant_ae': 'Le décalagage de trésorerie n\'est pas '
+                'possible sur cette nature comptable.'})
         kwargs.update({'comptabilite_type': 'depense'})
         super().save(**kwargs)
 

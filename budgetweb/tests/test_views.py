@@ -90,7 +90,7 @@ class ViewsTest(TestCase):
         self.assertEqual(len(response.context['structures']), 1)
 
     def test_show_subtree(self):
-        view_url = '/showtree/gbcp/ETAB/'
+        view_url = '/showtree/gbcp/1/'
         self.client.login(username='admin', password='pass')
         response = self.client.get(
             view_url, {}, HTTP_X_REQUESTED_WITH='XMLHttpRequest', follow=True)
@@ -138,7 +138,7 @@ class ViewsTest(TestCase):
         view_url = '/depense/26/2017/'
 
         naturecomptable = NatureComptableDepense.objects.get(
-            code_nature_comptable='9DFLU', is_fleche=self.pfi_ecp.is_fleche)
+            code_nature_comptable='9DLOC', is_fleche=self.pfi_ecp.is_fleche)
 
         data = {
             'form-TOTAL_FORMS': '1',
@@ -205,8 +205,10 @@ class ViewsTest(TestCase):
     def test_detailspfi(self):
         view_url = '/detailspfi/%s/' % self.pfi_ecp.pk
 
-        naturecomptabledepense = NatureComptableDepense.objects.get(pk=30)
-        naturecomptablerecette = NatureComptableRecette.objects.get(pk=30)
+        naturecomptabledepense = NatureComptableDepense.objects.get(
+            code_nature_comptable='9DLOC', is_fleche=self.pfi_ecp.is_fleche)
+        naturecomptablerecette = NatureComptableRecette.objects.get(
+            code_nature_comptable='9RSCS', is_fleche=self.pfi_ecp.is_fleche)
         Depense.objects.create(
             pfi=self.pfi_ecp, structure=self.structure_ecp, annee=self.annee,
             periodebudget=self.periode, domainefonctionnel=self.domaine,
@@ -237,13 +239,13 @@ class ViewsTest(TestCase):
 
         self.client.login(username='admin', password='pass')
         response = self.client.get(view_url)
-        depense_sum = response.context['sommeDepense']
-        recette_sum = response.context['sommeRecette']
+        depense_sum = response.context['sommeDepense'][self.annee][0]
+        recette_sum = response.context['sommeRecette'][self.annee][0]
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(depense_sum['sommeDC'], Decimal(11))
-        self.assertEqual(depense_sum['sommeCP'], Decimal(22))
-        self.assertEqual(depense_sum['sommeAE'], Decimal(33))
-        self.assertEqual(recette_sum['sommeDC'], Decimal(44))
-        self.assertEqual(recette_sum['sommeRE'], Decimal(55))
-        self.assertEqual(recette_sum['sommeAR'], Decimal(66))
+        self.assertEqual(depense_sum['sum_dc'], Decimal(11))
+        self.assertEqual(depense_sum['sum_cp'], Decimal(22))
+        self.assertEqual(depense_sum['sum_ae'], Decimal(33))
+        self.assertEqual(recette_sum['sum_dc'], Decimal(44))
+        self.assertEqual(recette_sum['sum_re'], Decimal(55))
+        self.assertEqual(recette_sum['sum_ar'], Decimal(66))
