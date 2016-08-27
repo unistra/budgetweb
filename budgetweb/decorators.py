@@ -32,10 +32,12 @@ def is_authorized_structure(func):
         try:
             user = request.user
             is_authorized = False
-            pfi = PlanFinancement.objects.get(pk=kwargs.get('pfiid'))
-            user_structures = []
+            structure_id = int(kwargs.get('structid', 0))
+            if 'pfiid' in kwargs:
+                pfi = PlanFinancement.objects.get(pk=kwargs.get('pfiid'))
+                structure_id = pfi.structure_id
             user_structures = get_authorized_structures_ids(user)[0]
-            is_authorized = pfi.structure.pk in user_structures
+            is_authorized = structure_id in user_structures
             if not is_authorized:
                 raise StructureUnauthorizedException
         except:

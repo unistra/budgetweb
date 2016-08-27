@@ -8,7 +8,8 @@ from django.test.client import Client
 
 from budgetweb.decorators import is_ajax_get, is_authorized_structure
 from budgetweb.exceptions import StructureUnauthorizedException
-from budgetweb.models import PlanFinancement, StructureAuthorizations
+from budgetweb.models import (PlanFinancement, Structure,
+                              StructureAuthorizations)
 
 
 class BaseDecoratorsTest(TestCase):
@@ -16,7 +17,7 @@ class BaseDecoratorsTest(TestCase):
     fixtures = ['tests/structures.json', 'tests/planfinancements.json',
                 'tests/structureauthorizations.json']
 
-    def test_is_authorized_structure(self):
+    def test_is_authorized_structure_by_pfiid(self):
         # The save method is not called in the fixtures
         StructureAuthorizations.objects.get(pk=1).save()
 
@@ -25,7 +26,21 @@ class BaseDecoratorsTest(TestCase):
         function = Mock()
         function.__name__ = 'mock'
         decorated_fuction = is_authorized_structure(function)
-        decorated_fuction(request, pfiid=56)  # PAIE7R101
+        pfi = PlanFinancement.objects.get(structure__code='PAIE7R101')
+        decorated_fuction(request, pfiid=pfi.pk)
+        self.assertTrue(function.called)
+
+    def test_is_authorized_structure_by_structid(self):
+        # The save method is not called in the fixtures
+        StructureAuthorizations.objects.get(pk=1).save()
+
+        request = HttpRequest()
+        request.user = User.objects.get(pk=100)
+        function = Mock()
+        function.__name__ = 'mock'
+        decorated_fuction = is_authorized_structure(function)
+        structure = Structure.objects.get(code='PAIE7R101')
+        decorated_fuction(request, structid=structure.pk)
         self.assertTrue(function.called)
 
     def test_is_unauthorized_structure(self):
@@ -34,7 +49,20 @@ class BaseDecoratorsTest(TestCase):
         function = Mock()
         function.__name__ = 'mock'
         decorated_fuction = is_authorized_structure(function)
-        response = decorated_fuction(request, pfiid=26)  # ECP
+        pfi = PlanFinancement.objects.get(structure__code='ECP')
+        response = decorated_fuction(request, pfiid=pfi.pk)
+        self.assertFalse(function.called)
+        self.assertEqual(
+            response.content,
+            StructureUnauthorizedException().message.encode('utf-8'))
+
+    def test_is_unauthorized_structure_no_parameters(self):
+        request = HttpRequest()
+        request.user = User.objects.get(pk=100)
+        function = Mock()
+        function.__name__ = 'mock'
+        decorated_fuction = is_authorized_structure(function)
+        response = decorated_fuction(request)
         self.assertFalse(function.called)
         self.assertEqual(
             response.content,
