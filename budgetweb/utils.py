@@ -5,7 +5,7 @@ from budgetweb.models import PeriodeBudget, Structure, StructureAuthorizations
 
 # TODO : Ajouter une exception si jamais pas de période ouverte
 def get_current_year():
-    return PeriodeBudget.objects.filter(is_active=True).first().annee
+    return PeriodeBudget.active.first().annee
 
 
 def get_authorized_structures_ids(user):

@@ -1,3 +1,4 @@
+from collections import OrderedDict
 import datetime
 from decimal import Decimal
 
@@ -20,6 +21,9 @@ class RecetteFormTest(TestCase):
         self.pfi = PlanFinancement.objects.get(structure__code='ECP')
         self.naturecomptable = NatureComptableRecette.objects.get(
             code_nature_comptable='9RSCS', is_fleche=self.pfi.is_fleche)
+        self.natures = OrderedDict(((n.pk, n) for n in\
+            NatureComptableRecette.objects.filter(
+                is_fleche=self.pfi.is_fleche)))
 
     def test_add_recette(self):
         post_data = {
@@ -38,6 +42,7 @@ class RecetteFormTest(TestCase):
             'periodebudget': self.periode,
             'pfi': self.pfi,
             'is_dfi_member_or_admin': True,
+            'natures': self.natures,
         }
 
         form = RecetteForm(data=post_data, **form_kwargs)
@@ -56,6 +61,7 @@ class RecetteFormTest(TestCase):
             'periodebudget': self.periode,
             'pfi': self.pfi,
             'is_dfi_member_or_admin': True,
+            'natures': self.natures,
         }
 
         form = RecetteForm(instance=recette, **form_kwargs)
@@ -78,6 +84,11 @@ class DepenseFormTest(TestCase):
         self.pfi = PlanFinancement.objects.get(structure__code='ECP')
         self.naturecomptable = NatureComptableDepense.objects.get(
             code_nature_comptable='9DLOC', is_fleche=self.pfi.is_fleche)
+        self.natures = OrderedDict(((n.pk, n) for n in\
+            NatureComptableDepense.objects.filter(
+                is_fleche=self.pfi.is_fleche)))
+        self.domaines = [
+            (d.pk, str(d)) for d in DomaineFonctionnel.active.all()]
 
     def test_add_depense(self):
         post_data = {
@@ -97,6 +108,8 @@ class DepenseFormTest(TestCase):
             'periodebudget': self.periode,
             'pfi': self.pfi,
             'is_dfi_member_or_admin': True,
+            'natures': self.natures,
+            'domaines': self.domaines,
         }
 
         form = DepenseForm(data=post_data, **form_kwargs)
@@ -115,6 +128,8 @@ class DepenseFormTest(TestCase):
             'periodebudget': self.periode,
             'pfi': self.pfi,
             'is_dfi_member_or_admin': True,
+            'natures': self.natures,
+            'domaines': self.domaines
         }
 
         form = DepenseForm(instance=depense, **form_kwargs)

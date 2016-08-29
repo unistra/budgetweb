@@ -9,14 +9,13 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import F, Prefetch, Sum
 from django.forms.models import modelformset_factory
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import (get_object_or_404, redirect, render,
-                              render_to_response)
+from django.shortcuts import (get_object_or_404, redirect, render)
 
 from .decorators import is_ajax_get, is_authorized_structure
 from .forms import DepenseForm, PlanFinancementPluriForm, RecetteForm
-from .models import (Depense, NatureComptableDepense, NatureComptableRecette,
-                     PeriodeBudget, PlanFinancement, Recette, Structure,
-                     StructureAuthorizations, StructureMontant)
+from .models import (Depense, DomaineFonctionnel, NatureComptableDepense,
+                     NatureComptableRecette, PeriodeBudget, PlanFinancement,
+                     Recette, Structure, StructureMontant)
 from .utils import get_authorized_structures_ids, get_current_year
 from decimal import Decimal
 
@@ -148,22 +147,31 @@ def modelformset_factory_with_kwargs(cls, **formset_kwargs):
 @login_required
 @is_authorized_structure
 def depense(request, pfiid, annee):
+    # Values for the form initialization
     pfi = PlanFinancement.objects.get(pk=pfiid)
-    periodebudget = PeriodeBudget.objects.filter(is_active=True).first()
+    periodebudget = PeriodeBudget.active.first()
     is_dfi_member = request.user.groups.filter(name=settings.DFI_GROUP_NAME).exists()
     is_dfi_member_or_admin = is_dfi_member or request.user.is_superuser
+    natures = OrderedDict(((n.pk, n) for n in\
+        NatureComptableDepense.objects.filter(is_fleche=pfi.is_fleche)))
+    domaines = [(d.pk, str(d)) for d in DomaineFonctionnel.active.all()]
+
     DepenseFormSet = modelformset_factory(
         Depense,
-        form=modelformset_factory_with_kwargs(DepenseForm, pfi=pfi,
-                                              periodebudget=periodebudget,
-                                              annee=annee,
-                                              is_dfi_member_or_admin=is_dfi_member_or_admin),
+        form=modelformset_factory_with_kwargs(
+            DepenseForm, pfi=pfi, periodebudget=periodebudget, annee=annee,
+            is_dfi_member_or_admin=is_dfi_member_or_admin, natures=natures,
+            domaines=domaines
+        ),
         exclude=[],
         extra=1,
         can_delete=True
     )
-    formset = DepenseFormSet(queryset=Depense.objects.filter(pfi=pfi,
-                                                             annee=annee).order_by('naturecomptabledepense__priority', '-montant_ae'))
+    formset = DepenseFormSet(queryset=Depense.objects.filter(
+        pfi=pfi,
+        annee=annee
+    ).order_by('naturecomptabledepense__priority', '-montant_ae'))
+
     if request.method == "POST":
         formset = DepenseFormSet(request.POST)
         if formset.is_valid():
@@ -173,7 +181,7 @@ def depense(request, pfiid, annee):
     context = {
         'PFI': pfi,
         'formset': formset,
-        'currentYear': get_current_year(),
+        'currentYear': periodebudget.annee,
         'form_template': 'depense.html'
     }
     return render(request, 'comptabilite.html', context)
@@ -182,22 +190,28 @@ def depense(request, pfiid, annee):
 @login_required
 @is_authorized_structure
 def recette(request, pfiid, annee):
+    # Values for the form initialization
     pfi = PlanFinancement.objects.get(pk=pfiid)
-    periodebudget = PeriodeBudget.objects.filter(is_active=True).first()
+    periodebudget = PeriodeBudget.active.first()
     is_dfi_member = request.user.groups.filter(name=settings.DFI_GROUP_NAME).exists()
     is_dfi_member_or_admin = is_dfi_member or request.user.is_superuser
+    natures = OrderedDict(((n.pk, n) for n in\
+        NatureComptableRecette.objects.filter(is_fleche=pfi.is_fleche)))
+
     RecetteFormSet = modelformset_factory(
         Recette,
-        form=modelformset_factory_with_kwargs(RecetteForm, pfi=pfi,
-                                              periodebudget=periodebudget,
-                                              annee=annee,
-                                              is_dfi_member_or_admin=is_dfi_member_or_admin),
+        form=modelformset_factory_with_kwargs(
+            RecetteForm, pfi=pfi, periodebudget=periodebudget, annee=annee,
+            is_dfi_member_or_admin=is_dfi_member_or_admin, natures=natures
+        ),
         exclude=[],
         extra=1,
         can_delete=True
     )
-    formset = RecetteFormSet(queryset=Recette.objects.filter(pfi=pfi,
-                                                             annee=annee).order_by('naturecomptablerecette__priority', '-montant_ar'))
+    formset = RecetteFormSet(queryset=Recette.objects.filter(
+        pfi=pfi, annee=annee
+    ).order_by('naturecomptablerecette__priority', '-montant_ar'))
+
     if request.method == "POST":
         formset = RecetteFormSet(request.POST)
         if formset.is_valid():
@@ -207,7 +221,7 @@ def recette(request, pfiid, annee):
     context = {
         'PFI': pfi,
         'formset': formset,
-        'currentYear': get_current_year(),
+        'currentYear': periodebudget.annee,
         'form_template': 'recette.html'
     }
     return render(request, 'comptabilite.html', context)
@@ -221,12 +235,14 @@ def detailspfi(request, pfiid):
 
     depenses = Depense.objects.filter(
         pfi=pfi).prefetch_related(
-            'naturecomptabledepense', 'periodebudget', 'pfi', 'pfi__structure')\
+            'naturecomptabledepense', 'periodebudget', 'pfi',
+            'domainefonctionnel', 'pfi__structure')\
         .annotate(enveloppe=F('naturecomptabledepense__enveloppe'))\
         .order_by('annee', 'naturecomptabledepense__priority')
     recettes = Recette.objects.filter(
         pfi=pfi).prefetch_related(
-            'naturecomptablerecette', 'periodebudget', 'pfi', 'pfi__structure')\
+            'naturecomptablerecette', 'periodebudget', 'pfi',
+            'pfi__structure')\
         .annotate(enveloppe=F('naturecomptablerecette__enveloppe'))\
         .order_by('annee', 'naturecomptablerecette__priority')
 
@@ -276,47 +292,40 @@ def detailspfi(request, pfiid):
 @is_authorized_structure
 def detailscf(request, structid):
     structparent = Structure.objects.get(id=structid)
-    liste_structure = structparent.get_children()
+    liste_structure = list(structparent.get_unordered_children())
     liste_structure.insert(0, structparent)
-    liste_depense = []
-    liste_recette = []
-    somme_depense = { 'sommeAE' : Decimal(0.00), 'sommeCP': Decimal(0.00), 'sommeDC': Decimal(0.00)}
-    somme_recette = { 'sommeAR' : Decimal(0.00), 'sommeRE': Decimal(0.00), 'sommeDC': Decimal(0.00)}
-    for struct in liste_structure:
-        liste_pfi = PlanFinancement.objects.filter(structure=struct.pk)
-        for pfi in liste_pfi:
-            listeDepense = Depense.objects.filter(
-                        pfi=pfi).prefetch_related('naturecomptabledepense')\
-                                .prefetch_related('periodebudget')\
-                                .prefetch_related('pfi')\
-                                .prefetch_related('pfi__structure')\
-                                .order_by('naturecomptabledepense__priority')
-            listeRecette = Recette.objects.filter(
-                        pfi=pfi).prefetch_related('naturecomptablerecette')\
-                                .prefetch_related('periodebudget')\
-                                .prefetch_related('pfi')\
-                                .prefetch_related('pfi__structure')\
-                                .order_by('naturecomptablerecette__priority')
-            sommeDepense = listeDepense.aggregate(sommeDC=Sum('montant_dc'),
-                                                  sommeAE=Sum('montant_ae'),
-                                                  sommeCP=Sum('montant_cp'))
-            sommeRecette = listeRecette.aggregate(sommeDC=Sum('montant_dc'),
-                                                  sommeAR=Sum('montant_ar'),
-                                                  sommeRE=Sum('montant_re'))
-            for key, values in sommeDepense.items():
-                if values is not None:
-                    somme_depense[key] += Decimal(values)
-            for key, values in sommeRecette.items():
-                if values is not None:
-                    somme_recette[key] += Decimal(values)
-            liste_depense += listeDepense
-            liste_recette += listeRecette
-            # somme_depense += sommeDepense
-            # somme_recette += sommeRecette
+    structure_ids = [s.pk for s in liste_structure]
+    somme_depense = {'sommeAE': Decimal(0.00), 'sommeCP': Decimal(0.00), 'sommeDC': Decimal(0.00)}
+    somme_recette = {'sommeAR': Decimal(0.00), 'sommeRE': Decimal(0.00), 'sommeDC': Decimal(0.00)}
+
+    listeDepense = Depense.objects.filter(pfi__structure__in=structure_ids)\
+        .prefetch_related(
+            'naturecomptabledepense', 'periodebudget', 'pfi',
+            'domainefonctionnel', 'pfi__structure')\
+        .order_by('naturecomptabledepense__priority')
+    listeRecette = Recette.objects.filter(pfi__structure__in=structure_ids)\
+        .prefetch_related(
+            'naturecomptablerecette', 'periodebudget', 'pfi',
+            'pfi__structure')\
+        .order_by('naturecomptablerecette__priority')
+
+    sommeDepense = listeDepense.aggregate(sommeDC=Sum('montant_dc'),
+                                          sommeAE=Sum('montant_ae'),
+                                          sommeCP=Sum('montant_cp'))
+    sommeRecette = listeRecette.aggregate(sommeDC=Sum('montant_dc'),
+                                      sommeAR=Sum('montant_ar'),
+                                      sommeRE=Sum('montant_re'))
+
+    for key, values in sommeDepense.items():
+        if values:
+            somme_depense[key] += Decimal(values)
+    for key, values in sommeRecette.items():
+        if values:
+            somme_recette[key] += Decimal(values)
 
     context = {
         'currentYear': get_current_year(),
-        'listeDepense': liste_depense, 'listeRecette': liste_recette,
+        'listeDepense': listeDepense, 'listeRecette': listeRecette,
         'sommeDepense': somme_depense, 'sommeRecette': somme_recette,
         'cf': structparent
     }

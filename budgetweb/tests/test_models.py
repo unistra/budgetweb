@@ -91,7 +91,7 @@ class StructureModelTest(TestCase):
             structure.path,
             '/%s/%s/%s' % (self.etab.pk, self.paie.pk, self.paie7din.pk))
 
-    def test_get_ancestors(self): 
+    def test_get_ancestors(self):
         self.assertListEqual(self.etab.get_ancestors(), [])
         self.assertListEqual(self.paie.get_ancestors(), [self.etab])
         self.assertListEqual(
@@ -100,16 +100,31 @@ class StructureModelTest(TestCase):
             self.paie7ecp.get_ancestors(), [self.paie, self.etab])
         self.assertListEqual(self.scx.get_ancestors(), [self.etab])
 
-    def test_get_children(self): 
+    def test_get_children(self):
         self.assertListEqual(self.etab.get_children(),
-            [self.paie, self.paie7din, self.paie7ecp , self.scx])
+            [self.paie, self.paie7din, self.paie7ecp, self.scx])
         self.assertListEqual(
             self.paie.get_children(), [self.paie7din, self.paie7ecp])
         self.assertListEqual(self.paie7din.get_children(), [])
         self.assertListEqual(self.paie7ecp.get_children(), [])
         self.assertListEqual(self.scx.get_children(), [])
 
-    def test_get_sons(self): 
+    def test_get_unordered_children(self):
+        etab_children = self.etab.get_unordered_children()
+        self.assertIn(self.paie, etab_children)
+        self.assertIn(self.paie7din, etab_children)
+        self.assertIn(self.paie7ecp, etab_children)
+        self.assertIn(self.scx, etab_children)
+
+        paie_children = self.paie.get_unordered_children()
+        self.assertIn(self.paie7din, paie_children)
+        self.assertIn(self.paie7ecp, paie_children)
+
+        self.assertFalse(self.paie7din.get_unordered_children())
+        self.assertFalse(self.paie7ecp.get_unordered_children())
+        self.assertFalse(self.scx.get_unordered_children())
+
+    def test_get_sons(self):
         self.assertListEqual(list(self.etab.get_sons()), [self.paie, self.scx])
         self.assertListEqual(
             list(self.paie.get_sons()), [self.paie7din, self.paie7ecp])
@@ -117,7 +132,7 @@ class StructureModelTest(TestCase):
         self.assertEqual(self.paie7ecp.get_sons().count(), 0)
         self.assertEqual(self.scx.get_sons().count(), 0)
 
-    def test_full_path(self): 
+    def test_full_path(self):
         self.assertEqual(self.etab.full_path, '/%s' % self.etab.pk)
         self.assertEqual(
             self.paie.full_path, '/%s/%s' % (self.etab.pk, self.paie.pk))

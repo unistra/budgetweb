@@ -107,9 +107,9 @@
             <td>{{ recette.naturecomptablerecette.label_nature_comptable }}</td>
             <td>{{ recette.naturecomptablerecette.code_compte_budgetaire }}</td>
             <td>{{ recette.naturecomptablerecette.code_fonds }}</td>
-            <td class="montant" nowrap>{{ recette.montant_dc|intspace }} &euro;</td>
             <td class="montant" nowrap>{{ recette.montant_ar|intspace }} &euro;</td>
             <td class="montant" nowrap>{{ recette.montant_re|intspace }} &euro;</td>
+            <td class="montant" nowrap>{{ recette.montant_dc|intspace }} &euro;</td>
             <td align="center">
               {% if recette.commentaire %}
                 <a href="#">

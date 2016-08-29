@@ -6,7 +6,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
 from django.db import models, transaction
-from django.db.models import F, Sum
+from django.db.models import F, Q, Sum
 from django.utils.translation import ugettext_lazy as _
 
 from .decorators import require_lock
@@ -122,6 +122,10 @@ class Structure(models.Model):
             children.append(sons)
             children.extend(sons.get_children())
         return children
+
+    def get_unordered_children(self):
+        return Structure.objects.filter(
+            Q(path__contains='/%s/' % self.pk) | Q(parent_id=self.pk))
 
     def get_sons(self):
         return self.fils.filter(is_active=True).order_by('code')

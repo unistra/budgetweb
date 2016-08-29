@@ -1,10 +1,6 @@
 from django import forms
-from django.forms.formsets import BaseFormSet, DELETION_FIELD_NAME
-from django.forms.models import modelformset_factory, BaseModelFormSet
-from django.http import Http404, HttpResponse
 
-from .models import (Depense, NatureComptableDepense, NatureComptableRecette,
-                     PlanFinancement, Recette)
+from .models import (Depense, PlanFinancement, Recette)
 
 
 class RecetteForm(forms.ModelForm):
@@ -45,24 +41,22 @@ class RecetteForm(forms.ModelForm):
         periodebudget = kwargs.pop('periodebudget')
         annee = kwargs.pop('annee')
         is_dfi_member_or_admin = kwargs.pop('is_dfi_member_or_admin')
+        natures = kwargs.pop('natures')
         super().__init__(*args, **kwargs)
 
         instance = self.instance
-        is_fleche = pfi.is_fleche
-        structure = pfi.structure
-        natures = NatureComptableRecette.active.filter(is_fleche=is_fleche)
 
         # Fields initialization
-        enveloppes = natures.values_list('enveloppe', flat=True)
+        enveloppes = {n.enveloppe for n in natures.values()}
         enveloppe_choices = [('', '---------')] + sorted([
             (e, e) for e in set(enveloppes)])
         self.fields['enveloppe'].choices = enveloppe_choices
         self.fields['naturecomptablerecette'].choices = [('', '---------')]
-        self.fields['naturecomptablerecette'].queryset = natures
-        self.fields['naturecomptablerecette'].widget.attrs['class'] = 'form-naturecomptable'
+        self.fields['naturecomptablerecette'].widget.attrs['class'] =\
+            'form-naturecomptable'
 
         # Set the initial values
-        self.fields['structure'].initial = structure.pk
+        self.fields['structure'].initial = pfi.structure_id
         self.fields['pfi'].initial = pfi.pk
         self.fields['periodebudget'].initial = periodebudget.pk
         self.fields['annee'].initial = int(annee)
@@ -73,12 +67,11 @@ class RecetteForm(forms.ModelForm):
             self.fields['montant_dc'].required = False
 
         if instance and instance.pk:
-            nature = instance.naturecomptablerecette
+            nature = natures[instance.naturecomptablerecette_id]
             self.fields['enveloppe'].initial = nature.enveloppe
-            natures = NatureComptableRecette.active.filter(
-                is_fleche=is_fleche, enveloppe=nature.enveloppe)
             self.fields['naturecomptablerecette'].choices += [
-                (n.pk, str(n)) for n in natures]
+                (pk, str(n)) for pk, n in natures.items()\
+                    if n.enveloppe == nature.enveloppe]
             self.fields['naturecomptablerecette'].initial = nature
 
 
@@ -124,25 +117,24 @@ class DepenseForm(forms.ModelForm):
         periodebudget = kwargs.pop('periodebudget')
         annee = kwargs.pop('annee')
         is_dfi_member_or_admin = kwargs.pop('is_dfi_member_or_admin')
+        natures = kwargs.pop('natures')
+        domaines = kwargs.pop('domaines')
         super().__init__(*args, **kwargs)
 
         instance = self.instance
-        is_fleche = pfi.is_fleche
-        structure = pfi.structure
-        natures = NatureComptableDepense.objects.filter(is_fleche=is_fleche)
 
         # Fields initialization
-        enveloppes = natures.values_list('enveloppe', flat=True)
+        enveloppes = {n.enveloppe for n in natures.values()}
         enveloppe_choices = [('', '---------')] + sorted([
             (e, e) for e in set(enveloppes)])
         self.fields['enveloppe'].choices = enveloppe_choices
         self.fields['naturecomptabledepense'].choices = [('', '---------')]
-        self.fields['naturecomptabledepense'].queryset = natures
         self.fields['naturecomptabledepense'].widget.attrs['class'] = \
             'form-naturecomptable form-naturecomptabledepense'
+        self.fields['domainefonctionnel'].choices = domaines
 
         # Set the initial values
-        self.fields['structure'].initial = structure.pk
+        self.fields['structure'].initial = pfi.structure_id
         self.fields['pfi'].initial = pfi.pk
         self.fields['periodebudget'].initial = periodebudget.pk
         self.fields['annee'].initial = int(annee)
@@ -153,13 +145,11 @@ class DepenseForm(forms.ModelForm):
             self.fields['montant_dc'].required = False
 
         if instance and instance.pk:
-            nature = instance.naturecomptabledepense
-
+            nature = natures[instance.naturecomptabledepense_id]
             self.fields['enveloppe'].initial = nature.enveloppe
-            natures = NatureComptableDepense.active.filter(
-                is_fleche=is_fleche, enveloppe=nature.enveloppe)
             self.fields['naturecomptabledepense'].choices += [
-                (n.pk, str(n)) for n in natures]
+                (pk, str(n)) for pk, n in natures.items()\
+                    if n.enveloppe == nature.enveloppe]
             self.fields['naturecomptabledepense'].initial = nature
             if not nature.is_decalage_tresorerie:
                 self.fields['montant_cp'].widget.attrs['readonly'] = True
