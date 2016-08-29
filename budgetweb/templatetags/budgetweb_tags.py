@@ -36,29 +36,11 @@ def intspace(value, use_l10n=True):
 
 
 @register.filter(is_safe=True)
-def itemssortbykey(value):
-    """
-    Sort a dict by its keys and return its items.
-    """
-    if value:
-        return OrderedDict(sorted(value.items(), key=lambda t: t[0])).items()
-    return {}
-
-
-@register.filter(is_safe=True)
 def dictvalue(value, key):
     """
     Get a dict value by its key
     """
     return value.get(key)
-
-
-@register.filter(is_safe=True)
-def dictitems(value, key):
-    """
-    Get a dict items by its key
-    """
-    return value.get(key).items()
 
 
 @register.simple_tag

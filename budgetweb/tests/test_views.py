@@ -20,13 +20,17 @@ class APIViewsTest(TestCase):
     ]
 
     def setUp(self):
-        self.pfi_ecp_ecp = PlanFinancement.objects.get(
+        self.pfi_ecp = PlanFinancement.objects.get(
             code='NA', structure__code='ECP')
+        self.naturecomptabledepense = NatureComptableDepense.objects.get(
+            code_nature_comptable='9DLOC', is_fleche=self.pfi_ecp.is_fleche)
+        self.naturecomptablerecette = NatureComptableRecette.objects.get(
+            code_nature_comptable='9RSCS', is_fleche=self.pfi_ecp.is_fleche)
 
     def test_api_fund_designation_by_nature_and_enveloppe_recette(self):
         nature = 'Investissement'
         view_api = '/api/naturecomptablerecette/enveloppe/%s/%s' % (
-            nature, self.pfi_ecp_ecp.pk)
+            nature, self.pfi_ecp.pk)
         response = self.client.get(
             view_api, {}, HTTP_X_REQUESTED_WITH='XMLHttpRequest', follow=True)
         json_response = json.loads(response.content.decode('utf-8'))
@@ -41,7 +45,7 @@ class APIViewsTest(TestCase):
     def test_api_fund_designation_by_nature_and_enveloppe_depense(self):
         nature = 'Personnel'
         view_api = '/api/naturecomptabledepense/enveloppe/%s/%s' % (
-            nature, self.pfi_ecp_ecp.pk)
+            nature, self.pfi_ecp.pk)
         response = self.client.get(
             view_api, {}, HTTP_X_REQUESTED_WITH='XMLHttpRequest', follow=True)
         json_response = json.loads(response.content.decode('utf-8'))
@@ -50,6 +54,42 @@ class APIViewsTest(TestCase):
         self.assertEqual(len(json_response), 4)
         self.assertDictEqual(json_response[0], {
             "id": 50, "label": "9DCAS - Cotisation CAS"})
+
+    def test_api_get_details_nature_by_code_recette(self):
+        view_api = '/api/naturecomptablerecette/%s/' % (
+            self.naturecomptablerecette.pk,)
+        response = self.client.get(
+            view_api, {}, HTTP_X_REQUESTED_WITH='XMLHttpRequest', follow=True)
+        json_response = json.loads(response.content.decode('utf-8'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertDictEqual(json_response, {
+            'code_compte_budgetaire': 'RG_SCSP',
+            'label_compte_budgetaire': 'Subvention pour charges de service public'
+        })
+
+    def test_api_get_details_nature_by_code_depense(self):
+        view_api = '/api/naturecomptabledepense/%s/' % (
+            self.naturecomptabledepense.pk,)
+        response = self.client.get(
+            view_api, {}, HTTP_X_REQUESTED_WITH='XMLHttpRequest', follow=True)
+        json_response = json.loads(response.content.decode('utf-8'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertDictEqual(json_response, {
+            'code_compte_budgetaire': 'FG',
+            'label_compte_budgetaire': 'Fonctionnement Globalisé'
+        })
+
+    def test_api_get_decalage_tresorerie_by_id(self):
+        view_api = '/api/naturecomptabledepense/is_decalage_tresorerie/%s/' % (
+            self.naturecomptabledepense.pk,)
+        response = self.client.get(
+            view_api, {}, HTTP_X_REQUESTED_WITH='XMLHttpRequest', follow=True)
+        json_response = json.loads(response.content.decode('utf-8'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertDictEqual(json_response, {'is_decalage_tresorerie': True})
 
 
 class ViewsTest(TestCase):
@@ -249,3 +289,42 @@ class ViewsTest(TestCase):
         self.assertEqual(recette_sum['sum_dc'], Decimal(44))
         self.assertEqual(recette_sum['sum_re'], Decimal(55))
         self.assertEqual(recette_sum['sum_ar'], Decimal(66))
+
+    def test_detailscf(self):
+        view_url = '/detailscf/%s/' % self.structure_ecp.pk
+
+        naturecomptabledepense = NatureComptableDepense.objects.get(
+            code_nature_comptable='9DLOC', is_fleche=self.pfi_ecp.is_fleche)
+        naturecomptablerecette = NatureComptableRecette.objects.get(
+            code_nature_comptable='9RSCS', is_fleche=self.pfi_ecp.is_fleche)
+        Depense.objects.create(
+            pfi=self.pfi_ecp, structure=self.structure_ecp, annee=self.annee,
+            periodebudget=self.periode, domainefonctionnel=self.domaine,
+            naturecomptabledepense=naturecomptabledepense,
+            montant_dc=Decimal(1), montant_cp=Decimal(2), montant_ae=Decimal(3)
+        )
+        Depense.objects.create(
+            pfi=self.pfi_ecp, structure=self.structure_ecp, annee=self.annee,
+            periodebudget=self.periode, domainefonctionnel=self.domaine,
+            naturecomptabledepense=naturecomptabledepense,
+            montant_dc=Decimal(10), montant_cp=Decimal(20),
+            montant_ae=Decimal(30)
+        )
+
+        Recette.objects.create(
+            pfi=self.pfi_ecp, structure=self.structure_ecp, annee=self.annee,
+            periodebudget=self.periode,
+            naturecomptablerecette=naturecomptablerecette,
+            montant_dc=Decimal(4), montant_re=Decimal(5), montant_ar=Decimal(6)
+        )
+        Recette.objects.create(
+            pfi=self.pfi_ecp, structure=self.structure_ecp, annee=self.annee,
+            periodebudget=self.periode,
+            naturecomptablerecette=naturecomptablerecette,
+            montant_dc=Decimal(40), montant_re=Decimal(50),
+            montant_ar=Decimal(60)
+        )
+
+        self.client.login(username='admin', password='pass')
+        response = self.client.get(view_url)
+        self.assertEqual(response.status_code, 200)

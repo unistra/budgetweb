@@ -81,12 +81,6 @@ class RecetteForm(forms.ModelForm):
                 (n.pk, str(n)) for n in natures]
             self.fields['naturecomptablerecette'].initial = nature
 
-    def clean_montant_dc(self):
-        montant_dc = self.cleaned_data.get("montant_dc", None)
-        if montant_dc is None:
-            montant_dc = self.cleaned_data.get("montant_ae")
-        return montant_dc
-
 
 class DepenseForm(forms.ModelForm):
 
@@ -169,12 +163,6 @@ class DepenseForm(forms.ModelForm):
             self.fields['naturecomptabledepense'].initial = nature
             if not nature.is_decalage_tresorerie:
                 self.fields['montant_cp'].widget.attrs['readonly'] = True
-
-    def clean_montant_dc(self):
-        montant_dc = self.cleaned_data.get("montant_dc", None)
-        if montant_dc is None:
-            montant_dc = self.cleaned_data.get("montant_ae")
-        return montant_dc
 
 
 class PlanFinancementPluriForm(forms.ModelForm):

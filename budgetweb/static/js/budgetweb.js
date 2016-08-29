@@ -49,7 +49,7 @@ jQuery(document).ready(function($) {
 
         if ($nature.val() != "") {
           $.getJSON("/api/naturecomptabledepense/is_decalage_tresorerie/" + $nature.val() + "/", function(data) {
-              if (!data[0].is_decalage_tresorerie) {
+              if (!data.is_decalage_tresorerie) {
                 $("#id_form-" + form_id + "-montant_cp").prop("readonly", true);
                 $("#id_form-" + form_id + "-montant_cp").val($("#id_form-" + form_id + "-montant_ae").val());
                 $("#id_form-" + form_id + "-montant_dc").val($("#id_form-" + form_id + "-montant_ae").val());
@@ -62,10 +62,8 @@ jQuery(document).ready(function($) {
 
     function loadDetails(url, dest) {
         $.getJSON(url, function(data) {
-            $.each(data, function(index, obj) {
-              dest.nextAll().empty();
-              dest.after("<span><br />Compte budgétaire : " + obj.code_compte_budgetaire + "-" + obj.label_compte_budgetaire + "</span>");
-            });
+			dest.nextAll().empty();
+			dest.after("<span><br />Compte budgétaire : " + data.code_compte_budgetaire + "-" + data.label_compte_budgetaire + "</span>");
         });
     };
 
