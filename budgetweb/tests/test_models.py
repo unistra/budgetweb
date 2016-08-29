@@ -1,6 +1,7 @@
 from decimal import Decimal
 
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.test import TestCase
 
 from budgetweb.models import (Depense, DomaineFonctionnel,
@@ -349,6 +350,107 @@ class ComptabiliteModelTest(TestCase):
         self.assertEqual(montants_etab.recette_montant_dc, Decimal(40))
         self.assertEqual(montants_etab.recette_montant_re, Decimal(50))
         self.assertEqual(montants_etab.recette_montant_ar, Decimal(60))
+
+
+class DepenseModelTest(TestCase):
+
+    fixtures = [
+        'tests/periodebudgets.json', 'tests/structures.json',
+        'tests/planfinancements.json', 'tests/domainefonctionnels.json',
+        'tests/naturecomptabledepenses.json',
+    ]
+
+    def setUp(self):
+        self.structure_ecp = Structure.objects.get(code='ECP')
+        self.pfi_ecp = PlanFinancement.objects.get(
+            code='NA', structure=self.structure_ecp)
+        self.periode = PeriodeBudget.objects.first()
+        self.annee = self.periode.annee
+        self.domaine = DomaineFonctionnel.objects.get(pk=1)
+
+    def test_save(self):
+        naturecomptabledepense = NatureComptableDepense.objects.get(
+            code_nature_comptable='9DLOC', is_fleche=self.pfi_ecp.is_fleche)
+
+        depense = Depense(
+            pfi=self.pfi_ecp, structure=self.structure_ecp, annee=self.annee,
+            periodebudget=self.periode, domainefonctionnel=self.domaine,
+            naturecomptabledepense=naturecomptabledepense,
+            montant_dc=Decimal(1), montant_cp=Decimal(2), montant_ae=Decimal(3)
+        )
+        depense.save()
+        self.assertIsNotNone(depense.pk)
+
+    def test_save_with_validation_error(self):
+        naturecomptabledepense = NatureComptableDepense.objects.get(
+            code_nature_comptable='9DFLU', is_fleche=self.pfi_ecp.is_fleche)
+        depense = Depense(
+            pfi=self.pfi_ecp, structure=self.structure_ecp, annee=self.annee,
+            periodebudget=self.periode, domainefonctionnel=self.domaine,
+            naturecomptabledepense=naturecomptabledepense,
+            montant_dc=Decimal(1), montant_cp=Decimal(2), montant_ae=Decimal(3)
+        )
+
+        with self.assertRaises(ValidationError) as ve:
+            depense.save()
+        self.assertEqual(
+            ve.exception.message_dict['montant_ae'][0],
+            "Le décalagage de trésorerie n'est pas possible sur cette nature "
+            "comptable.")
+
+    def test_save_without_montant_dc(self):
+        naturecomptabledepense = NatureComptableDepense.objects.get(
+            code_nature_comptable='9DLOC', is_fleche=self.pfi_ecp.is_fleche)
+
+        depense = Depense(
+            pfi=self.pfi_ecp, structure=self.structure_ecp, annee=self.annee,
+            periodebudget=self.periode, domainefonctionnel=self.domaine,
+            naturecomptabledepense=naturecomptabledepense,
+            montant_cp=Decimal(2), montant_ae=Decimal(3)
+        )
+        depense.save()
+        self.assertIsNotNone(depense.pk)
+        self.assertEqual(depense.montant_dc, Decimal(3))
+
+
+class RecetteModelTest(TestCase):
+
+    fixtures = [
+        'tests/periodebudgets.json', 'tests/structures.json',
+        'tests/planfinancements.json', 'tests/domainefonctionnels.json',
+        'tests/naturecomptablerecettes.json',
+    ]
+
+    def setUp(self):
+        self.structure_ecp = Structure.objects.get(code='ECP')
+        self.pfi_ecp = PlanFinancement.objects.get(
+            code='NA', structure=self.structure_ecp)
+        self.periode = PeriodeBudget.objects.first()
+        self.annee = self.periode.annee
+        self.domaine = DomaineFonctionnel.objects.get(pk=1)
+        self.naturecomptablerecette = NatureComptableRecette.objects.get(
+            code_nature_comptable='9RSCS', is_fleche=self.pfi_ecp.is_fleche)
+
+    def test_save(self):
+        recette = Recette.objects.create(
+            pfi=self.pfi_ecp, structure=self.structure_ecp, annee=self.annee,
+            periodebudget=self.periode,
+            naturecomptablerecette=self.naturecomptablerecette,
+            montant_dc=Decimal(4), montant_re=Decimal(5), montant_ar=Decimal(6)
+        )
+        recette.save()
+        self.assertIsNotNone(recette.pk)
+
+    def test_save_without_montant_dc(self):
+        recette = Recette.objects.create(
+            pfi=self.pfi_ecp, structure=self.structure_ecp, annee=self.annee,
+            periodebudget=self.periode,
+            naturecomptablerecette=self.naturecomptablerecette,
+            montant_re=Decimal(5), montant_ar=Decimal(6)
+        )
+        recette.save()
+        self.assertIsNotNone(recette.pk)
+        self.assertEqual(recette.montant_dc, Decimal(6))
 
 
 class ManagersTest(TestCase):

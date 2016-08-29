@@ -50,7 +50,7 @@ def api_get_details_nature_by_code(request, model, id_nature):
         'naturecomptablerecette': NatureComptableRecette,
         'naturecomptabledepense': NatureComptableDepense,
     }
-    nature = models[model].active.filter(id=id_nature).first()
+    nature = models[model].active.get(pk=id_nature)
     response_data = [
         {"code_compte_budgetaire": nature.code_compte_budgetaire,
          "label_compte_budgetaire": nature.label_compte_budgetaire}]
@@ -60,7 +60,7 @@ def api_get_details_nature_by_code(request, model, id_nature):
 
 @is_ajax_get
 def api_get_decalage_tresorerie_by_id(request, id_naturecomptabledepense):
-    nature = NatureComptableDepense.active.filter(id=id_naturecomptabledepense).first()
+    nature = NatureComptableDepense.active.get(pk=id_naturecomptabledepense)
     response_data = [
         {"is_decalage_tresorerie": nature.is_decalage_tresorerie}]
 
@@ -80,7 +80,7 @@ def show_tree(request, type_affichage, structid=0):
         to_attr='montants')
     ).filter(pk__in=hierarchy_structures, **queryset).order_by('code')
 
-    # if the PFI's strcture is in the authorized structures
+    # if the PFI's structure is in the authorized structures
     if int(structid) in authorized_structures:
         pfis = PlanFinancement.active.filter(structure__id=structid)\
                 .values('code', 'id')
