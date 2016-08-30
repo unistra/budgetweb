@@ -75,6 +75,7 @@ class RecetteForm(forms.ModelForm):
                     if n.enveloppe == nature.enveloppe]
             self.fields['naturecomptablerecette'].initial = nature
 
+<<<<<<< Updated upstream
     def save(self, commit=True):
         recette = super().save(commit=False)
         username = self.user.username
@@ -83,6 +84,12 @@ class RecetteForm(forms.ModelForm):
         recette.modifiepar = username
         recette.save()
         return recette
+
+    def clean_montant_dc(self):
+        montant_dc = self.cleaned_data.get("montant_dc", None)
+        if montant_dc is None:
+            montant_dc = self.cleaned_data.get("montant_re")
+        return montant_dc
 
 
 class DepenseForm(forms.ModelForm):
@@ -173,6 +180,12 @@ class DepenseForm(forms.ModelForm):
         depense.modifiepar = username
         depense.save()
         return depense
+
+    def clean_montant_dc(self):
+        montant_dc = self.cleaned_data.get("montant_dc", None)
+        if montant_dc is None:
+            montant_dc = self.cleaned_data.get("montant_cp")
+        return montant_dc
 
 
 class PlanFinancementPluriForm(forms.ModelForm):
