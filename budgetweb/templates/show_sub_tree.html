@@ -1,7 +1,7 @@
 {% load budgetweb_tags %}
 {% for node in pfis %}
     <li>
-      <div>
+      <div class="showTree">
         <span style="width:160px;" class="pfi">
           <a href="{% url 'detailspfi' pfiid=node.id %}">{{ node.code }}</a>
           {% if node.is_pluriannuel %}
@@ -11,21 +11,21 @@
             <a class="recette-color" href="{% url 'recette' pfiid=node.id annee=currentYear %}">Rec.</a>
           {% endif %}
         </span>
-        {% with depense=pfi_depenses|dictvalue:node.id %}
-        {% with recette=pfi_recettes|dictvalue:node.id %}
-        {% if typeAffichage == "gbcp" %}
-           <div class="showTree">{% firstof recette.sum_recette_re|intspace "0,00" %} &euro;</div>
-           <div class="showTree">{% firstof recette.sum_recette_ar|intspace "0,00" %} &euro;</div>
-           <div class="showTree">&nbsp;</div>
-           <div class="showTree">{% firstof depense.sum_depense_cp|intspace "0,00" %} &euro;</div>
-           <div class="showTree">{% firstof depense.sum_depense_ae|intspace "0,00" %} &euro;</div>
-         {% else %}
-           <div class="showTree">{% firstof recette.sum_recette_dc|intspace "0,00" %} &euro;</div>
-           <div class="showTree">&nbsp;</div>
-           <div class="showTree">{% firstof depense.sum_depense_dc|intspace "0,00" %} &euro;</div>
-        {% endif %}
-        {% endwith %}
-        {% endwith %}
+    {% with depense=pfi_depenses|dictvalue:node.id %}
+    {% with recette=pfi_recettes|dictvalue:node.id %}
+    {% if typeAffichage == "gbcp" %}
+        <div>{% firstof recette.sum_recette_re|intspace "0,00" %} &euro;</div>
+        <div>{% firstof recette.sum_recette_ar|intspace "0,00" %} &euro;</div>
+        <div>&nbsp;</div>
+        <div>{% firstof depense.sum_depense_cp|intspace "0,00" %} &euro;</div>
+        <div>{% firstof depense.sum_depense_ae|intspace "0,00" %} &euro;</div>
+    {% else %}
+        <div>{% firstof recette.sum_recette_dc|intspace "0,00" %} &euro;</div>
+        <div>&nbsp;</div>
+        <div>{% firstof depense.sum_depense_dc|intspace "0,00" %} &euro;</div>
+    {% endif %}
+{% endwith %}
+{% endwith %}
         <ul id="{{ node.code }}"></ul>
       </div>
     </li>
@@ -33,21 +33,22 @@
 {% for structure in structures %}
     {% with montants=structure.montants.0 %}
     <li class="parent_li">
-      <div>
+      <div class="showTree">
         <span style="width:auto;" class="cf" structid="{{ structure.id }}" title="Ouvrir cette branche">
-          <i class="glyphicon glyphicon-plus"></i>{{ structure.code }}{% if structure.depth > 2 %}</span> - <a href="{% url 'detailscf' structid=structure.id %}">Détails</a>{% endif %}
-
-        {% if typeAffichage == "gbcp" %}
-           <div class="showTree">{% firstof montants.recette_montant_re|intspace "0,00" %} &euro;</div>
-           <div class="showTree">{% firstof montants.recette_montant_ar|intspace "0,00" %} &euro;</div>
-           <div class="showTree">&nbsp;</div>
-           <div class="showTree">{% firstof montants.depense_montant_cp|intspace "0,00" %} &euro;</div>
-           <div class="showTree">{% firstof montants.depense_montant_ae|intspace "0,00" %} &euro;</div>
-         {% else %}
-           <div class="showTree">{% firstof montants.recette_montant_dc|intspace "0,00" %} &euro;</div>
-           <div class="showTree">&nbsp;</div>
-           <div class="showTree">{% firstof montants.depense_montant_dc|intspace "0,00" %} &euro;</div>
-         {% endif %}
+          <i class="glyphicon glyphicon-plus"></i>{{ structure.code }}{% if structure.depth > 2 %}
+        </span> - <a href="{% url 'detailscf' structid=structure.id %}">Détails</a>{% endif %}
+	
+	{% if typeAffichage == "gbcp" %}
+	    <div>{% firstof montants.recette_montant_re|intspace "0,00" %} &euro;</div>
+	    <div>{% firstof montants.recette_montant_ar|intspace "0,00" %} &euro;</div>
+	    <div>&nbsp;</div>
+	    <div>{% firstof montants.depense_montant_cp|intspace "0,00" %} &euro;</div>
+	    <div>{% firstof montants.depense_montant_ae|intspace "0,00" %} &euro;</div>
+	 {% else %}
+	    <div>{% firstof montants.recette_montant_dc|intspace "0,00" %} &euro;</div>
+	    <div>&nbsp;</div>
+	    <div>{% firstof montants.depense_montant_dc|intspace "0,00" %} &euro;</div>
+	 {% endif %}
       </div>
       <ul id="cf{{ structure.id }}"></ul>
     </li>

@@ -54,7 +54,7 @@ ul {
     height:30px;
 }
 
-.showTree {
+.showTree div {
   display: inline;
   float:right;
   margin:0px;

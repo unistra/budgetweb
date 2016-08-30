@@ -73,7 +73,7 @@ def show_tree(request, type_affichage, structid=0):
     queryset = {'parent__id': structid} if structid else {'parent': None}
     authorized_structures, hierarchy_structures =\
         get_authorized_structures_ids(request.user)
-    structures = Structure.objects.prefetch_related(Prefetch(
+    structures = Structure.active.prefetch_related(Prefetch(
         'structuremontant_set',
         queryset=StructureMontant.active_period.all(),
         to_attr='montants')
