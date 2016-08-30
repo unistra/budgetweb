@@ -61,6 +61,7 @@
 			    {% for year in years %}
 				<td nowrap><span class="pluri">Total :</span> {% if enveloppe_values.1 %}{% firstof enveloppe_values.1|dictvalue:year|intspace "0,00" %}{% else %}0,00{% endif %} &euro;</td>
 				{% endfor %}
+				<td nowrap><span class="pluri total">Total :</span> {% if enveloppe_values.1 %}{% firstof enveloppe_values.1.total|intspace "0,00" %}{% else %}0,00{% endif %} &euro;</td>
 			</tr>
 			{% endwith %}
 			{% endwith %}

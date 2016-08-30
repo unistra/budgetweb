@@ -42,6 +42,7 @@ class RecetteForm(forms.ModelForm):
         annee = kwargs.pop('annee')
         is_dfi_member_or_admin = kwargs.pop('is_dfi_member_or_admin')
         natures = kwargs.pop('natures')
+        self.user = kwargs.pop('user')
         super().__init__(*args, **kwargs)
 
         instance = self.instance
@@ -73,6 +74,15 @@ class RecetteForm(forms.ModelForm):
                 (pk, str(n)) for pk, n in natures.items()\
                     if n.enveloppe == nature.enveloppe]
             self.fields['naturecomptablerecette'].initial = nature
+
+    def save(self, commit=True):
+        recette = super().save(commit=False)
+        username = self.user.username
+        if not recette.id:
+            recette.creepar = username
+        recette.modifiepar = username
+        recette.save()
+        return recette
 
 
 class DepenseForm(forms.ModelForm):
@@ -119,6 +129,7 @@ class DepenseForm(forms.ModelForm):
         is_dfi_member_or_admin = kwargs.pop('is_dfi_member_or_admin')
         natures = kwargs.pop('natures')
         domaines = kwargs.pop('domaines')
+        self.user = kwargs.pop('user')
         super().__init__(*args, **kwargs)
 
         instance = self.instance
@@ -153,6 +164,15 @@ class DepenseForm(forms.ModelForm):
             self.fields['naturecomptabledepense'].initial = nature
             if not nature.is_decalage_tresorerie:
                 self.fields['montant_cp'].widget.attrs['readonly'] = True
+
+    def save(self, commit=True):
+        depense = super().save(commit=False)
+        username = self.user.username
+        if not depense.id:
+            depense.creepar = username
+        depense.modifiepar = username
+        depense.save()
+        return depense
 
 
 class PlanFinancementPluriForm(forms.ModelForm):

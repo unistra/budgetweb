@@ -250,6 +250,8 @@ class PlanFinancement(models.Model):
                     type_dict[1].setdefault(annee, None)
                     type_dict[1][annee] =\
                         (type_dict[1][annee] or Decimal(0)) + montant
+                    type_dict[1]['total'] =\
+                        type_dict[1].get('total', Decimal(0)) + montant
             types.append(compta_types)
         return types
 
@@ -446,6 +448,7 @@ class Comptabilite(models.Model):
                 obj.save()
 
     @transaction.atomic
+    @require_lock(StructureMontant)
     def delete(self, **kwargs):
         """
         Change all the StructureMontant of the structure's asending hierarchy

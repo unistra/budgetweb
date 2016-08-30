@@ -10,15 +10,12 @@ from budgetweb.models import Depense, Recette, Structure, StructureMontant
 class Command(NoArgsCommand):
     help = 'Check if the StructureMontant objects are correct'
 
-
     def get_structure_ancestors(self, structure_id):
         parent = self.structures[structure_id]
         return [parent] + self.get_structure_ancestors(parent) if parent else []
 
-
     def handle_noargs(self, **options):
-        self.structures = {s.pk : s.parent_id for s in Structure.active.all()}
-        montants = []
+        self.structures = {s.pk: s.parent_id for s in Structure.active.all()}
         comptabilites = {}
         errors = []
 
@@ -70,6 +67,6 @@ class Command(NoArgsCommand):
                     errors.append(error_str)
 
         if errors:
-            print('ERRORS : \n{}'.format('\n'.join(errors)))
+            self.stdout.write('ERRORS : \n{}'.format('\n'.join(errors)))
         else:
-            print('No calculation errors')
+            self.stdout.write('No calculation errors')

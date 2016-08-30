@@ -161,7 +161,7 @@ def depense(request, pfiid, annee):
         form=modelformset_factory_with_kwargs(
             DepenseForm, pfi=pfi, periodebudget=periodebudget, annee=annee,
             is_dfi_member_or_admin=is_dfi_member_or_admin, natures=natures,
-            domaines=domaines
+            domaines=domaines, user=request.user
         ),
         exclude=[],
         extra=1,
@@ -202,7 +202,8 @@ def recette(request, pfiid, annee):
         Recette,
         form=modelformset_factory_with_kwargs(
             RecetteForm, pfi=pfi, periodebudget=periodebudget, annee=annee,
-            is_dfi_member_or_admin=is_dfi_member_or_admin, natures=natures
+            is_dfi_member_or_admin=is_dfi_member_or_admin, natures=natures,
+            user=request.user
         ),
         exclude=[],
         extra=1,

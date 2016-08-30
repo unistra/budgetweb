@@ -2,6 +2,7 @@ from collections import OrderedDict
 import datetime
 from decimal import Decimal
 
+from django.contrib.auth.models import User
 from django.test import TestCase
 
 from budgetweb.forms import DepenseForm, PlanFinancementPluriForm, RecetteForm
@@ -43,18 +44,24 @@ class RecetteFormTest(TestCase):
             'pfi': self.pfi,
             'is_dfi_member_or_admin': True,
             'natures': self.natures,
+            'user': User.objects.create_user('user1')
         }
 
         form = RecetteForm(data=post_data, **form_kwargs)
         self.assertTrue(form.is_bound)
         self.assertTrue(form.is_valid())
 
+        recette = form.save()
+        self.assertIsNotNone(recette)
+        self.assertEqual(recette.creepar, 'user1')
+        self.assertEqual(recette.modifiepar, 'user1')
+
     def test_edit_recette(self):
         recette = Recette.objects.create(
             naturecomptablerecette=self.naturecomptable, pfi=self.pfi,
             structure=self.pfi.structure, annee=self.periode.annee,
             periodebudget=self.periode, montant_ar=Decimal(1),
-            montant_re=Decimal(2), montant_dc=Decimal(3)
+            montant_re=Decimal(2), montant_dc=Decimal(3), creepar='user2'
         )
         form_kwargs = {
             'annee': self.periode.annee,
@@ -62,6 +69,7 @@ class RecetteFormTest(TestCase):
             'pfi': self.pfi,
             'is_dfi_member_or_admin': True,
             'natures': self.natures,
+            'user': User.objects.create_user('user1')
         }
 
         form = RecetteForm(instance=recette, **form_kwargs)
@@ -69,6 +77,11 @@ class RecetteFormTest(TestCase):
             form.fields['naturecomptablerecette'].initial.pk,
             self.naturecomptable.pk
         )
+
+        recette = form.save()
+        self.assertIsNotNone(recette)
+        self.assertEqual(recette.creepar, 'user2')
+        self.assertEqual(recette.modifiepar, 'user1')
 
 
 class DepenseFormTest(TestCase):
@@ -110,18 +123,25 @@ class DepenseFormTest(TestCase):
             'is_dfi_member_or_admin': True,
             'natures': self.natures,
             'domaines': self.domaines,
+            'user': User.objects.create_user('user1')
         }
 
         form = DepenseForm(data=post_data, **form_kwargs)
         self.assertTrue(form.is_bound)
         self.assertTrue(form.is_valid())
 
+        depense = form.save()
+        self.assertIsNotNone(depense)
+        self.assertEqual(depense.creepar, 'user1')
+        self.assertEqual(depense.modifiepar, 'user1')
+
     def test_edit_depense(self):
         depense = Depense.objects.create(
             naturecomptabledepense=self.naturecomptable, pfi=self.pfi,
             structure=self.pfi.structure, domainefonctionnel=self.domaine,
             annee=self.periode.annee, periodebudget=self.periode,
-            montant_ae=Decimal(1), montant_cp=Decimal(2), montant_dc=Decimal(3)
+            montant_ae=Decimal(1), montant_cp=Decimal(2),montant_dc=Decimal(3),
+            creepar='user2'
         )
         form_kwargs = {
             'annee': self.periode.annee,
@@ -129,7 +149,8 @@ class DepenseFormTest(TestCase):
             'pfi': self.pfi,
             'is_dfi_member_or_admin': True,
             'natures': self.natures,
-            'domaines': self.domaines
+            'domaines': self.domaines,
+            'user': User.objects.create_user('user1')
         }
 
         form = DepenseForm(instance=depense, **form_kwargs)
@@ -137,6 +158,11 @@ class DepenseFormTest(TestCase):
             form.fields['naturecomptabledepense'].initial.pk,
             self.naturecomptable.pk
         )
+
+        depense = form.save()
+        self.assertIsNotNone(depense)
+        self.assertEqual(depense.creepar, 'user2')
+        self.assertEqual(depense.modifiepar, 'user1')
 
 
 class PlanFinancementPluriFormTest(TestCase):
