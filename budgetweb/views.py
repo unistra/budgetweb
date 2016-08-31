@@ -70,6 +70,7 @@ def api_get_decalage_tresorerie_by_id(request, id_naturecomptabledepense):
 @login_required
 def show_tree(request, type_affichage, structid=0):
     # Authorized structures list
+    is_tree_node = request.is_ajax()
     queryset = {'parent__id': structid} if structid else {'parent': None}
     authorized_structures, hierarchy_structures =\
         get_authorized_structures_ids(request.user)
@@ -107,7 +108,21 @@ def show_tree(request, type_affichage, structid=0):
         'currentYear': get_current_year()
     }
 
-    template = 'show_sub_tree.html' if request.is_ajax() else 'showtree.html'
+    # Total sums
+    if not is_tree_node:
+        fields = (
+            'depense_montant_ae', 'depense_montant_cp', 'depense_montant_dc',
+            'recette_montant_ar', 'recette_montant_re', 'recette_montant_dc')
+        total = {}
+        for structure in structures:
+            montants = structure.montants
+            if montants:
+                for name in fields:
+                    total[name] = total.get(name, Decimal(0))\
+                        + getattr(montants[0], name)
+        context['total'] = total
+
+    template = 'show_sub_tree.html' if is_tree_node else 'showtree.html'
     return render(request, template, context)
 
 

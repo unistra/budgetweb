@@ -1,15 +1,16 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+{% load budgetweb_tags %}
 
 {% block head-additional %}
 	<link rel="stylesheet" href="{% static 'css/budgetweb.css' %}"/>
 {% endblock %}
 
 {% block content %}
-<div class="col-md-12">
+<div class="col-md-12 well">
 	<div class="title showTree">
 	{% if typeAffichage == "gbcp" %}
-		<div style="margin-right:20px;">&sum; Rec. RE</div>
+		<div>&sum; Rec. RE</div>
 		<div>&sum; Rec. AR</div>
 		<div>&nbsp;</div>
 		<div>&sum; Dép. CP</div>
@@ -19,8 +20,21 @@
 		<div>&nbsp;</div>
 		<div>&sum; Dép. DC</div>
 	{% endif %}
-	</div>
-	<div class="tree well">
+	</div><br />
+	<div class="title showTree"">
+    {% if typeAffichage == "gbcp" %}
+        <div>{% firstof total.recette_montant_re|intspace "0,00" %} &euro;</div>
+        <div>{% firstof total.recette_montant_ar|intspace "0,00" %} &euro;</div>
+        <div>&nbsp;</div>
+        <div>{% firstof total.depense_montant_cp|intspace "0,00" %} &euro;</div>
+        <div>{% firstof total.depense_montant_ae|intspace "0,00" %} &euro;</div>
+    {% else %}
+        <div style="margin-right:20px;">{% firstof total.recette_montant_dc|intspace "0,00" %} &euro;</div>
+        <div>&nbsp;</div>
+        <div>{% firstof total.depense_montant_dc|intspace "0,00" %} &euro;</div>
+    {% endif %}
+    </div><br />
+	<div class="tree">
 		<ul>
 		{% include "show_sub_tree.html" %}
 		</ul>
