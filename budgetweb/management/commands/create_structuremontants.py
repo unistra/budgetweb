@@ -65,8 +65,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         if options['delete']:
-            Recette.active_period.filter(creepar='budgetweb').delete()
-            Depense.active_period.filter(creepar='budgetweb').delete()
+            Recette.active_period.all().delete()
+            Depense.active_period.all().delete()
             StructureMontant.active_period.all().delete()
 
         self.periodebudget = PeriodeBudget.active.first()
