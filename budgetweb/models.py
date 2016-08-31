@@ -195,9 +195,11 @@ class PlanFinancement(models.Model):
 
         return depense, recette
 
-    def get_years(self, begin_current_year=True, year_number=4):
+    def get_years(self, begin_current_period=True, year_number=4):
+        from .utils import get_current_year
+
         if self.date_debut and self.date_fin:
-            begin_year = datetime.date.today().year if begin_current_year\
+            begin_year = get_current_year() if begin_current_period\
                 else self.date_debut.year
             end_year = min(begin_year + year_number, self.date_fin.year)
             return list(range(begin_year, end_year + 1))
