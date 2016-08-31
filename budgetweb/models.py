@@ -1,3 +1,4 @@
+import datetime
 from decimal import Decimal
 from itertools import groupby
 
@@ -174,20 +175,18 @@ class PlanFinancement(models.Model):
 
     # Retourne un tableau avec l'année, la
     #
-    def get_total(self):
-        # select annee, periodebudget_id, enveloppe, sum(montantae) as sommeae,
-        # sum(montantcp) as sommecp, sum(montantdc) as sommedc
-        # from budgetweb_depense, budgetweb_naturecomptabledepense
-        # where budgetweb_naturecomptabledepense.id = \
-        #       budgetweb_depense.naturecomptabledepense_id
-        # and pfi_id=30 group by annee, periodebudget_id, enveloppe;
-        depense = Depense.objects.filter(pfi=self.id)\
+    def get_total(self, years=None):
+        query_params = {'pfi': self.id}
+        if years:
+            query_params.update({'annee__in': years})
+
+        depense = Depense.objects.filter(**query_params)\
             .annotate(enveloppe=F('naturecomptabledepense__enveloppe'))\
             .values('annee', 'periodebudget', 'enveloppe')\
             .annotate(sum_depense_ae=Sum('montant_ae'),
                       sum_depense_cp=Sum('montant_cp'),
                       sum_depense_dc=Sum('montant_dc'))
-        recette = Recette.objects.filter(pfi=self.id)\
+        recette = Recette.objects.filter(**query_params)\
             .annotate(enveloppe=F('naturecomptablerecette__enveloppe'))\
             .values('annee', 'periodebudget', 'enveloppe')\
             .annotate(sum_recette_ar=Sum('montant_ar'),
@@ -196,9 +195,12 @@ class PlanFinancement(models.Model):
 
         return depense, recette
 
-    def get_years(self):
+    def get_years(self, begin_current_year=True, year_number=4):
         if self.date_debut and self.date_fin:
-            return list(range(self.date_debut.year, self.date_fin.year + 1))
+            begin_year = datetime.date.today().year if begin_current_year\
+                else self.date_debut.year
+            end_year = min(begin_year + year_number, self.date_fin.year)
+            return list(range(begin_year, end_year + 1))
         return []
 
     def get_total_types(self):
@@ -227,7 +229,7 @@ class PlanFinancement(models.Model):
         types = []
         years = self.get_years()
 
-        for comptabilite in self.get_total():
+        for comptabilite in self.get_total(years=years):
             compta_types = {k: {} for k in montants_dict.keys()}
             for c in comptabilite:
                 fields = [k for k in c.keys() if k.startswith('sum_')]
