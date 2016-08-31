@@ -75,7 +75,6 @@ class RecetteForm(forms.ModelForm):
                     if n.enveloppe == nature.enveloppe]
             self.fields['naturecomptablerecette'].initial = nature
 
-<<<<<<< Updated upstream
     def save(self, commit=True):
         recette = super().save(commit=False)
         username = self.user.username
