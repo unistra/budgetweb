@@ -82,15 +82,14 @@ def show_tree(request, type_affichage, structid=0):
 
     # if the PFI's structure is in the authorized structures
     if int(structid) in authorized_structures:
-        pfis = PlanFinancement.active.filter(structure__id=structid)\
-                .values('code', 'id')
-        pfi_depenses = {pfi['id']: pfi for pfi in pfis\
+        pfis = PlanFinancement.active.filter(structure__id=structid)
+        pfi_depenses = {pfi.pk: pfi for pfi in pfis\
                 .annotate(
                     sum_depense_ae=Sum('depense__montant_ae'),
                     sum_depense_cp=Sum('depense__montant_cp'),
                     sum_depense_dc=Sum('depense__montant_dc'))
         }
-        pfi_recettes = {pfi['id']: pfi for pfi in pfis\
+        pfi_recettes = {pfi.pk: pfi for pfi in pfis\
                 .annotate(
                     sum_recette_ar=Sum('recette__montant_ar'),
                     sum_recette_re=Sum('recette__montant_re'),

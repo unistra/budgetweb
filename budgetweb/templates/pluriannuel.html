@@ -52,12 +52,12 @@
 	{% include "pluriannuel.comptabilite.inc.html" with types=depense.gbcp compta_type="depense" label="Liste des dépenses" montants_types="AE CP" enveloppes="Fonctionnement Personnel Investissement"%}
 	{% endif %}
 	{% if recette %}
-	{% include "pluriannuel.comptabilite.inc.html" with types=recette.gbcp compta_type="recette" label="Liste des recettes" montants_types="AR RE" enveloppes="Fonctionnement Personnel Investissement"%}
+	{% include "pluriannuel.comptabilite.inc.html" with types=recette.gbcp compta_type="recette" label="Liste des recettes" montants_types="AR RE" enveloppes="Fonctionnement Investissement"%}
     {% endif %}
     </div>
     <div role="tabpanel" class="tab-pane" id="dc">
     {% if depense %}
-    {% include "pluriannuel.comptabilite.inc.html" with types=depense.dc compta_type="depense" label="Liste des dépenses" montants_types="DC" enveloppes="Fonctionnement Investissement"%}
+    {% include "pluriannuel.comptabilite.inc.html" with types=depense.dc compta_type="depense" label="Liste des dépenses" montants_types="DC" enveloppes="Fonctionnement Personnel Investissement"%}
     {% endif %}
     {% if recette %}
     {% include "pluriannuel.comptabilite.inc.html" with types=recette.dc compta_type="recette" label="Liste des recettes" montants_types="DC" enveloppes="Fonctionnement Investissement"%}
