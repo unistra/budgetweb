@@ -15,30 +15,32 @@
 			</tr>
 		</thead>
 		<tbody>
+	{% for periode, periode_values in types.items %}
 		{% for type in montants_types.split %}
-		    {% with enveloppe_values=types|dictvalue:type %}
+		    {% with enveloppe_values=periode_values|dictvalue:type %}
 			{% with rowspan=enveloppes.split|length|add:1 %}
 			<tr>
-				<td rowspan="{{ rowspan }}">BP</td>
-				<td rowspan="{{ rowspan }}">{{ type }}</td>
+			{% if forloop.counter == 1 %}
+                <td rowspan="{% pluriannuel_rowspan rowspan montants_types.split %}" style="text-align: center;">{{ periode }}</td>
+			{% endif %}
+				<td rowspan="{{ rowspan }}" style="text-align: center;">{{ type }}</td>
 			{% for enveloppe in enveloppes.split %}
 			{% if enveloppe_values.0 %}
 			{% with year_values=enveloppe_values.0|dictvalue:enveloppe %}
 				{% if forloop.counter == 1 %}
 				<td nowrap=""><span class="pluri">{{ enveloppe }}</span></td>
 			     	{% for year in years %}
-				<td nowrap="" style="text-align:right;">{% if year_values.0 %}{% firstof year_values.0|dictvalue:year|intspace "0,00" %}{% else %}0,00{% endif %} &euro;</td>
+				<td nowrap="">{% if year_values.0 %}{% firstof year_values.0|dictvalue:year|intspace "0,00" %}{% else %}0,00{% endif %} &euro;</td>
 				<td rowspan="{{ rowspan }}" class="table-details"><a href="/{{ compta_type }}/{{ PFI.id }}/{{ year }}/">Détails<br>(obligatoires)</a></td>
 				    {% endfor %}
 				<td nowrap="">{% firstof year_values.1|intspace "0,00" %} &euro;</td>
-			</tr>
 				{% else %}
 			<tr>
 			    <td nowrap=""><span class="pluri">{{ enveloppe }}</span></td>
 			    {% for year in years %}
-				<td nowrap="" style="text-align:right;">{% if year_values.0 %}{% firstof year_values.0|dictvalue:year|intspace "0,00" %}{% else %}0,00{% endif %} &euro;</td>
+				<td nowrap="">{% if year_values.0 %}{% firstof year_values.0|dictvalue:year|intspace "0,00" %}{% else %}0,00{% endif %} &euro;</td>
 				{% endfor %}
-				<td nowrap="" style="text-align:right;">{% firstof year_values.1|intspace "0,00" %} &euro;</td>
+				<td nowrap="">{% firstof year_values.1|intspace "0,00" %} &euro;</td>
 				{% endif %}
 			</tr>
 			{% endwith %}
@@ -72,6 +74,7 @@
 			{% endwith %}
 			{% endwith %}
 		{% endfor %}
+	{% endfor %}
 		</tbody>
 	</table>
   </div>

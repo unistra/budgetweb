@@ -182,13 +182,13 @@ class PlanFinancement(models.Model):
 
         depense = Depense.objects.filter(**query_params)\
             .annotate(enveloppe=F('naturecomptabledepense__enveloppe'))\
-            .values('annee', 'periodebudget', 'enveloppe')\
+            .values('annee', 'periodebudget__code', 'enveloppe')\
             .annotate(sum_depense_ae=Sum('montant_ae'),
                       sum_depense_cp=Sum('montant_cp'),
                       sum_depense_dc=Sum('montant_dc'))
         recette = Recette.objects.filter(**query_params)\
             .annotate(enveloppe=F('naturecomptablerecette__enveloppe'))\
-            .values('annee', 'periodebudget', 'enveloppe')\
+            .values('annee', 'periodebudget__code', 'enveloppe')\
             .annotate(sum_recette_ar=Sum('montant_ar'),
                       sum_recette_re=Sum('montant_re'),
                       sum_recette_dc=Sum('montant_dc'))
@@ -236,12 +236,14 @@ class PlanFinancement(models.Model):
             for c in comptabilite:
                 fields = [k for k in c.keys() if k.startswith('sum_')]
                 for field in fields:
+                    periode = c['periodebudget__code']
                     montant = c[field]
                     annee = c['annee']
                     field_name = field.split('_')[-1].upper()
                     mt = montant_type(field_name)
                     ct = compta_types[mt]
-                    type_dict = ct.setdefault(
+                    periode_dict = ct.setdefault(periode, {})
+                    type_dict = periode_dict.setdefault(
                         field_name, [{}, dict.fromkeys(years, None)])
                     nature_dict = type_dict[0].setdefault(
                         c['enveloppe'], [dict.fromkeys(years, None), None])

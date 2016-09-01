@@ -49,3 +49,11 @@ def resume_colspan(periodes1, periodes2, montants_types):
     Return the resume colspan
     """
     return (1 + (len(montants_types) * (len(periodes1 or periodes2) + 1)))
+
+
+@register.simple_tag
+def pluriannuel_rowspan(base_rowspan, montants_types):
+    """
+    Return the pluriannuel rowspan
+    """
+    return base_rowspan * (len(montants_types))

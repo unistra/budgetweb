@@ -14,8 +14,8 @@
     "model": "budgetweb.periodebudget",
     "fields": {
         "is_active": false,
-        "label": "Budget initial",
-        "code": "BI",
+        "label": "Budget initial 2016",
+        "code": "BI 2016",
         "annee": 2016
     }
 }
