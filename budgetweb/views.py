@@ -84,13 +84,14 @@ def show_tree(request, type_affichage, structid=0):
     if int(structid) in authorized_structures:
         pfis = PlanFinancement.active.filter(structure__id=structid)
         pfi_depenses = {pfi.pk: pfi for pfi in pfis\
-                .annotate(
+                .filter(depense__annee=get_current_year()).annotate(
                     sum_depense_ae=Sum('depense__montant_ae'),
                     sum_depense_cp=Sum('depense__montant_cp'),
                     sum_depense_dc=Sum('depense__montant_dc'))
+
         }
         pfi_recettes = {pfi.pk: pfi for pfi in pfis\
-                .annotate(
+                .filter(recette__annee=get_current_year()).annotate(
                     sum_recette_ar=Sum('recette__montant_ar'),
                     sum_recette_re=Sum('recette__montant_re'),
                     sum_recette_dc=Sum('recette__montant_dc'))

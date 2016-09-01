@@ -148,7 +148,7 @@ class DepenseForm(forms.ModelForm):
         self.fields['naturecomptabledepense'].choices = [('', '---------')]
         self.fields['naturecomptabledepense'].widget.attrs['class'] = \
             'form-naturecomptable form-naturecomptabledepense'
-        self.fields['domainefonctionnel'].choices = domaines
+        self.fields['domainefonctionnel'].choices = [('', '---------')] + domaines
 
         # Set the initial values
         self.fields['structure'].initial = pfi.structure_id
