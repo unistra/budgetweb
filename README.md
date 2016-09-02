@@ -19,7 +19,7 @@ Prérequis
 	export PIP_RESPECT_VIRTUALENV=true
 	source /usr/share/virtualenvwrapper/virtualenvwrapper.sh
 	
-  * python3.5-dev
+  * python3.5-dev (comptatible python 3.4)
   
 On revient dans le home dir (exemple /home/lhutin)
 
@@ -97,6 +97,10 @@ Quelques règles de gestion ont été implémentées :
 
 Documentation utilisateur
 -------------------------
+
+La gestion des droits permets de donner des accès à des niveaux très fins (structure de niveau 3 où plus selon la structure financière intégrée.
+
+Un champ "is_active" est disponible pour les strcutres et les pfi, cela permet d'afficher / masquer les données voulues.
 
 Le jeu de test contient :
     Des programmes de financements fléchés / non fléchés. ( La naturecomptable est différente entre un PFI fléché et non fléché)
