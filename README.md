@@ -48,12 +48,58 @@ Installation des prerequis du projets
     
     workon budgetweb
     cdproject # Si la commande est installé pour se trouver dans le bon répertoire.
+
+    # Vous devrez ensuite adapter les variables liées à l'authentification centralisé.
+    vi budgetweb/budgetweb/settings/base.py 
+    CAS_SERVER_URL = XXXXXXXXXXXXXXXX
+    CAS_LOGOUT_REQUEST_ALLOWED = ('XXXXXXXXXXXXX', 'XXXXXXXXXXXXXXX')
     
     # Configuration du modèle.
     python manage.py migrate
     
-    # Permet de générer un jeu de test
+    # On créé notre "superuser" qui disposera des droits administrateurs.
+    python manage.py createsuperuser
+    
+    # Permet d'importer un jeu de test.
     python manage.py initial_import
     
-    # Permet de générer des écritures aléatoires.
+    # Permet de générer des écritures en dépense et en recette de manière aléatoire.
     python manage.py create_structuremontants
+    
+    # On démarre le serveur.
+    python manage.py runserver
+    
+    # On lance son navigateur favori via l'adresse suivante :
+    http://localhost:8000
+   
+Documentation technique
+-----------------------
+
+La table "Structure" contient la structure financière de l'établissement.
+La table "StructureAuthorizations" contient les autorisatons des utilisateurs aux structures.
+La table "StructureMontant" contient les montants cumulés des sous-structures / programme de financement.
+La table "PeriodeBudget" contient les différentes périodes budgétaires (BI, Virement, BR1, BR2, etc.)
+La table "DomaineFonctionnel" contient la liste des domaines fonctionnels.
+La table "PlanFinancement" contient la liste des programmes de financements.
+La table "NatureComptableDepense" contient la liste des natures comptables dépenses.
+La table "NatureComptableRecette" contient la liste des natures comptables recettes
+La table "Depense" qui contient la liste des saisies en dépense.
+La table "Recette" qui contient la liste des saisies en recette.
+
+Quelques règles de gestion ont été implémentées :
+  * Si l'utilisateur appartient au groupe "DFI"
+        Alors le champ "DC" en recette et en dépense est ouvert à la saisie
+        Sinon le champ "DC" est bloqué et est égal au champ "CP" en dépense et au champ "RE" en recette.
+  * Si la nature comptable dépense autorise le décalage de trésorerie
+        Alors le champ CP n'est pas bloqué et la saisie est libre.
+        Sinon le champ CP est égal au champ AE.
+  * FIX IT.
+
+Documentation utilisateur
+-------------------------
+
+Le jeu de test contient :
+    Des programmes de financements fléchés / non fléchés. ( La naturecomptable est différente entre un PFI fléché et non fléché)
+    Des programmes de financements pluri-annuel et non pluri-annuel. (Les écrans de saisies ne sont pas identiques).
+L
+
