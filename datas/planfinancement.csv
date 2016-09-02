@@ -187,7 +187,6 @@ ESP1;NA;Non affecté;non;non;NA;ESP1LI;ESP1
 ESP2;NA;Non affecté;non;non;NA;ESP2CO;ESP2
 ESP3;NA;Non affecté;non;non;NA;ESP3;ESP3
 ESP3ING;NA;Non affecté;non;non;NA;ESP3DNC;ESP3ING
-ETAB;NA;Non affecté;non;non;NA;ETAB;ETAB
 GEO;NA;Non affecté;non;non;NA;GEO;GEO
 GEO1;NA;Non affecté;non;non;NA;GEO1LI;GEO1
 GEO2;NA;Non affecté;non;non;NA;GEO2LA;GEO2
@@ -484,7 +483,7 @@ PSY;NA;Non affecté;non;non;NA;PSY;PSY
 PSY1;NA;Non affecté;non;non;NA;PSY1LI;PSY1
 PSY2;NA;Non affecté;non;non;NA;PSY2LA;PSY2
 PSY3;NA;Non affecté;non;non;NA;PSY3DNC;PSY3
-PUS;NA;Non affecté;non;non;NA;PUS;PUS
+1020;NA;Non affecté;non;non;NA;PUS;PUS
 PUSACT;NA;Non affecté;non;non;NA;PUSFCT;PUSFCT
 PUSAMOR;NA;Non affecté;non;non;NA;PUSAMOR;PUS
 R10ED101;NA;Non affecté;non;non;NA;R10ED101;R10ED101
@@ -836,11 +835,11 @@ TRANET;NA;Non affecté;non;non;NA;TRANET;TRANET
 TRAPROV;NA;Non affecté;non;non;NA;TRAPROV;TRAPROV
 TRASDN;NA;Non affecté;non;non;NA;TRASDN;TRASDN
 TRATEL;NA;Non affecté;non;non;NA;TRATEL;TRATEL
-UOH;NA;Non affecté;non;non;NA;UOH;UOH
+1030;NA;Non affecté;non;non;NA;UOH;UOH
 UOH2;NA;Non affecté;non;non;NA;UOH2;UOH2
 UOH5;NA;Non affecté;non;non;NA;UOH5NDC;UOH5
 UOHAMOR;NA;Non affecté;non;non;NA;UOHAMOR;UOH
-VALO;NA;Non affecté;non;non;NA;VALO;VALO
+1040;NA;Non affecté;non;non;NA;VALO;VALO
 VIE;NA;Non affecté;non;non;NA;VIE;VIE
 VIE1;NA;Non affecté;non;non;NA;VIE1LI;VIE1
 VIE1B;NA;Non affecté;non;non;NA;VIE1LIJBOT;VIE1B
