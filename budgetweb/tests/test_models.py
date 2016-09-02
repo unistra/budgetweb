@@ -1,3 +1,4 @@
+import datetime
 from decimal import Decimal
 
 from django.contrib.auth.models import User
@@ -216,6 +217,60 @@ class PlanFinancementModelTest(TestCase):
         self.assertEqual(total_recette[0]['sum_recette_dc'], Decimal(44))
         self.assertEqual(total_recette[0]['sum_recette_re'], Decimal(55))
         self.assertEqual(total_recette[0]['sum_recette_ar'], Decimal(66))
+
+    def test_get_total_with_years(self):
+        Depense.objects.create(
+            pfi=self.pfi_ecp, structure=self.structure_ecp, annee=self.annee,
+            periodebudget=self.periode, domainefonctionnel=self.domaine,
+            naturecomptabledepense=self.naturecomptabledepense,
+            montant_dc=Decimal(1), montant_cp=Decimal(2), montant_ae=Decimal(3)
+        )
+        Depense.objects.create(
+            pfi=self.pfi_ecp, structure=self.structure_ecp,
+            annee=self.annee - 1, periodebudget=self.periode,
+            domainefonctionnel=self.domaine,
+            naturecomptabledepense=self.naturecomptabledepense,
+            montant_dc=Decimal(10), montant_cp=Decimal(20),
+            montant_ae=Decimal(30)
+        )
+
+        Recette.objects.create(
+            pfi=self.pfi_ecp, structure=self.structure_ecp, annee=self.annee,
+            periodebudget=self.periode,
+            naturecomptablerecette=self.naturecomptablerecette,
+            montant_dc=Decimal(4), montant_re=Decimal(5), montant_ar=Decimal(6)
+        )
+        Recette.objects.create(
+            pfi=self.pfi_ecp, structure=self.structure_ecp,
+            annee=self.annee - 1, periodebudget=self.periode,
+            naturecomptablerecette=self.naturecomptablerecette,
+            montant_dc=Decimal(40), montant_re=Decimal(50),
+            montant_ar=Decimal(60)
+        )
+        total_depense, total_recette = self.pfi_ecp.get_total(
+            years=[self.annee])
+
+        self.assertEqual(total_depense[0]['sum_depense_dc'], Decimal(1))
+        self.assertEqual(total_depense[0]['sum_depense_cp'], Decimal(2))
+        self.assertEqual(total_depense[0]['sum_depense_ae'], Decimal(3))
+        self.assertEqual(total_recette[0]['sum_recette_dc'], Decimal(4))
+        self.assertEqual(total_recette[0]['sum_recette_re'], Decimal(5))
+        self.assertEqual(total_recette[0]['sum_recette_ar'], Decimal(6))
+
+    def test_get_years(self):
+        self.pfi_ecp.date_debut = datetime.date(2015, 1, 1)
+        self.pfi_ecp.date_fin = datetime.date(2025, 12, 31)
+        self.pfi_ecp.save()
+
+        self.assertListEqual(
+            self.pfi_ecp.get_years(), [2017, 2018, 2019, 2020, 2021])
+        self.assertListEqual(
+            self.pfi_ecp.get_years(year_number=2), [2017, 2018, 2019])
+        self.assertListEqual(self.pfi_ecp.get_years(
+            begin_current_period=False), [2015, 2016, 2017, 2018, 2019])
+        self.assertListEqual(
+            self.pfi_ecp.get_years(begin_current_period=False, year_number=2),
+            [2015, 2016, 2017])
 
 
 class NatureComptableDepenseModelTest(TestCase):

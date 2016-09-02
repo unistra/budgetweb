@@ -33,7 +33,7 @@
           {% if enveloppes_montants.0 %}
           {% with types_montants=enveloppes_montants.0|dictvalue:periode %}
               {% for type in montants_types %}
-      <td>{{ types_montants|dictvalue:type|intspace }} &euro;</td>
+      <td>{% if types_montants %}{{ types_montants|dictvalue:type|intspace }}{% else %}0,00{% endif %} &euro;</td>
               {% endfor %}
           {% endwith %}
           {% else %}
