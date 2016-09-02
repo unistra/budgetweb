@@ -17,22 +17,22 @@ class Command(BaseCommand):
         # Parent nodes
         node = Structure.objects.update_or_create(
             code='1010', type='Etablissement',
-            label='Université de Strasbourg', depth=1,
+            label='Etablissement principal', depth=1,
             defaults={'is_active': True}
         )[0]
         node = Structure.objects.update_or_create(
             code='1020', type='Etablissement',
-            label='Université de Strasbourg', depth=1,
+            label='Presse universitaire', depth=1,
             defaults={'is_active': True}
         )[0]
         node = Structure.objects.update_or_create(
             code='1030', type='Etablissement',
-            label='Université de Strasbourg', depth=1,
+            label='Université Ouverte des Humanités', depth=1,
             defaults={'is_active': True}
         )[0]
         node = Structure.objects.update_or_create(
             code='1040', type='Etablissement',
-            label='Université de Strasbourg', depth=1,
+            label='Valorisation de la recherche', depth=1,
             defaults={'is_active': True}
         )[0]
         for filename in options.get('filename'):
