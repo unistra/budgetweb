@@ -23,15 +23,15 @@
 	</div><br />
 	<div class="title showTree"">
     {% if typeAffichage == "gbcp" %}
-        <div>{% firstof total.recette_montant_re|intspace "0,00" %} &euro;</div>
-        <div>{% firstof total.recette_montant_ar|intspace "0,00" %} &euro;</div>
+        <div class="bold">{% firstof total.recette_montant_re|intspace "0,00" %} &euro;</div>
+        <div class="bold">{% firstof total.recette_montant_ar|intspace "0,00" %} &euro;</div>
         <div>&nbsp;</div>
-        <div>{% firstof total.depense_montant_cp|intspace "0,00" %} &euro;</div>
-        <div>{% firstof total.depense_montant_ae|intspace "0,00" %} &euro;</div>
+        <div class="bold">{% firstof total.depense_montant_cp|intspace "0,00" %} &euro;</div>
+        <div class="bold">{% firstof total.depense_montant_ae|intspace "0,00" %} &euro;</div>
     {% else %}
-        <div style="margin-right:20px;">{% firstof total.recette_montant_dc|intspace "0,00" %} &euro;</div>
+        <div class="bold" style="margin-right:20px;">{% firstof total.recette_montant_dc|intspace "0,00" %} &euro;</div>
         <div>&nbsp;</div>
-        <div>{% firstof total.depense_montant_dc|intspace "0,00" %} &euro;</div>
+        <div class="bold">{% firstof total.depense_montant_dc|intspace "0,00" %} &euro;</div>
     {% endif %}
     </div><br />
 	<div class="tree">
