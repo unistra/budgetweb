@@ -107,3 +107,7 @@ Le jeu de test contient :
     Des programmes de financements pluri-annuel et non pluri-annuel. (Les écrans de saisies ne sont pas identiques).
 L
 
+Contact
+-------
+
+Si vous voulez plus d'information : ludovic.hutin@unistra.fr
