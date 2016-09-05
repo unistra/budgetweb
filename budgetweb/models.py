@@ -95,6 +95,8 @@ class Structure(models.Model):
                                blank=True, null=True)
     groupe2 = models.CharField('Groupe BudgetWeb 2', max_length=255,
                                blank=True, null=True)
+    type = models.CharField('Groupe BudgetWeb 2', max_length=255,
+                            blank=True, null=True)
     is_active = models.BooleanField('Actif', max_length=100, default=True)
     # Depth: 1 == root
     depth = models.PositiveIntegerField()
