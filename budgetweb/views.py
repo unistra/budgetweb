@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from collections import OrderedDict
+from decimal import Decimal
 from itertools import groupby
 import json
 
@@ -16,8 +17,8 @@ from .forms import DepenseForm, PlanFinancementPluriForm, RecetteForm
 from .models import (Depense, DomaineFonctionnel, NatureComptableDepense,
                      NatureComptableRecette, PeriodeBudget, PlanFinancement,
                      Recette, Structure, StructureMontant)
-from .utils import get_authorized_structures_ids, get_current_year
-from decimal import Decimal
+from .utils import (get_authorized_structures_ids, get_current_year,
+                    get_detail_pfi_by_period)
 
 
 # @login_required
@@ -294,7 +295,7 @@ def detailspfi(request, pfiid):
         sum_re=Sum('montant_re'))
     sum_recettes = to_dict(groupby(sum_recettes, lambda x: x['annee']))
 
-    resume_depenses, resume_recettes = pfi.get_detail_pfi_by_period(
+    resume_depenses, resume_recettes = get_detail_pfi_by_period(
         [year_depenses, year_recettes])
 
     context = {
@@ -310,42 +311,67 @@ def detailspfi(request, pfiid):
 @login_required
 @is_authorized_structure
 def detailscf(request, structid):
+    to_dict = lambda x: {k: list(v) for k, v in x}
     structparent = Structure.objects.get(id=structid)
     liste_structure = list(structparent.get_unordered_children())
     liste_structure.insert(0, structparent)
     structure_ids = [s.pk for s in liste_structure]
-    somme_depense = {'sommeAE': Decimal(0.00), 'sommeCP': Decimal(0.00), 'sommeDC': Decimal(0.00)}
-    somme_recette = {'sommeAR': Decimal(0.00), 'sommeRE': Decimal(0.00), 'sommeDC': Decimal(0.00)}
 
-    listeDepense = Depense.objects.filter(pfi__structure__in=structure_ids)\
+    queryset = {'pfi__structure__in': structure_ids}
+    depenses = Depense.objects.filter(**queryset)\
         .prefetch_related(
             'naturecomptabledepense', 'periodebudget', 'pfi',
             'domainefonctionnel', 'pfi__structure')\
-        .order_by('naturecomptabledepense__priority')
-    listeRecette = Recette.objects.filter(pfi__structure__in=structure_ids)\
+        .annotate(enveloppe=F('naturecomptabledepense__enveloppe'))\
+        .order_by('annee', 'naturecomptabledepense__priority')
+    recettes = Recette.objects.filter(**queryset)\
         .prefetch_related(
             'naturecomptablerecette', 'periodebudget', 'pfi',
             'pfi__structure')\
-        .order_by('naturecomptablerecette__priority')
+        .annotate(enveloppe=F('naturecomptablerecette__enveloppe'))\
+        .order_by('annee', 'naturecomptablerecette__priority')
 
-    sommeDepense = listeDepense.aggregate(sommeDC=Sum('montant_dc'),
-                                          sommeAE=Sum('montant_ae'),
-                                          sommeCP=Sum('montant_cp'))
-    sommeRecette = listeRecette.aggregate(sommeDC=Sum('montant_dc'),
-                                      sommeAR=Sum('montant_ar'),
-                                      sommeRE=Sum('montant_re'))
+    # Depenses and recettes per year for the resume template
+    year_depenses = depenses.values(
+            'annee', 'enveloppe', 'periodebudget__code')\
+        .annotate(
+            sum_dc=Sum('montant_dc'),
+            sum_ae=Sum('montant_ae'),
+            sum_cp=Sum('montant_cp'))
+    year_recettes = recettes.values(
+            'annee', 'enveloppe', 'periodebudget__code')\
+        .annotate(
+            sum_dc=Sum('montant_dc'),
+            sum_ar=Sum('montant_ar'),
+            sum_re=Sum('montant_re'))
 
-    for key, values in sommeDepense.items():
-        if values:
-            somme_depense[key] += Decimal(values)
-    for key, values in sommeRecette.items():
-        if values:
-            somme_recette[key] += Decimal(values)
+    depenses = to_dict(groupby(depenses, lambda x: x.annee))
+    recettes = to_dict(groupby(recettes, lambda x: x.annee))
+    years = depenses.keys() | recettes.keys()
+
+    resume_depenses, resume_recettes = get_detail_pfi_by_period(
+        [year_depenses, year_recettes])
 
     context = {
-        'currentYear': get_current_year(),
-        'listeDepense': listeDepense, 'listeRecette': listeRecette,
-        'sommeDepense': somme_depense, 'sommeRecette': somme_recette,
-        'cf': structparent
+        'cf': structparent, 'currentYear': get_current_year(),
+        'resume_depenses': resume_depenses, 'resume_recettes': resume_recettes,
+        'years': years
     }
+
+    if structparent.depth > 2:
+        sum_depenses = Depense.objects.filter(**queryset).values('annee').annotate(
+            sum_dc=Sum('montant_dc'),
+            sum_ae=Sum('montant_ae'),
+            sum_cp=Sum('montant_cp'))
+        sum_depenses = to_dict(groupby(sum_depenses, lambda x: x['annee']))
+        sum_recettes = Recette.objects.filter(**queryset).values('annee').annotate(
+            sum_dc=Sum('montant_dc'),
+            sum_ar=Sum('montant_ar'),
+            sum_re=Sum('montant_re'))
+        sum_recettes = to_dict(groupby(sum_recettes, lambda x: x['annee']))
+        context.update({
+            'listeDepense': depenses, 'listeRecette': recettes,
+            'sommeDepense': sum_depenses, 'sommeRecette': sum_recettes
+        })
+
     return render(request, 'detailscf.html', context)

@@ -4,7 +4,11 @@
   <thead>
     <tr>
       <th colspan="13" style="text-align:left;padding-left:50px;">
-        <a href="{% url 'depense' pfiid=PFI.id annee=year %}">Liste des dépenses.</a>
+    {% if PFI %}
+        <a href="{% url 'depense' pfiid=PFI.id annee=year %}">Liste des dépenses</a>
+    {% else %}
+        Liste des dépenses
+    {% endif %}
       </th>
     </tr>
     <tr>

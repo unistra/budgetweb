@@ -35,8 +35,8 @@
     <li class="parent_li">
       <div class="showTree">
         <span style="width:auto;" class="cf" structid="{{ structure.id }}" title="Ouvrir cette branche">
-          <i class="glyphicon glyphicon-plus"></i>{% if structure.depth == 1 %}{{ structure.label }}{% else %}{{ structure.code }}{% endif %}{% if structure.depth > 2 %}
-        </span> - <a href="{% url 'detailscf' structid=structure.id %}">Détails</a>{% endif %}
+          <i class="glyphicon glyphicon-plus"></i>{% if structure.depth == 1 %}{{ structure.label }}{% else %}{{ structure.code }}{% endif %}
+        </span> - <a href="{% url 'detailscf' structid=structure.id %}">Détails</a>
 
 	{% if typeAffichage == "gbcp" %}
 	    <div>{% firstof montants.recette_montant_re|intspace "0,00" %} &euro;</div>
