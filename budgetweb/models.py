@@ -86,12 +86,15 @@ class Structure(models.Model):
     """
     Gestion de la hiérarchie des Objets CF. En cours de précisions
     """
-    type = models.CharField('Type', max_length=100)
     code = models.CharField('Code', max_length=100, unique=True)
     label = models.CharField('Libellé', max_length=255)
     parent = models.ForeignKey(
         'Structure', blank=True, null=True, related_name='fils',
         verbose_name=u'Lien direct vers la structure parent')
+    groupe1 = models.CharField('Groupe BudgetWeb 1', max_length=255,
+                               blank=True, null=True)
+    groupe2 = models.CharField('Groupe BudgetWeb 2', max_length=255,
+                               blank=True, null=True)
     is_active = models.BooleanField('Actif', max_length=100, default=True)
     # Depth: 1 == root
     depth = models.PositiveIntegerField()

@@ -103,9 +103,9 @@ admin.site.register(Recette, RecetteAdmin)
 
 
 class StructureAdmin(admin.ModelAdmin):
-    field = ('code', 'parent', 'type', 'label', 'is_active')
-    list_display = ('code', 'parent', 'type', 'label', 'is_active')
-    search_fields = ['type', 'code', 'label']
+    field = ('code', 'parent', 'groupe1', 'label', 'is_active')
+    list_display = ('code', 'parent', 'groupe1', 'label', 'is_active')
+    search_fields = ['code', 'label', 'groupe1']
 
     class Meta:
         ordering = ['is_active', 'code']
