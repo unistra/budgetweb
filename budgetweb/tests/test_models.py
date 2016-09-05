@@ -83,7 +83,7 @@ class StructureModelTest(TestCase):
 
     def test_save(self):
         structure = Structure.objects.create(
-            type='Recherche',
+            groupe1='Recherche',
             code='PAIE7DIN1',
             label='Paie 7 Din 1',
             parent=self.paie7din)

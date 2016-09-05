@@ -44,7 +44,7 @@ class StructureAuthorizationsAdminTest(TestCase):
         authorized = user.structureauthorizations.structures.all()
         self.assertEqual(len(authorized), 4)
         self.assertListEqual(
-            [structure.code for structure in authorized], 
+            [structure.code for structure in authorized],
             ['PAIE', 'PAIE7DIN', 'PAIE7ECP', 'PAIE7R101']
         )
 
@@ -52,11 +52,11 @@ class StructureAuthorizationsAdminTest(TestCase):
 class StructureAuthorizationsFormTest(TestCase):
 
     def test_tree(self):
-        structure1 = Structure.objects.create(type='S', code='S1', label='S1')
+        structure1 = Structure.objects.create(groupe1='S', code='S1', label='S1')
         structure2 = Structure.objects.create(
-            type='S', code='S2', label='S2', parent=structure1)
+            groupe1='S', code='S2', label='S2', parent=structure1)
         structure3 = Structure.objects.create(
-            type='S', code='S3', label='S3', parent=structure2)
+            groupe1='S', code='S3', label='S3', parent=structure2)
 
         saa = StructureAuthorizationsAdmin(StructureAuthorizations, AdminSite())
         sa_form = saa.get_form(request)()
