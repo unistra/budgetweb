@@ -40,7 +40,7 @@ class RecetteForm(forms.ModelForm):
         pfi = kwargs.pop('pfi')
         periodebudget = kwargs.pop('periodebudget')
         annee = kwargs.pop('annee')
-        is_dfi_member_or_admin = kwargs.pop('is_dfi_member_or_admin')
+        self.is_dfi_member_or_admin = kwargs.pop('is_dfi_member_or_admin')
         natures = kwargs.pop('natures')
         self.user = kwargs.pop('user')
         super().__init__(*args, **kwargs)
@@ -61,11 +61,6 @@ class RecetteForm(forms.ModelForm):
         self.fields['pfi'].initial = pfi.pk
         self.fields['periodebudget'].initial = periodebudget.pk
         self.fields['annee'].initial = int(annee)
-
-        # Règle de gestion, le champ DC n'est autorisé que pour la DFI.
-        if not is_dfi_member_or_admin:
-            self.fields['montant_dc'].widget.attrs['readonly'] = True
-            self.fields['montant_dc'].required = False
 
         if instance and instance.pk:
             nature = natures[instance.naturecomptablerecette_id]
@@ -131,7 +126,7 @@ class DepenseForm(forms.ModelForm):
         pfi = kwargs.pop('pfi')
         periodebudget = kwargs.pop('periodebudget')
         annee = kwargs.pop('annee')
-        is_dfi_member_or_admin = kwargs.pop('is_dfi_member_or_admin')
+        self.is_dfi_member_or_admin = kwargs.pop('is_dfi_member_or_admin')
         natures = kwargs.pop('natures')
         domaines = kwargs.pop('domaines')
         self.user = kwargs.pop('user')
@@ -163,15 +158,23 @@ class DepenseForm(forms.ModelForm):
                     if n.enveloppe == nature.enveloppe]
             self.fields['naturecomptabledepense'].initial = nature
             if not nature.is_decalage_tresorerie and\
-               not is_dfi_member_or_admin:
+               not self.is_dfi_member_or_admin:
                 self.fields['montant_cp'].widget.attrs['readonly'] = True
 
     def save(self, commit=True):
         depense = super().save(commit=False)
+
+        # Mise à jour des infos de base
         username = self.user.username
         if not depense.id:
             depense.creepar = username
         depense.modifiepar = username
+
+        # Règle de gestion
+        if not self.is_dfi_member_or_admin:
+            if not depense.naturecomptabledepense.is_decalage_tresorerie:
+                if depense.montant_ae != depense.montant_cp:
+                    raise("Le montant AE et CP ne peuvent pas être différent.")
         depense.save()
         return depense
 
