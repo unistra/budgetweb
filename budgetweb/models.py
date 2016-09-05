@@ -1,4 +1,6 @@
+import datetime
 from decimal import Decimal
+from itertools import groupby
 
 from django import forms
 from django.conf import settings
@@ -154,6 +156,10 @@ class PlanFinancement(models.Model):
                                         max_length=100)
     centreprofitderive = models.CharField('Centre de profit associé',
                                           max_length=100)
+    groupe1 = models.CharField('Groupe BudgetWeb 1', max_length=255,
+                               null=True, blank=True)
+    groupe2 = models.CharField('Groupe BudgetWeb 2', max_length=255,
+                               null=True, blank=True)
     is_fleche = models.BooleanField('Fléché oui/non', default=False)
     is_pluriannuel = models.BooleanField('Pluriannuel oui/non', default=False)
     is_active = models.BooleanField('Actif', max_length=100, default=True)
@@ -258,6 +264,47 @@ class PlanFinancement(models.Model):
                         type_dict[1].get('total', Decimal(0)) + montant
             types.append(compta_types)
         return types
+
+    def get_detail_pfi_by_period(self, totals):
+        # FIXME: docstring
+        montants_dict = {'gbcp': ('AE', 'CP', 'AR', 'RE'), 'dc': ('DC',)}
+        montant_type = lambda x: [
+            k for k, v in montants_dict.items() if x in v][0]
+        details = []
+
+        # Group by year
+        for compta in totals:
+            compta_details = {}
+            for year, year_values in groupby(compta, lambda x: x['annee']):
+                compta_types = {k: [{}, {}] for k in montants_dict.keys()}
+                periodes_set = set()
+                for c in year_values:
+                    periode = c['periodebudget__code']
+                    periodes_set.add(periode)
+                    fields = [k for k in c.keys() if k.startswith('sum_')]
+                    for field in fields:
+                        montant = c[field]
+                        field_name = field.split('_')[-1].upper()
+                        mt = montant_type(field_name)
+                        ct = compta_types[mt]
+                        nature_dict = ct[0].setdefault(
+                            c['enveloppe'], [{}, {}])
+                        type_dict = nature_dict[0].setdefault(
+                            periode, {})
+                        type_dict[field_name] = montant
+
+                        # Total per periode and montant_type
+                        nature_dict[1].setdefault(field_name, Decimal(0))
+                        nature_dict[1][field_name] += montant
+
+                        # Total per enveloppe
+                        total_enveloppe = compta_types[mt][1].setdefault(periode, {})
+                        total_enveloppe[field_name] = total_enveloppe.get(field_name, Decimal(0)) + montant
+
+                # TODO: order periodes_set and global periodes_set for depenses and recettes
+                compta_details[year] = (compta_types, periodes_set)
+            details.append(compta_details)
+        return details
 
 
 class NatureComptableDepense(models.Model):
