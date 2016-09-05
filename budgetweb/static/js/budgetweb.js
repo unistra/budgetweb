@@ -41,25 +41,6 @@ jQuery(document).ready(function($) {
         loadDetails("/api/"+ model + "/" + $nature.val() + "/", $nature);
     });
 
-    // NatureComptableDetails choice fields in RecetteForm and DepenseForm
-    $("#supertable").on("change", ".form-naturecomptabledepense", function (e) {
-        var idRegex = /id_form-(\d+).*/;
-        var form_id = idRegex.exec(this.id)[1];
-        var $nature = $("#id_form-" + form_id + "-naturecomptabledepense");
-
-        if ($nature.val() != "") {
-          $.getJSON("/api/naturecomptabledepense/is_decalage_tresorerie/" + $nature.val() + "/", function(data) {
-              if (!data.is_decalage_tresorerie) {
-                $("#id_form-" + form_id + "-montant_cp").prop("readonly", true);
-                $("#id_form-" + form_id + "-montant_cp").val($("#id_form-" + form_id + "-montant_ae").val());
-                $("#id_form-" + form_id + "-montant_dc").val($("#id_form-" + form_id + "-montant_ae").val());
-              }
-              else
-                $("#id_form-" + form_id + "-montant_cp").prop("readonly", false);
-          });
-      }
-    });
-
     function loadDetails(url, dest) {
         $.getJSON(url, function(data) {
 			dest.nextAll().empty();

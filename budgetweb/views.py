@@ -197,7 +197,9 @@ def depense(request, pfiid, annee):
         'PFI': pfi,
         'formset': formset,
         'currentYear': periodebudget.annee,
+        'is_dfi_member_or_admin': is_dfi_member_or_admin,
         'form_template': 'depense.html'
+
     }
     return render(request, 'comptabilite.html', context)
 
@@ -238,6 +240,7 @@ def recette(request, pfiid, annee):
         'PFI': pfi,
         'formset': formset,
         'currentYear': periodebudget.annee,
+        'is_dfi_member_or_admin': is_dfi_member_or_admin,
         'form_template': 'recette.html'
     }
     return render(request, 'comptabilite.html', context)

@@ -52,6 +52,28 @@
 <script src="{% static 'js/jquery.formset.js' %}"></script>
 <script>
     $(document).ready(function() {
+      var is_dfi_member_or_admin = {{ is_dfi_member_or_admin|yesno:"true,false" }};
+
+      // NatureComptableDetails choice fields in RecetteForm and DepenseForm
+      $("#supertable").on("change", ".form-naturecomptabledepense", function (e) {
+          var idRegex = /id_form-(\d+).*/;
+          var form_id = idRegex.exec(this.id)[1];
+          var $nature = $("#id_form-" + form_id + "-naturecomptabledepense");
+
+          if ($nature.val() != "") {
+            $.getJSON("/api/naturecomptabledepense/is_decalage_tresorerie/" + $nature.val() + "/", function(data) {
+                if (!data.is_decalage_tresorerie) {
+                  if ( !is_dfi_member_or_admin)
+                    $("#id_form-" + form_id + "-montant_cp").prop("readonly", true);
+                  $("#id_form-" + form_id + "-montant_cp").val($("#id_form-" + form_id + "-montant_ae").val());
+                  $("#id_form-" + form_id + "-montant_dc").val($("#id_form-" + form_id + "-montant_ae").val());
+                }
+                else
+                  $("#id_form-" + form_id + "-montant_cp").prop("readonly", false);
+            });
+        }
+      });
+
     	$.each(['commentaire', 'lienpiecejointe'], function(index, field) {
     		$('#modal_' + field).on('show.bs.modal', function(e) {
    	           $('#inputform-' + field).attr('value', $(e.relatedTarget).data('formid'));
@@ -62,7 +84,7 @@
    	          $('#' + dest).val($('#modal-' + field + '-field').val());
    	        });
     	});
-    }); 
+    });
 
     $('#formset tbody tr').formset({
         addText: 'Ajouter',

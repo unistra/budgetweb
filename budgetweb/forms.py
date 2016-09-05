@@ -101,8 +101,7 @@ class DepenseForm(forms.ModelForm):
         label='AE', widget=forms.TextInput(attrs={'style': 'width:90px;',
                                                   'class': 'form-naturecomptabledepense'}))
     montant_cp = forms.DecimalField(
-        label='CP', widget=forms.TextInput(attrs={'style': 'width:90px;',
-                                                  'class': 'form-naturecomptabledepense'}))
+        label='CP', widget=forms.TextInput(attrs={'style': 'width:90px;'}))
     lienpiecejointe = forms.CharField(
         required=False,
         label='PJ', widget=forms.TextInput(attrs={'style': 'width:2px;'}))
@@ -156,11 +155,6 @@ class DepenseForm(forms.ModelForm):
         self.fields['periodebudget'].initial = periodebudget.pk
         self.fields['annee'].initial = int(annee)
 
-        # Règle de gestion, le champ DC n'est autorisé que pour la DFI.
-        if not is_dfi_member_or_admin:
-            self.fields['montant_dc'].widget.attrs['readonly'] = True
-            self.fields['montant_dc'].required = False
-
         if instance and instance.pk:
             nature = natures[instance.naturecomptabledepense_id]
             self.fields['enveloppe'].initial = nature.enveloppe
@@ -168,7 +162,8 @@ class DepenseForm(forms.ModelForm):
                 (pk, str(n)) for pk, n in natures.items()\
                     if n.enveloppe == nature.enveloppe]
             self.fields['naturecomptabledepense'].initial = nature
-            if not nature.is_decalage_tresorerie:
+            if not nature.is_decalage_tresorerie and\
+               not is_dfi_member_or_admin:
                 self.fields['montant_cp'].widget.attrs['readonly'] = True
 
     def save(self, commit=True):
