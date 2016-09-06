@@ -212,3 +212,8 @@ td.blank_row {
 .bold {
 	font-weight: bold;
 }
+
+input[readonly]
+{
+    background-color:#ffb3b3;
+}

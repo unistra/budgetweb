@@ -63,8 +63,10 @@
           if ($nature.val() != "") {
             $.getJSON("/api/naturecomptabledepense/is_decalage_tresorerie/" + $nature.val() + "/", function(data) {
                 if (!data.is_decalage_tresorerie) {
-                  if ( !is_dfi_member_or_admin)
+                  if ( !is_dfi_member_or_admin) {
                     $("#id_form-" + form_id + "-montant_cp").prop("readonly", true);
+                    $("#id_form-" + form_id + "-montant_dc").prop("readonly", true);
+                  }
                   $("#id_form-" + form_id + "-montant_cp").val($("#id_form-" + form_id + "-montant_ae").val());
                   $("#id_form-" + form_id + "-montant_dc").val($("#id_form-" + form_id + "-montant_ae").val());
                 }

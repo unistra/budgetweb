@@ -18,8 +18,8 @@ class Command(BaseCommand):
                 reader = csv.reader(h, delimiter=';', quotechar='"')
                 total = 0
                 for row in reader:
-                    pfi_is_fleche = (row[3] == 'oui')
-                    pluri = (row[4] == 'oui')
+                    pfi_is_fleche = (row[3] == 'oui' or  row[3] == 'Oui')
+                    pluri = (row[4] == 'oui' or row[4] == 'Oui')
                     struct_code = row[0]
                     try:
                         struct = Structure.objects.get(code=struct_code)
@@ -30,6 +30,8 @@ class Command(BaseCommand):
                             eotp=row[5],
                             centrecoutderive=row[6],
                             centreprofitderive=row[7],
+                            groupe1=row[8],
+                            groupe2=row[9],
                             is_fleche=pfi_is_fleche,
                             is_pluriannuel=pluri,
                             defaults={'is_active': True}

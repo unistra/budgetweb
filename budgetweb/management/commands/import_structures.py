@@ -16,25 +16,26 @@ class Command(BaseCommand):
 
         # Parent nodes
         node = Structure.objects.update_or_create(
-            code='1010', type='Etablissement',
+            code='1010', groupe1='Etablissement',
             label='Etablissement principal', depth=1,
             defaults={'is_active': True}
         )[0]
         node = Structure.objects.update_or_create(
-            code='1020', type='Etablissement',
+            code='1020', groupe1='Etablissement',
+            label='Valorisation de la recherche', depth=1,
+            defaults={'is_active': True}
+        )[0]
+        node = Structure.objects.update_or_create(
+            code='1030', groupe1='Etablissement',
             label='Presse universitaire', depth=1,
             defaults={'is_active': True}
         )[0]
         node = Structure.objects.update_or_create(
-            code='1030', type='Etablissement',
+            code='1040', groupe1='Etablissement',
             label='Université Ouverte des Humanités', depth=1,
             defaults={'is_active': True}
         )[0]
-        node = Structure.objects.update_or_create(
-            code='1040', type='Etablissement',
-            label='Valorisation de la recherche', depth=1,
-            defaults={'is_active': True}
-        )[0]
+
         for filename in options.get('filename'):
             with open(filename) as h:
                 reader = csv.DictReader(h, delimiter=';', quotechar='"')
@@ -44,9 +45,10 @@ class Command(BaseCommand):
                     code = row['CF']
                     structures[code] = {
                         'code': code,
-                        'type': row['Groupe1'],
-                        'label': row['Designation CF'],
-                        'parent': row['CF Sup. sifac']
+                        'groupe1': row['Groupe1'],
+                        'groupe2': row['Groupe2'],
+                        'label': row['Label'],
+                        'parent': row['CFParent']
                     }
 
                 iteration = 0

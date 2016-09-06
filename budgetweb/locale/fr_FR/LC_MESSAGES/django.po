@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-05 22:52+0200\n"
+"POT-Creation-Date: 2016-09-06 21:11+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -67,7 +67,7 @@ msgstr "Fermer"
 msgid "Accompanying document link"
 msgstr "Lien vers la pièce jointe"
 
-#: budgetweb/templates/comptabilite.html:90 budgetweb/templates/depense.html:32
+#: budgetweb/templates/comptabilite.html:92 budgetweb/templates/depense.html:32
 #: budgetweb/templates/recette.html:32
 msgid "Add"
 msgstr "Ajouter"

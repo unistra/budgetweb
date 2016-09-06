@@ -8,11 +8,11 @@ class RecetteForm(forms.ModelForm):
     enveloppe = forms.ChoiceField(required=False, widget=forms.Select(
         attrs={'class': 'form-enveloppe'}))
     montant_dc = forms.DecimalField(
-        label='DC', widget=forms.TextInput(attrs={'style': 'width:90px;'}))
+        label='DC', widget=forms.TextInput(attrs={'style': 'width:90px;text-align:right;'}))
     montant_ar = forms.DecimalField(
-        label='AR', widget=forms.TextInput(attrs={'style': 'width:90px;'}))
+        label='AR', widget=forms.TextInput(attrs={'style': 'width:90px;text-align:right;'}))
     montant_re = forms.DecimalField(
-        label='RE', widget=forms.TextInput(attrs={'style': 'width:90px;'}))
+        label='RE', widget=forms.TextInput(attrs={'style': 'width:90px;text-align:right;'}))
     lienpiecejointe = forms.CharField(
         required=False,
         label='PJ', widget=forms.TextInput(attrs={'style': 'width:2px;'}))
@@ -28,7 +28,7 @@ class RecetteForm(forms.ModelForm):
         widgets = {
             'commentaire': forms.Textarea(attrs={'cols': 40, 'rows': 2}),
             'annee': forms.TextInput(attrs={
-                'style': 'width:50px;',
+                'style': 'width:50px;text-align:center;',
                 'readonly': 'readonly'
             }),
             'pfi': forms.HiddenInput(attrs={'readonly': 'readonly'}),
@@ -115,7 +115,7 @@ class DepenseForm(forms.ModelForm):
             'commentaire': forms.Textarea(attrs={'cols': 40, 'rows': 2}),
             'pfi': forms.HiddenInput(attrs={'readonly': 'readonly'}),
             'annee': forms.TextInput(attrs={
-                'style': 'width:50px;',
+                'style': 'width:50px;text-align:center;',
                 'readonly': 'readonly'
             }),
             'structure': forms.HiddenInput(attrs={'readonly': 'readonly'}),
@@ -160,6 +160,7 @@ class DepenseForm(forms.ModelForm):
             if not nature.is_decalage_tresorerie and\
                not self.is_dfi_member_or_admin:
                 self.fields['montant_cp'].widget.attrs['readonly'] = True
+                self.fields['montant_dc'].widget.attrs['readonly'] = True
 
     def save(self, commit=True):
         depense = super().save(commit=False)
