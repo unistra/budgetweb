@@ -16,7 +16,7 @@
 		<div>&sum; Dép. CP</div>
 		<div>&sum; Dép. AE</div>
 	{% else %}
-		<div style="margin-right:20px;">&sum; Rec. DC</div>
+		<div>&sum; Rec. DC</div>
 		<div>&nbsp;</div>
 		<div>&sum; Dép. DC</div>
 	{% endif %}
@@ -29,7 +29,7 @@
         <div class="bold">{% firstof total.depense_montant_cp|intspace "0,00" %} &euro;</div>
         <div class="bold">{% firstof total.depense_montant_ae|intspace "0,00" %} &euro;</div>
     {% else %}
-        <div class="bold" style="margin-right:20px;">{% firstof total.recette_montant_dc|intspace "0,00" %} &euro;</div>
+        <div class="bold">{% firstof total.recette_montant_dc|intspace "0,00" %} &euro;</div>
         <div>&nbsp;</div>
         <div class="bold">{% firstof total.depense_montant_dc|intspace "0,00" %} &euro;</div>
     {% endif %}
