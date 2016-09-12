@@ -22,7 +22,7 @@ Prérequis
   
 On revient dans le home dir (exemple /home/lhutin)
 ``` 
-  git clone https://git.unistra.fr/di/budgetweb.git
+  git clone https://github.com/unistra/budgetweb.git
 ```   
 On créé le virtualenv pour BudgetWeb.
 ``` 
@@ -43,6 +43,7 @@ Installation des prerequis du projets
 ```
 * On configure l'environnement et on ajoute 
 ``` 
+    nano .virtualenvs/budgetweb/bin/postactivate
     export DJANGO_SETTINGS_MODULE=budgetweb.settings.dev
     
     workon budgetweb
@@ -56,7 +57,7 @@ Installation des prerequis du projets
     # Configuration du modèle.
     python manage.py migrate
     
-    # On créé notre "superuser" qui disposera des droits administrateurs.
+    # On créé notre "superuser" qui disposera des droits administrateurs. (même login que votre login CAS !)
     python manage.py createsuperuser
     
     # Permet d'importer un jeu de test.
@@ -75,16 +76,16 @@ Installation des prerequis du projets
 Documentation technique
 -----------------------
 
-La table "Structure" contient la structure financière de l'établissement.
-La table "StructureAuthorizations" contient les autorisatons des utilisateurs aux structures.
-La table "StructureMontant" contient les montants cumulés des sous-structures / programme de financement.
-La table "PeriodeBudget" contient les différentes périodes budgétaires (BI, Virement, BR1, BR2, etc.)
-La table "DomaineFonctionnel" contient la liste des domaines fonctionnels.
-La table "PlanFinancement" contient la liste des programmes de financements.
-La table "NatureComptableDepense" contient la liste des natures comptables dépenses.
-La table "NatureComptableRecette" contient la liste des natures comptables recettes
-La table "Depense" qui contient la liste des saisies en dépense.
-La table "Recette" qui contient la liste des saisies en recette.
+ * La table "Structure" contient la structure financière de l'établissement.
+ * La table "StructureAuthorizations" contient les autorisatons des utilisateurs aux structures.
+ * La table "StructureMontant" contient les montants cumulés des sous-structures / programme de financement.
+ * La table "PeriodeBudget" contient les différentes périodes budgétaires (BI, Virement, BR1, BR2, etc.)
+ * La table "DomaineFonctionnel" contient la liste des domaines fonctionnels.
+ * La table "PlanFinancement" contient la liste des programmes de financements.
+ * La table "NatureComptableDepense" contient la liste des natures comptables dépenses.
+ * La table "NatureComptableRecette" contient la liste des natures comptables recettes
+ * La table "Depense" qui contient la liste des saisies en dépense.
+ * La table "Recette" qui contient la liste des saisies en recette.
 
 Quelques règles de gestion ont été implémentées :
   * Si l'utilisateur appartient au groupe "DFI"
