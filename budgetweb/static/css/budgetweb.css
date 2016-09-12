@@ -213,7 +213,12 @@ td.blank_row {
 	font-weight: bold;
 }
 
-input[readonly]
-{
-    background-color:#ffb3b3;
+input[readonly]{
+    /*background-color:#A9A9A9;*/
+		background-color: transparent;
+		border: none;
+}
+input.decimal{
+		text-align:right;
+		width:90px;
 }

@@ -508,14 +508,7 @@ class Depense(Comptabilite):
         super().delete(**kwargs)
 
     def save(self, *args, **kwargs):
-        if not self.naturecomptabledepense.is_decalage_tresorerie\
-                and self.montant_ae != self.montant_cp:
-            raise ValidationError({
-                'montant_ae': "Le décalagage de trésorerie n'est pas possible "
-                "sur cette nature comptable."})
         kwargs.update({'comptabilite_type': 'depense'})
-        if not self.montant_dc:
-            self.montant_dc = self.montant_ae
         super().save(**kwargs)
 
 
@@ -540,8 +533,6 @@ class Recette(Comptabilite):
 
     def save(self, *args, **kwargs):
         kwargs.update({'comptabilite_type': 'recette'})
-        if not self.montant_dc:
-            self.montant_dc = self.montant_ar
         super().save(*args, **kwargs)
 
     def delete(self, **kwargs):

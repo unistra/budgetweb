@@ -62,6 +62,7 @@
 
           if ($nature.val() != "") {
             $.getJSON("/api/naturecomptabledepense/is_decalage_tresorerie/" + $nature.val() + "/", function(data) {
+                // Première règle de gestion.
                 if (!data.is_decalage_tresorerie) {
                   if ( !is_dfi_member_or_admin) {
                     $("#id_form-" + form_id + "-montant_cp").prop("readonly", true);
@@ -70,8 +71,13 @@
                   $("#id_form-" + form_id + "-montant_cp").val($("#id_form-" + form_id + "-montant_ae").val());
                   $("#id_form-" + form_id + "-montant_dc").val($("#id_form-" + form_id + "-montant_ae").val());
                 }
-                else
+                else {
                   $("#id_form-" + form_id + "-montant_cp").prop("readonly", false);
+                  $("#id_form-" + form_id + "-montant_dc").val($("#id_form-" + form_id + "-montant_ae").val());
+                }
+                // Deuxième règle de gestion.
+
+                // Troisième règle de gestion.
             });
         }
       });

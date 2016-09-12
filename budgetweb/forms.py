@@ -8,11 +8,11 @@ class RecetteForm(forms.ModelForm):
     enveloppe = forms.ChoiceField(required=False, widget=forms.Select(
         attrs={'class': 'form-enveloppe'}))
     montant_dc = forms.DecimalField(
-        label='DC', widget=forms.TextInput(attrs={'style': 'width:90px;text-align:right;'}))
+        label='DC', widget=forms.TextInput(attrs={'class': 'decimal'}))
     montant_ar = forms.DecimalField(
-        label='AR', widget=forms.TextInput(attrs={'style': 'width:90px;text-align:right;'}))
+        label='AR', widget=forms.TextInput(attrs={'class': 'decimal'}))
     montant_re = forms.DecimalField(
-        label='RE', widget=forms.TextInput(attrs={'style': 'width:90px;text-align:right;'}))
+        label='RE', widget=forms.TextInput(attrs={'class': 'decimal'}))
     lienpiecejointe = forms.CharField(
         required=False,
         label='PJ', widget=forms.TextInput(attrs={'style': 'width:2px;'}))
@@ -91,12 +91,11 @@ class DepenseForm(forms.ModelForm):
     enveloppe = forms.ChoiceField(required=False, widget=forms.Select(
         attrs={'class': 'form-enveloppe'}))
     montant_dc = forms.DecimalField(
-        label='DC', widget=forms.TextInput(attrs={'style': 'width:90px;'}))
+        label='DC', widget=forms.TextInput(attrs={'class': 'decimal'}))
     montant_ae = forms.DecimalField(
-        label='AE', widget=forms.TextInput(attrs={'style': 'width:90px;',
-                                                  'class': 'form-naturecomptabledepense'}))
+        label='AE', widget=forms.TextInput(attrs={'class': 'form-naturecomptabledepense decimal'}))
     montant_cp = forms.DecimalField(
-        label='CP', widget=forms.TextInput(attrs={'style': 'width:90px;'}))
+        label='CP', widget=forms.TextInput(attrs={'class': 'decimal'}))
     lienpiecejointe = forms.CharField(
         required=False,
         label='PJ', widget=forms.TextInput(attrs={'style': 'width:2px;'}))
@@ -160,6 +159,7 @@ class DepenseForm(forms.ModelForm):
             if not nature.is_decalage_tresorerie and\
                not self.is_dfi_member_or_admin:
                 self.fields['montant_cp'].widget.attrs['readonly'] = True
+            if not self.is_dfi_member_or_admin:
                 self.fields['montant_dc'].widget.attrs['readonly'] = True
 
     def save(self, commit=True):
@@ -176,6 +176,9 @@ class DepenseForm(forms.ModelForm):
             if not depense.naturecomptabledepense.is_decalage_tresorerie:
                 if depense.montant_ae != depense.montant_cp:
                     raise("Le montant AE et CP ne peuvent pas être différent.")
+            else:
+                if depense.montant_ae != depense.montant_cp:
+                    depense.montant_dc = depense.montant_ae
         depense.save()
         return depense
 
