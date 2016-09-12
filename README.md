@@ -1,4 +1,3 @@
-========================
 BudgetWeb
 ========================
 
@@ -13,7 +12,6 @@ Prérequis
   
   * virtualenvwrapper_ et le ``.bashrc`` complété avec les lignes suivantes ::
 
-	# VIRTUALENV PYTHON
 	export WORKON_HOME=~/.virtualenvs/
 	export PIP_VIRTUALENV_BASE=$WORKON_HOME
 	export PIP_RESPECT_VIRTUALENV=true
