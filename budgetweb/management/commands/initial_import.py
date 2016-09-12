@@ -27,9 +27,9 @@ class Command(NoArgsCommand):
             call_command('import_naturecomptablerecette',
                          join(datapath, 'naturecomptablerecette.csv'))
             print('***** Import Financial Plans *****')
-            call_command('import_pfi', join(datapath, 'planfinancement.csv'))
+            call_command('import_pfi', join(datapath, 'programmefinancement.csv'))
             print('***** Import Authorizations *****')
-            call_command('import_authorizations', join(datapath, 'lda.txt'))
+            call_command('import_authorizations', join(datapath, 'autorisation.csv'))
 
             # Creation du groupe DFI correspondant aux gestionnaires de budget.
             Group.objects.update_or_create(name=settings.DFI_GROUP_NAME)
