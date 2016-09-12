@@ -22,7 +22,7 @@ Prérequis
   
 On revient dans le home dir (exemple /home/lhutin)
 ``` 
-  git clone https://git.unistra.fr/di/budgetweb.git
+  git clone https://github.com/unistra/budgetweb.git
 ```   
 On créé le virtualenv pour BudgetWeb.
 ``` 
@@ -43,6 +43,7 @@ Installation des prerequis du projets
 ```
 * On configure l'environnement et on ajoute 
 ``` 
+    nano .virtualenvs/budgetweb/bin/postactivate
     export DJANGO_SETTINGS_MODULE=budgetweb.settings.dev
     
     workon budgetweb
@@ -56,7 +57,7 @@ Installation des prerequis du projets
     # Configuration du modèle.
     python manage.py migrate
     
-    # On créé notre "superuser" qui disposera des droits administrateurs.
+    # On créé notre "superuser" qui disposera des droits administrateurs. (même login que votre login CAS !)
     python manage.py createsuperuser
     
     # Permet d'importer un jeu de test.
