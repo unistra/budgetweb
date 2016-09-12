@@ -1,21 +1,22 @@
+{% load i18n %}
 <fieldset>
-	<legend><a data-toggle="collapse" data-target="#detailspfi" href="#">Caractérisque du programme de financement : {{ PFI.code }} ({{ PFI.label}}) rattaché au centre financier {{ PFI.structure.code }}</a></legend>
-	<div class="row collapse" id="detailspfi">
+	<legend><a data-toggle="collapse" data-target="#detailspfi" href="#">{% trans "Financial programs details"%} : {{ PFI.code }} ({{ PFI.label}}) {% trans "link to the fund center"%} {{ PFI.structure.code }}</a></legend>
+	<div class="row collapse in" id="detailspfi">
 		<div style="display: inline-block;">
-			<div style="display: inline-block;"><label style="width:250px;margin-bottom:0px;">Structure de rattachement :</label>{{ PFI.structure.code }}</div>
-			<div style="display: inline-block;"><label style="width:250px;margin-bottom:0px;">Code de l'EOTP :</label>{{ PFI.eotp }}</div>
+			<div style="display: inline-block;"><label style="width:250px;margin-bottom:0px;">{% trans "Structure link"%} :</label>{{ PFI.structure.code }}</div>
+			<div style="display: inline-block;"><label style="width:250px;margin-bottom:0px;">{% trans "EOTP Code"%} :</label>{{ PFI.eotp }}</div>
 		</div>
 		<div>
-			<div style="display: inline-block;"><label style="width:250px;margin-bottom:0px;">Centre de coût dérivé : </label>{{ PFI.centrecoutderive }}</div>
-			<div style="display: inline-block;"><label style="width:250px;">Centre de profit dérivé : </label>{{ PFI.centreprofitderive }}</div>
+			<div style="display: inline-block;"><label style="width:250px;margin-bottom:0px;">{% trans "Derivate cost center"%} : </label>{{ PFI.centrecoutderive }}</div>
+			<div style="display: inline-block;"><label style="width:250px;">{% trans "Derivate profit center"%} : </label>{{ PFI.centreprofitderive }}</div>
 		</div>
 		<div>
-			<div style="display: inline-block;"><label style="width:250px;margin-bottom:0px;">PFI fléché : </label>{% if PFI.is_fleche %}Oui{% else %}Non{% endif %}</div>
-			<div style="display: inline-block;"><label style="width:250px;margin-bottom:0px;">PFI pluriannuel : </label>{% if PFI.is_pluriannuel %}Oui{% else %}Non{% endif %}</div>
+			<div style="display: inline-block;"><label style="width:250px;margin-bottom:0px;">{% trans "Assigned PFI"%} : </label>{% if PFI.is_fleche %}{% trans "Yes"%}{% else %}{% trans "No"%}{% endif %}</div>
+			<div style="display: inline-block;"><label style="width:250px;margin-bottom:0px;">{% trans "Multi-year PFI"%} : </label>{% if PFI.is_pluriannuel %}{% trans "Yes"%}{% else %}{% trans "No"%}{% endif %}</div>
 	 </div>
 	 {% if PFI.is_pluriannuel %}
 	 <div>
-		 <h4 style="display: inline-block;margin-left:20px;"><a class="pluri-color" href="{% url 'pluriannuel' pfiid=PFI.id %}">Voir le résumé du PFI.</a></h4>
+		 <h4 style="display: inline-block;margin-left:20px;"><a class="pluri-color" href="{% url 'pluriannuel' pfiid=PFI.id %}">{% trans "Show the resumed PFI"%}.</a></h4>
 	 </div>
 	 {% endif %}
  </div>

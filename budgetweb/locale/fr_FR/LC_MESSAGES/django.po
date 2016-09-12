@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-06 21:11+0200\n"
+"POT-Creation-Date: 2016-09-12 13:59+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -67,7 +67,7 @@ msgstr "Fermer"
 msgid "Accompanying document link"
 msgstr "Lien vers la pièce jointe"
 
-#: budgetweb/templates/comptabilite.html:92 budgetweb/templates/depense.html:32
+#: budgetweb/templates/comptabilite.html:98 budgetweb/templates/depense.html:32
 #: budgetweb/templates/recette.html:32
 msgid "Add"
 msgstr "Ajouter"
@@ -83,6 +83,52 @@ msgstr "Modifier"
 #: budgetweb/templates/depense.html:45 budgetweb/templates/recette.html:45
 msgid "Save"
 msgstr "Enregistrer"
+
+#: budgetweb/templates/detailspfi.html:3
+msgid "Financial programs details"
+msgstr "Caractéristique du programme de financement"
+
+#: budgetweb/templates/detailspfi.html:3
+msgid "link to the fund center"
+msgstr "rattaché au centre financier"
+
+#: budgetweb/templates/detailspfi.html:6
+msgid "Structure link"
+msgstr "Structure de rattachement"
+
+#: budgetweb/templates/detailspfi.html:7
+msgid "EOTP Code"
+msgstr "Code de l'EOTP"
+
+#: budgetweb/templates/detailspfi.html:10
+msgid "Derivate cost center"
+msgstr "Centre de coût dérivé"
+
+#: budgetweb/templates/detailspfi.html:11
+msgid "Derivate profit center"
+msgstr "Centre de profit dérivé"
+
+#: budgetweb/templates/detailspfi.html:14
+msgid "Assigned PFI"
+msgstr "PFI fléché"
+
+#: budgetweb/templates/detailspfi.html:14
+#: budgetweb/templates/detailspfi.html:15
+msgid "Yes"
+msgstr "Oui"
+
+#: budgetweb/templates/detailspfi.html:14
+#: budgetweb/templates/detailspfi.html:15
+msgid "No"
+msgstr "Non"
+
+#: budgetweb/templates/detailspfi.html:15
+msgid "Multi-year PFI"
+msgstr "PFI pluriannuel"
+
+#: budgetweb/templates/detailspfi.html:19
+msgid "Show the resumed PFI"
+msgstr "Voir le résumé du PFI"
 
 #: budgetweb/templates/recette.html:8
 msgid "Receipt forms"
