@@ -119,7 +119,7 @@ Le jeu de test contient :
 ![Alt text](docs/images/capture5.jpg?raw=true "Title")
 ![Alt text](docs/images/capture6.jpg?raw=true "Title")
 *Exploitation des données via un univers BO dédié.
-
+![Alt text](docs/images/capture7.jpg?raw=true "Title")
 Contact
 -------
 
