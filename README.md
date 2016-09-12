@@ -37,9 +37,9 @@ Installation des prerequis du projets
 -------------------------------------
 
 * Pour installer Django dans l'environnement virtuel::
-
+```sh
     pip install -r requirements/dev.txt
-    
+```
 * On configure l'environnement et on ajoute 
 
     export DJANGO_SETTINGS_MODULE=budgetweb.settings.dev
