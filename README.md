@@ -11,6 +11,7 @@ Prérequis
   apt-get install virtualenvwrapper
 ``` 
   * virtualenvwrapper_ et le ``.bashrc`` complété avec les lignes suivantes :
+
 ```
 	export WORKON_HOME=~/.virtualenvs/
 	export PIP_VIRTUALENV_BASE=$WORKON_HOME
