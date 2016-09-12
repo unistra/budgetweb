@@ -36,8 +36,8 @@ Vous lancerez et désactiverez l'env. avec les commandes suivantes::
 Installation des prerequis du projets
 -------------------------------------
 
-* Pour installer Django dans l'environnement virtuel::
-```sh
+* Pour installer Django dans l'environnement virtuel:
+```
     pip install -r requirements/dev.txt
 ```
 * On configure l'environnement et on ajoute 
