@@ -1,0 +1,69 @@
+PFI fléché;Fonctionnement;FD020;Droits d'inscription;9RDRN;Droits de scolarité nationaux et redevances;RF_AUTR;Recettes propres fléchées;oui;non
+PFI fléché;Fonctionnement;FD030;Formation continue, diplômes propres et VAE;9RDRU;Droits de scolarité diplômes d'université;RF_AUTR;Recettes propres fléchées;oui;non
+PFI fléché;Fonctionnement;FD030;Formation continue, diplômes propres et VAE;9RFCO;Formation continue;RF_AUTR;Recettes propres fléchées;oui;non
+PFI fléché;Fonctionnement;FD030;Formation continue, diplômes propres et VAE;9RVAE;VAE;RF_AUTR;Recettes propres fléchées;oui;non
+PFI fléché;Fonctionnement;FD040;Taxe d'apprentissage;9RTAX;Taxe d'apprentissage;RF_AUTR;Recettes propres fléchées;oui;non
+PFI fléché;Fonctionnement;FD050;Contrats et prestations de recherche hors ANR;9RRCH;Prestations de recherche, travaux, études, mesures et expertises;RF_AUTR;Recettes propres fléchées;oui;non
+PFI fléché;Fonctionnement;FD050;Contrats et prestations de recherche hors ANR;9RCOL;Colloques;RF_AUTR;Recettes propres fléchées;oui;non
+PFI fléché;Fonctionnement;FD060;Valorisation;9RVAL;Vente de publications, redevance de propriété intellectuelle et droits d'auteur;RF_AUTR;Recettes propres fléchées;oui;non
+PFI fléché;Fonctionnement;FD070;ANR investissements d'avenir;9RFIA;Subvention fonctionnement ANR Investissement d'avenir;RF_ETAT;Financements de l'Etat fléchés;oui;non
+PFI fléché;Fonctionnement;FD080;ANR hors investissements d'avenir;9RANR;Subvention fonctionnement ANR hors Investissement d'avenir;RF_ETAT;Financements de l'Etat fléchés;oui;non
+PFI fléché;Fonctionnement;FD090;Subvention d'exploitation et financement des actifs Région;9RFRE;Subvention fonctionnement Région;RF_PUBL;Autres financements publics fléchés;oui;non
+PFI fléché;Fonctionnement;FD100;Subvention d'exploitation et financement des actifs UE;9RFUE;Subvention fonctionnement Union Européenne;RF_PUBL;Autres financements publics fléchés;oui;non
+PFI fléché;Fonctionnement;FD110;Subvention d'exploitation et financement des actifs Autres;9RFCM;Subvention fonctionnement Communes;RF_PUBL;Autres financements publics fléchés;oui;non
+PFI fléché;Fonctionnement;FD110;Subvention d'exploitation et financement des actifs Autres;9RFDE;Subvention fonctionnement Départements;RF_PUBL;Autres financements publics fléchés;oui;non
+PFI fléché;Fonctionnement;FD110;Subvention d'exploitation et financement des actifs Autres;9RFAU;Subvention fonctionnement Autres ministères, collectivités et organismes;RF_PUBL;Autres financements publics fléchés;oui;non
+PFI fléché;Fonctionnement;FD120;Fondations - fonds propres, réserves, dons et legs ;9RDON;Dons;RF_AUTR;Recettes propres fléchées;oui;non
+PFI fléché;Fonctionnement;FD130;Autres recettes;9RAID;Subvention fonctionnement pour contrats aidés;RF_PUBL;Autres financements publics fléchés;oui;non
+PFI fléché;Fonctionnement;FD130;Autres recettes;9RPRE;Prestations de services diverses et activités annexes;RF_AUTR;Recettes propres fléchées;oui;non
+PFI fléché;Fonctionnement;FD130;Autres recettes;9RDIV;Produits divers;RF_AUTR;Recettes propres fléchées;oui;non
+PFI fléché;Fonctionnement;FD130;Autres recettes;9RMBL;Revenus des immeubles;RF_AUTR;Recettes propres fléchées;oui;non
+PFI fléché;Fonctionnement;FD130;Autres recettes;9RVEN;Ventes de produits finis et marchandises;RF_AUTR;Recettes propres fléchées;oui;non
+PFI fléché;Fonctionnement;FD130;Autres recettes;9RFIN;Produits financiers;RF_AUTR;Recettes propres fléchées;oui;non
+PFI fléché;Fonctionnement;FD130;Autres recettes;9RPIN;Vente de prestations internes ;RF_NB;Recettes fléchées non budgétaires;non;oui
+PFI fléché;Fonctionnement;FD130;Autres recettes;9RANN;NB-Annulation dépenses année antérieure;RF_NB;Recettes fléchées non budgétaires;non;oui
+PFI fléché;Fonctionnement;FD130;Autres recettes;9RQPR;NB-QP reprise des financements d'actifs;RF_NB;Recettes fléchées non budgétaires;non;oui
+PFI fléché;Fonctionnement;FD130;Autres recettes;9RAMO;NB-Reprise sur amort ou provisions;RF_NB;Recettes fléchées non budgétaires;non;oui
+PFI fléché;Fonctionnement;FD130;Autres recettes;9RPIM;NB-Production immobilisée;RF_NB;Recettes fléchées non budgétaires;non;oui
+PFI fléché;Investissement;FD070;ANR investissements d'avenir;9RIIA;Financement d'actifs par l'ANR Investissement d'avenir;RF_ETAT;Financements de l'Etat fléchés;oui;non
+PFI fléché;Investissement;FD090;Subvention d'exploitation et financement des actifs Région;9RIRE;Financement d'actifs par la Région;RF_PUBL;Autres financements publics fléchés;oui;non
+PFI fléché;Investissement;FD100;Subvention d'exploitation et financement des actifs UE;9RIUE;Financement d'actifs par l'Union Européenne;RF_PUBL;Autres financements publics fléchés;oui;non
+PFI fléché;Investissement;FD110;Subvention d'exploitation et financement des actifs Autres;9RIET;Financement d'actifs par l'Etat;RF_ETAT;Financements de l'Etat fléchés;oui;non
+PFI fléché;Investissement;FD110;Subvention d'exploitation et financement des actifs Autres;9RICO;Financement d'actifs par les Communes;RF_PUBL;Autres financements publics fléchés;oui;non
+PFI fléché;Investissement;FD110;Subvention d'exploitation et financement des actifs Autres;9RIDE;Financement d'actifs par les Départements;RF_PUBL;Autres financements publics fléchés;oui;non
+PFI fléché;Investissement;FD110;Subvention d'exploitation et financement des actifs Autres;9RIAU;Financement d'actifs par les autres collectivités et organismes;RF_PUBL;Autres financements publics fléchés;oui;non
+PFI non fléché ou NA;Fonctionnement;FD010;Subvention pour charges de service public;9RSCS;SCSP et autres subventions fonctionnement MESR;RG_SCSP;Subvention pour charges de service public;oui;non
+PFI non fléché ou NA;Fonctionnement;FD020;Droits d'inscription;9RDRN;Droits de scolarité nationaux et redevances;RG_RPRO;Recettes propres;oui;non
+PFI non fléché ou NA;Fonctionnement;FD030;Formation continue, diplômes propres et VAE;9RDRU;Droits de scolarité diplômes d'université;RG_RPRO;Recettes propres;oui;non
+PFI non fléché ou NA;Fonctionnement;FD030;Formation continue, diplômes propres et VAE;9RFCO;Formation continue;RG_RPRO;Recettes propres;oui;non
+PFI non fléché ou NA;Fonctionnement;FD030;Formation continue, diplômes propres et VAE;9RVAE;VAE;RG_RPRO;Recettes propres;oui;non
+PFI non fléché ou NA;Fonctionnement;FD040;Taxe d'apprentissage;9RTAX;Taxe d'apprentissage;RG_RPRO;Recettes propres;oui;non
+PFI non fléché ou NA;Fonctionnement;FD050;Contrats et prestations de recherche hors ANR;9RRCH;Prestations de recherche, travaux, études, mesures et expertises;RG_RPRO;Recettes propres;oui;non
+PFI non fléché ou NA;Fonctionnement;FD050;Contrats et prestations de recherche hors ANR;9RCOL;Colloques;RG_RPRO;Recettes propres;oui;non
+PFI non fléché ou NA;Fonctionnement;FD060;Valorisation;9RVAL;Vente de publications, redevance de propriété intellectuelle et droits d'auteur;RG_RPRO;Recettes propres;oui;non
+PFI non fléché ou NA;Fonctionnement;FD070;ANR investissements d'avenir;9RFIA;Subvention fonctionnement ANR Investissement d'avenir;RG_ETAT;Autres financements de l'Etat ;oui;non
+PFI non fléché ou NA;Fonctionnement;FD080;ANR hors investissements d'avenir;9RANR;Subvention fonctionnement ANR hors Investissement d'avenir;RG_ETAT;Autres financements de l'Etat ;oui;non
+PFI non fléché ou NA;Fonctionnement;FD090;Subvention d'exploitation et financement des actifs Région;9RFRE;Subvention fonctionnement Région;RG_PUBL;Autres financements publics;oui;non
+PFI non fléché ou NA;Fonctionnement;FD100;Subvention d'exploitation et financement des actifs UE;9RFUE;Subvention fonctionnement Union Européenne;RG_PUBL;Autres financements publics;oui;non
+PFI non fléché ou NA;Fonctionnement;FD110;Subvention d'exploitation et financement des actifs Autres;9RFCM;Subvention fonctionnement Communes;RG_PUBL;Autres financements publics;oui;non
+PFI non fléché ou NA;Fonctionnement;FD110;Subvention d'exploitation et financement des actifs Autres;9RFDE;Subvention fonctionnement Départements;RG_PUBL;Autres financements publics;oui;non
+PFI non fléché ou NA;Fonctionnement;FD110;Subvention d'exploitation et financement des actifs Autres;9RFAU;Subvention fonctionnement Autres ministères, collectivités et organismes;RG_PUBL;Autres financements publics;oui;non
+PFI non fléché ou NA;Fonctionnement;FD120;Fondations - fonds propres, réserves, dons et legs ;9RDON;Dons;RG_RPRO;Recettes propres;oui;non
+PFI non fléché ou NA;Fonctionnement;FD130;Autres recettes;9RAID;Subvention fonctionnement pour contrats aidés;RG_PUBL;Autres financements publics;oui;non
+PFI non fléché ou NA;Fonctionnement;FD130;Autres recettes;9RPRE;Prestations de services diverses et activités annexes;RG_RPRO;Recettes propres;oui;non
+PFI non fléché ou NA;Fonctionnement;FD130;Autres recettes;9RDIV;Produits divers;RG_RPRO;Recettes propres;oui;non
+PFI non fléché ou NA;Fonctionnement;FD130;Autres recettes;9RMBL;Revenus des immeubles;RG_RPRO;Recettes propres;oui;non
+PFI non fléché ou NA;Fonctionnement;FD130;Autres recettes;9RVEN;Ventes de produits finis et marchandises;RG_RPRO;Recettes propres;oui;non
+PFI non fléché ou NA;Fonctionnement;FD130;Autres recettes;9RFIN;Produits financiers;RG_RPRO;Recettes propres;oui;non
+PFI non fléché ou NA;Fonctionnement;FD130;Autres recettes;9RPIN;Vente de prestations internes ;RG_NB;Recettes globalisées non budgétaires;non;oui
+PFI non fléché ou NA;Fonctionnement;FD130;Autres recettes;9RANN;NB-Annulation dépenses année antérieure;RG_NB;Recettes globalisées non budgétaires;non;oui
+PFI non fléché ou NA;Fonctionnement;FD130;Autres recettes;9RQPR;NB-QP reprise des financements d'actifs;RG_NB;Recettes globalisées non budgétaires;non;oui
+PFI non fléché ou NA;Fonctionnement;FD130;Autres recettes;9RAMO;NB-Reprise sur amort ou provisions;RG_NB;Recettes globalisées non budgétaires;non;oui
+PFI non fléché ou NA;Fonctionnement;FD130;Autres recettes;9RPIM;NB-Production immobilisée;RG_NB;Recettes globalisées non budgétaires;non;oui
+PFI non fléché ou NA;Investissement;FD070;ANR investissements d'avenir;9RIIA;Financement d'actifs par l'ANR Investissement d'avenir;RG_ETAT;Autres financements de l'Etat ;oui;non
+PFI non fléché ou NA;Investissement;FD090;Subvention d'exploitation et financement des actifs Région;9RIRE;Financement d'actifs par la Région;RG_PUBL;Autres financements publics;oui;non
+PFI non fléché ou NA;Investissement;FD100;Subvention d'exploitation et financement des actifs UE;9RIUE;Financement d'actifs par l'Union Européenne;RG_PUBL;Autres financements publics;oui;non
+PFI non fléché ou NA;Investissement;FD110;Subvention d'exploitation et financement des actifs Autres;9RIET;Financement d'actifs par l'Etat;RG_ETAT;Autres financements de l'Etat ;oui;non
+PFI non fléché ou NA;Investissement;FD110;Subvention d'exploitation et financement des actifs Autres;9RICO;Financement d'actifs par les Communes;RG_PUBL;Autres financements publics;oui;non
+PFI non fléché ou NA;Investissement;FD110;Subvention d'exploitation et financement des actifs Autres;9RIDE;Financement d'actifs par les Départements;RG_PUBL;Autres financements publics;oui;non
+PFI non fléché ou NA;Investissement;FD110;Subvention d'exploitation et financement des actifs Autres;9RIAU;Financement d'actifs par les autres collectivités et organismes;RG_PUBL;Autres financements publics;oui;non

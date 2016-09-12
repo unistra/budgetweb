@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load i18n %}
+{% block head-additional %}
+<link rel="stylesheet" href="{% static 'css/budgetweb.css' %}"/>
+{% endblock %}
+
+{% block content %}
+<div class="col-md-12">
+    {% include "detailspfi.html" %}
+    {% include form_template %}
+</div>
+
+<div class="modal fade model-wide" id="modal_commentaire" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{% trans "Comment" %}</h4>
+      </div>
+      <div class="modal-body">
+        <textarea cols="60" id="modal-commentaire-field" name="modal-commentaire-field" rows="10"></textarea>
+        <input type="textfield" size="10" id="inputform-commentaire" name="inputform-commentaire" hidden />
+        <button id="modal-commentaire-submit" data-dismiss="modal" type="submit" class="save btn btn-primary">{% trans "Submit" %}</button>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-default" data-dismiss="modal">{% trans "Close" %}</button>
+      </div>
+     </div>
+   </div>
+</div>
+<div class="modal fade model-wide" id="modal_lienpiecejointe" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{% trans "Accompanying document link" %}</h4>
+      </div>
+      <div class="modal-body">
+        <textarea cols="60" id="modal-lienpiecejointe-field" name="modal-lienpiecejointe-field" rows="10"></textarea>
+        <input type="textfield" size="10" id="inputform-lienpiecejointe" name="inputform-lienpiecejointe" hidden />
+        <button id="modal-lienpiecejointe-submit" data-dismiss="modal" type="submit" class="save btn btn-primary">{% trans "Submit" %}</button>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-default" data-dismiss="modal">{% trans "Close" %}</button>
+      </div>
+     </div>
+   </div>
+</div>
+{% endblock %}
+{% block foot-javascript %}
+<script src="{% static 'js/jquery.formset.js' %}"></script>
+<script>
+    $(document).ready(function() {
+      var is_dfi_member_or_admin = {{ is_dfi_member_or_admin|yesno:"true,false" }};
+
+      // NatureComptableDetails choice fields in RecetteForm and DepenseForm
+      $("#supertable").on("change", ".form-naturecomptabledepense", function (e) {
+          var idRegex = /id_form-(\d+).*/;
+          var form_id = idRegex.exec(this.id)[1];
+          var $nature = $("#id_form-" + form_id + "-naturecomptabledepense");
+
+          if ($nature.val() != "") {
+            $.getJSON("/api/naturecomptabledepense/is_decalage_tresorerie/" + $nature.val() + "/", function(data) {
+                // Première règle de gestion.
+                if (!data.is_decalage_tresorerie) {
+                  if ( !is_dfi_member_or_admin) {
+                    $("#id_form-" + form_id + "-montant_cp").prop("readonly", true);
+                    $("#id_form-" + form_id + "-montant_dc").prop("readonly", true);
+                  }
+                  $("#id_form-" + form_id + "-montant_cp").val($("#id_form-" + form_id + "-montant_ae").val());
+                  $("#id_form-" + form_id + "-montant_dc").val($("#id_form-" + form_id + "-montant_ae").val());
+                }
+                else {
+                  $("#id_form-" + form_id + "-montant_cp").prop("readonly", false);
+                  $("#id_form-" + form_id + "-montant_dc").val($("#id_form-" + form_id + "-montant_ae").val());
+                }
+                // Deuxième règle de gestion.
+
+                // Troisième règle de gestion.
+            });
+        }
+      });
+
+    	$.each(['commentaire', 'lienpiecejointe'], function(index, field) {
+    		$('#modal_' + field).on('show.bs.modal', function(e) {
+   	           $('#inputform-' + field).attr('value', $(e.relatedTarget).data('formid'));
+   	           $('#modal-' + field + '-field').val($('#' + $(e.relatedTarget).data('formid')).val());
+   	        });
+   	        $('#modal-' + field + '-submit').on('click', function(e) {
+   	          dest = $('#inputform-' + field).attr('value');
+   	          $('#' + dest).val($('#modal-' + field + '-field').val());
+   	        });
+    	});
+    });
+
+    $('#formset tbody tr').formset({
+        addText: '{% trans "Add" %}',
+        addCssClass: 'btn-primary btn',
+        deleteText: '<span class="danger glyphicon glyphicon-trash"></span>',
+    });
+</script>
+{% endblock %}

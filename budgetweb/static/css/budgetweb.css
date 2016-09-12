@@ -1,0 +1,224 @@
+ul {
+	margin:0px;
+	padding:0px;
+	padding-left:10px;
+}
+
+.tree{
+	margin-top:0px;
+}
+.tree li {
+    list-style-type:none;
+    margin:0;
+    padding: 5px 0 0px 5px;
+    position:relative;
+}
+.tree li::before, .tree li::after {
+    content:'';
+    left:-20px;
+    position:absolute;
+    right:auto;
+}
+.tree li::before {
+    /*border-left:1px solid #999;*/
+    bottom:50px;
+    height:100%;
+    top:0;
+    width:1px;
+}
+.tree li::after {
+    /*border-top:1px solid #999;*/
+    height:20px;
+    top:25px;
+    width:0px;
+}
+.tree li>div:hover {
+	background-color: #cbcbcb;
+}
+.tree li span {
+    /*-moz-border-radius:5px;
+    -webkit-border-radius:5px;
+    border:1px solid #999;*/
+    border-radius:5px;*/
+    display:inline-block;
+    /*padding:3px 8px;*/
+    text-decoration:none;
+}
+.tree li.parent_li>div span {
+    cursor:pointer;
+}
+.tree>ul>li::before, .tree>ul>li::after {
+    border:0;
+}
+.tree li:last-child::before {
+    height:30px;
+}
+
+.showTree div {
+  display: inline;
+  float:right;
+  margin:0px;
+  width:150px;
+  border-left: solid 1px black;
+  text-align:right;
+  padding-right:5px;
+}
+
+.form-control{
+	height:30px;
+	width:auto;
+	display:inline-block;
+}
+
+label {
+  display: inline-block;
+  width: 180px;
+  text-align: right;
+  vertical-align: top;
+}
+
+.table-pluri thead th {
+  text-align: center;
+  font-weight: bold;
+  border: 3px solid #000000;
+  padding: 5px;
+}
+
+.table-pluri tbody tr {
+  border-right: 3px solid #000000;
+  border-left: 3px solid #000000;
+}
+
+.table-pluri tbody td {
+    border: 1px solid #000000;
+    padding: 5px;
+    text-align: right;
+}
+.table-pluri tbody {
+    border-bottom: 3px solid #000000;
+}
+
+.table-details {
+  text-align:center;
+}
+
+.container {
+  width:100%;
+}
+
+.pluri {
+  display: inline-block;
+  width: 150px;
+  text-align: right;
+  vertical-align: middle;
+  font-weight: bold;
+}
+
+.pluri.total {
+  width: 50px;
+}
+
+.supertable {
+    margin-bottom: 20px;
+    width:100%;
+}
+.supertable tbody td{
+    padding: 2px 5px;
+}
+.supertable thead th{
+  padding: 5px 10px 5px 10px;
+  font-size: 1.1em;
+}
+.supertable select {
+    width: 100%;
+}
+.depense thead th {
+  background-color: #66ff66
+}
+.depense tr.row1 {
+  background-color: #ccffcc;
+}
+.depense tr.row2 {
+  background-color: #99ff99;
+}
+.recette thead th {
+  background-color: #ff6666
+}
+.recette tr.row1 {
+  background-color: #ffcccc;
+}
+.recette tr.row2 {
+  background-color: #ff9999;
+}
+ul.errorlist {
+    color: #F00;
+    font-weight: bold;
+    list-style-type: none;
+}
+
+fieldset {
+  border: 1px solid #000000;
+  padding: 5px;
+  margin-bottom: 20px;
+}
+
+legend {
+  margin-bottom:5px;
+  padding-left:5px;
+  padding-right:5px;
+  width: auto;
+  border: 0px solid;
+}
+
+.recette-color {
+  color: #775500;
+}
+
+.depense-color {
+  color: #009900;
+}
+.pluri-color {
+  color: #9900ff;
+}
+
+.cf {
+  color: #0000bb;
+}
+
+.montant {
+	text-align: right;
+}
+
+td.blank_row {
+    line-height:5px;
+}
+
+.resumepfi {
+    border: 3px solid black;
+}
+
+.resumepfi th {
+    text-align: center;
+		border: 3px solid #000000;
+		padding: 2px;
+}
+
+.resumepfi td {
+    border: 1px solid #000000;
+    padding: 5px;
+		text-align: right;
+}
+
+.bold {
+	font-weight: bold;
+}
+
+input[readonly]{
+    /*background-color:#A9A9A9;*/
+		background-color: transparent;
+		border: none;
+}
+input.decimal{
+		text-align:right;
+		width:90px;
+}

@@ -1,0 +1,887 @@
+[
+{
+    "fields": {
+        "code_compte_budgetaire": "RF_AUTR",
+        "label_compte_budgetaire": "Recettes propres fl\u00e9ch\u00e9es",
+        "is_fleche": true,
+        "code_fonds": "FD020",
+        "is_active": true,
+        "enveloppe": "Fonctionnement",
+        "label_fonds": "Droits d'inscription",
+        "label_nature_comptable": "Droits de scolarit\u00e9 nationaux et redevances",
+        "code_nature_comptable": "9RDRN"
+    },
+    "pk": 1,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RF_AUTR",
+        "label_compte_budgetaire": "Recettes propres fl\u00e9ch\u00e9es",
+        "is_fleche": true,
+        "code_fonds": "FD030",
+        "is_active": true,
+        "enveloppe": "Fonctionnement",
+        "label_fonds": "Formation continue, dipl\u00f4mes propres et VAE",
+        "label_nature_comptable": "Droits de scolarit\u00e9 dipl\u00f4mes d'universit\u00e9",
+        "code_nature_comptable": "9RDRU"
+    },
+    "pk": 2,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RF_AUTR",
+        "label_compte_budgetaire": "Recettes propres fl\u00e9ch\u00e9es",
+        "is_fleche": true,
+        "code_fonds": "FD030",
+        "is_active": true,
+        "enveloppe": "Fonctionnement",
+        "label_fonds": "Formation continue, dipl\u00f4mes propres et VAE",
+        "label_nature_comptable": "Formation continue",
+        "code_nature_comptable": "9RFCO"
+    },
+    "pk": 3,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RF_AUTR",
+        "label_compte_budgetaire": "Recettes propres fl\u00e9ch\u00e9es",
+        "is_fleche": true,
+        "code_fonds": "FD030",
+        "is_active": true,
+        "enveloppe": "Fonctionnement",
+        "label_fonds": "Formation continue, dipl\u00f4mes propres et VAE",
+        "label_nature_comptable": "VAE",
+        "code_nature_comptable": "9RVAE"
+    },
+    "pk": 4,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RF_AUTR",
+        "label_compte_budgetaire": "Recettes propres fl\u00e9ch\u00e9es",
+        "is_fleche": true,
+        "code_fonds": "FD040",
+        "is_active": true,
+        "enveloppe": "Fonctionnement",
+        "label_fonds": "Taxe d'apprentissage",
+        "label_nature_comptable": "Taxe d'apprentissage",
+        "code_nature_comptable": "9RTAX"
+    },
+    "pk": 5,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RF_AUTR",
+        "label_compte_budgetaire": "Recettes propres fl\u00e9ch\u00e9es",
+        "is_fleche": true,
+        "code_fonds": "FD050",
+        "is_active": true,
+        "enveloppe": "Fonctionnement",
+        "label_fonds": "Contrats et prestations de recherche hors ANR",
+        "label_nature_comptable": "Prestations de recherche, travaux, \u00e9tudes, mesures et expertises",
+        "code_nature_comptable": "9RRCH"
+    },
+    "pk": 6,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RF_AUTR",
+        "label_compte_budgetaire": "Recettes propres fl\u00e9ch\u00e9es",
+        "is_fleche": true,
+        "code_fonds": "FD050",
+        "is_active": true,
+        "enveloppe": "Fonctionnement",
+        "label_fonds": "Contrats et prestations de recherche hors ANR",
+        "label_nature_comptable": "Colloques",
+        "code_nature_comptable": "9RCOL"
+    },
+    "pk": 7,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RF_AUTR",
+        "label_compte_budgetaire": "Recettes propres fl\u00e9ch\u00e9es",
+        "is_fleche": true,
+        "code_fonds": "FD060",
+        "is_active": true,
+        "enveloppe": "Fonctionnement",
+        "label_fonds": "Valorisation",
+        "label_nature_comptable": "Vente de publications, redevance de propri\u00e9t\u00e9 intellectuelle et droits d'auteur",
+        "code_nature_comptable": "9RVAL"
+    },
+    "pk": 8,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RF_ETAT",
+        "label_compte_budgetaire": "Financements de l'Etat fl\u00e9ch\u00e9s",
+        "is_fleche": true,
+        "code_fonds": "FD070",
+        "is_active": true,
+        "enveloppe": "Fonctionnement",
+        "label_fonds": "ANR investissements d'avenir",
+        "label_nature_comptable": "Subvention fonctionnement ANR Investissement d'avenir",
+        "code_nature_comptable": "9RFIA"
+    },
+    "pk": 9,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RF_ETAT",
+        "label_compte_budgetaire": "Financements de l'Etat fl\u00e9ch\u00e9s",
+        "is_fleche": true,
+        "code_fonds": "FD080",
+        "is_active": true,
+        "enveloppe": "Fonctionnement",
+        "label_fonds": "ANR hors investissements d'avenir",
+        "label_nature_comptable": "Subvention fonctionnement ANR hors Investissement d'avenir",
+        "code_nature_comptable": "9RANR"
+    },
+    "pk": 10,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RF_PUBL",
+        "label_compte_budgetaire": "Autres financements publics fl\u00e9ch\u00e9s",
+        "is_fleche": true,
+        "code_fonds": "FD090",
+        "is_active": true,
+        "enveloppe": "Fonctionnement",
+        "label_fonds": "Subvention d'exploitation et financement des actifs R\u00e9gion",
+        "label_nature_comptable": "Subvention fonctionnement R\u00e9gion",
+        "code_nature_comptable": "9RFRE"
+    },
+    "pk": 11,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RF_PUBL",
+        "label_compte_budgetaire": "Autres financements publics fl\u00e9ch\u00e9s",
+        "is_fleche": true,
+        "code_fonds": "FD100",
+        "is_active": true,
+        "enveloppe": "Fonctionnement",
+        "label_fonds": "Subvention d'exploitation et financement des actifs UE",
+        "label_nature_comptable": "Subvention fonctionnement Union Europ\u00e9enne",
+        "code_nature_comptable": "9RFUE"
+    },
+    "pk": 12,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RF_PUBL",
+        "label_compte_budgetaire": "Autres financements publics fl\u00e9ch\u00e9s",
+        "is_fleche": true,
+        "code_fonds": "FD110",
+        "is_active": true,
+        "enveloppe": "Fonctionnement",
+        "label_fonds": "Subvention d'exploitation et financement des actifs Autres",
+        "label_nature_comptable": "Subvention fonctionnement Communes",
+        "code_nature_comptable": "9RFCO"
+    },
+    "pk": 13,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RF_PUBL",
+        "label_compte_budgetaire": "Autres financements publics fl\u00e9ch\u00e9s",
+        "is_fleche": true,
+        "code_fonds": "FD110",
+        "is_active": true,
+        "enveloppe": "Fonctionnement",
+        "label_fonds": "Subvention d'exploitation et financement des actifs Autres",
+        "label_nature_comptable": "Subvention fonctionnement D\u00e9partements",
+        "code_nature_comptable": "9RFDE"
+    },
+    "pk": 14,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RF_PUBL",
+        "label_compte_budgetaire": "Autres financements publics fl\u00e9ch\u00e9s",
+        "is_fleche": true,
+        "code_fonds": "FD110",
+        "is_active": true,
+        "enveloppe": "Fonctionnement",
+        "label_fonds": "Subvention d'exploitation et financement des actifs Autres",
+        "label_nature_comptable": "Subvention fonctionnement Autres minist\u00e8res, collectivit\u00e9s et organismes",
+        "code_nature_comptable": "9RFAU"
+    },
+    "pk": 15,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RF_AUTR",
+        "label_compte_budgetaire": "Recettes propres fl\u00e9ch\u00e9es",
+        "is_fleche": true,
+        "code_fonds": "FD120",
+        "is_active": true,
+        "enveloppe": "Fonctionnement",
+        "label_fonds": "Fondations - fonds propres, r\u00e9serves, dons et legs",
+        "label_nature_comptable": "Dons",
+        "code_nature_comptable": "9RDON"
+    },
+    "pk": 16,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RF_PUBL",
+        "label_compte_budgetaire": "Autres financements publics fl\u00e9ch\u00e9s",
+        "is_fleche": true,
+        "code_fonds": "FD130",
+        "is_active": true,
+        "enveloppe": "Fonctionnement",
+        "label_fonds": "Autres recettes",
+        "label_nature_comptable": "Subvention fonctionnement pour contrats aid\u00e9s",
+        "code_nature_comptable": "9RAID"
+    },
+    "pk": 17,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RF_AUTR",
+        "label_compte_budgetaire": "Recettes propres fl\u00e9ch\u00e9es",
+        "is_fleche": true,
+        "code_fonds": "FD130",
+        "is_active": true,
+        "enveloppe": "Fonctionnement",
+        "label_fonds": "Autres recettes",
+        "label_nature_comptable": "Prestations de services diverses et activit\u00e9s annexes",
+        "code_nature_comptable": "9RPRE"
+    },
+    "pk": 18,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RF_AUTR",
+        "label_compte_budgetaire": "Recettes propres fl\u00e9ch\u00e9es",
+        "is_fleche": true,
+        "code_fonds": "FD130",
+        "is_active": true,
+        "enveloppe": "Fonctionnement",
+        "label_fonds": "Autres recettes",
+        "label_nature_comptable": "Produits divers",
+        "code_nature_comptable": "9RDIV"
+    },
+    "pk": 19,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RF_AUTR",
+        "label_compte_budgetaire": "Recettes propres fl\u00e9ch\u00e9es",
+        "is_fleche": true,
+        "code_fonds": "FD130",
+        "is_active": true,
+        "enveloppe": "Fonctionnement",
+        "label_fonds": "Autres recettes",
+        "label_nature_comptable": "Revenus des immeubles",
+        "code_nature_comptable": "9RIMM"
+    },
+    "pk": 20,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RF_AUTR",
+        "label_compte_budgetaire": "Recettes propres fl\u00e9ch\u00e9es",
+        "is_fleche": true,
+        "code_fonds": "FD130",
+        "is_active": true,
+        "enveloppe": "Fonctionnement",
+        "label_fonds": "Autres recettes",
+        "label_nature_comptable": "Ventes de produits finis et marchandises",
+        "code_nature_comptable": "9RVEN"
+    },
+    "pk": 21,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RF_AUTR",
+        "label_compte_budgetaire": "Recettes propres fl\u00e9ch\u00e9es",
+        "is_fleche": true,
+        "code_fonds": "FD130",
+        "is_active": true,
+        "enveloppe": "Fonctionnement",
+        "label_fonds": "Autres recettes",
+        "label_nature_comptable": "Produits financiers",
+        "code_nature_comptable": "9RFIN"
+    },
+    "pk": 22,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RF_ETAT",
+        "label_compte_budgetaire": "Financements de l'Etat fl\u00e9ch\u00e9s",
+        "is_fleche": true,
+        "code_fonds": "FD070",
+        "is_active": true,
+        "enveloppe": "Investissement",
+        "label_fonds": "ANR investissements d'avenir",
+        "label_nature_comptable": "Financement d'actifs par l'ANR Investissement d'avenir",
+        "code_nature_comptable": "9RIIA"
+    },
+    "pk": 23,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RF_PUBL",
+        "label_compte_budgetaire": "Autres financements publics fl\u00e9ch\u00e9s",
+        "is_fleche": true,
+        "code_fonds": "FD090",
+        "is_active": true,
+        "enveloppe": "Investissement",
+        "label_fonds": "Subvention d'exploitation et financement des actifs R\u00e9gion",
+        "label_nature_comptable": "Financement d'actifs par la R\u00e9gion",
+        "code_nature_comptable": "9RIRE"
+    },
+    "pk": 24,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RF_PUBL",
+        "label_compte_budgetaire": "Autres financements publics fl\u00e9ch\u00e9s",
+        "is_fleche": true,
+        "code_fonds": "FD100",
+        "is_active": true,
+        "enveloppe": "Investissement",
+        "label_fonds": "Subvention d'exploitation et financement des actifs UE",
+        "label_nature_comptable": "Financement d'actifs par l'Union Europ\u00e9enne",
+        "code_nature_comptable": "9RIUE"
+    },
+    "pk": 25,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RF_ETAT",
+        "label_compte_budgetaire": "Financements de l'Etat fl\u00e9ch\u00e9s",
+        "is_fleche": true,
+        "code_fonds": "FD110",
+        "is_active": true,
+        "enveloppe": "Investissement",
+        "label_fonds": "Subvention d'exploitation et financement des actifs Autres",
+        "label_nature_comptable": "Financement d'actifs par l'Etat",
+        "code_nature_comptable": "9RIET"
+    },
+    "pk": 26,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RF_PUBL",
+        "label_compte_budgetaire": "Autres financements publics fl\u00e9ch\u00e9s",
+        "is_fleche": true,
+        "code_fonds": "FD110",
+        "is_active": true,
+        "enveloppe": "Investissement",
+        "label_fonds": "Subvention d'exploitation et financement des actifs Autres",
+        "label_nature_comptable": "Financement d'actifs par les Communes",
+        "code_nature_comptable": "9RICO"
+    },
+    "pk": 27,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RF_PUBL",
+        "label_compte_budgetaire": "Autres financements publics fl\u00e9ch\u00e9s",
+        "is_fleche": true,
+        "code_fonds": "FD110",
+        "is_active": true,
+        "enveloppe": "Investissement",
+        "label_fonds": "Subvention d'exploitation et financement des actifs Autres",
+        "label_nature_comptable": "Financement d'actifs par les D\u00e9partements",
+        "code_nature_comptable": "9RIDE"
+    },
+    "pk": 28,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RF_PUBL",
+        "label_compte_budgetaire": "Autres financements publics fl\u00e9ch\u00e9s",
+        "is_fleche": true,
+        "code_fonds": "FD110",
+        "is_active": true,
+        "enveloppe": "Investissement",
+        "label_fonds": "Subvention d'exploitation et financement des actifs Autres",
+        "label_nature_comptable": "Financement d'actifs par les autres collectivit\u00e9s et organismes",
+        "code_nature_comptable": "9RIAU"
+    },
+    "pk": 29,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RG_SCSP",
+        "label_compte_budgetaire": "Subvention pour charges de service public",
+        "is_fleche": false,
+        "code_fonds": "FD010",
+        "is_active": true,
+        "enveloppe": "Fonctionnement",
+        "label_fonds": "Subvention pour charges de service public",
+        "label_nature_comptable": "SCSP et autres subventions fonctionnement MESR",
+        "code_nature_comptable": "9RSCS"
+    },
+    "pk": 30,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RG_RPRO",
+        "label_compte_budgetaire": "Recettes propres",
+        "is_fleche": false,
+        "code_fonds": "FD020",
+        "is_active": true,
+        "enveloppe": "Fonctionnement",
+        "label_fonds": "Droits d'inscription",
+        "label_nature_comptable": "Droits de scolarit\u00e9 nationaux et redevances",
+        "code_nature_comptable": "9RDRN"
+    },
+    "pk": 31,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RG_RPRO",
+        "label_compte_budgetaire": "Recettes propres",
+        "is_fleche": false,
+        "code_fonds": "FD030",
+        "is_active": true,
+        "enveloppe": "Fonctionnement",
+        "label_fonds": "Formation continue, dipl\u00f4mes propres et VAE",
+        "label_nature_comptable": "Droits de scolarit\u00e9 dipl\u00f4mes d'universit\u00e9",
+        "code_nature_comptable": "9RDRU"
+    },
+    "pk": 32,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RG_RPRO",
+        "label_compte_budgetaire": "Recettes propres",
+        "is_fleche": false,
+        "code_fonds": "FD030",
+        "is_active": true,
+        "enveloppe": "Fonctionnement",
+        "label_fonds": "Formation continue, dipl\u00f4mes propres et VAE",
+        "label_nature_comptable": "Formation continue",
+        "code_nature_comptable": "9RFCO"
+    },
+    "pk": 33,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RG_RPRO",
+        "label_compte_budgetaire": "Recettes propres",
+        "is_fleche": false,
+        "code_fonds": "FD030",
+        "is_active": true,
+        "enveloppe": "Fonctionnement",
+        "label_fonds": "Formation continue, dipl\u00f4mes propres et VAE",
+        "label_nature_comptable": "VAE",
+        "code_nature_comptable": "9RVAE"
+    },
+    "pk": 34,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RG_RPRO",
+        "label_compte_budgetaire": "Recettes propres",
+        "is_fleche": false,
+        "code_fonds": "FD040",
+        "is_active": true,
+        "enveloppe": "Fonctionnement",
+        "label_fonds": "Taxe d'apprentissage",
+        "label_nature_comptable": "Taxe d'apprentissage",
+        "code_nature_comptable": "9RTAX"
+    },
+    "pk": 35,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RG_RPRO",
+        "label_compte_budgetaire": "Recettes propres",
+        "is_fleche": false,
+        "code_fonds": "FD050",
+        "is_active": true,
+        "enveloppe": "Fonctionnement",
+        "label_fonds": "Contrats et prestations de recherche hors ANR",
+        "label_nature_comptable": "Prestations de recherche, travaux, \u00e9tudes, mesures et expertises",
+        "code_nature_comptable": "9RRCH"
+    },
+    "pk": 36,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RG_RPRO",
+        "label_compte_budgetaire": "Recettes propres",
+        "is_fleche": false,
+        "code_fonds": "FD050",
+        "is_active": true,
+        "enveloppe": "Fonctionnement",
+        "label_fonds": "Contrats et prestations de recherche hors ANR",
+        "label_nature_comptable": "Colloques",
+        "code_nature_comptable": "9RCOL"
+    },
+    "pk": 37,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RG_RPRO",
+        "label_compte_budgetaire": "Recettes propres",
+        "is_fleche": false,
+        "code_fonds": "FD060",
+        "is_active": true,
+        "enveloppe": "Fonctionnement",
+        "label_fonds": "Valorisation",
+        "label_nature_comptable": "Vente de publications, redevance de propri\u00e9t\u00e9 intellectuelle et droits d'auteur",
+        "code_nature_comptable": "9RVAL"
+    },
+    "pk": 38,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RG_ETAT",
+        "label_compte_budgetaire": "Autres financements de l'Etat",
+        "is_fleche": false,
+        "code_fonds": "FD070",
+        "is_active": true,
+        "enveloppe": "Fonctionnement",
+        "label_fonds": "ANR investissements d'avenir",
+        "label_nature_comptable": "Subvention fonctionnement ANR Investissement d'avenir",
+        "code_nature_comptable": "9RFIA"
+    },
+    "pk": 39,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RG_ETAT",
+        "label_compte_budgetaire": "Autres financements de l'Etat",
+        "is_fleche": false,
+        "code_fonds": "FD080",
+        "is_active": true,
+        "enveloppe": "Fonctionnement",
+        "label_fonds": "ANR hors investissements d'avenir",
+        "label_nature_comptable": "Subvention fonctionnement ANR hors Investissement d'avenir",
+        "code_nature_comptable": "9RANR"
+    },
+    "pk": 40,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RG_PUBL",
+        "label_compte_budgetaire": "Autres financements publics",
+        "is_fleche": false,
+        "code_fonds": "FD090",
+        "is_active": true,
+        "enveloppe": "Fonctionnement",
+        "label_fonds": "Subvention d'exploitation et financement des actifs R\u00e9gion",
+        "label_nature_comptable": "Subvention fonctionnement R\u00e9gion",
+        "code_nature_comptable": "9RFRE"
+    },
+    "pk": 41,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RG_PUBL",
+        "label_compte_budgetaire": "Autres financements publics",
+        "is_fleche": false,
+        "code_fonds": "FD100",
+        "is_active": true,
+        "enveloppe": "Fonctionnement",
+        "label_fonds": "Subvention d'exploitation et financement des actifs UE",
+        "label_nature_comptable": "Subvention fonctionnement Union Europ\u00e9enne",
+        "code_nature_comptable": "9RFUE"
+    },
+    "pk": 42,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RG_PUBL",
+        "label_compte_budgetaire": "Autres financements publics",
+        "is_fleche": false,
+        "code_fonds": "FD110",
+        "is_active": true,
+        "enveloppe": "Fonctionnement",
+        "label_fonds": "Subvention d'exploitation et financement des actifs Autres",
+        "label_nature_comptable": "Subvention fonctionnement Communes",
+        "code_nature_comptable": "9RFCO"
+    },
+    "pk": 43,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RG_PUBL",
+        "label_compte_budgetaire": "Autres financements publics",
+        "is_fleche": false,
+        "code_fonds": "FD110",
+        "is_active": true,
+        "enveloppe": "Fonctionnement",
+        "label_fonds": "Subvention d'exploitation et financement des actifs Autres",
+        "label_nature_comptable": "Subvention fonctionnement D\u00e9partements",
+        "code_nature_comptable": "9RFDE"
+    },
+    "pk": 44,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RG_PUBL",
+        "label_compte_budgetaire": "Autres financements publics",
+        "is_fleche": false,
+        "code_fonds": "FD110",
+        "is_active": true,
+        "enveloppe": "Fonctionnement",
+        "label_fonds": "Subvention d'exploitation et financement des actifs Autres",
+        "label_nature_comptable": "Subvention fonctionnement Autres minist\u00e8res, collectivit\u00e9s et organismes",
+        "code_nature_comptable": "9RFAU"
+    },
+    "pk": 45,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RG_RPRO",
+        "label_compte_budgetaire": "Recettes propres",
+        "is_fleche": false,
+        "code_fonds": "FD120",
+        "is_active": true,
+        "enveloppe": "Fonctionnement",
+        "label_fonds": "Fondations - fonds propres, r\u00e9serves, dons et legs",
+        "label_nature_comptable": "Dons",
+        "code_nature_comptable": "9RDON"
+    },
+    "pk": 46,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RG_PUBL",
+        "label_compte_budgetaire": "Autres financements publics",
+        "is_fleche": false,
+        "code_fonds": "FD130",
+        "is_active": true,
+        "enveloppe": "Fonctionnement",
+        "label_fonds": "Autres recettes",
+        "label_nature_comptable": "Subvention fonctionnement pour contrats aid\u00e9s",
+        "code_nature_comptable": "9RAID"
+    },
+    "pk": 47,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RG_RPRO",
+        "label_compte_budgetaire": "Recettes propres",
+        "is_fleche": false,
+        "code_fonds": "FD130",
+        "is_active": true,
+        "enveloppe": "Fonctionnement",
+        "label_fonds": "Autres recettes",
+        "label_nature_comptable": "Prestations de services diverses et activit\u00e9s annexes",
+        "code_nature_comptable": "9RPRE"
+    },
+    "pk": 48,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RG_RPRO",
+        "label_compte_budgetaire": "Recettes propres",
+        "is_fleche": false,
+        "code_fonds": "FD130",
+        "is_active": true,
+        "enveloppe": "Fonctionnement",
+        "label_fonds": "Autres recettes",
+        "label_nature_comptable": "Produits divers",
+        "code_nature_comptable": "9RDIV"
+    },
+    "pk": 49,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RG_RPRO",
+        "label_compte_budgetaire": "Recettes propres",
+        "is_fleche": false,
+        "code_fonds": "FD130",
+        "is_active": true,
+        "enveloppe": "Fonctionnement",
+        "label_fonds": "Autres recettes",
+        "label_nature_comptable": "Revenus des immeubles",
+        "code_nature_comptable": "9RIMM"
+    },
+    "pk": 50,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RG_RPRO",
+        "label_compte_budgetaire": "Recettes propres",
+        "is_fleche": false,
+        "code_fonds": "FD130",
+        "is_active": true,
+        "enveloppe": "Fonctionnement",
+        "label_fonds": "Autres recettes",
+        "label_nature_comptable": "Ventes de produits finis et marchandises",
+        "code_nature_comptable": "9RVEN"
+    },
+    "pk": 51,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RG_RPRO",
+        "label_compte_budgetaire": "Recettes propres",
+        "is_fleche": false,
+        "code_fonds": "FD130",
+        "is_active": true,
+        "enveloppe": "Fonctionnement",
+        "label_fonds": "Autres recettes",
+        "label_nature_comptable": "Produits financiers",
+        "code_nature_comptable": "9RFIN"
+    },
+    "pk": 52,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RG_ETAT",
+        "label_compte_budgetaire": "Autres financements de l'Etat",
+        "is_fleche": false,
+        "code_fonds": "FD070",
+        "is_active": true,
+        "enveloppe": "Investissement",
+        "label_fonds": "ANR investissements d'avenir",
+        "label_nature_comptable": "Financement d'actifs par l'ANR Investissement d'avenir",
+        "code_nature_comptable": "9RIIA"
+    },
+    "pk": 53,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RG_PUBL",
+        "label_compte_budgetaire": "Autres financements publics",
+        "is_fleche": false,
+        "code_fonds": "FD090",
+        "is_active": true,
+        "enveloppe": "Investissement",
+        "label_fonds": "Subvention d'exploitation et financement des actifs R\u00e9gion",
+        "label_nature_comptable": "Financement d'actifs par la R\u00e9gion",
+        "code_nature_comptable": "9RIRE"
+    },
+    "pk": 54,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RG_PUBL",
+        "label_compte_budgetaire": "Autres financements publics",
+        "is_fleche": false,
+        "code_fonds": "FD100",
+        "is_active": true,
+        "enveloppe": "Investissement",
+        "label_fonds": "Subvention d'exploitation et financement des actifs UE",
+        "label_nature_comptable": "Financement d'actifs par l'Union Europ\u00e9enne",
+        "code_nature_comptable": "9RIUE"
+    },
+    "pk": 55,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RG_ETAT",
+        "label_compte_budgetaire": "Autres financements de l'Etat",
+        "is_fleche": false,
+        "code_fonds": "FD110",
+        "is_active": true,
+        "enveloppe": "Investissement",
+        "label_fonds": "Subvention d'exploitation et financement des actifs Autres",
+        "label_nature_comptable": "Financement d'actifs par l'Etat",
+        "code_nature_comptable": "9RIET"
+    },
+    "pk": 56,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RG_PUBL",
+        "label_compte_budgetaire": "Autres financements publics",
+        "is_fleche": false,
+        "code_fonds": "FD110",
+        "is_active": true,
+        "enveloppe": "Investissement",
+        "label_fonds": "Subvention d'exploitation et financement des actifs Autres",
+        "label_nature_comptable": "Financement d'actifs par les Communes",
+        "code_nature_comptable": "9RICO"
+    },
+    "pk": 57,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RG_PUBL",
+        "label_compte_budgetaire": "Autres financements publics",
+        "is_fleche": false,
+        "code_fonds": "FD110",
+        "is_active": true,
+        "enveloppe": "Investissement",
+        "label_fonds": "Subvention d'exploitation et financement des actifs Autres",
+        "label_nature_comptable": "Financement d'actifs par les D\u00e9partements",
+        "code_nature_comptable": "9RIDE"
+    },
+    "pk": 58,
+    "model": "budgetweb.naturecomptablerecette"
+},
+{
+    "fields": {
+        "code_compte_budgetaire": "RG_PUBL",
+        "label_compte_budgetaire": "Autres financements publics",
+        "is_fleche": false,
+        "code_fonds": "FD110",
+        "is_active": true,
+        "enveloppe": "Investissement",
+        "label_fonds": "Subvention d'exploitation et financement des actifs Autres",
+        "label_nature_comptable": "Financement d'actifs par les autres collectivit\u00e9s et organismes",
+        "code_nature_comptable": "9RIAU"
+    },
+    "pk": 59,
+    "model": "budgetweb.naturecomptablerecette"
+}
+]

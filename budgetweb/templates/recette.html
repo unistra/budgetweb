@@ -1,0 +1,46 @@
+{% load i18n %}
+<form id="formset" method="POST" action="{% url 'recette' pfiid=PFI.id annee=currentYear %}">
+{% csrf_token %}
+<table class='supertable recette' id='supertable' border="1">
+{% for form in formset %}
+    {% if forloop.counter = 1 %}
+    <thead>
+        <tr><th colspan="10" align="center">{% trans "Receipt forms" %}</th></tr>
+        <tr>
+        {% for field in form.visible_fields %}
+            <th style="white-space:nowrap;">
+            {% if field.name = "DELETE" %}
+                <span class="danger glyphicon glyphicon-trash"></span>
+            {% elif field.name = "commentaire" %}
+                <span class="danger glyphicon glyphicon-comment"></span>
+            {% else %}
+                {{ field.label }}
+            {% endif %}
+            </th>
+        {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+    {% endif %}
+        <tr class="{% cycle 'row1' 'row2' %}">
+        {% for hidden in form.hidden_fields %}
+            {{ hidden }}
+        {% endfor %}
+        {% for field in form.visible_fields %}
+            <td style="line-height:1; white-space:nowrap" align="center">
+            {% if field.name in form.modal_fields %}
+                <a href="#"><span data-backdrop="false" data-toggle="modal" data-target="#modal_{{ field.name }}" data-formid="{{ field.id_for_label }}" class="glyphicon glyphicon-{% if field.value %}edit{% else %}pencil{% endif %}" title="{% if field.value %}{% trans "Modify" %}{% else %}{% trans "Add"%}{% endif %}"></span></a>
+                <div style="visibility:hidden;height:0px;width:0px;">{{ field }}</div>
+            {% else %}
+                {{ field }}
+            {% endif %}
+            {{ field.errors }}
+            </td>
+       {% endfor %}
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{{ formset.management_form }}
+<button type="submit" class="save btn btn-primary">{% trans "Save" %}</button>
+</form>

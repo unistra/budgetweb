@@ -1,0 +1,814 @@
+[
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Fluides",
+        "is_fleche": true,
+        "code_nature_comptable": "9DFLU",
+        "is_active": true,
+        "is_decalage_tresorerie": false,
+        "label_compte_budgetaire": "Fonctionnement Fl\u00e9ch\u00e9",
+        "enveloppe": "Fonctionnement",
+        "code_compte_budgetaire": "FF"
+    },
+    "pk": 1
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Fournitures administratives, d'entretien",
+        "is_fleche": true,
+        "code_nature_comptable": "9DFOU",
+        "is_active": true,
+        "is_decalage_tresorerie": false,
+        "label_compte_budgetaire": "Fonctionnement Fl\u00e9ch\u00e9",
+        "enveloppe": "Fonctionnement",
+        "code_compte_budgetaire": "FF"
+    },
+    "pk": 2
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Locations mobili\u00e8res et immobili\u00e8res",
+        "is_fleche": true,
+        "code_nature_comptable": "9DLOC",
+        "is_active": true,
+        "is_decalage_tresorerie": true,
+        "label_compte_budgetaire": "Fonctionnement Fl\u00e9ch\u00e9",
+        "enveloppe": "Fonctionnement",
+        "code_compte_budgetaire": "FF"
+    },
+    "pk": 3
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Maintenance, entretien",
+        "is_fleche": true,
+        "code_nature_comptable": "9DMAI",
+        "is_active": true,
+        "is_decalage_tresorerie": true,
+        "label_compte_budgetaire": "Fonctionnement Fl\u00e9ch\u00e9",
+        "enveloppe": "Fonctionnement",
+        "code_compte_budgetaire": "FF"
+    },
+    "pk": 4
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Documentation, reprographie",
+        "is_fleche": true,
+        "code_nature_comptable": "9DDOC",
+        "is_active": true,
+        "is_decalage_tresorerie": false,
+        "label_compte_budgetaire": "Fonctionnement Fl\u00e9ch\u00e9",
+        "enveloppe": "Fonctionnement",
+        "code_compte_budgetaire": "FF"
+    },
+    "pk": 5
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Colloques",
+        "is_fleche": true,
+        "code_nature_comptable": "9DCOL",
+        "is_active": true,
+        "is_decalage_tresorerie": false,
+        "label_compte_budgetaire": "Fonctionnement Fl\u00e9ch\u00e9",
+        "enveloppe": "Fonctionnement",
+        "code_compte_budgetaire": "FF"
+    },
+    "pk": 6
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "D\u00e9placements, missions, transports",
+        "is_fleche": true,
+        "code_nature_comptable": "9DMIS",
+        "is_active": true,
+        "is_decalage_tresorerie": false,
+        "label_compte_budgetaire": "Fonctionnement Fl\u00e9ch\u00e9",
+        "enveloppe": "Fonctionnement",
+        "code_compte_budgetaire": "FF"
+    },
+    "pk": 7
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "R\u00e9ceptions",
+        "is_fleche": true,
+        "code_nature_comptable": "9DREC",
+        "is_active": true,
+        "is_decalage_tresorerie": false,
+        "label_compte_budgetaire": "Fonctionnement Fl\u00e9ch\u00e9",
+        "enveloppe": "Fonctionnement",
+        "code_compte_budgetaire": "FF"
+    },
+    "pk": 8
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Publicit\u00e9",
+        "is_fleche": true,
+        "code_nature_comptable": "9DPUB",
+        "is_active": true,
+        "is_decalage_tresorerie": false,
+        "label_compte_budgetaire": "Fonctionnement Fl\u00e9ch\u00e9",
+        "enveloppe": "Fonctionnement",
+        "code_compte_budgetaire": "FF"
+    },
+    "pk": 9
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Recrutements, honoraires, formation continue du personnel",
+        "is_fleche": true,
+        "code_nature_comptable": "9DFCP",
+        "is_active": true,
+        "is_decalage_tresorerie": false,
+        "label_compte_budgetaire": "Fonctionnement Fl\u00e9ch\u00e9",
+        "enveloppe": "Fonctionnement",
+        "code_compte_budgetaire": "FF"
+    },
+    "pk": 10
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Affranchissements, t\u00e9l\u00e9phone",
+        "is_fleche": true,
+        "code_nature_comptable": "9DAFF",
+        "is_active": true,
+        "is_decalage_tresorerie": false,
+        "label_compte_budgetaire": "Fonctionnement Fl\u00e9ch\u00e9",
+        "enveloppe": "Fonctionnement",
+        "code_compte_budgetaire": "FF"
+    },
+    "pk": 11
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Nettoyage",
+        "is_fleche": true,
+        "code_nature_comptable": "9DNET",
+        "is_active": true,
+        "is_decalage_tresorerie": false,
+        "label_compte_budgetaire": "Fonctionnement Fl\u00e9ch\u00e9",
+        "enveloppe": "Fonctionnement",
+        "code_compte_budgetaire": "FF"
+    },
+    "pk": 12
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Impots taxes",
+        "is_fleche": true,
+        "code_nature_comptable": "9DTAX",
+        "is_active": true,
+        "is_decalage_tresorerie": false,
+        "label_compte_budgetaire": "Fonctionnement Fl\u00e9ch\u00e9",
+        "enveloppe": "Fonctionnement",
+        "code_compte_budgetaire": "FF"
+    },
+    "pk": 13
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Bourses, gratifications de stage",
+        "is_fleche": true,
+        "code_nature_comptable": "9DBOU",
+        "is_active": true,
+        "is_decalage_tresorerie": false,
+        "label_compte_budgetaire": "Fonctionnement Fl\u00e9ch\u00e9",
+        "enveloppe": "Fonctionnement",
+        "code_compte_budgetaire": "FF"
+    },
+    "pk": 14
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Subventions",
+        "is_fleche": true,
+        "code_nature_comptable": "9DSUB",
+        "is_active": true,
+        "is_decalage_tresorerie": false,
+        "label_compte_budgetaire": "Fonctionnement Fl\u00e9ch\u00e9",
+        "enveloppe": "Fonctionnement",
+        "code_compte_budgetaire": "FF"
+    },
+    "pk": 15
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Autres charges de fonctionnement",
+        "is_fleche": true,
+        "code_nature_comptable": "9DFCT",
+        "is_active": true,
+        "is_decalage_tresorerie": false,
+        "label_compte_budgetaire": "Fonctionnement Fl\u00e9ch\u00e9",
+        "enveloppe": "Fonctionnement",
+        "code_compte_budgetaire": "FF"
+    },
+    "pk": 16
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Prestations internes",
+        "is_fleche": true,
+        "code_nature_comptable": "9DPIN",
+        "is_active": true,
+        "is_decalage_tresorerie": true,
+        "label_compte_budgetaire": "Fonctionnement Fl\u00e9ch\u00e9",
+        "enveloppe": "Fonctionnement",
+        "code_compte_budgetaire": "FF"
+    },
+    "pk": 17
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Frais de gestion",
+        "is_fleche": true,
+        "code_nature_comptable": "9DCFG",
+        "is_active": true,
+        "is_decalage_tresorerie": true,
+        "label_compte_budgetaire": "Fonctionnement Fl\u00e9ch\u00e9",
+        "enveloppe": "Fonctionnement",
+        "code_compte_budgetaire": "FF"
+    },
+    "pk": 18
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "R\u00e9mun\u00e9rations principales et accessoires",
+        "is_fleche": true,
+        "code_nature_comptable": "9DREM",
+        "is_active": true,
+        "is_decalage_tresorerie": false,
+        "label_compte_budgetaire": "R\u00e9mun\u00e9rations d'activit\u00e9s fl\u00e9ch\u00e9es",
+        "enveloppe": "Personnel",
+        "code_compte_budgetaire": "PF_REM"
+    },
+    "pk": 19
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Cotisations hors CAS",
+        "is_fleche": true,
+        "code_nature_comptable": "9DCOT",
+        "is_active": true,
+        "is_decalage_tresorerie": false,
+        "label_compte_budgetaire": "Cot. hors CAS d'activit\u00e9s fl\u00e9ch\u00e9es",
+        "enveloppe": "Personnel",
+        "code_compte_budgetaire": "PF_COT_HCAS"
+    },
+    "pk": 20
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Cotisation CAS",
+        "is_fleche": true,
+        "code_nature_comptable": "9DCAS",
+        "is_active": true,
+        "is_decalage_tresorerie": false,
+        "label_compte_budgetaire": "Cot. CAS d'activit\u00e9s fl\u00e9ch\u00e9es",
+        "enveloppe": "Personnel",
+        "code_compte_budgetaire": "PF_COT_CAS"
+    },
+    "pk": 21
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Prestations sociales",
+        "is_fleche": true,
+        "code_nature_comptable": "9DSOC",
+        "is_active": true,
+        "is_decalage_tresorerie": false,
+        "label_compte_budgetaire": "Prest. Soc  d'activit\u00e9s fl\u00e9ch\u00e9es",
+        "enveloppe": "Personnel",
+        "code_compte_budgetaire": "PF_SOC"
+    },
+    "pk": 22
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Construction",
+        "is_fleche": true,
+        "code_nature_comptable": "9DCON",
+        "is_active": true,
+        "is_decalage_tresorerie": true,
+        "label_compte_budgetaire": "Investissement Fl\u00e9ch\u00e9",
+        "enveloppe": "Investissement",
+        "code_compte_budgetaire": "IF"
+    },
+    "pk": 23
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Mat\u00e9riel scientifique",
+        "is_fleche": true,
+        "code_nature_comptable": "9DSCI",
+        "is_active": true,
+        "is_decalage_tresorerie": true,
+        "label_compte_budgetaire": "Investissement Fl\u00e9ch\u00e9",
+        "enveloppe": "Investissement",
+        "code_compte_budgetaire": "IF"
+    },
+    "pk": 24
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Installations, agencements, am\u00e9nagements",
+        "is_fleche": true,
+        "code_nature_comptable": "9DAGE",
+        "is_active": true,
+        "is_decalage_tresorerie": true,
+        "label_compte_budgetaire": "Investissement Fl\u00e9ch\u00e9",
+        "enveloppe": "Investissement",
+        "code_compte_budgetaire": "IF"
+    },
+    "pk": 25
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Mat\u00e9riel informatique",
+        "is_fleche": true,
+        "code_nature_comptable": "9DINF",
+        "is_active": true,
+        "is_decalage_tresorerie": true,
+        "label_compte_budgetaire": "Investissement Fl\u00e9ch\u00e9",
+        "enveloppe": "Investissement",
+        "code_compte_budgetaire": "IF"
+    },
+    "pk": 26
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Immobilisations en cours (corporelles et incorporelles)",
+        "is_fleche": true,
+        "code_nature_comptable": "9DIMM",
+        "is_active": true,
+        "is_decalage_tresorerie": true,
+        "label_compte_budgetaire": "Investissement Fl\u00e9ch\u00e9",
+        "enveloppe": "Investissement",
+        "code_compte_budgetaire": "IF"
+    },
+    "pk": 27
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Autres d\u00e9penses d'investissement",
+        "is_fleche": true,
+        "code_nature_comptable": "9DINV",
+        "is_active": true,
+        "is_decalage_tresorerie": true,
+        "label_compte_budgetaire": "Investissement Fl\u00e9ch\u00e9",
+        "enveloppe": "Investissement",
+        "code_compte_budgetaire": "IF"
+    },
+    "pk": 28
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "D\u00e9p\u00f4ts, cautionnements, emprunts, pr\u00eats",
+        "is_fleche": true,
+        "code_nature_comptable": "9DEMP",
+        "is_active": true,
+        "is_decalage_tresorerie": true,
+        "label_compte_budgetaire": "Investissement Fl\u00e9ch\u00e9",
+        "enveloppe": "Investissement",
+        "code_compte_budgetaire": "IF"
+    },
+    "pk": 29
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Fluides",
+        "is_fleche": false,
+        "code_nature_comptable": "9DFLU",
+        "is_active": true,
+        "is_decalage_tresorerie": false,
+        "label_compte_budgetaire": "Fonctionnement Globalis\u00e9",
+        "enveloppe": "Fonctionnement",
+        "code_compte_budgetaire": "FG"
+    },
+    "pk": 30
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Fournitures administratives, d'entretien",
+        "is_fleche": false,
+        "code_nature_comptable": "9DFOU",
+        "is_active": true,
+        "is_decalage_tresorerie": false,
+        "label_compte_budgetaire": "Fonctionnement Globalis\u00e9",
+        "enveloppe": "Fonctionnement",
+        "code_compte_budgetaire": "FG"
+    },
+    "pk": 31
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Locations mobili\u00e8res et immobili\u00e8res",
+        "is_fleche": false,
+        "code_nature_comptable": "9DLOC",
+        "is_active": true,
+        "is_decalage_tresorerie": true,
+        "label_compte_budgetaire": "Fonctionnement Globalis\u00e9",
+        "enveloppe": "Fonctionnement",
+        "code_compte_budgetaire": "FG"
+    },
+    "pk": 32
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Maintenance, entretien",
+        "is_fleche": false,
+        "code_nature_comptable": "9DMAI",
+        "is_active": true,
+        "is_decalage_tresorerie": true,
+        "label_compte_budgetaire": "Fonctionnement Globalis\u00e9",
+        "enveloppe": "Fonctionnement",
+        "code_compte_budgetaire": "FG"
+    },
+    "pk": 33
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Documentation, reprographie",
+        "is_fleche": false,
+        "code_nature_comptable": "9DDOC",
+        "is_active": true,
+        "is_decalage_tresorerie": false,
+        "label_compte_budgetaire": "Fonctionnement Globalis\u00e9",
+        "enveloppe": "Fonctionnement",
+        "code_compte_budgetaire": "FG"
+    },
+    "pk": 34
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Colloques",
+        "is_fleche": false,
+        "code_nature_comptable": "9DCOL",
+        "is_active": true,
+        "is_decalage_tresorerie": false,
+        "label_compte_budgetaire": "Fonctionnement Globalis\u00e9",
+        "enveloppe": "Fonctionnement",
+        "code_compte_budgetaire": "FG"
+    },
+    "pk": 35
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "D\u00e9placements, missions, transports",
+        "is_fleche": false,
+        "code_nature_comptable": "9DMIS",
+        "is_active": true,
+        "is_decalage_tresorerie": false,
+        "label_compte_budgetaire": "Fonctionnement Globalis\u00e9",
+        "enveloppe": "Fonctionnement",
+        "code_compte_budgetaire": "FG"
+    },
+    "pk": 36
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "R\u00e9ceptions",
+        "is_fleche": false,
+        "code_nature_comptable": "9DREC",
+        "is_active": true,
+        "is_decalage_tresorerie": false,
+        "label_compte_budgetaire": "Fonctionnement Globalis\u00e9",
+        "enveloppe": "Fonctionnement",
+        "code_compte_budgetaire": "FG"
+    },
+    "pk": 37
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Publicit\u00e9",
+        "is_fleche": false,
+        "code_nature_comptable": "9DPUB",
+        "is_active": true,
+        "is_decalage_tresorerie": false,
+        "label_compte_budgetaire": "Fonctionnement Globalis\u00e9",
+        "enveloppe": "Fonctionnement",
+        "code_compte_budgetaire": "FG"
+    },
+    "pk": 38
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Recrutements, honoraires, formation continue du personnel",
+        "is_fleche": false,
+        "code_nature_comptable": "9DFCP",
+        "is_active": true,
+        "is_decalage_tresorerie": false,
+        "label_compte_budgetaire": "Fonctionnement Globalis\u00e9",
+        "enveloppe": "Fonctionnement",
+        "code_compte_budgetaire": "FG"
+    },
+    "pk": 39
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Affranchissements, t\u00e9l\u00e9phone",
+        "is_fleche": false,
+        "code_nature_comptable": "9DAFF",
+        "is_active": true,
+        "is_decalage_tresorerie": false,
+        "label_compte_budgetaire": "Fonctionnement Globalis\u00e9",
+        "enveloppe": "Fonctionnement",
+        "code_compte_budgetaire": "FG"
+    },
+    "pk": 40
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Nettoyage",
+        "is_fleche": false,
+        "code_nature_comptable": "9DNET",
+        "is_active": true,
+        "is_decalage_tresorerie": false,
+        "label_compte_budgetaire": "Fonctionnement Globalis\u00e9",
+        "enveloppe": "Fonctionnement",
+        "code_compte_budgetaire": "FG"
+    },
+    "pk": 41
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Impots taxes",
+        "is_fleche": false,
+        "code_nature_comptable": "9DTAX",
+        "is_active": true,
+        "is_decalage_tresorerie": false,
+        "label_compte_budgetaire": "Fonctionnement Globalis\u00e9",
+        "enveloppe": "Fonctionnement",
+        "code_compte_budgetaire": "FG"
+    },
+    "pk": 42
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Bourses, gratifications de stage",
+        "is_fleche": false,
+        "code_nature_comptable": "9DBOU",
+        "is_active": true,
+        "is_decalage_tresorerie": false,
+        "label_compte_budgetaire": "Fonctionnement Globalis\u00e9",
+        "enveloppe": "Fonctionnement",
+        "code_compte_budgetaire": "FG"
+    },
+    "pk": 43
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Subventions",
+        "is_fleche": false,
+        "code_nature_comptable": "9DSUB",
+        "is_active": true,
+        "is_decalage_tresorerie": false,
+        "label_compte_budgetaire": "Fonctionnement Globalis\u00e9",
+        "enveloppe": "Fonctionnement",
+        "code_compte_budgetaire": "FG"
+    },
+    "pk": 44
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Autres charges de fonctionnement",
+        "is_fleche": false,
+        "code_nature_comptable": "9DFCT",
+        "is_active": true,
+        "is_decalage_tresorerie": false,
+        "label_compte_budgetaire": "Fonctionnement Globalis\u00e9",
+        "enveloppe": "Fonctionnement",
+        "code_compte_budgetaire": "FG"
+    },
+    "pk": 45
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Prestations internes",
+        "is_fleche": false,
+        "code_nature_comptable": "9DPIN",
+        "is_active": true,
+        "is_decalage_tresorerie": true,
+        "label_compte_budgetaire": "Fonctionnement Globalis\u00e9",
+        "enveloppe": "Fonctionnement",
+        "code_compte_budgetaire": "FG"
+    },
+    "pk": 46
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Frais de gestion",
+        "is_fleche": false,
+        "code_nature_comptable": "9DCFG",
+        "is_active": true,
+        "is_decalage_tresorerie": true,
+        "label_compte_budgetaire": "Fonctionnement Globalis\u00e9",
+        "enveloppe": "Fonctionnement",
+        "code_compte_budgetaire": "FG"
+    },
+    "pk": 47
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "R\u00e9mun\u00e9rations principales et accessoires",
+        "is_fleche": false,
+        "code_nature_comptable": "9DREM",
+        "is_active": true,
+        "is_decalage_tresorerie": false,
+        "label_compte_budgetaire": "R\u00e9mun\u00e9rations d'activit\u00e9s Globalis\u00e9es",
+        "enveloppe": "Personnel",
+        "code_compte_budgetaire": "PG_REM"
+    },
+    "pk": 48
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Cotisations hors CAS",
+        "is_fleche": false,
+        "code_nature_comptable": "9DCOT",
+        "is_active": true,
+        "is_decalage_tresorerie": false,
+        "label_compte_budgetaire": "Cot. hors CAS d'activit\u00e9s Globalis\u00e9es",
+        "enveloppe": "Personnel",
+        "code_compte_budgetaire": "PG_COT_HCAS"
+    },
+    "pk": 49
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Cotisation CAS",
+        "is_fleche": false,
+        "code_nature_comptable": "9DCAS",
+        "is_active": true,
+        "is_decalage_tresorerie": false,
+        "label_compte_budgetaire": "Cot. CAS d'activit\u00e9s  Globalis\u00e9es",
+        "enveloppe": "Personnel",
+        "code_compte_budgetaire": "PG_COT_CAS"
+    },
+    "pk": 50
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Prestations sociales",
+        "is_fleche": false,
+        "code_nature_comptable": "9DSOC",
+        "is_active": true,
+        "is_decalage_tresorerie": false,
+        "label_compte_budgetaire": "Prest. Soc  d'activit\u00e9s  Globalis\u00e9es",
+        "enveloppe": "Personnel",
+        "code_compte_budgetaire": "PG_SOC"
+    },
+    "pk": 51
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Construction",
+        "is_fleche": false,
+        "code_nature_comptable": "9DCON",
+        "is_active": true,
+        "is_decalage_tresorerie": true,
+        "label_compte_budgetaire": "Investissement Globalis\u00e9",
+        "enveloppe": "Investissement",
+        "code_compte_budgetaire": "IG"
+    },
+    "pk": 52
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Mat\u00e9riel scientifique",
+        "is_fleche": false,
+        "code_nature_comptable": "9DSCI",
+        "is_active": true,
+        "is_decalage_tresorerie": true,
+        "label_compte_budgetaire": "Investissement Globalis\u00e9",
+        "enveloppe": "Investissement",
+        "code_compte_budgetaire": "IG"
+    },
+    "pk": 53
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Installations, agencements, am\u00e9nagements",
+        "is_fleche": false,
+        "code_nature_comptable": "9DAGE",
+        "is_active": true,
+        "is_decalage_tresorerie": true,
+        "label_compte_budgetaire": "Investissement Globalis\u00e9",
+        "enveloppe": "Investissement",
+        "code_compte_budgetaire": "IG"
+    },
+    "pk": 54
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Mat\u00e9riel informatique",
+        "is_fleche": false,
+        "code_nature_comptable": "9DINF",
+        "is_active": true,
+        "is_decalage_tresorerie": true,
+        "label_compte_budgetaire": "Investissement Globalis\u00e9",
+        "enveloppe": "Investissement",
+        "code_compte_budgetaire": "IG"
+    },
+    "pk": 55
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Immobilisations en cours (corporelles et incorporelles)",
+        "is_fleche": false,
+        "code_nature_comptable": "9DIMM",
+        "is_active": true,
+        "is_decalage_tresorerie": true,
+        "label_compte_budgetaire": "Investissement Globalis\u00e9",
+        "enveloppe": "Investissement",
+        "code_compte_budgetaire": "IG"
+    },
+    "pk": 56
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "Autres d\u00e9penses d'investissement",
+        "is_fleche": false,
+        "code_nature_comptable": "9DINV",
+        "is_active": true,
+        "is_decalage_tresorerie": true,
+        "label_compte_budgetaire": "Investissement Globalis\u00e9",
+        "enveloppe": "Investissement",
+        "code_compte_budgetaire": "IG"
+    },
+    "pk": 57
+},
+{
+    "model": "budgetweb.naturecomptabledepense",
+    "fields": {
+        "label_nature_comptable": "D\u00e9p\u00f4ts, cautionnements, emprunts, pr\u00eats",
+        "is_fleche": false,
+        "code_nature_comptable": "9DEMP",
+        "is_active": true,
+        "is_decalage_tresorerie": true,
+        "label_compte_budgetaire": "Investissement Globalis\u00e9",
+        "enveloppe": "Investissement",
+        "code_compte_budgetaire": "IG"
+    },
+    "pk": 58
+}
+]

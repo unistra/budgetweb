@@ -1,0 +1,135 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-12 13:59+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: budgetweb/models.py:102
+msgid "Path"
+msgstr "Chemin"
+
+#: budgetweb/templates/404.html:6
+msgid "Page not found"
+msgstr "Page non trouvée"
+
+#: budgetweb/templates/500.html:6
+msgid "Error"
+msgstr "Erreur"
+
+#: budgetweb/templates/base.html:34
+msgid "Home"
+msgstr "Accueil"
+
+#: budgetweb/templates/base.html:39
+msgid "GBCP Menu"
+msgstr "Menu GBCP"
+
+#: budgetweb/templates/base.html:40
+msgid "DC Menu"
+msgstr "Menu Droit Constaté"
+
+#: budgetweb/templates/base.html:44
+msgid "Logout"
+msgstr "Déconnexion"
+
+#: budgetweb/templates/base.html:46
+msgid "Login"
+msgstr "Connexion"
+
+#: budgetweb/templates/comptabilite.html:19
+msgid "Comment"
+msgstr "Commentaire"
+
+#: budgetweb/templates/comptabilite.html:24
+#: budgetweb/templates/comptabilite.html:42
+msgid "Submit"
+msgstr "Valider"
+
+#: budgetweb/templates/comptabilite.html:27
+#: budgetweb/templates/comptabilite.html:45
+msgid "Close"
+msgstr "Fermer"
+
+#: budgetweb/templates/comptabilite.html:37
+msgid "Accompanying document link"
+msgstr "Lien vers la pièce jointe"
+
+#: budgetweb/templates/comptabilite.html:98 budgetweb/templates/depense.html:32
+#: budgetweb/templates/recette.html:32
+msgid "Add"
+msgstr "Ajouter"
+
+#: budgetweb/templates/depense.html:8
+msgid "Expenditure forms"
+msgstr "Formulaire de saisie des dépenses"
+
+#: budgetweb/templates/depense.html:32 budgetweb/templates/recette.html:32
+msgid "Modify"
+msgstr "Modifier"
+
+#: budgetweb/templates/depense.html:45 budgetweb/templates/recette.html:45
+msgid "Save"
+msgstr "Enregistrer"
+
+#: budgetweb/templates/detailspfi.html:3
+msgid "Financial programs details"
+msgstr "Caractéristique du programme de financement"
+
+#: budgetweb/templates/detailspfi.html:3
+msgid "link to the fund center"
+msgstr "rattaché au centre financier"
+
+#: budgetweb/templates/detailspfi.html:6
+msgid "Structure link"
+msgstr "Structure de rattachement"
+
+#: budgetweb/templates/detailspfi.html:7
+msgid "EOTP Code"
+msgstr "Code de l'EOTP"
+
+#: budgetweb/templates/detailspfi.html:10
+msgid "Derivate cost center"
+msgstr "Centre de coût dérivé"
+
+#: budgetweb/templates/detailspfi.html:11
+msgid "Derivate profit center"
+msgstr "Centre de profit dérivé"
+
+#: budgetweb/templates/detailspfi.html:14
+msgid "Assigned PFI"
+msgstr "PFI fléché"
+
+#: budgetweb/templates/detailspfi.html:14
+#: budgetweb/templates/detailspfi.html:15
+msgid "Yes"
+msgstr "Oui"
+
+#: budgetweb/templates/detailspfi.html:14
+#: budgetweb/templates/detailspfi.html:15
+msgid "No"
+msgstr "Non"
+
+#: budgetweb/templates/detailspfi.html:15
+msgid "Multi-year PFI"
+msgstr "PFI pluriannuel"
+
+#: budgetweb/templates/detailspfi.html:19
+msgid "Show the resumed PFI"
+msgstr "Voir le résumé du PFI"
+
+#: budgetweb/templates/recette.html:8
+msgid "Receipt forms"
+msgstr "Formulaire de saisie des recettes"

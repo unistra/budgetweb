@@ -1,0 +1,22 @@
+[
+{
+    "pk": 1,
+    "model": "budgetweb.periodebudget",
+    "fields": {
+        "is_active": true,
+        "label": "Budget initial",
+        "code": "BI",
+        "annee": 2017
+    }
+},
+{
+    "pk": 2,
+    "model": "budgetweb.periodebudget",
+    "fields": {
+        "is_active": false,
+        "label": "Budget initial 2016",
+        "code": "BI 2016",
+        "annee": 2016
+    }
+}
+]

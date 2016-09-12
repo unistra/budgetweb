@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load budgetweb_tags %}
+
+{% block head-additional %}
+  <link rel="stylesheet" href="{% static 'css/budgetweb.css' %}"/>
+{% endblock %}
+
+{% block content %}
+ <div class="col-md-12">
+    {% include "detailspfi.html" %}
+    {% for year in years %}
+    <fieldset>
+    <legend><a data-toggle="collapse" data-target="#div-{{ year }}" href="#">Prévision budgétaire pour {{ year }}</a></legend>
+    <div style="margin-left:1px;width:100%;" class="row" id="div-{{ year }}">
+      <ul class="nav nav-tabs" role="tablist" id="pluri-tabs">
+        <li role="presentation" class="active"><a href="#gbcp{{year}}" role="tab" data-toggle="tab">GBCP</a></li>
+        <li role="presentation"><a href="#dc{{year}}" role="tab" data-toggle="tab">Droit Constaté</a></li>
+      </ul>
+      <div style="display: inline-block;width:100%;" class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="gbcp{{ year }}">
+	    {% include "detailsfullpfi.resume.inc.html" with montant_group="gbcp" montants_types_depense="AE CP" montants_types_recette="AR RE" %}
+	    </div>
+	    <div role="tabpanel" class="tab-pane" id="dc{{ year }}">
+        {% include "detailsfullpfi.resume.inc.html" with montant_group="dc" montants_types_depense="DC" montants_types_recette="DC" %}
+        </div>
+      </div>
+	  <br />
+	    {% include "detailsfullpfi.depense.inc.html" with depenses=listeDepense|dictvalue:year sums=sommeDepense|dictvalue:year %}
+      <br />
+        {% include "detailsfullpfi.recette.inc.html" with recettes=listeRecette|dictvalue:year sums=sommeRecette|dictvalue:year %}
+      </div>
+    </fieldset>
+  {% endfor %}
+<div class="modal fade model-wide" id="modalCommentaire" role="dialog">
+  <div class="modal-dialog">
+   <!-- Modal content-->
+   <div class="modal-content">
+     <div class="modal-header">
+       <h4 class="modal-title">Commentaire</h4>
+     </div>
+     <div class="modal-body">
+       <textarea style="width:100%;" cols="60" id="modalcomm" name="modalcomm" rows="10" disabled></textarea>
+     </div>
+     <div class="modal-footer">
+       <button type="submit" class="btn btn-default" data-dismiss="modal">Fermer</button>
+     </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade model-wide" id="modalPieceJointe" role="dialog">
+  <div class="modal-dialog">
+   <!-- Modal content-->
+   <div class="modal-content">
+     <div class="modal-header">
+       <h4 class="modal-title">Lien vers la pièce jointe</h4>
+     </div>
+     <div class="modal-body">
+       <a id="modalpiecejointe" name="modalpiecejointe" href="" target="_blank">
+         <div id="modalpiecejointe" name="modalpiecejointe"></div>
+       </a>
+     </div>
+     <div class="modal-footer">
+       <button type="submit" class="btn btn-default" data-dismiss="modal">Fermer</button>
+     </div>
+    </div>
+  </div>
+</div>
+</div>
+{% endblock %}
+{% block foot-javascript %}
+<script>
+$(document).ready(function() {
+    $('#modalCommentaire').on('show.bs.modal', function(e) {
+       var d = e;
+       var f = $(e.relatedTarget);
+       var g =f.data('formid');
+       $('#modalcomm').empty().val($(e.relatedTarget).data('formid'));
+    });
+    $('#modalPieceJointe').on('show.bs.modal', function(e) {
+    	var d = e;
+        var f = $(e.relatedTarget);
+        var g =f.data('formid');
+       $('#modalpiecejointe').empty().append($(e.relatedTarget).data('formid'));
+    });
+});
+</script>
+{% endblock %}
