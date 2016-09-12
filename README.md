@@ -106,8 +106,14 @@ Un champ "is_active" est disponible pour les strcutres et les pfi, cela permet d
 Le jeu de test contient :
     Des programmes de financements fléchés / non fléchés. ( La naturecomptable est différente entre un PFI fléché et non fléché)
     Des programmes de financements pluri-annuel et non pluri-annuel. (Les écrans de saisies ne sont pas identiques).
-L
 
+![Alt text](docs/images/capture1.jpg?raw=true "Title")
+
+![Alt text](docs/images/capture1.jpg?raw=true "Title")
+![Alt text](docs/images/capture1.jpg?raw=true "Title")
+![Alt text](docs/images/capture1.jpg?raw=true "Title")
+![Alt text](docs/images/capture1.jpg?raw=true "Title")
+![Alt text](docs/images/capture1.jpg?raw=true "Title")
 Contact
 -------
 
