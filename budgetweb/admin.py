@@ -35,19 +35,17 @@ admin.site.register(DomaineFonctionnel, DomaineFonctionnelAdmin)
 class NatureComptableDepenseAdmin(admin.ModelAdmin):
     field = ('is_fleche', 'enveloppe', 'label_nature_comptable',
              'code_nature_comptable', 'code_compte_budgetaire',
-             'label_compte_budgetaire',
-             'is_decalage_tresorerie', 'is_active')
-    list_display = ('is_fleche', 'enveloppe', 'label_nature_comptable',
-                    'code_nature_comptable', 'code_compte_budgetaire',
-                    'label_compte_budgetaire',
-                    'is_decalage_tresorerie', 'is_active')
+             'label_compte_budgetaire', 'is_decalage_tresorerie',
+             'is_non_budgetaire', 'is_pi_cfg', 'is_active')
+    list_display = ('is_active', 'is_fleche', 'enveloppe',
+                    'code_nature_comptable', 'label_nature_comptable',
+                    'code_compte_budgetaire', 'label_compte_budgetaire',
+                    'is_decalage_tresorerie', 'is_non_budgetaire',
+                    'is_pi_cfg')
     search_fields = ['enveloppe', 'label_nature_comptable',
                      'code_nature_comptable', 'code_compte_budgetaire',
-                     'label_compte_budgetaire', 'is_fleche',
-                     'is_decalage_tresorerie', 'is_active']
+                     'label_compte_budgetaire', 'is_fleche', 'is_active']
 
-    class Meta:
-        ordering = ['is_fleche', 'enveloppe']
 admin.site.register(NatureComptableDepense, NatureComptableDepenseAdmin)
 
 
@@ -55,18 +53,16 @@ class NatureComptableRecetteAdmin(admin.ModelAdmin):
     field = ('is_fleche', 'enveloppe', 'code_fonds', 'label_fonds',
              'code_nature_comptable', 'label_nature_comptable',
              'code_compte_budgetaire', 'label_compte_budgetaire',
-             'is_active')
+             'is_ar_and_re', 'is_non_budgetaire', 'is_active')
     list_display = ('is_fleche', 'enveloppe', 'code_fonds', 'label_fonds',
                     'code_nature_comptable', 'label_nature_comptable',
                     'code_compte_budgetaire', 'label_compte_budgetaire',
-                    'is_active')
+                    'is_ar_and_re', 'is_non_budgetaire', 'is_active')
     search_fields = ['is_fleche', 'enveloppe', 'code_fonds', 'label_fonds',
                      'code_nature_comptable', 'label_nature_comptable',
                      'code_compte_budgetaire', 'label_compte_budgetaire',
                      'is_active']
 
-    class Meta:
-        ordering = ['is_fleche', 'enveloppe']
 admin.site.register(NatureComptableRecette, NatureComptableRecetteAdmin)
 
 

@@ -19,18 +19,22 @@ class Command(BaseCommand):
                 for row in reader:
                     pfi_is_fleche = (row[0] == 'PFI fléché')
                     enveloppe = row[1]
+                    ar_and_re = (row[8] == 'oui')
+                    non_budgetaire = (row[9] == 'oui')
                     priorities = ('Fonctionnement', 'Personnel')
                     priority_nc = (priorities.index(enveloppe)\
                         if enveloppe in priorities else len(priorities)) + 1
                     created = NatureComptableRecette.objects.update_or_create(
-                        enveloppe=enveloppe,
-                        label_fonds=row[2],
-                        code_fonds=row[3],
-                        code_nature_comptable=row[5],
-                        label_nature_comptable=row[4],
-                        code_compte_budgetaire=row[7],
-                        label_compte_budgetaire=row[6],
                         is_fleche=pfi_is_fleche,
+                        enveloppe=enveloppe,
+                        code_fonds=row[2],
+                        label_fonds=row[3],
+                        code_nature_comptable=row[4],
+                        label_nature_comptable=row[5],
+                        code_compte_budgetaire=row[6],
+                        label_compte_budgetaire=row[7],
+                        is_ar_and_re=ar_and_re,
+                        is_non_budgetaire=non_budgetaire,
                         priority=priority_nc,
                         defaults={'is_active': True}
                     )[1]

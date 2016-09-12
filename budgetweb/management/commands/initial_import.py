@@ -15,9 +15,9 @@ class Command(NoArgsCommand):
         try:
             print('***** Import PeriodeBudget *****')
             call_command('import_periodebudget')
-            print('***** Import structures *****')
+            print('***** Import Structures *****')
             call_command('import_structures', join(datapath, 'structures.csv'))
-            print('***** Import functional domains *****')
+            print('***** Import Functional Domains *****')
             call_command('import_functionaldomains',
                          join(datapath, 'domaines_fonctionnels.csv'))
             print('***** Import NatudeComptableDepense *****')

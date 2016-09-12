@@ -324,6 +324,10 @@ class NatureComptableDepense(models.Model):
     is_fleche = models.BooleanField('Fleché', max_length=100, default=True)
     is_decalage_tresorerie = models.BooleanField(
         max_length=100, verbose_name='Décalage trésorerie')
+    is_non_budgetaire = models.BooleanField(
+        max_length=100, verbose_name='Non budgétaire')
+    is_pi_cfg = models.BooleanField(
+        max_length=100, verbose_name='PI/CFG')
     is_active = models.BooleanField('Actif', max_length=100, default=True)
     priority = models.PositiveIntegerField('Ordre de tri pour les natures \
                                             comptables', default=1)
@@ -339,19 +343,21 @@ class NatureComptableDepense(models.Model):
 class NatureComptableRecette(models.Model):
 
     enveloppe = models.CharField(max_length=100, verbose_name='Enveloppe')
-    label_fonds = models.CharField(
-        max_length=255,
-        verbose_name='Désignation de la nature comptable')
-    code_fonds = models.CharField(max_length=100, verbose_name='Code du fond')
+    code_fonds = models.CharField(max_length=100, verbose_name='Code du fonds')
+    label_fonds = models.CharField(max_length=255,
+                                   verbose_name='Désignation du fonds')
     code_nature_comptable = models.CharField(
         max_length=100, verbose_name='Code de la nature comptable')
     label_nature_comptable = models.CharField(
-        max_length=255, verbose_name='Désignation du compte budgétaire')
+        max_length=255, verbose_name='Désignation de la nature comptable')
     code_compte_budgetaire = models.CharField(
         max_length=100, verbose_name='Code du compte budgétaire')
     label_compte_budgetaire = models.CharField(
         max_length=255, verbose_name='Désignation du compte budgétaire')
     is_fleche = models.BooleanField('Fleché', max_length=100, default=True)
+    is_ar_and_re = models.BooleanField('AR et RE', max_length=100)
+    is_non_budgetaire = models.BooleanField(
+        'Non budgétaire dont PI', max_length=100)
     is_active = models.BooleanField('Actif', max_length=100, default=True)
     priority = models.PositiveIntegerField('Ordre de tri pour les natures \
                                             comptables', default=1)

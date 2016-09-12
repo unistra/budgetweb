@@ -19,6 +19,8 @@ class Command(BaseCommand):
                 for row in reader:
                     pfi_is_fleche = (row[0] == 'PFI fléché')
                     decalage = (row[6] == 'oui')
+                    budgetaire = (row[7] == 'oui')
+                    pi_cfg = (row[8] == 'oui')
                     enveloppe = row[1]
                     priorities = ('Fonctionnement', 'Personnel')
                     priority_nc = (priorities.index(enveloppe)\
@@ -31,6 +33,8 @@ class Command(BaseCommand):
                         label_compte_budgetaire=row[5],
                         is_fleche=pfi_is_fleche,
                         is_decalage_tresorerie=decalage,
+                        is_non_budgetaire=budgetaire,
+                        is_pi_cfg=pi_cfg,
                         priority=priority_nc,
                         defaults={'is_active': True}
                     )[1]
