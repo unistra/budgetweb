@@ -31,7 +31,7 @@
 				<td nowrap=""><span class="pluri">{{ enveloppe }}</span></td>
 			     	{% for year in years %}
 				<td nowrap="">{% if year_values.0 %}{% firstof year_values.0|dictvalue:year|intspace "0,00" %}{% else %}0,00{% endif %} &euro;</td>
-				<td rowspan="{{ rowspan }}" class="table-details"><a href="/{{ compta_type }}/{{ PFI.id }}/{{ year }}/">Détails<br>(obligatoires)</a></td>
+				<td rowspan="{{ rowspan }}" style="text-align:center;"><a href="/{{ compta_type }}/{{ PFI.id }}/{{ year }}/">Détails<br>(obligatoires)</a></td>
 				    {% endfor %}
 				<td nowrap="">{% firstof year_values.1|intspace "0,00" %} &euro;</td>
 				{% else %}
