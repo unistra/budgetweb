@@ -120,7 +120,8 @@ Le jeu de test contient :
 ![Alt text](docs/images/capture6.jpg?raw=true "Title")
 *Exploitation des données via un univers BO dédié.
 ![Alt text](docs/images/capture7.jpg?raw=true "Title")
-Contact
--------
 
-Si vous voulez plus d'information : ludovic.hutin@unistra.fr
+Contact
+========================
+
+Une seule adresse : ludovic.hutin@unistra.fr
