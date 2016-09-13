@@ -63,6 +63,9 @@ Installation des prerequis du projets
     # Permet d'importer un jeu de test.
     python manage.py initial_import
     
+    # Génération des fichiers de traductions.
+    python manage.py compilemessages
+    
     # Permet de générer des écritures en dépense et en recette de manière aléatoire.
     python manage.py create_structuremontants
     
