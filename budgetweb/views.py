@@ -51,10 +51,18 @@ def api_get_details_nature_by_code(request, model, id_nature):
         'naturecomptabledepense': NatureComptableDepense,
     }
     nature = models[model].active.get(pk=id_nature)
-    response_data = {
-        'code_compte_budgetaire': nature.code_compte_budgetaire,
-        'label_compte_budgetaire': nature.label_compte_budgetaire
-    }
+    if model == 'naturecomptabledepense':
+        response_data = {
+            'code_compte_budgetaire': nature.code_compte_budgetaire,
+            'label_compte_budgetaire': nature.label_compte_budgetaire
+        }
+    else:
+        response_data = {
+            'code_compte_budgetaire': nature.code_compte_budgetaire,
+            'label_compte_budgetaire': nature.label_compte_budgetaire,
+            'code_fonds': nature.code_fonds,
+            'label_fonds': nature.label_fonds,
+        }
     return HttpResponse(
         json.dumps(response_data), content_type='application/json')
 
