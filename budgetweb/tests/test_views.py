@@ -38,7 +38,7 @@ class APIViewsTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(json_response), 7)
         self.assertDictEqual(json_response[0], {
-            "id": 59,
+            "id": 69,
             "label": "9RIAU - Financement d'actifs par les autres collectivités et organismes"
         })
 
@@ -53,7 +53,7 @@ class APIViewsTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(json_response), 4)
         self.assertDictEqual(json_response[0], {
-            "id": 50, "label": "9DCAS - Cotisation CAS"})
+            "id": 63, "label": "9DCAS - Cotisation CAS"})
 
     def test_api_get_details_nature_by_code_recette(self):
         view_api = '/api/naturecomptablerecette/%s/' % (
@@ -65,7 +65,9 @@ class APIViewsTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertDictEqual(json_response, {
             'code_compte_budgetaire': 'RG_SCSP',
-            'label_compte_budgetaire': 'Subvention pour charges de service public'
+            'label_compte_budgetaire': 'Subvention pour charges de service public',
+            'code_fonds': 'FD010',
+            'label_fonds': 'Subvention pour charges de service public'
         })
 
     def test_api_get_details_nature_by_code_depense(self):

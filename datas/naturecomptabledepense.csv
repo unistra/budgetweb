@@ -23,7 +23,7 @@ PFI fléché;Fonctionnement;NB-Dotation aux amortissements ou provisions;9DAMO;N
 PFI fléché;Fonctionnement;NB-QP reconstituée des financements d'actifs;9DQPR;NBF;Non Budgétaire Fléché;non;oui;non
 PFI fléché;Personnel;Rémunérations principales et accessoires;9DREM;PF_REM;Rémunérations d'activités fléchées;non;non;non
 PFI fléché;Personnel;Cotisations hors CAS;9DCOT;PF_COT_HCAS;Cot. hors CAS d'activités fléchées;non;non;non
-PFI fléché;Personnel;Cotisation CAS ;9DCAS;PF_COT_CAS;Cot. CAS d'activités fléchées;non;non;non
+PFI fléché;Personnel;Cotisation CAS;9DCAS;PF_COT_CAS;Cot. CAS d'activités fléchées;non;non;non
 PFI fléché;Personnel;Prestations sociales;9DSOC;PF_SOC;Prest. Soc  d'activités fléchées;non;non;non
 PFI fléché;Investissement;Constructions, terrains;9DICT;IF;Investissement Fléché;oui;non;non
 PFI fléché;Investissement;Matériel d'enseignement, scientifique, outillage et leur installation;9DIMA;IF;Investissement Fléché;oui;non;non
