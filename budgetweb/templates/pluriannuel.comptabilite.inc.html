@@ -9,7 +9,7 @@
 				<th>Type</th>
 				<th>Enveloppe</th>
 				{% for year in years %}
-					<th colspan="2">{{ year }}</th>
+					<th colspan="2"><a href="/{{ compta_type }}/{{ PFI.id }}/{{ year }}/">{{ year }}</a></th>
 				{% endfor %}
 				<th>Total</th>
 			</tr>

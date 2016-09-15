@@ -42,10 +42,14 @@ jQuery(document).ready(function($) {
     });
 
     function loadDetails(url, dest) {
-        $.getJSON(url, function(data) {
-			dest.nextAll().empty();
-			dest.after("<span><br />Compte budgétaire : " + data.code_compte_budgetaire + "-" + data.label_compte_budgetaire + "</span>");
-        });
+      $.getJSON(url, function(data) {
+  			dest.nextAll().empty();
+        if ( data.code_fonds)
+          // Cas d'une recette
+          dest.after("<span><br />Compte budgétaire : " + data.code_compte_budgetaire + "-" + data.label_compte_budgetaire + "<br />Fonds : " + data.code_fonds + "-" + data.label_fonds + "</span>");
+        else
+  			   dest.after("<span><br />Compte budgétaire : " + data.code_compte_budgetaire + "-" + data.label_compte_budgetaire + "</span>");
+      });
     };
 
     function changeOptions(url, dest) {
