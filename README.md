@@ -22,7 +22,7 @@ Prérequis
   
 On revient dans le home dir (exemple /home/lhutin)
 ``` 
-  git clone https://git.unistra.fr/di/budgetweb.git
+  git clone https://github.com/unistra/budgetweb.git
 ```   
 On créé le virtualenv pour BudgetWeb.
 ``` 
@@ -43,6 +43,7 @@ Installation des prerequis du projets
 ```
 * On configure l'environnement et on ajoute 
 ``` 
+    nano .virtualenvs/budgetweb/bin/postactivate
     export DJANGO_SETTINGS_MODULE=budgetweb.settings.dev
     
     workon budgetweb
@@ -56,11 +57,14 @@ Installation des prerequis du projets
     # Configuration du modèle.
     python manage.py migrate
     
-    # On créé notre "superuser" qui disposera des droits administrateurs.
+    # On créé notre "superuser" qui disposera des droits administrateurs. (même login que votre login CAS !)
     python manage.py createsuperuser
     
     # Permet d'importer un jeu de test.
     python manage.py initial_import
+    
+    # Génération des fichiers de traductions.
+    python manage.py compilemessages
     
     # Permet de générer des écritures en dépense et en recette de manière aléatoire.
     python manage.py create_structuremontants
@@ -75,16 +79,16 @@ Installation des prerequis du projets
 Documentation technique
 -----------------------
 
-La table "Structure" contient la structure financière de l'établissement.
-La table "StructureAuthorizations" contient les autorisatons des utilisateurs aux structures.
-La table "StructureMontant" contient les montants cumulés des sous-structures / programme de financement.
-La table "PeriodeBudget" contient les différentes périodes budgétaires (BI, Virement, BR1, BR2, etc.)
-La table "DomaineFonctionnel" contient la liste des domaines fonctionnels.
-La table "PlanFinancement" contient la liste des programmes de financements.
-La table "NatureComptableDepense" contient la liste des natures comptables dépenses.
-La table "NatureComptableRecette" contient la liste des natures comptables recettes
-La table "Depense" qui contient la liste des saisies en dépense.
-La table "Recette" qui contient la liste des saisies en recette.
+ * La table "Structure" contient la structure financière de l'établissement.
+ * La table "StructureAuthorizations" contient les autorisatons des utilisateurs aux structures.
+ * La table "StructureMontant" contient les montants cumulés des sous-structures / programme de financement.
+ * La table "PeriodeBudget" contient les différentes périodes budgétaires (BI, Virement, BR1, BR2, etc.)
+ * La table "DomaineFonctionnel" contient la liste des domaines fonctionnels.
+ * La table "PlanFinancement" contient la liste des programmes de financements.
+ * La table "NatureComptableDepense" contient la liste des natures comptables dépenses.
+ * La table "NatureComptableRecette" contient la liste des natures comptables recettes
+ * La table "Depense" qui contient la liste des saisies en dépense.
+ * La table "Recette" qui contient la liste des saisies en recette.
 
 Quelques règles de gestion ont été implémentées :
   * Si l'utilisateur appartient au groupe "DFI"
@@ -105,9 +109,22 @@ Un champ "is_active" est disponible pour les strcutres et les pfi, cela permet d
 Le jeu de test contient :
     Des programmes de financements fléchés / non fléchés. ( La naturecomptable est différente entre un PFI fléché et non fléché)
     Des programmes de financements pluri-annuel et non pluri-annuel. (Les écrans de saisies ne sont pas identiques).
-L
+
+* Présentation de l'arborescence.
+![Alt text](docs/images/capture1.jpg?raw=true "Title")
+* Formulaire de saisie des dépenses.
+![Alt text](docs/images/capture2.jpg?raw=true "Title")
+* Formulaire de saisie des recettes
+![Alt text](docs/images/capture3.jpg?raw=true "Title")
+* Résumé disponible pour chaque niveau.
+![Alt text](docs/images/capture4.jpg?raw=true "Title")
+* Gestion des PFI pluri-annuel
+![Alt text](docs/images/capture5.jpg?raw=true "Title")
+![Alt text](docs/images/capture6.jpg?raw=true "Title")
+*Exploitation des données via un univers BO dédié.
+![Alt text](docs/images/capture7.jpg?raw=true "Title")
 
 Contact
--------
+========================
 
-Si vous voulez plus d'information : ludovic.hutin@unistra.fr
+Une seule adresse : ludovic.hutin@unistra.fr
