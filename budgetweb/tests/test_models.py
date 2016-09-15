@@ -451,36 +451,36 @@ class DepenseModelTest(TestCase):
         depense.save()
         self.assertIsNotNone(depense.pk)
 
-    def test_save_with_validation_error(self):
-        naturecomptabledepense = NatureComptableDepense.objects.get(
-            code_nature_comptable='9DFLU', is_fleche=self.pfi_ecp.is_fleche)
-        depense = Depense(
-            pfi=self.pfi_ecp, structure=self.structure_ecp, annee=self.annee,
-            periodebudget=self.periode, domainefonctionnel=self.domaine,
-            naturecomptabledepense=naturecomptabledepense,
-            montant_dc=Decimal(1), montant_cp=Decimal(2), montant_ae=Decimal(3)
-        )
+    # def test_save_with_validation_error(self):
+    #    naturecomptabledepense = NatureComptableDepense.objects.get(
+    #        code_nature_comptable='9DFLU', is_fleche=self.pfi_ecp.is_fleche)
+    #    depense = Depense(
+    #        pfi=self.pfi_ecp, structure=self.structure_ecp, annee=self.annee,
+    #        periodebudget=self.periode, domainefonctionnel=self.domaine,
+    #        naturecomptabledepense=naturecomptabledepense,
+    #        montant_dc=Decimal(1), montant_cp=Decimal(2), montant_ae=Decimal(3)
+    #    )
+    #
+    #    with self.assertRaises(ValidationError) as ve:
+    #        depense.save()
+    #    self.assertEqual(
+    #        ve.exception.message_dict['montant_ae'][0],
+    #        "Le décalagage de trésorerie n'est pas possible sur cette nature "
+    #        "comptable.")
 
-        with self.assertRaises(ValidationError) as ve:
-            depense.save()
-        self.assertEqual(
-            ve.exception.message_dict['montant_ae'][0],
-            "Le décalagage de trésorerie n'est pas possible sur cette nature "
-            "comptable.")
-
-    def test_save_without_montant_dc(self):
-        naturecomptabledepense = NatureComptableDepense.objects.get(
-            code_nature_comptable='9DLOC', is_fleche=self.pfi_ecp.is_fleche)
-
-        depense = Depense(
-            pfi=self.pfi_ecp, structure=self.structure_ecp, annee=self.annee,
-            periodebudget=self.periode, domainefonctionnel=self.domaine,
-            naturecomptabledepense=naturecomptabledepense,
-            montant_cp=Decimal(2), montant_ae=Decimal(3)
-        )
-        depense.save()
-        self.assertIsNotNone(depense.pk)
-        self.assertEqual(depense.montant_dc, Decimal(3))
+    #def test_save_without_montant_dc(self):
+    #    naturecomptabledepense = NatureComptableDepense.objects.get(
+    #        code_nature_comptable='9DLOC', is_fleche=self.pfi_ecp.is_fleche)
+    #
+    #    depense = Depense(
+    #        pfi=self.pfi_ecp, structure=self.structure_ecp, annee=self.annee,
+    #        periodebudget=self.periode, domainefonctionnel=self.domaine,
+    #        naturecomptabledepense=naturecomptabledepense,
+    #        montant_cp=Decimal(2), montant_ae=Decimal(3)
+    #    )
+    #    depense.save()
+    #    self.assertIsNotNone(depense.pk)
+    #    self.assertEqual(depense.montant_dc, Decimal(3))
 
 
 class RecetteModelTest(TestCase):
@@ -511,16 +511,16 @@ class RecetteModelTest(TestCase):
         recette.save()
         self.assertIsNotNone(recette.pk)
 
-    def test_save_without_montant_dc(self):
-        recette = Recette.objects.create(
-            pfi=self.pfi_ecp, structure=self.structure_ecp, annee=self.annee,
-            periodebudget=self.periode,
-            naturecomptablerecette=self.naturecomptablerecette,
-            montant_re=Decimal(5), montant_ar=Decimal(6)
-        )
-        recette.save()
-        self.assertIsNotNone(recette.pk)
-        self.assertEqual(recette.montant_dc, Decimal(6))
+    #def test_save_without_montant_dc(self):
+    #    recette = Recette.objects.create(
+    #        pfi=self.pfi_ecp, structure=self.structure_ecp, annee=self.annee,
+    #        periodebudget=self.periode,
+    #        naturecomptablerecette=self.naturecomptablerecette,
+    #        montant_re=Decimal(5), montant_ar=Decimal(6)
+    #    )
+    #    recette.save()
+    #    self.assertIsNotNone(recette.pk)
+    #    self.assertEqual(recette.montant_dc, Decimal(6))
 
 
 class ManagersTest(TestCase):
