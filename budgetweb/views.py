@@ -37,7 +37,7 @@ def api_fund_designation_by_nature_and_enveloppe(request, model,
     }
     natures = models[model].active.filter(
         is_fleche=pfi.is_fleche, enveloppe=enveloppe
-    ).order_by('code_nature_comptable')
+    ).order_by('priority', 'ordre')
     response_data = [
         {"id": nature.pk, "label": str(nature)} for nature in natures]
     return HttpResponse(
@@ -189,7 +189,7 @@ def depense(request, pfiid, annee):
     is_dfi_member = request.user.groups.filter(name=settings.DFI_GROUP_NAME).exists()
     is_dfi_member_or_admin = is_dfi_member or request.user.is_superuser
     natures = OrderedDict(((n.pk, n) for n in\
-        NatureComptableDepense.objects.filter(is_fleche=pfi.is_fleche)))
+        NatureComptableDepense.objects.filter(is_fleche=pfi.is_fleche).order_by('priority','ordre')))
     domaines = [(d.pk, str(d)) for d in DomaineFonctionnel.active.all()]
 
     DepenseFormSet = modelformset_factory(
@@ -234,7 +234,7 @@ def recette(request, pfiid, annee):
     is_dfi_member = request.user.groups.filter(name=settings.DFI_GROUP_NAME).exists()
     is_dfi_member_or_admin = is_dfi_member or request.user.is_superuser
     natures = OrderedDict(((n.pk, n) for n in\
-        NatureComptableRecette.objects.filter(is_fleche=pfi.is_fleche)))
+        NatureComptableRecette.objects.filter(is_fleche=pfi.is_fleche).order_by('priority', 'ordre')))
 
     RecetteFormSet = modelformset_factory(
         Recette,
