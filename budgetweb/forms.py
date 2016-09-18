@@ -1,6 +1,8 @@
 from django import forms
+from collections import OrderedDict
+from decimal import Decimal
 
-from .models import (Depense, PlanFinancement, Recette)
+from .models import (Depense, PlanFinancement, Recette, NatureComptableDepense)
 
 
 class RecetteForm(forms.ModelForm):
@@ -10,7 +12,7 @@ class RecetteForm(forms.ModelForm):
     montant_dc = forms.DecimalField(
         label='DC', widget=forms.TextInput(attrs={'class': 'decimal'}))
     montant_ar = forms.DecimalField(
-        label='AR', widget=forms.TextInput(attrs={'class': 'decimal'}))
+        label='AR', widget=forms.TextInput(attrs={'class': 'form-naturecomptablerecette decimal'}))
     montant_re = forms.DecimalField(
         label='RE', widget=forms.TextInput(attrs={'class': 'decimal'}))
     lienpiecejointe = forms.CharField(
@@ -54,7 +56,7 @@ class RecetteForm(forms.ModelForm):
         self.fields['enveloppe'].choices = enveloppe_choices
         self.fields['naturecomptablerecette'].choices = [('', '---------')]
         self.fields['naturecomptablerecette'].widget.attrs['class'] =\
-            'form-naturecomptable'
+            'form-naturecomptable form-naturecomptablerecette'
 
         # Set the initial values
         self.fields['structure'].initial = pfi.structure_id
@@ -126,22 +128,21 @@ class DepenseForm(forms.ModelForm):
         periodebudget = kwargs.pop('periodebudget')
         annee = kwargs.pop('annee')
         self.is_dfi_member_or_admin = kwargs.pop('is_dfi_member_or_admin')
-        natures = kwargs.pop('natures')
-        domaines = kwargs.pop('domaines')
+        self.natures = kwargs.pop('natures')
+        self.domaines = kwargs.pop('domaines')
         self.user = kwargs.pop('user')
         super().__init__(*args, **kwargs)
 
         instance = self.instance
-
         # Fields initialization
-        enveloppes = {n.enveloppe for n in natures.values()}
+        enveloppes = {n.enveloppe for n in self.natures.values()}
         enveloppe_choices = [('', '---------')] + sorted([
             (e, e) for e in set(enveloppes)])
         self.fields['enveloppe'].choices = enveloppe_choices
         self.fields['naturecomptabledepense'].choices = [('', '---------')]
         self.fields['naturecomptabledepense'].widget.attrs['class'] = \
             'form-naturecomptable form-naturecomptabledepense'
-        self.fields['domainefonctionnel'].choices = [('', '---------')] + domaines
+        self.fields['domainefonctionnel'].choices = [('', '---------')] + self.domaines
 
         # Set the initial values
         self.fields['structure'].initial = pfi.structure_id
@@ -150,10 +151,10 @@ class DepenseForm(forms.ModelForm):
         self.fields['annee'].initial = int(annee)
 
         if instance and instance.pk:
-            nature = natures[instance.naturecomptabledepense_id]
+            nature = self.natures[instance.naturecomptabledepense_id]
             self.fields['enveloppe'].initial = nature.enveloppe
             self.fields['naturecomptabledepense'].choices += [
-                (pk, str(n)) for pk, n in natures.items()\
+                (pk, str(n)) for pk, n in self.natures.items()\
                     if n.enveloppe == nature.enveloppe]
             self.fields['naturecomptabledepense'].initial = nature
             if not nature.is_decalage_tresorerie and\
@@ -161,6 +162,50 @@ class DepenseForm(forms.ModelForm):
                 self.fields['montant_cp'].widget.attrs['readonly'] = True
             if not self.is_dfi_member_or_admin:
                 self.fields['montant_dc'].widget.attrs['readonly'] = True
+
+    def clean(self):
+        cleaned_data = self.cleaned_data
+        # Règle de gestion
+        if not self.is_dfi_member_or_admin:
+            # Première règle de gestion.
+            if cleaned_data.get('naturecomptabledepense', None):
+                if not cleaned_data['naturecomptabledepense'].is_decalage_tresorerie:
+                    if cleaned_data.get('montant_ae', None) != cleaned_data.get('montant_cp', None):
+                        raise forms.ValidationError("Le montant AE et CP ne peuvent pas être différent \
+                               pour la nature comptable %s %s." % (
+                            cleaned_data['naturecomptabledepense'].code_nature_comptable,
+                            cleaned_data['naturecomptabledepense'].label_nature_comptable))
+
+                # Deuxième règle de gestion.
+                if cleaned_data['naturecomptabledepense'].is_non_budgetaire:
+                    if cleaned_data['montant_ae'] != Decimal(0):
+                        raise forms.ValidationError("Le montant AE ne peut être différent de 0 pour \
+                               cette nature comptable.")
+                    if cleaned_data['montant_cp'] != Decimal(0):
+                        raise forms.ValidationError("Le montant CP ne peut être différent de 0 pour \
+                               cette nature comptable.")
+                # Trosième règle de gestion.
+                # // Si "PI/CFG" = oui alors AE = DC et CP = 0
+                if cleaned_data['naturecomptabledepense'].is_pi_cfg:
+                    if cleaned_data['montant_cp'] != Decimal(0):
+                        raise forms.ValidationError("Le montant CP ne peut être différent de 0 pour \
+                               cette nature comptable.")
+                    if cleaned_data.get('montant_ae', None) != cleaned_data.get('montant_dc', None):
+                        raise forms.ValidationError("Le montant AE doit être identique au montant DC pour \
+                               cette nature comptable.")
+                # Réaffectation du  naturecomptabledepense
+                self.fields['naturecomptabledepense'].choices = [('', '---------')] + [
+                    (pk, str(n)) for pk, n in self.natures.items()\
+                        if n.enveloppe == cleaned_data['enveloppe']]
+                self.fields['naturecomptabledepense'].initial = cleaned_data['naturecomptabledepense']
+            else:
+                if cleaned_data.get('enveloppe', None):
+                    cleaned_data['naturecomptabledepense'] = self.fields['naturecomptabledepense']
+                    cleaned_data['naturecomptabledepense'].choices = [('', '---------')] + [
+                        (pk, str(n)) for pk, n in self.natures.items()\
+                            if n.enveloppe == cleaned_data['enveloppe']]
+
+        return cleaned_data
 
     def save(self, commit=True):
         depense = super().save(commit=False)
@@ -170,23 +215,8 @@ class DepenseForm(forms.ModelForm):
         if not depense.id:
             depense.creepar = username
         depense.modifiepar = username
-
-        # Règle de gestion
-        if not self.is_dfi_member_or_admin:
-            if not depense.naturecomptabledepense.is_decalage_tresorerie:
-                if depense.montant_ae != depense.montant_cp:
-                    raise("Le montant AE et CP ne peuvent pas être différent.")
-            else:
-                if depense.montant_ae != depense.montant_cp:
-                    depense.montant_dc = depense.montant_ae
         depense.save()
         return depense
-
-    def clean_montant_dc(self):
-        montant_dc = self.cleaned_data.get("montant_dc", None)
-        if montant_dc is None:
-            montant_dc = self.cleaned_data.get("montant_cp")
-        return montant_dc
 
 
 class PlanFinancementPluriForm(forms.ModelForm):
