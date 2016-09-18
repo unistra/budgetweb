@@ -22,7 +22,7 @@
     </thead>
     <tbody>
     {% endif %}
-        <tr class="{% cycle 'row1' 'row2' %}">
+        <tr class="{% if form.non_field_errors or form.errors %}error{% else %}{% cycle 'row1' 'row2' %}{% endif %}">
         {% for hidden in form.hidden_fields %}
             {{ hidden }}
         {% endfor %}
@@ -38,6 +38,9 @@
             </td>
         {% endfor %}
         </tr>
+        {% if form.non_field_errors %}
+        <tr><td colspan="10">{{ form.non_field_errors }}</td></tr>
+        {% endif %}
     {% endfor %}
     </tbody>
 </table>

@@ -92,8 +92,11 @@ label {
 .table-pluri tbody td {
     border: 1px solid #000000;
     padding: 5px;
-    text-align: right;
 }
+.table-pluri tbody td.money {
+    text-align:right;
+}
+
 .table-pluri tbody {
     border-bottom: 3px solid #000000;
 }
@@ -141,6 +144,9 @@ label {
 .depense tr.row2 {
   background-color: #99ff99;
 }
+.depense tr.error {
+  background-color: #FF9292;
+}
 .recette thead th {
   background-color: #ff6666
 }
@@ -149,6 +155,9 @@ label {
 }
 .recette tr.row2 {
   background-color: #ff9999;
+}
+.recette tr.error {
+  background-color: #FF9292;
 }
 ul.errorlist {
     color: #F00;

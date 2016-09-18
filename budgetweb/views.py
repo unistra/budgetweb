@@ -68,9 +68,21 @@ def api_get_details_nature_by_code(request, model, id_nature):
 
 
 @is_ajax_get
-def api_get_decalage_tresorerie_by_id(request, id_naturecomptabledepense):
+def api_get_managment_rules_depense_by_id(request, id_naturecomptabledepense):
     nature = NatureComptableDepense.active.get(pk=id_naturecomptabledepense)
-    response_data = {'is_decalage_tresorerie': nature.is_decalage_tresorerie}
+    response_data = {'is_decalage_tresorerie': nature.is_decalage_tresorerie,
+                     'is_non_budgetaire': nature.is_non_budgetaire,
+                     'is_pi_cfg': nature.is_pi_cfg}
+
+    return HttpResponse(
+        json.dumps(response_data), content_type='application/json')
+
+
+@is_ajax_get
+def api_get_managment_rules_recette_by_id(request, id_naturecomptablerecette):
+    nature = NatureComptableRecette.active.get(pk=id_naturecomptablerecette)
+    response_data = {'is_non_budgetaire': nature.is_non_budgetaire,
+                     'is_ar_and_re': nature.is_ar_and_re}
 
     return HttpResponse(
         json.dumps(response_data), content_type='application/json')
