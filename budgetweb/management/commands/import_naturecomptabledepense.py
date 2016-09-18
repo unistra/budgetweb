@@ -36,6 +36,7 @@ class Command(BaseCommand):
                         is_non_budgetaire=budgetaire,
                         is_pi_cfg=pi_cfg,
                         priority=priority_nc,
+                        ordre=row[9],
                         defaults={'is_active': True}
                     )[1]
                     total += int(created)

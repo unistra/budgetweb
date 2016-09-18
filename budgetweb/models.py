@@ -331,6 +331,8 @@ class NatureComptableDepense(models.Model):
     is_active = models.BooleanField('Actif', max_length=100, default=True)
     priority = models.PositiveIntegerField('Ordre de tri pour les natures \
                                             comptables', default=1)
+    ordre = models.PositiveIntegerField('Sous-ordre de tri pour les natures \
+                                         comptables', default=1)
 
     objects = models.Manager()
     active = ActiveManager()
@@ -361,7 +363,8 @@ class NatureComptableRecette(models.Model):
     is_active = models.BooleanField('Actif', max_length=100, default=True)
     priority = models.PositiveIntegerField('Ordre de tri pour les natures \
                                             comptables', default=1)
-
+    ordre = models.PositiveIntegerField('Sous-ordre de tri pour les natures \
+                                         comptables', default=1)
     objects = models.Manager()
     active = ActiveManager()
 
