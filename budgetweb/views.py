@@ -212,7 +212,7 @@ def depense(request, pfiid, annee):
         formset = DepenseFormSet(request.POST)
         if formset.is_valid():
             formset.save()
-            return HttpResponseRedirect('/detailspfi/%s' % pfi.pk)
+            return HttpResponseRedirect('/detailspfi/%s%s' % pfi.pk)
 
     context = {
         'PFI': pfi,

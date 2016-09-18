@@ -43,14 +43,14 @@ class RecetteForm(forms.ModelForm):
         periodebudget = kwargs.pop('periodebudget')
         annee = kwargs.pop('annee')
         self.is_dfi_member_or_admin = kwargs.pop('is_dfi_member_or_admin')
-        natures = kwargs.pop('natures')
+        self.natures = kwargs.pop('natures')
         self.user = kwargs.pop('user')
         super().__init__(*args, **kwargs)
 
         instance = self.instance
 
         # Fields initialization
-        enveloppes = {n.enveloppe for n in natures.values()}
+        enveloppes = {n.enveloppe for n in self.natures.values()}
         enveloppe_choices = [('', '---------')] + sorted([
             (e, e) for e in set(enveloppes)])
         self.fields['enveloppe'].choices = enveloppe_choices
@@ -65,12 +65,69 @@ class RecetteForm(forms.ModelForm):
         self.fields['annee'].initial = int(annee)
 
         if instance and instance.pk:
-            nature = natures[instance.naturecomptablerecette_id]
+            nature = self.natures[instance.naturecomptablerecette_id]
             self.fields['enveloppe'].initial = nature.enveloppe
             self.fields['naturecomptablerecette'].choices += [
-                (pk, str(n)) for pk, n in natures.items()\
-                    if n.enveloppe == nature.enveloppe]
+                (pk, str(n)) for pk, n in self.natures.items()
+                if n.enveloppe == nature.enveloppe]
             self.fields['naturecomptablerecette'].initial = nature
+
+            if nature.is_ar_and_re and\
+               not self.is_dfi_member_or_admin:
+                self.fields['montant_re'].widget.attrs['readonly'] = True
+            if nature.is_non_budgetaire and\
+               not self.is_dfi_member_or_admin:
+                self.fields['montant_ar'].widget.attrs['readonly'] = True
+                self.fields['montant_re'].widget.attrs['readonly'] = True
+
+
+    def clean(self):
+        cleaned_data = self.cleaned_data
+        # Règle de gestion
+        if not self.is_dfi_member_or_admin:
+            # Première règle de gestion.
+            print(cleaned_data)
+            if cleaned_data.get('naturecomptablerecette', None):
+                # * Si "AR et RE" = oui  alors AR = RE
+                if cleaned_data['naturecomptablerecette'].is_ar_and_re:
+                    if cleaned_data.get('montant_ar', None) != cleaned_data.get('montant_re', None):
+                        raise forms.ValidationError("Le montant AR et RE ne peuvent pas être différent \
+                               pour la nature comptable %s %s." % (
+                            cleaned_data['naturecomptablerecette'].code_nature_comptable,
+                            cleaned_data['naturecomptablerecette'].label_nature_comptable))
+
+                # Si "non budgétaire (dont PI)" = oui alors AR = RE = 0 et DC à saisir
+                if cleaned_data['naturecomptablerecette'].is_non_budgetaire:
+                    if cleaned_data['montant_ar'] != Decimal(0):
+                        raise forms.ValidationError("Le montant AR ne peut être différent de 0 pour \
+                               cette nature comptable.")
+                    if cleaned_data['montant_re'] != Decimal(0):
+                        raise forms.ValidationError("Le montant RE ne peut être différent de 0 pour \
+                               cette nature comptable.")
+                # Réaffectation du  naturecomptabledepense
+                self.fields['naturecomptablerecette'].choices = [('', '---------')] + [
+                    (pk, str(n)) for pk, n in self.natures.items()
+                    if n.enveloppe == cleaned_data['enveloppe']]
+                self.fields['naturecomptablerecette'].initial = cleaned_data['naturecomptablerecette']
+            else:
+                if cleaned_data.get('enveloppe', None):
+                    cleaned_data['naturecomptablerecette'] = self.fields['naturecomptablerecette']
+                    cleaned_data['naturecomptablerecette'].choices = [('', '---------')] + [
+                        (pk, str(n)) for pk, n in self.natures.items()
+                        if n.enveloppe == cleaned_data['enveloppe']]
+        else:
+            if cleaned_data.get('naturecomptablerecette', None):
+                self.fields['naturecomptablerecette'].choices = [('', '---------')] + [
+                    (pk, str(n)) for pk, n in self.natures.items()
+                    if n.enveloppe == cleaned_data['enveloppe']]
+                self.fields['naturecomptablerecette'].initial = cleaned_data['naturecomptablerecette']
+            else:
+                if cleaned_data.get('enveloppe', None):
+                    cleaned_data['naturecomptablerecette'] = self.fields['naturecomptablerecette']
+                    cleaned_data['naturecomptablerecette'].choices = [('', '---------')] + [
+                        (pk, str(n)) for pk, n in self.natures.items()
+                        if n.enveloppe == cleaned_data['enveloppe']]
+        return cleaned_data
 
     def save(self, commit=True):
         recette = super().save(commit=False)
@@ -80,12 +137,6 @@ class RecetteForm(forms.ModelForm):
         recette.modifiepar = username
         recette.save()
         return recette
-
-    def clean_montant_dc(self):
-        montant_dc = self.cleaned_data.get("montant_dc", None)
-        if montant_dc is None:
-            montant_dc = self.cleaned_data.get("montant_re")
-        return montant_dc
 
 
 class DepenseForm(forms.ModelForm):

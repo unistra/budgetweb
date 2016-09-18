@@ -1,6 +1,7 @@
 {% load i18n %}
 <form id="formset" method="POST" action="{% url 'recette' pfiid=PFI.id annee=currentYear %}">
 {% csrf_token %}
+<a href="#recette"></a>
 <table class='supertable recette' id='supertable' border="1">
 {% for form in formset %}
     {% if forloop.counter = 1 %}
