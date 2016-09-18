@@ -490,7 +490,8 @@ class Comptabilite(models.Model):
 
 
 class Depense(Comptabilite):
-    montant_dc = models.DecimalField(max_digits=12, decimal_places=2,
+    montant_dc = models.DecimalField(verbose_name='Charges / Immo',
+                                     max_digits=12, decimal_places=2,
                                      blank=True, null=True)
     montant_cp = models.DecimalField(verbose_name='Montant Crédit de Paiement',
                                      max_digits=12, decimal_places=2,
@@ -519,7 +520,8 @@ class Depense(Comptabilite):
 
 
 class Recette(Comptabilite):
-    montant_dc = models.DecimalField(max_digits=12, decimal_places=2,
+    montant_dc = models.DecimalField(verbose_name='Produits / Ressources',
+                                     max_digits=12, decimal_places=2,
                                      blank=True, null=True)
     montant_re = models.DecimalField(
         verbose_name='Montant Recette Encaissable',
