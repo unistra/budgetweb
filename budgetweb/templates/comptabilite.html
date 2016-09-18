@@ -119,41 +119,6 @@
                     $("#id_form-" + form_id + "-montant_dc").val($("#id_form-" + form_id + "-montant_ae").val());
                   }
                 }
-/*
-                if (!data.is_decalage_tresorerie) { // Pas de décalage de trésorerie.
-                  if ( !is_dfi_member_or_admin) {
-                    $("#id_form-" + form_id + "-montant_cp").prop("readonly", true);
-                    $("#id_form-" + form_id + "-montant_dc").prop("readonly", true);
-                  }
-
-                }
-                else { // Décalage de trésorerie autorisé.
-                  if ( !is_dfi_member_or_admin) {
-                    $("#id_form-" + form_id + "-montant_dc").prop("readonly", false);
-                  }
-
-                }
-
-                // Deuxième règle de gestion.
-                if (data.is_non_budgetaire) { // Règne non budgétaire
-                  if ( !is_dfi_member_or_admin) {
-                    $("#id_form-" + form_id + "-montant_ae").prop("readonly", true);
-                    $("#id_form-" + form_id + "-montant_cp").prop("readonly", true);
-                  }
-                  $("#id_form-" + form_id + "-montant_ae").val('0.00');
-                  $("#id_form-" + form_id + "-montant_cp").val('0.00');
-                  $("#id_form-" + form_id + "-montant_dc").prop("readonly", false);
-                }
-
-                // Troisième règle de gestion.
-                if (data.is_pi_cfg) { // Règne PI / CFG
-                  if ( !is_dfi_member_or_admin) {
-                    $("#id_form-" + form_id + "-montant_cp").prop("readonly", true);
-                    $("#id_form-" + form_id + "-montant_dc").prop("readonly", true);
-                  }
-
-                }
-*/
             });
         }
       });
@@ -168,24 +133,36 @@
             $.getJSON("/api/naturecomptablerecette/rules/" + $nature.val() + "/", function(data) {
                 console.log(data);
                 // Première règle de gestion.
-                if (data.is_non_budgetaire) { // Si "non budgétaire (dont PI)" = oui alors AR = RE = 0 et DC à saisir
-                  if ( !is_dfi_member_or_admin) {
+                if ( is_dfi_member_or_admin) {
+                  if (data.is_ar_and_re) {  // Si "décalage de trésorerie" = non alors AE = CP = DC
+                    $("#id_form-" + form_id + "-montant_ar").prop("readonly", false);
+                    $("#id_form-" + form_id + "-montant_re").prop("readonly", false);
+                    $("#id_form-" + form_id + "-montant_dc").prop("readonly", false);
+                    if ( $("#id_form-" + form_id + "-montant_re").val().length == 0 )
+                      $("#id_form-" + form_id + "-montant_re").val($("#id_form-" + form_id + "-montant_ar").val());
+                  }
+                  if (data.is_non_budgetaire) { // Si "non budgétaire (dont PI)" = oui  alors AR = RE = 0 et DC à saisir
+                    if ( $("#id_form-" + form_id + "-montant_ar").val().length == 0 )
+                      $("#id_form-" + form_id + "-montant_re").val('0.00');
+                    if ( $("#id_form-" + form_id + "-montant_dc").val().length == 0 )
+                      $("#id_form-" + form_id + "-montant_dc").val('0.00');
+                  }
+                }
+                else {
+                  if (data.is_ar_and_re) {  // * Si "AR et RE" = oui  alors AR = RE
+                    $("#id_form-" + form_id + "-montant_ar").prop("readonly", false);
+                    $("#id_form-" + form_id + "-montant_re").prop("readonly", true);
+                    $("#id_form-" + form_id + "-montant_dc").prop("readonly", false);
+                    $("#id_form-" + form_id + "-montant_re").val($("#id_form-" + form_id + "-montant_ar").val());
+                  }
+                  if (data.is_non_budgetaire) { // Si "non budgétaire (dont PI)" = oui  alors AR = RE = 0 et DC à saisir
+                    $("#id_form-" + form_id + "-montant_ar").val('0.00');
+                    $("#id_form-" + form_id + "-montant_re").val('0.00');
                     $("#id_form-" + form_id + "-montant_ar").prop("readonly", true);
                     $("#id_form-" + form_id + "-montant_re").prop("readonly", true);
-                  }
-                  $("#id_form-" + form_id + "-montant_ar").val('0.00');
-                  $("#id_form-" + form_id + "-montant_re").val('0.00');
-                  $("#id_form-" + form_id + "-montant_dc").prop("readonly", false);
-                }
+                    $("#id_form-" + form_id + "-montant_dc").prop("readonly", false);
 
-                // Deuxième règle de gestion.
-                if (data.is_ar_and_re) {  // Si "AR et RE" = oui alors AR = RE
-                  if ( !is_dfi_member_or_admin) {
-                    $("#id_form-" + form_id + "-montant_re").prop("readonly", true);
-                    $("#id_form-" + form_id + "-montant_dc").prop("readonly", true);
                   }
-                  $("#id_form-" + form_id + "-montant_re").val($("#id_form-" + form_id + "-montant_re").val());
-                  $("#id_form-" + form_id + "-montant_dc").val('0.00'); // A corriger / probablement.
                 }
             });
         }
