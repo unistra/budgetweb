@@ -10,7 +10,8 @@ class RecetteForm(forms.ModelForm):
     enveloppe = forms.ChoiceField(required=False, widget=forms.Select(
         attrs={'class': 'form-enveloppe'}))
     montant_dc = forms.DecimalField(
-        label='DC', widget=forms.TextInput(attrs={'class': 'decimal'}))
+        label='Produits / Ressources',
+        widget=forms.TextInput(attrs={'class': 'decimal'}))
     montant_ar = forms.DecimalField(
         label='AR', widget=forms.TextInput(attrs={'class': 'form-naturecomptablerecette decimal'}))
     montant_re = forms.DecimalField(
@@ -144,7 +145,8 @@ class DepenseForm(forms.ModelForm):
     enveloppe = forms.ChoiceField(required=False, widget=forms.Select(
         attrs={'class': 'form-enveloppe'}))
     montant_dc = forms.DecimalField(
-        label='DC', widget=forms.TextInput(attrs={'class': 'decimal'}))
+        label='Charges / Immos',
+        widget=forms.TextInput(attrs={'class': 'decimal'}))
     montant_ae = forms.DecimalField(
         label='AE', widget=forms.TextInput(attrs={'class': 'form-naturecomptabledepense decimal'}))
     montant_cp = forms.DecimalField(
