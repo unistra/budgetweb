@@ -204,7 +204,18 @@ class DepenseForm(forms.ModelForm):
                     cleaned_data['naturecomptabledepense'].choices = [('', '---------')] + [
                         (pk, str(n)) for pk, n in self.natures.items()\
                             if n.enveloppe == cleaned_data['enveloppe']]
-
+        else:
+            if cleaned_data.get('naturecomptabledepense', None):
+                self.fields['naturecomptabledepense'].choices = [('', '---------')] + [
+                    (pk, str(n)) for pk, n in self.natures.items()\
+                        if n.enveloppe == cleaned_data['enveloppe']]
+                self.fields['naturecomptabledepense'].initial = cleaned_data['naturecomptabledepense']
+            else:
+                if cleaned_data.get('enveloppe', None):
+                    cleaned_data['naturecomptabledepense'] = self.fields['naturecomptabledepense']
+                    cleaned_data['naturecomptabledepense'].choices = [('', '---------')] + [
+                        (pk, str(n)) for pk, n in self.natures.items()\
+                            if n.enveloppe == cleaned_data['enveloppe']]
         return cleaned_data
 
     def save(self, commit=True):
