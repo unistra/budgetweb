@@ -1,74 +1,74 @@
-PFI fléché;Fonctionnement;Fluides;9DFLU;FF;Fonctionnement Fléché;non;non;non
-PFI fléché;Fonctionnement;Fournitures administratives, d'entretien, d'enseignement et de recherche;9DFOU;FF;Fonctionnement Fléché;non;non;non
-PFI fléché;Fonctionnement;Locations mobilières et immobilières;9DLOC;FF;Fonctionnement Fléché;oui;non;non
-PFI fléché;Fonctionnement;Entretien et maintenance;9DMAI;FF;Fonctionnement Fléché;oui;non;non
-PFI fléché;Fonctionnement;Documentation;9DDOC;FF;Fonctionnement Fléché;oui;non;non
-PFI fléché;Fonctionnement;Organisation de colloques et frais d'inscription aux colloques;9DCOL;FF;Fonctionnement Fléché;non;non;non
-PFI fléché;Fonctionnement;Déplacements, missions, transports;9DMIS;FF;Fonctionnement Fléché;non;non;non
-PFI fléché;Fonctionnement;Réceptions;9DREC;FF;Fonctionnement Fléché;non;non;non
-PFI fléché;Fonctionnement;Publicité, publications, relations publiques et reprographie;9DPUB;FF;Fonctionnement Fléché;non;non;non
-PFI fléché;Fonctionnement;Personnel extérieur, honoraires, FC des personnels et frais de recrutement;9DPER;FF;Fonctionnement Fléché;non;non;non
-PFI fléché;Fonctionnement;Affranchissements et téléphone;9DAFF;FF;Fonctionnement Fléché;non;non;non
-PFI fléché;Fonctionnement;Nettoyage et gardiennage;9DNET;FF;Fonctionnement Fléché;non;non;non
-PFI fléché;Fonctionnement;Impôts, taxes et pénalités;9DTAX;FF;Fonctionnement Fléché;non;non;non
-PFI fléché;Fonctionnement;Bourses, gratifications de stages, sub réparties et autres charges spécifiques;9DSUB;FF;Fonctionnement Fléché;oui;non;non
-PFI fléché;Fonctionnement;Etudes, sous-traitances, assurances, cotisations, droits de PI, prestations de service et charges diverses;9DETU;FF;Fonctionnement Fléché;oui;non;non
-PFI fléché;Fonctionnement;Frais bancaires et financiers;9DFIN;FF;Fonctionnement Fléché;non;non;non
-PFI fléché;Fonctionnement;Achat de prestations internes ;9DPIN;FF;Fonctionnement Fléché;non;non;oui
-PFI fléché;Fonctionnement;Frais de gestion contrats;9DCFG;FF;Fonctionnement Fléché;non;non;oui
-PFI fléché;Fonctionnement;NB-Créances irrécouvrables, annulation titre exercice antérieur;9DIRR;NBF;Non Budgétaire Fléché;non;oui;non
-PFI fléché;Fonctionnement;NB-Variation des stocks;9DSTO;NBF;Non Budgétaire Fléché;non;oui;non
-PFI fléché;Fonctionnement;NB-Autres charges non budgétaires;9DAUT;NBF;Non Budgétaire Fléché;non;oui;non
-PFI fléché;Fonctionnement;NB-Dotation aux amortissements ou provisions;9DAMO;NBF;Non Budgétaire Fléché;non;oui;non
-PFI fléché;Fonctionnement;NB-QP reconstituée des financements d'actifs;9DQPR;NBF;Non Budgétaire Fléché;non;oui;non
-PFI fléché;Personnel;Rémunérations principales et accessoires;9DREM;PF_REM;Rémunérations d'activités fléchées;non;non;non
-PFI fléché;Personnel;Cotisations hors CAS;9DCOT;PF_COT_HCAS;Cot. hors CAS d'activités fléchées;non;non;non
-PFI fléché;Personnel;Cotisation CAS;9DCAS;PF_COT_CAS;Cot. CAS d'activités fléchées;non;non;non
-PFI fléché;Personnel;Prestations sociales;9DSOC;PF_SOC;Prest. Soc  d'activités fléchées;non;non;non
-PFI fléché;Investissement;Constructions, terrains;9DICT;IF;Investissement Fléché;oui;non;non
-PFI fléché;Investissement;Matériel d'enseignement, scientifique, outillage et leur installation;9DIMA;IF;Investissement Fléché;oui;non;non
-PFI fléché;Investissement;Mobilier, matériel de bureau, de transport et divers;9DIMO;IF;Investissement Fléché;oui;non;non
-PFI fléché;Investissement;Matériel informatique, logiciel;9DINF;IF;Investissement Fléché;oui;non;non
-PFI fléché;Investissement;Autres dépenses d'investissement;9DINV;IF;Investissement Fléché;oui;non;non
-PFI fléché;Investissement;Immobilisations financières;9DIFI;IF;Investissement Fléché;non;non;non
-PFI fléché;Investissement;Remboursement d'emprunt budgétaire;9DIEB;IF;Investissement Fléché;oui;non;non
-PFI fléché;Investissement;NB-Prêts, dépôts ou cautionnements versés par l'établissement;9DIPR;NBF;Non Budgétaire Fléché;non;oui;non
-PFI fléché;Investissement;NB-Remboursement d'emprunt NON budgétaire;9DIEN;NBF;Non Budgétaire Fléché;non;oui;non
-PFI fléché;Investissement;NB-Restitution de dépôts ou cautionnements reçus d'un tiers;9DIDE;NBF;Non Budgétaire Fléché;non;oui;non
-PFI non fléché ou NA;Fonctionnement;Fluides;9DFLU;FG;Fonctionnement Globalisé;non;non;non
-PFI non fléché ou NA;Fonctionnement;Fournitures administratives, d'entretien, d'enseignement et de recherche;9DFOU;FG;Fonctionnement Globalisé;non;non;non
-PFI non fléché ou NA;Fonctionnement;Locations mobilières et immobilières;9DLOC;FG;Fonctionnement Globalisé;oui;non;non
-PFI non fléché ou NA;Fonctionnement;Entretien et maintenance;9DMAI;FG;Fonctionnement Globalisé;oui;non;non
-PFI non fléché ou NA;Fonctionnement;Documentation;9DDOC;FG;Fonctionnement Globalisé;non;non;non
-PFI non fléché ou NA;Fonctionnement;Organisation de colloques et frais d'inscription aux colloques;9DCOL;FG;Fonctionnement Globalisé;non;non;non
-PFI non fléché ou NA;Fonctionnement;Déplacements, missions, transports;9DMIS;FG;Fonctionnement Globalisé;non;non;non
-PFI non fléché ou NA;Fonctionnement;Réceptions;9DREC;FG;Fonctionnement Globalisé;non;non;non
-PFI non fléché ou NA;Fonctionnement;Publicité, publications, relations publiques et reprographie;9DPUB;FG;Fonctionnement Globalisé;non;non;non
-PFI non fléché ou NA;Fonctionnement;Personnel extérieur, honoraires, FC des personnels et frais de recrutement;9DPER;FG;Fonctionnement Globalisé;non;non;non
-PFI non fléché ou NA;Fonctionnement;Affranchissements et téléphone;9DAFF;FG;Fonctionnement Globalisé;non;non;non
-PFI non fléché ou NA;Fonctionnement;Nettoyage et gardiennage;9DNET;FG;Fonctionnement Globalisé;non;non;non
-PFI non fléché ou NA;Fonctionnement;Impôts, taxes et pénalités;9DTAX;FG;Fonctionnement Globalisé;non;non;non
-PFI non fléché ou NA;Fonctionnement;Bourses, gratifications de stages, sub réparties et autres charges spécifiques;9DSUB;FG;Fonctionnement Globalisé;non;non;non
-PFI non fléché ou NA;Fonctionnement;Etudes, sous-traitances, assurances, cotisations, droits de PI, prestations de service et charges diverses;9DETU;FF;Fonctionnement Globalisé;oui;non;non
-PFI non fléché ou NA;Fonctionnement;Frais bancaires et financiers;9DFIN;FF;Fonctionnement Globalisé;non;non;non
-PFI non fléché ou NA;Fonctionnement;Achat de prestations internes ;9DPIN;FG;Fonctionnement Globalisé;non;non;oui
-PFI non fléché ou NA;Fonctionnement;Frais de gestion contrats;9DCFG;FG;Fonctionnement Globalisé;non;non;oui
-PFI non fléché ou NA;Fonctionnement;NB-Créances irrécouvrables, annulation titre exercice antérieur;9DIRR;NBG;Non Budgétaire Globalisé;non;oui;non
-PFI non fléché ou NA;Fonctionnement;NB-Variation des stocks;9DSTO;NBG;Non Budgétaire Globalisé;non;oui;non
-PFI non fléché ou NA;Fonctionnement;NB-Autres charges non budgétaires;9DAUT;NBG;Non Budgétaire Globalisé;non;oui;non
-PFI non fléché ou NA;Fonctionnement;NB-Dotation aux amortissements ou provisions;9DAMO;NBG;Non Budgétaire Globalisé;non;oui;non
-PFI non fléché ou NA;Fonctionnement;NB-QP reconstituée des financements d'actifs;9DQPR;NBG;Non Budgétaire Globalisé;non;oui;non
-PFI non fléché ou NA;Personnel;Rémunérations principales et accessoires;9DREM;PG_REM;Rémunérations d'activités Globalisées;non;non;non
-PFI non fléché ou NA;Personnel;Cotisations hors CAS;9DCOT;PG_COT_HCAS;Cot. hors CAS d'activités Globalisées;non;non;non
-PFI non fléché ou NA;Personnel;Cotisation CAS ;9DCAS;PG_COT_CAS;Cot. CAS d'activités  Globalisées;non;non;non
-PFI non fléché ou NA;Personnel;Prestations sociales;9DSOC;PG_SOC;Prest. Soc  d'activités  Globalisées;non;non;non
-PFI non fléché ou NA;Investissement;Constructions, terrains;9DICT;IG;Investissement Globalisé;oui;non;non
-PFI non fléché ou NA;Investissement;Matériel d'enseignement, scientifique, outillage et leur installation;9DIMA;IG;Investissement Globalisé;oui;non;non
-PFI non fléché ou NA;Investissement;Mobilier, matériel de bureau, de transport et divers;9DIMO;IG;Investissement Globalisé;oui;non;non
-PFI non fléché ou NA;Investissement;Matériel informatique, logiciel;9DINF;IG;Investissement Globalisé;oui;non;non
-PFI non fléché ou NA;Investissement;Autres dépenses d'investissement;9DINV;IG;Investissement Globalisé;oui;non;non
-PFI non fléché ou NA;Investissement;Immobilisations financières;9DIFI;IG;Investissement Globalisé;oui;non;non
-PFI non fléché ou NA;Investissement;Remboursement d'emprunt budgétaire;9DIEB;IG;Investissement Globalisé;oui;non;non
-PFI non fléché ou NA;Investissement;NB-Prêts, dépôts ou cautionnements versés par l'établissement;9DIPR;NBG;Non Budgétaire Globalisé;non;oui;non
-PFI non fléché ou NA;Investissement;NB-Remboursement d'emprunt NON budgétaire;9DIEN;NBG;Non Budgétaire Globalisé;non;oui;non
-PFI non fléché ou NA;Investissement;NB-Restitution de dépôts ou cautionnements reçus d'un tiers;9DIDE;NBG;Non Budgétaire Globalisé;non;oui;non
+PFI fléché;Fonctionnement;Fluides;9DFLU;FF;Fonctionnement Fléché;non;non;non;1
+PFI fléché;Fonctionnement;Fournitures administratives, d'entretien, d'enseignement et de recherche;9DFOU;FF;Fonctionnement Fléché;non;non;non;2
+PFI fléché;Fonctionnement;Locations mobilières et immobilières;9DLOC;FF;Fonctionnement Fléché;oui;non;non;3
+PFI fléché;Fonctionnement;Entretien et maintenance;9DMAI;FF;Fonctionnement Fléché;oui;non;non;4
+PFI fléché;Fonctionnement;Documentation;9DDOC;FF;Fonctionnement Fléché;oui;non;non;5
+PFI fléché;Fonctionnement;Organisation de colloques et frais d'inscription aux colloques;9DCOL;FF;Fonctionnement Fléché;non;non;non;6
+PFI fléché;Fonctionnement;Déplacements, missions, transports;9DMIS;FF;Fonctionnement Fléché;non;non;non;7
+PFI fléché;Fonctionnement;Réceptions;9DREC;FF;Fonctionnement Fléché;non;non;non;8
+PFI fléché;Fonctionnement;Publicité, publications, relations publiques et reprographie;9DPUB;FF;Fonctionnement Fléché;non;non;non;9
+PFI fléché;Fonctionnement;Personnel extérieur, honoraires, FC des personnels et frais de recrutement;9DPER;FF;Fonctionnement Fléché;non;non;non;10
+PFI fléché;Fonctionnement;Affranchissements et téléphone;9DAFF;FF;Fonctionnement Fléché;non;non;non;11
+PFI fléché;Fonctionnement;Nettoyage et gardiennage;9DNET;FF;Fonctionnement Fléché;non;non;non;12
+PFI fléché;Fonctionnement;Impôts, taxes et pénalités;9DTAX;FF;Fonctionnement Fléché;non;non;non;13
+PFI fléché;Fonctionnement;Bourses, gratifications de stages, sub réparties et autres charges spécifiques;9DSUB;FF;Fonctionnement Fléché;oui;non;non;14
+PFI fléché;Fonctionnement;Etudes, sous-traitances, assurances, cotisations, droits de PI, prestations de service et charges diverses;9DETU;FF;Fonctionnement Fléché;oui;non;non;15
+PFI fléché;Fonctionnement;Frais bancaires et financiers;9DFIN;FF;Fonctionnement Fléché;non;non;non;16
+PFI fléché;Fonctionnement;Achats de prestations internes ;9DPIN;FF;Fonctionnement Fléché;non;non;oui;17
+PFI fléché;Fonctionnement;Contributions aux frais de gestion contrats;9DCFG;FF;Fonctionnement Fléché;non;non;oui;18
+PFI fléché;Fonctionnement;NB-Créances irrécouvrables, annulation titre exercice antérieur;9DIRR;NEANT;Néant;non;oui;non;19
+PFI fléché;Fonctionnement;NB-Variation des stocks;9DSTO;NEANT;Néant;non;oui;non;20
+PFI fléché;Fonctionnement;NB-Dotation aux amortissements ou provisions;9DAMO;NEANT;Néant;non;oui;non;21
+PFI fléché;Fonctionnement;NB-QP reconstituée des financements d'actifs;9DQPR;NEANT;Néant;non;oui;non;22
+PFI fléché;Fonctionnement;NB-Autres charges non budgétaires;9DAUT;NEANT;Néant;non;oui;non;23
+PFI fléché;Personnel;Rémunérations principales et accessoires;9DREM;PF_REM;Rémunérations d'activités fléchées;non;non;non;24
+PFI fléché;Personnel;Cotisations hors CAS;9DCOT;PF_COT_HCAS;Cot. hors CAS d'activités fléchées;non;non;non;25
+PFI fléché;Personnel;Cotisation CAS ;9DCAS;PF_COT_CAS;Cot. CAS d'activités fléchées;non;non;non;26
+PFI fléché;Personnel;Prestations sociales;9DSOC;PF_SOC;Prest. Soc  d'activités fléchées;non;non;non;27
+PFI fléché;Investissement;Constructions, terrains;9DICT;IF;Investissement Fléché;oui;non;non;28
+PFI fléché;Investissement;Matériel d'enseignement, scientifique, outillage et leur installation;9DIMA;IF;Investissement Fléché;oui;non;non;29
+PFI fléché;Investissement;Mobilier, matériel de bureau, de transport et divers;9DIMO;IF;Investissement Fléché;oui;non;non;30
+PFI fléché;Investissement;Matériel informatique, logiciel;9DINF;IF;Investissement Fléché;oui;non;non;31
+PFI fléché;Investissement;Autres dépenses d'investissement;9DINV;IF;Investissement Fléché;oui;non;non;32
+PFI fléché;Investissement;Immobilisations financières;9DIFI;IF;Investissement Fléché;non;non;non;33
+PFI fléché;Investissement;Remboursement d'emprunt budgétaire;9DIEB;IF;Investissement Fléché;oui;non;non;34
+PFI fléché;Investissement;NB-Prêts, dépôts ou cautionnements versés par l'établissement;9DIPR;NEANT;Néant;non;oui;non;35
+PFI fléché;Investissement;NB-Remboursement d'emprunt NON budgétaire;9DIEN;NEANT;Néant;non;oui;non;36
+PFI fléché;Investissement;NB-Restitution de dépôts ou cautionnements reçus d'un tiers;9DIDE;NEANT;Néant;non;oui;non;37
+PFI non fléché ou NA;Fonctionnement;Fluides;9DFLU;FG;Fonctionnement Globalisé;non;non;non;38
+PFI non fléché ou NA;Fonctionnement;Fournitures administratives, d'entretien, d'enseignement et de recherche;9DFOU;FG;Fonctionnement Globalisé;non;non;non;39
+PFI non fléché ou NA;Fonctionnement;Locations mobilières et immobilières;9DLOC;FG;Fonctionnement Globalisé;oui;non;non;40
+PFI non fléché ou NA;Fonctionnement;Entretien et maintenance;9DMAI;FG;Fonctionnement Globalisé;oui;non;non;41
+PFI non fléché ou NA;Fonctionnement;Documentation;9DDOC;FG;Fonctionnement Globalisé;non;non;non;42
+PFI non fléché ou NA;Fonctionnement;Organisation de colloques et frais d'inscription aux colloques;9DCOL;FG;Fonctionnement Globalisé;non;non;non;43
+PFI non fléché ou NA;Fonctionnement;Déplacements, missions, transports;9DMIS;FG;Fonctionnement Globalisé;non;non;non;44
+PFI non fléché ou NA;Fonctionnement;Réceptions;9DREC;FG;Fonctionnement Globalisé;non;non;non;45
+PFI non fléché ou NA;Fonctionnement;Publicité, publications, relations publiques et reprographie;9DPUB;FG;Fonctionnement Globalisé;non;non;non;46
+PFI non fléché ou NA;Fonctionnement;Personnel extérieur, honoraires, FC des personnels et frais de recrutement;9DPER;FG;Fonctionnement Globalisé;non;non;non;47
+PFI non fléché ou NA;Fonctionnement;Affranchissements et téléphone;9DAFF;FG;Fonctionnement Globalisé;non;non;non;48
+PFI non fléché ou NA;Fonctionnement;Nettoyage et gardiennage;9DNET;FG;Fonctionnement Globalisé;non;non;non;49
+PFI non fléché ou NA;Fonctionnement;Impôts, taxes et pénalités;9DTAX;FG;Fonctionnement Globalisé;non;non;non;50
+PFI non fléché ou NA;Fonctionnement;Bourses, gratifications de stages, sub réparties et autres charges spécifiques;9DSUB;FG;Fonctionnement Globalisé;non;non;non;51
+PFI non fléché ou NA;Fonctionnement;Etudes, sous-traitances, assurances, cotisations, droits de PI, prestations de service et charges diverses;9DETU;FG;Fonctionnement Globalisé;oui;non;non;52
+PFI non fléché ou NA;Fonctionnement;Frais bancaires et financiers;9DFIN;FG;Fonctionnement Globalisé;non;non;non;53
+PFI non fléché ou NA;Fonctionnement;Achats de prestations internes ;9DPIN;FG;Fonctionnement Globalisé;non;non;oui;54
+PFI non fléché ou NA;Fonctionnement;Contributions aux frais de gestion contrats;9DCFG;FG;Fonctionnement Globalisé;non;non;oui;55
+PFI non fléché ou NA;Fonctionnement;NB-Créances irrécouvrables, annulation titre exercice antérieur;9DIRR;NEANT;Néant;non;oui;non;56
+PFI non fléché ou NA;Fonctionnement;NB-Variation des stocks;9DSTO;NEANT;Néant;non;oui;non;57
+PFI non fléché ou NA;Fonctionnement;NB-Dotation aux amortissements ou provisions;9DAMO;NEANT;Néant;non;oui;non;58
+PFI non fléché ou NA;Fonctionnement;NB-QP reconstituée des financements d'actifs;9DQPR;NEANT;Néant;non;oui;non;59
+PFI non fléché ou NA;Fonctionnement;NB-Autres charges non budgétaires;9DAUT;NEANT;Néant;non;oui;non;60
+PFI non fléché ou NA;Personnel;Rémunérations principales et accessoires;9DREM;PG_REM;Rémunérations d'activités Globalisées;non;non;non;61
+PFI non fléché ou NA;Personnel;Cotisations hors CAS;9DCOT;PG_COT_HCAS;Cot. hors CAS d'activités Globalisées;non;non;non;62
+PFI non fléché ou NA;Personnel;Cotisation CAS ;9DCAS;PG_COT_CAS;Cot. CAS d'activités  Globalisées;non;non;non;63
+PFI non fléché ou NA;Personnel;Prestations sociales;9DSOC;PG_SOC;Prest. Soc  d'activités  Globalisées;non;non;non;64
+PFI non fléché ou NA;Investissement;Constructions, terrains;9DICT;IG;Investissement Globalisé;oui;non;non;65
+PFI non fléché ou NA;Investissement;Matériel d'enseignement, scientifique, outillage et leur installation;9DIMA;IG;Investissement Globalisé;oui;non;non;66
+PFI non fléché ou NA;Investissement;Mobilier, matériel de bureau, de transport et divers;9DIMO;IG;Investissement Globalisé;oui;non;non;67
+PFI non fléché ou NA;Investissement;Matériel informatique, logiciel;9DINF;IG;Investissement Globalisé;oui;non;non;68
+PFI non fléché ou NA;Investissement;Autres dépenses d'investissement;9DINV;IG;Investissement Globalisé;oui;non;non;69
+PFI non fléché ou NA;Investissement;Immobilisations financières;9DIFI;IG;Investissement Globalisé;oui;non;non;70
+PFI non fléché ou NA;Investissement;Remboursement d'emprunt budgétaire;9DIEB;IG;Investissement Globalisé;oui;non;non;71
+PFI non fléché ou NA;Investissement;NB-Prêts, dépôts ou cautionnements versés par l'établissement;9DIPR;NEANT;Néant;non;oui;non;72
+PFI non fléché ou NA;Investissement;NB-Remboursement d'emprunt NON budgétaire;9DIEN;NEANT;Néant;non;oui;non;73
+PFI non fléché ou NA;Investissement;NB-Restitution de dépôts ou cautionnements reçus d'un tiers;9DIDE;NEANT;Néant;non;oui;non;74
