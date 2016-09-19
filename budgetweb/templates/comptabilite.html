@@ -65,11 +65,9 @@
                 console.log(data);
                 // Première règle de gestion.
                 if ( is_dfi_member_or_admin) {
-                  if (data.is_decalage_tresorerie) {  // Si "décalage de trésorerie" = non alors AE = CP = DC
-                    if ( $("#id_form-" + form_id + "-montant_cp").val().length == 0 )
-                      $("#id_form-" + form_id + "-montant_cp").val($("#id_form-" + form_id + "-montant_ae").val());
+                  if (data.is_decalage_tresorerie) {  // Si "décalage de trésorerie" = oui alors AE <> CP = DC
                     if ( $("#id_form-" + form_id + "-montant_dc").val().length == 0 )
-                      $("#id_form-" + form_id + "-montant_dc").val($("#id_form-" + form_id + "-montant_ae").val());
+                      $("#id_form-" + form_id + "-montant_dc").val($("#id_form-" + form_id + "-montant_cp").val());
                   }
                   if (data.is_non_budgetaire) { // Si "non budgétaire" = oui alors AE = CP = 0 et DC à saisir
                     if ( $("#id_form-" + form_id + "-montant_ae").val().length == 0 )
@@ -92,10 +90,11 @@
                 }
                 // Dans le cas où je suis gestionnaire financier.
                 else {
-                  if (data.is_decalage_tresorerie) {  // Si "décalage de trésorerie" = non alors AE = CP = DC
+                  if (data.is_decalage_tresorerie) {  // Si "décalage de trésorerie" = oui alors AE <> CP = DC
                     $("#id_form-" + form_id + "-montant_ae").prop("readonly", false);
                     $("#id_form-" + form_id + "-montant_cp").prop("readonly", false);
-                    $("#id_form-" + form_id + "-montant_dc").prop("readonly", false);
+                    $("#id_form-" + form_id + "-montant_dc").prop("readonly", true);
+                    $("#id_form-" + form_id + "-montant_dc").val($("#id_form-" + form_id + "-montant_cp").val());
                   }
                   if (data.is_non_budgetaire) { // Si "non budgétaire" = oui alors AE = CP = 0 et DC à saisir
                     $("#id_form-" + form_id + "-montant_ae").prop("readonly", true);
@@ -134,7 +133,7 @@
                 console.log(data);
                 // Première règle de gestion.
                 if ( is_dfi_member_or_admin) {
-                  if (data.is_ar_and_re) {  // Si "décalage de trésorerie" = non alors AE = CP = DC
+                  if (data.is_ar_and_re) {   // * Si "AR et RE" = oui  alors AR = RE
                     $("#id_form-" + form_id + "-montant_ar").prop("readonly", false);
                     $("#id_form-" + form_id + "-montant_re").prop("readonly", false);
                     $("#id_form-" + form_id + "-montant_dc").prop("readonly", false);
@@ -143,9 +142,9 @@
                   }
                   if (data.is_non_budgetaire) { // Si "non budgétaire (dont PI)" = oui  alors AR = RE = 0 et DC à saisir
                     if ( $("#id_form-" + form_id + "-montant_ar").val().length == 0 )
-                      $("#id_form-" + form_id + "-montant_re").val('0.00');
-                    if ( $("#id_form-" + form_id + "-montant_dc").val().length == 0 )
-                      $("#id_form-" + form_id + "-montant_dc").val('0.00');
+                      $("#id_form-" + form_id + "-montant_ar").val('0.00');
+                    if ( $("#id_form-" + form_id + "-montant_re").val().length == 0 )
+                      $("#id_form-" + form_id + "-montant_re").val($("#id_form-" + form_id + "-montant_ar").val());
                   }
                 }
                 else {
@@ -156,11 +155,11 @@
                     $("#id_form-" + form_id + "-montant_re").val($("#id_form-" + form_id + "-montant_ar").val());
                   }
                   if (data.is_non_budgetaire) { // Si "non budgétaire (dont PI)" = oui  alors AR = RE = 0 et DC à saisir
-                    $("#id_form-" + form_id + "-montant_ar").val('0.00');
-                    $("#id_form-" + form_id + "-montant_re").val('0.00');
                     $("#id_form-" + form_id + "-montant_ar").prop("readonly", true);
                     $("#id_form-" + form_id + "-montant_re").prop("readonly", true);
                     $("#id_form-" + form_id + "-montant_dc").prop("readonly", false);
+                    $("#id_form-" + form_id + "-montant_ar").val('0.00');
+                    $("#id_form-" + form_id + "-montant_re").val('0.00');
 
                   }
                 }
