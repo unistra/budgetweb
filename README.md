@@ -1,8 +1,8 @@
 BudgetWeb
 ========================
 
-![myimage-alt-tag](https://git.unistra.fr/di/budgetweb/badges/master/build.svg)
-![myimage-alt-tag](https://git.unistra.fr/di/budgetweb/badges/master/coverage.svg)
+![myimage-alt-tag](https://secure.travis-ci.org/unistra/budgetweb.png?branch=master)
+![myimage-alt-tag](http://coveralls.io/repos/unistra/budgetweb/badge.png?branch=master)
   
 L'application BudgetWeb est basée sur Django.
 
