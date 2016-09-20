@@ -87,7 +87,6 @@ class RecetteForm(forms.ModelForm):
         # Règle de gestion
         if not self.is_dfi_member_or_admin:
             # Première règle de gestion.
-            print(cleaned_data)
             if cleaned_data.get('naturecomptablerecette', None):
                 # * Si "AR et RE" = oui  alors AR = RE
                 if cleaned_data['naturecomptablerecette'].is_ar_and_re:
@@ -222,9 +221,9 @@ class DepenseForm(forms.ModelForm):
         if not self.is_dfi_member_or_admin:
             # Première règle de gestion.
             if cleaned_data.get('naturecomptabledepense', None):
-                if not cleaned_data['naturecomptabledepense'].is_decalage_tresorerie:
-                    if cleaned_data.get('montant_ae', None) != cleaned_data.get('montant_cp', None):
-                        raise forms.ValidationError("Le montant AE et CP ne peuvent pas être différent \
+                if cleaned_data['naturecomptabledepense'].is_decalage_tresorerie:
+                    if cleaned_data.get('montant_cp', None) != cleaned_data.get('montant_dc', None):
+                        raise forms.ValidationError("Le montant CP et DC ne peuvent pas être différent \
                                pour la nature comptable %s %s." % (
                             cleaned_data['naturecomptabledepense'].code_nature_comptable,
                             cleaned_data['naturecomptabledepense'].label_nature_comptable))
@@ -246,6 +245,21 @@ class DepenseForm(forms.ModelForm):
                     if cleaned_data.get('montant_ae', None) != cleaned_data.get('montant_dc', None):
                         raise forms.ValidationError("Le montant AE doit être identique au montant DC pour \
                                cette nature comptable.")
+
+                # Règle par défaut
+                if not cleaned_data['naturecomptabledepense'].is_decalage_tresorerie and\
+                   not cleaned_data['naturecomptabledepense'].is_non_budgetaire and\
+                   not cleaned_data['naturecomptabledepense'].is_pi_cfg:
+                    if cleaned_data.get('montant_ae', None) != cleaned_data.get('montant_cd', None):
+                        raise forms.ValidationError("Le montant AE et CP ne peuvent pas être différent \
+                              pour la nature comptable %s %s." % (
+                           cleaned_data['naturecomptabledepense'].code_nature_comptable,
+                           cleaned_data['naturecomptabledepense'].label_nature_comptable))
+                    if cleaned_data.get('montant_cp', None) != cleaned_data.get('montant_dc', None):
+                        raise forms.ValidationError("Le montant CP et DC ne peuvent pas être différent \
+                               pour la nature comptable %s %s." % (
+                            cleaned_data['naturecomptabledepense'].code_nature_comptable,
+                            cleaned_data['naturecomptabledepense'].label_nature_comptable))
                 # Réaffectation du  naturecomptabledepense
                 self.fields['naturecomptabledepense'].choices = [('', '---------')] + [
                     (pk, str(n)) for pk, n in self.natures.items()\
