@@ -1,8 +1,8 @@
 BudgetWeb
 ========================
 
-.. image:: https://git.unistra.fr/di/amfortas/badges/master/build.svg
-     :target: https://git.unistra.fr/di/amfortas/commits/master
+.. image:: https://git.unistra.fr/di/budgetweb/badges/master/build.svg
+     :target: https://git.unistra.fr/di/budgetweb/commits/master
      :alt: Build
  
   
