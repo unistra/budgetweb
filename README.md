@@ -1,9 +1,5 @@
 BudgetWeb
 ========================
-
-.. image:: https://git.unistra.fr/di/budgetweb/badges/master/build.svg
-    :target: https://git.unistra.fr/di/budgetweb/commits/master
-    :alt: Build
     
 L'application BudgetWeb est basée sur Django.
 
