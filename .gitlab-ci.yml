@@ -1,0 +1,4 @@
+py34:
+  script:
+  - tox -e py34
+
