@@ -11,11 +11,11 @@ class RecetteForm(forms.ModelForm):
         attrs={'class': 'form-enveloppe'}))
     montant_dc = forms.DecimalField(
         label='Produits / Ressources',
-        widget=forms.TextInput(attrs={'class': 'decimal'}))
+        widget=forms.TextInput(attrs={'class': 'form-naturecomptablerecette decimal'}))
     montant_ar = forms.DecimalField(
         label='AR', widget=forms.TextInput(attrs={'class': 'form-naturecomptablerecette decimal'}))
     montant_re = forms.DecimalField(
-        label='RE', widget=forms.TextInput(attrs={'class': 'decimal'}))
+        label='RE', widget=forms.TextInput(attrs={'class': 'form-naturecomptablerecette decimal'}))
     lienpiecejointe = forms.CharField(
         required=False,
         label='PJ', widget=forms.TextInput(attrs={'style': 'width:2px;'}))
@@ -145,11 +145,11 @@ class DepenseForm(forms.ModelForm):
         attrs={'class': 'form-enveloppe'}))
     montant_dc = forms.DecimalField(
         label='Charges / Immos',
-        widget=forms.TextInput(attrs={'class': 'decimal'}))
+        widget=forms.TextInput(attrs={'class': 'form-naturecomptabledepense decimal'}))
     montant_ae = forms.DecimalField(
         label='AE', widget=forms.TextInput(attrs={'class': 'form-naturecomptabledepense decimal'}))
     montant_cp = forms.DecimalField(
-        label='CP', widget=forms.TextInput(attrs={'class': 'decimal'}))
+        label='CP', widget=forms.TextInput(attrs={'class': 'form-naturecomptabledepense decimal'}))
     lienpiecejointe = forms.CharField(
         required=False,
         label='PJ', widget=forms.TextInput(attrs={'style': 'width:2px;'}))
