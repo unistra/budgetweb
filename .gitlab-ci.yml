@@ -1,4 +1,4 @@
-py35:
+py34:
   script:
-  - tox -e py35
+  - tox -e py34
 
