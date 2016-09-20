@@ -272,6 +272,7 @@ def recette(request, pfiid, annee):
 def detailspfi(request, pfiid):
     to_dict = lambda x: {k: list(v) for k, v in x}
     pfi = PlanFinancement.objects.get(pk=pfiid)
+    current_year = get_current_year()
 
     depenses = Depense.objects.filter(
         pfi=pfi).prefetch_related(
@@ -302,7 +303,7 @@ def detailspfi(request, pfiid):
 
     depenses = to_dict(groupby(depenses, lambda x: x.annee))
     recettes = to_dict(groupby(recettes, lambda x: x.annee))
-    years = depenses.keys() | recettes.keys()
+    years = (depenses.keys() | recettes.keys()) or [current_year]
 
     sum_depenses = Depense.objects.filter(pfi=pfi).values('annee').annotate(
         sum_dc=Sum('montant_dc'),
@@ -319,7 +320,7 @@ def detailspfi(request, pfiid):
         [year_depenses, year_recettes])
 
     context = {
-        'PFI': pfi, 'currentYear': get_current_year(),
+        'PFI': pfi, 'currentYear': current_year,
         'listeDepense': depenses, 'listeRecette': recettes,
         'sommeDepense': sum_depenses, 'sommeRecette': sum_recettes,
         'resume_depenses': resume_depenses, 'resume_recettes': resume_recettes,

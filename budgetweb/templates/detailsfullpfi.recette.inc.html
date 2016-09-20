@@ -64,9 +64,9 @@
     {% endfor %}
       <tr>
         <td colspan="8" style="text-align:right;padding-right:20px;font-weight:bold;">Total :</td>
-        <td nowrap style="background-color:#ff6666;font-weight:bold;text-align:right;">{{ sums.0.sum_dc|intspace }} &euro;</td>
-        <td nowrap style="background-color:#ff6666;font-weight:bold;text-align:right;">{{ sums.0.sum_ar|intspace }} &euro;</td>
-        <td nowrap style="background-color:#ff6666;font-weight:bold;text-align:right;">{{ sums.0.sum_re|intspace }} &euro;</td>
+        <td nowrap style="background-color:#ff6666;font-weight:bold;text-align:right;">{% firstof sums.0.sum_dc|intspace "0,00" %} &euro;</td>
+        <td nowrap style="background-color:#ff6666;font-weight:bold;text-align:right;">{% firstof sums.0.sum_ar|intspace "0,00" %} &euro;</td>
+        <td nowrap style="background-color:#ff6666;font-weight:bold;text-align:right;">{% firstof sums.0.sum_re|intspace "0,00" %} &euro;</td>
         <td colspan="2">&nbsp;</td>
       </tr>
   </tbody>

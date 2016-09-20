@@ -91,7 +91,20 @@ class APIViewsTest(TestCase):
         json_response = json.loads(response.content.decode('utf-8'))
 
         self.assertEqual(response.status_code, 200)
-        self.assertDictEqual(json_response, {'is_decalage_tresorerie': True, 'is_non_budgetaire': False, 'is_pi_cfg': False})
+        self.assertDictEqual(json_response, {'is_decalage_tresorerie': True,
+                                             'is_non_budgetaire': False,
+                                             'is_pi_cfg': False})
+
+    def test_api_get_managment_rules_recette_by_id(self):
+        view_api = '/api/naturecomptablerecette/rules/%s/' % (
+            self.naturecomptablerecette.pk,)
+        response = self.client.get(
+            view_api, {}, HTTP_X_REQUESTED_WITH='XMLHttpRequest', follow=True)
+        json_response = json.loads(response.content.decode('utf-8'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertDictEqual(json_response, {'is_non_budgetaire': False,
+                                             'is_ar_and_re': True})
 
 
 class ViewsTest(TestCase):
