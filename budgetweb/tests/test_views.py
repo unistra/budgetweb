@@ -38,8 +38,8 @@ class APIViewsTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(json_response), 7)
         self.assertDictEqual(json_response[0], {
-            "id": 69,
-            "label": "9RIAU - Financement d'actifs par les autres collectivités et organismes"
+            "id": 63,
+            "label": "9RIIA - Financement d'actifs par l'ANR Investissement d'avenir"
         })
 
     def test_api_fund_designation_by_nature_and_enveloppe_depense(self):
@@ -53,7 +53,7 @@ class APIViewsTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(json_response), 4)
         self.assertDictEqual(json_response[0], {
-            "id": 63, "label": "9DCAS - Cotisation CAS"})
+            "id": 61, "label": "9DREM - Rémunérations principales et accessoires"})
 
     def test_api_get_details_nature_by_code_recette(self):
         view_api = '/api/naturecomptablerecette/%s/' % (
@@ -83,15 +83,15 @@ class APIViewsTest(TestCase):
             'label_compte_budgetaire': 'Fonctionnement Globalisé'
         })
 
-    def test_api_get_decalage_tresorerie_by_id(self):
-        view_api = '/api/naturecomptabledepense/is_decalage_tresorerie/%s/' % (
+    def test_api_get_managment_rules_depense_by_id(self):
+        view_api = '/api/naturecomptabledepense/rules/%s/' % (
             self.naturecomptabledepense.pk,)
         response = self.client.get(
             view_api, {}, HTTP_X_REQUESTED_WITH='XMLHttpRequest', follow=True)
         json_response = json.loads(response.content.decode('utf-8'))
 
         self.assertEqual(response.status_code, 200)
-        self.assertDictEqual(json_response, {'is_decalage_tresorerie': True})
+        self.assertDictEqual(json_response, {'is_decalage_tresorerie': True, 'is_non_budgetaire': False, 'is_pi_cfg': False})
 
 
 class ViewsTest(TestCase):
