@@ -1,7 +1,7 @@
 BudgetWeb
 ========================
 
-.. image:: https://git.unistra.fr/di/budgetweb/badges/master/build.svg
+![myimage-alt-tag](https://git.unistra.fr/di/budgetweb/badges/master/build.svg)
      :target: https://git.unistra.fr/di/budgetweb/commits/master
      :alt: Build
  
