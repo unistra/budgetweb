@@ -1,0 +1,2 @@
+exclude_paths:
+- "/budgetweb/static/js/moment/*"
