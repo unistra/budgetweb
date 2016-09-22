@@ -3,6 +3,7 @@ BudgetWeb
 
 ![myimage-alt-tag](https://secure.travis-ci.org/unistra/budgetweb.png?branch=master)
 [![Coverage Status](https://coveralls.io/repos/github/unistra/budgetweb/badge.svg?branch=master)](https://coveralls.io/github/unistra/budgetweb?branch=master)
+[![AUR](https://img.shields.io/aur/license/yaourt.svg?maxAge=2592000?style=flat-square)]()
   
 L'application BudgetWeb est basée sur Django, jQuery et BootStrap.
 
