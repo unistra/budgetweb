@@ -67,6 +67,10 @@ def get_detail_pfi_by_period(totals):
                     total_enveloppe = compta_types[mt][1].setdefault(periode, {})
                     total_enveloppe[field_name] = total_enveloppe.get(field_name, Decimal(0)) + montant
 
+                    # Total per enveloppe and periods
+                    total = compta_types[mt][1].setdefault('total', {})
+                    total[field_name] = total.get(field_name, Decimal(0)) + montant
+
             # TODO: order periodes_set and global periodes_set for depenses and recettes
             compta_details[year] = (compta_types, periodes_set)
         details.append(compta_details)

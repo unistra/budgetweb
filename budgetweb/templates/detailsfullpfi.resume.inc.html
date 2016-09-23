@@ -49,14 +49,19 @@
     </tr>
     {% endfor %}
     <tr>
-    <td>Total</td>
+      <td>Total</td>
     {% for periode in depenses.1 %}
         {% with total_enveloppes=resume_montant_group.1|dictvalue:periode %}
         {% for type in montants_types %}
-     <td class="bold">{% firstof total_enveloppes|dictvalue:type|intspace "0,00" %} &euro;</td>
+      <td class="bold">{% firstof total_enveloppes|dictvalue:type|intspace "0,00" %} &euro;</td>
         {% endfor %}
         {% endwith %}
     {% endfor %}
+    {% with totals=resume_montant_group.1.total %}
+    {% for type in montants_types %}
+      <td class="bold">{% firstof totals|dictvalue:type|intspace "0,00" %} &euro;</td>
+    {% endfor %}
+    {% endwith %}
     {% endwith %}
     </tr>
     <tr>
@@ -115,17 +120,22 @@
     </tr>
     {% endfor %}
     <tr>
-    <td>Total</td>
+      <td>Total</td>
     {% for periode in recettes.1 %}
         {% with total_enveloppes=resume_montant_group.1|dictvalue:periode %}
         {% for type in montants_types %}
-     <td class="bold">{% firstof total_enveloppes|dictvalue:type|intspace "0,00" %} &euro;</td>
+      <td class="bold">{% firstof total_enveloppes|dictvalue:type|intspace "0,00" %} &euro;</td>
         {% endfor %}
         {% endwith %}
     {% endfor %}
+    {% with totals=resume_montant_group.1.total %}
+    {% for type in montants_types %}
+      <td class="bold">{% firstof totals|dictvalue:type|intspace "0,00" %} &euro;</td>
+    {% endfor %}
+    {% endwith %}
     {% endwith %}
     </tr>
-   </tbody>
+  </tbody>
 {% endwith %}
 {% endif %}
 {% endwith %}
