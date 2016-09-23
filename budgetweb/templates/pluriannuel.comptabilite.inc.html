@@ -30,17 +30,17 @@
 				{% if forloop.counter == 1 %}
 				<td nowrap=""><span class="pluri">{{ enveloppe }}</span></td>
 			     	{% for year in years %}
-				<td nowrap="">{% if year_values.0 %}{% firstof year_values.0|dictvalue:year|intspace "0,00" %}{% else %}0,00{% endif %} &euro;</td>
+				<td nowrap="" class="montant">{% if year_values.0 %}{% firstof year_values.0|dictvalue:year|intspace "0,00" %}{% else %}0,00{% endif %} &euro;</td>
 				<td rowspan="{{ rowspan }}" style="text-align:center;"><a href="/{{ compta_type }}/{{ PFI.id }}/{{ year }}/">Détails<br>(obligatoires)</a></td>
 				    {% endfor %}
-				<td nowrap="">{% firstof year_values.1|intspace "0,00" %} &euro;</td>
+				<td nowrap="" class="montant">{% firstof year_values.1|intspace "0,00" %} &euro;</td>
 				{% else %}
 			<tr>
 			    <td nowrap=""><span class="pluri">{{ enveloppe }}</span></td>
 			    {% for year in years %}
-				<td nowrap="">{% if year_values.0 %}{% firstof year_values.0|dictvalue:year|intspace "0,00" %}{% else %}0,00{% endif %} &euro;</td>
+				<td nowrap="" class="montant">{% if year_values.0 %}{% firstof year_values.0|dictvalue:year|intspace "0,00" %}{% else %}0,00{% endif %} &euro;</td>
 				{% endfor %}
-				<td nowrap="">{% firstof year_values.1|intspace "0,00" %} &euro;</td>
+				<td nowrap="" class="montant">{% firstof year_values.1|intspace "0,00" %} &euro;</td>
 				{% endif %}
 			</tr>
 			{% endwith %}
@@ -48,18 +48,18 @@
 			    {% if forloop.counter == 1 %}
 			    <td nowrap=""><span class="pluri">{{ enveloppe }}</span></td>
                     {% for year in years %}
-                <td nowrap="">0,00 &euro;</td>
+                <td nowrap="" class="montant">0,00 &euro;</td>
                 <td rowspan="{{ rowspan }}" class="table-details"><a href="/{{ compta_type }}/{{ PFI.id }}/{{ year }}/">Détails<br>(obligatoires)</a></td>
                     {% endfor %}
-                <td nowrap="">0,00 &euro;</td>
+                <td nowrap="" class="montant">0,00 &euro;</td>
             </tr>
                 {% else %}
             <tr>
                 <td nowrap=""><span class="pluri">{{ enveloppe }}</span></td>
                 {% for year in years %}
-                <td nowrap="">0,00 &euro;</td>
+                <td nowrap="" class="montant">0,00 &euro;</td>
                 {% endfor %}
-                <td nowrap="">0,00 &euro;</td>
+                <td nowrap="" class="montant">0,00 &euro;</td>
                 {% endif %}
             </tr>
 			{% endif %}
@@ -67,9 +67,9 @@
 			<tr>
 			    <td nowrap=""><span class="pluri">Total</span></td>
 			    {% for year in years %}
-				<td nowrap="">{% if enveloppe_values.1 %}{% firstof enveloppe_values.1|dictvalue:year|intspace "0,00" %}{% else %}0,00{% endif %} &euro;</td>
+				<td nowrap="" class="montant">{% if enveloppe_values.1 %}{% firstof enveloppe_values.1|dictvalue:year|intspace "0,00" %}{% else %}0,00{% endif %} &euro;</td>
 				{% endfor %}
-				<td nowrap="">{% if enveloppe_values.1 %}{% firstof enveloppe_values.1.total|intspace "0,00" %}{% else %}0,00{% endif %} &euro;</td>
+				<td nowrap="" class="montant">{% if enveloppe_values.1 %}{% firstof enveloppe_values.1.total|intspace "0,00" %}{% else %}0,00{% endif %} &euro;</td>
 			</tr>
 			{% endwith %}
 			{% endwith %}
