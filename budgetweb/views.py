@@ -97,7 +97,8 @@ def show_tree(request, type_affichage, structid=0):
         get_authorized_structures_ids(request.user)
     structures = Structure.active.prefetch_related(Prefetch(
         'structuremontant_set',
-        queryset=StructureMontant.active_period.all(),
+        queryset=StructureMontant.active_period.filter(
+                                        annee=get_current_year()).all(),
         to_attr='montants')
     ).filter(pk__in=hierarchy_structures, **queryset).order_by('code')
 

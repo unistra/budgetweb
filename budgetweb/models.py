@@ -337,6 +337,7 @@ class StructureMontant(models.Model):
     structure = models.ForeignKey(Structure)
     periodebudget = models.ForeignKey('PeriodeBudget',
                                       related_name='periodebudgetmontants')
+    annee = models.PositiveIntegerField(verbose_name='Année')
     depense_montant_dc = models.DecimalField(
         max_digits=12, decimal_places=2, default=Decimal(0))
     depense_montant_cp = models.DecimalField(
@@ -355,7 +356,7 @@ class StructureMontant(models.Model):
     active_period = ActivePeriodManager()
 
     class Meta:
-        unique_together = (('structure', 'periodebudget'),)
+        unique_together = (('structure', 'periodebudget', 'annee'),)
 
 
 class Comptabilite(models.Model):
@@ -413,7 +414,8 @@ class Comptabilite(models.Model):
         for structure in structures:
             try:
                 obj = StructureMontant.objects.get(
-                    structure=structure, periodebudget=self.periodebudget
+                    structure=structure, periodebudget=self.periodebudget,
+                    annee=self.annee
                 )
                 updated_values = {montant_name(k): (F(montant_name(k)) + v)\
                     for k, v in diffs.items()}
@@ -424,7 +426,8 @@ class Comptabilite(models.Model):
                 updated_values = {montant_name(k): v for k, v in diffs.items()}
                 updated_values.update({
                     'structure': structure,
-                    'periodebudget': self.periodebudget
+                    'periodebudget': self.periodebudget,
+                    'annee': self.annee
                 })
                 obj = StructureMontant(**updated_values)
                 obj.save()
