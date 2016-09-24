@@ -5,6 +5,7 @@ from django.core.management import call_command
 from django.db import transaction
 
 from budgetweb.models import Depense, Recette, Structure, StructureMontant
+from budgetweb.utils import get_current_year
 
 
 class Command(NoArgsCommand):
@@ -21,16 +22,18 @@ class Command(NoArgsCommand):
 
         with transaction.atomic():
             structure_montants = list(StructureMontant.active_period.filter(
-                structure__is_active=True))
+                structure__is_active=True, annee=get_current_year()))
 
             comptabilites = {
                 'depense': {
                     'model': Depense,
-                    'values': list(Depense.active_period.all())
+                    'values': list(Depense.active_period.filter(
+                                           annee=get_current_year()).all()),
                 },
                 'recette': {
                     'model': Recette,
-                    'values': list(Recette.active_period.all()),
+                    'values': list(Recette.active_period.filter(
+                                           annee=get_current_year()).all()),
                 },
             }
 
@@ -64,6 +67,10 @@ class Command(NoArgsCommand):
                 if result1 != result2:
                     error_str = 'StructureMontant (pk={0.pk}). {1} : {2} - Calculated : {3}'.format(
                         structure_montant, montant, result1, result2)
+                    # If we find a diff, we update them !
+                    sm = StructureMontant.objects.get(pk=structure_montant.pk)
+                    setattr(sm, montant, result1)
+                    sm.save()
                     errors.append(error_str)
 
         if errors:
