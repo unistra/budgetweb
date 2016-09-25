@@ -10,6 +10,7 @@ from budgetweb.models import (Depense, DomaineFonctionnel,
                               PeriodeBudget, PlanFinancement, Recette,
                               Structure, StructureAuthorizations,
                               StructureMontant)
+from budgetweb.utils import get_current_year
 
 
 class StructureAuthorizationsModelTest(TestCase):
@@ -538,8 +539,10 @@ class ManagersTest(TestCase):
         self.assertEqual(domaines[0].code, 'D1')
 
     def test_active_period_manager(self):
-        StructureMontant.objects.create(structure_id=1, periodebudget_id=1)
-        StructureMontant.objects.create(structure_id=1, periodebudget_id=2)
+        StructureMontant.objects.create(structure_id=1, periodebudget_id=1,
+                                        annee=get_current_year())
+        StructureMontant.objects.create(structure_id=1, periodebudget_id=2,
+                                        annee=get_current_year())
 
         montants = StructureMontant.active_period.all()
         self.assertEqual(len(montants), 1)

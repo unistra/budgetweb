@@ -25,7 +25,7 @@ class APIViewsTest(TestCase):
         self.naturecomptabledepense = NatureComptableDepense.objects.get(
             code_nature_comptable='9DLOC', is_fleche=self.pfi_ecp.is_fleche)
         self.naturecomptablerecette = NatureComptableRecette.objects.get(
-            code_nature_comptable='9RSCS', is_fleche=self.pfi_ecp.is_fleche)
+            code_nature_comptable='9RIIA', is_fleche=self.pfi_ecp.is_fleche)
 
     def test_api_fund_designation_by_nature_and_enveloppe_recette(self):
         nature = 'Investissement'
@@ -38,8 +38,8 @@ class APIViewsTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(json_response), 7)
         self.assertDictEqual(json_response[0], {
-            "id": 63,
-            "label": "9RIIA - Financement d'actifs par l'ANR Investissement d'avenir"
+            "id": 65,
+            "label": "9RIET - Financement d'actifs par l\'Etat"
         })
 
     def test_api_fund_designation_by_nature_and_enveloppe_depense(self):
@@ -64,10 +64,10 @@ class APIViewsTest(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertDictEqual(json_response, {
-            'code_compte_budgetaire': 'RG_SCSP',
-            'label_compte_budgetaire': 'Subvention pour charges de service public',
-            'code_fonds': 'FD010',
-            'label_fonds': 'Subvention pour charges de service public'
+            'code_compte_budgetaire': 'RG_ETAT',
+            'label_compte_budgetaire': 'Autres financements de l\'Etat ',
+            'code_fonds': 'FD070',
+            'label_fonds': 'ANR investissements d\'avenir'
         })
 
     def test_api_get_details_nature_by_code_depense(self):
