@@ -223,25 +223,21 @@ class DepenseForm(forms.ModelForm):
             if cleaned_data.get('naturecomptabledepense', None):
                 if cleaned_data['naturecomptabledepense'].is_decalage_tresorerie:
                     if cleaned_data.get('montant_cp', None) != cleaned_data.get('montant_dc', None):
-                        raise forms.ValidationError("Le montant CP et DC ne peuvent pas être différent \
-                               pour la nature comptable %s %s." % (
+                        raise forms.ValidationError("Le montant CP et DC ne peuvent pas être différent pour la nature comptable %s %s." % (
                             cleaned_data['naturecomptabledepense'].code_nature_comptable,
                             cleaned_data['naturecomptabledepense'].label_nature_comptable))
 
                 # Deuxième règle de gestion.
                 if cleaned_data['naturecomptabledepense'].is_non_budgetaire:
                     if cleaned_data['montant_ae'] != Decimal(0):
-                        raise forms.ValidationError("Le montant AE ne peut être différent de 0 pour \
-                               cette nature comptable.")
+                        raise forms.ValidationError("Le montant AE ne peut être différent de 0 pour cette nature comptable.")
                     if cleaned_data['montant_cp'] != Decimal(0):
-                        raise forms.ValidationError("Le montant CP ne peut être différent de 0 pour \
-                               cette nature comptable.")
+                        raise forms.ValidationError("Le montant CP ne peut être différent de 0 pour cette nature comptable.")
                 # Trosième règle de gestion.
                 # // Si "PI/CFG" = oui alors AE = DC et CP = 0
                 if cleaned_data['naturecomptabledepense'].is_pi_cfg:
                     if cleaned_data['montant_cp'] != Decimal(0):
-                        raise forms.ValidationError("Le montant CP ne peut être différent de 0 pour \
-                               cette nature comptable.")
+                        raise forms.ValidationError("Le montant CP ne peut être différent de 0 pour cette nature comptable.")
                     if cleaned_data.get('montant_ae', None) != cleaned_data.get('montant_dc', None):
                         raise forms.ValidationError("Le montant AE doit être identique au montant DC pour \
                                cette nature comptable.")
@@ -250,7 +246,7 @@ class DepenseForm(forms.ModelForm):
                 if not cleaned_data['naturecomptabledepense'].is_decalage_tresorerie and\
                    not cleaned_data['naturecomptabledepense'].is_non_budgetaire and\
                    not cleaned_data['naturecomptabledepense'].is_pi_cfg:
-                    if cleaned_data.get('montant_ae', None) != cleaned_data.get('montant_cd', None):
+                    if cleaned_data.get('montant_ae', None) != cleaned_data.get('montant_cp', None):
                         raise forms.ValidationError("Le montant AE et CP ne peuvent pas être différent \
                               pour la nature comptable %s %s." % (
                            cleaned_data['naturecomptabledepense'].code_nature_comptable,
