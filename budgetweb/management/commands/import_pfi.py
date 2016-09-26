@@ -18,7 +18,7 @@ class Command(BaseCommand):
                 reader = csv.reader(h, delimiter=';', quotechar='"')
                 total = 0
                 for row in reader:
-                    pfi_is_fleche = (row[3] == 'oui' or  row[3] == 'Oui')
+                    pfi_is_fleche = (row[3] == 'oui' or row[3] == 'Oui')
                     pluri = (row[4] == 'oui' or row[4] == 'Oui')
                     struct_code = row[0]
                     try:
