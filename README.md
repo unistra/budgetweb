@@ -1,10 +1,10 @@
 BudgetWeb
 ========================
 
-![myimage-alt-tag](https://secure.travis-ci.org/unistra/budgetweb.png?branch=master)
-[![Coverage Status](https://coveralls.io/repos/github/unistra/budgetweb/badge.svg?branch=master)](https://coveralls.io/github/unistra/budgetweb?branch=master)
+![myimage-alt-tag](https://secure.travis-ci.org/unistra/budgetweb.png?branch=master&maxAge=0)
+[![Coverage Status](https://coveralls.io/repos/github/unistra/budgetweb/badge.svg?branch=master)](https://coveralls.io/github/unistra/budgetweb?branch=master&maxAge=0)
 [![AUR](https://img.shields.io/aur/license/yaourt.svg?maxAge=2592000?style=flat-square)]()
-[![Code Climate](https://codeclimate.com/github/unistra/budgetweb/badges/gpa.svg)](https://codeclimate.com/github/unistra/budgetweb)
+[![Code Climate](https://codeclimate.com/github/unistra/budgetweb/badges/gpa.svg)](https://codeclimate.com/github/unistra/budgetweb&maxAge=0)
 
 
 L'application BudgetWeb est basée sur Django, jQuery et BootStrap.
