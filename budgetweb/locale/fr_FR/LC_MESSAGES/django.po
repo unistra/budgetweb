@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-12 13:59+0200\n"
+"POT-Creation-Date: 2016-09-27 15:10+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,9 +17,13 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: budgetweb/models.py:102
+#: budgetweb/models.py:101
 msgid "Path"
 msgstr "Chemin"
+
+#: budgetweb/models.py:193
+msgid "There are already entries which are not in the new period"
+msgstr "Il existe déjà des entrées qui ne sont pas dans la nouvelle période"
 
 #: budgetweb/templates/404.html:6
 msgid "Page not found"
@@ -67,20 +71,20 @@ msgstr "Fermer"
 msgid "Accompanying document link"
 msgstr "Lien vers la pièce jointe"
 
-#: budgetweb/templates/comptabilite.html:98 budgetweb/templates/depense.html:32
-#: budgetweb/templates/recette.html:32
+#: budgetweb/templates/comptabilite.html:183
+#: budgetweb/templates/depense.html:33 budgetweb/templates/recette.html:33
 msgid "Add"
 msgstr "Ajouter"
 
-#: budgetweb/templates/depense.html:8
+#: budgetweb/templates/depense.html:9
 msgid "Expenditure forms"
 msgstr "Formulaire de saisie des dépenses"
 
-#: budgetweb/templates/depense.html:32 budgetweb/templates/recette.html:32
+#: budgetweb/templates/depense.html:33 budgetweb/templates/recette.html:33
 msgid "Modify"
 msgstr "Modifier"
 
-#: budgetweb/templates/depense.html:45 budgetweb/templates/recette.html:45
+#: budgetweb/templates/depense.html:49 budgetweb/templates/recette.html:46
 msgid "Save"
 msgstr "Enregistrer"
 
@@ -130,6 +134,6 @@ msgstr "PFI pluriannuel"
 msgid "Show the resumed PFI"
 msgstr "Revenir sur la synthèse pluriannuelle du PFI"
 
-#: budgetweb/templates/recette.html:8
+#: budgetweb/templates/recette.html:9
 msgid "Receipt forms"
 msgstr "Formulaire de saisie des recettes"

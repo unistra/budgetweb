@@ -1,6 +1,9 @@
-from django import forms
 from collections import OrderedDict
 from decimal import Decimal
+
+from django import forms
+from django.db.models import Q
+from django.utils.translation import ugettext_lazy as _
 
 from .models import (Depense, PlanFinancement, Recette, NatureComptableDepense)
 
@@ -80,7 +83,6 @@ class RecetteForm(forms.ModelForm):
                not self.is_dfi_member_or_admin:
                 self.fields['montant_ar'].widget.attrs['readonly'] = True
                 self.fields['montant_re'].widget.attrs['readonly'] = True
-
 
     def clean(self):
         cleaned_data = self.cleaned_data
@@ -306,9 +308,30 @@ class PlanFinancementPluriForm(forms.ModelForm):
 
     def clean(self):
         super(PlanFinancementPluriForm, self).clean()
-        date_debut = self.cleaned_data.get("date_debut")
-        date_fin = self.cleaned_data.get("date_fin")
+        instance = self.instance
+        cleaned_data = self.cleaned_data
+        date_debut = cleaned_data.get("date_debut")
+        date_fin = cleaned_data.get("date_fin")
 
-        if date_fin and date_debut and date_fin < date_debut:
-            raise forms.ValidationError(
-                "La date de début est inférieure à la date de fin !")
+        if date_fin and date_debut:
+            if date_fin < date_debut:
+                cleaned_data.pop('date_debut')
+                cleaned_data.pop('date_fin')
+                raise forms.ValidationError(
+                    "La date de début est inférieure à la date de fin !")
+
+            # Check if the are existing accountings which ar not in the new
+            # period
+            has_compta = any(model.objects.filter(
+                    Q(pfi=instance.pk),
+                    Q(annee__lt=date_debut.year) | Q(annee__gt=date_fin.year)
+                ).exists() for model in (Depense, Recette))
+
+            if has_compta:
+                cleaned_data.pop('date_debut')
+                cleaned_data.pop('date_fin')
+                raise forms.ValidationError(
+                    _('There are already entries which are not in the new period'))
+
+            
+        return cleaned_data

@@ -231,3 +231,7 @@ input.decimal{
 		text-align:right;
 		width:90px;
 }
+
+.alert-error {
+    color: #f00;
+}

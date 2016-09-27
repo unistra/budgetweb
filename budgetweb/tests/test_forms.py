@@ -2,9 +2,10 @@ from collections import OrderedDict
 import datetime
 from decimal import Decimal
 
+from django import forms
 from django.contrib.auth.models import User
 from django.test import TestCase
-from django import forms
+from django.utils.translation import ugettext_lazy as _
 
 from budgetweb.forms import DepenseForm, PlanFinancementPluriForm, RecetteForm
 from budgetweb.models import (Depense, DomaineFonctionnel,
@@ -804,6 +805,12 @@ class DepenseFormTest(TestCase):
 
 class PlanFinancementPluriFormTest(TestCase):
 
+    fixtures = [
+        'tests/periodebudgets.json', 'tests/structures.json',
+        'tests/planfinancements.json', 'tests/domainefonctionnels.json',
+        'tests/naturecomptabledepenses.json',
+    ]
+
     def test_is_valid(self):
         post_data = {
             'date_debut': datetime.date(2016, 9, 1),
@@ -813,17 +820,39 @@ class PlanFinancementPluriFormTest(TestCase):
         self.assertTrue(form.is_bound)
         self.assertTrue(form.is_valid())
 
-    def test_is_not_valid(self):
-        from django import forms
+    def test_is_not_valid_earlier_date_error(self):
         post_data = {
             'date_debut': datetime.date(2016, 9, 1),
             'date_fin': datetime.date(2016, 8, 31),
         }
         form = PlanFinancementPluriForm(data=post_data)
         self.assertTrue(form.is_bound)
-        with self.assertRaises(forms.ValidationError) as e:
-            form.is_valid()
-            form.clean()
+        self.assertFalse(form.is_valid())
         self.assertEqual(
-            e.exception.message,
+            form.errors['__all__'][0],
             'La date de début est inférieure à la date de fin !')
+
+    def test_is_not_valid_alreay_existing_entries_error(self):
+        periode = PeriodeBudget.objects.first()
+        pfi_pluriannuel = PlanFinancement.objects.get(code='SA5ECP01')
+        naturecomptabledepense = NatureComptableDepense.objects.get(
+            code_nature_comptable='9DLOC', is_fleche=pfi_pluriannuel.is_fleche)
+        domaine = DomaineFonctionnel.objects.get(pk=1)
+        Depense.objects.create(
+            pfi=pfi_pluriannuel, structure=pfi_pluriannuel.structure,
+            annee=periode.annee, periodebudget=periode,
+            domainefonctionnel=domaine,
+            naturecomptabledepense=naturecomptabledepense,
+            montant_dc=Decimal(1), montant_cp=Decimal(2), montant_ae=Decimal(3)
+        )
+        post_data = {
+            'date_debut': datetime.date(2018, 1, 1),
+            'date_fin': datetime.date(2019, 12, 31),
+        }
+        form = PlanFinancementPluriForm(data=post_data,
+                                        instance=pfi_pluriannuel)
+        self.assertTrue(form.is_bound)
+        self.assertFalse(form.is_valid())
+        self.assertEqual(
+            form.errors['__all__'][0],
+            _('There are already entries which are not in the new period'))
