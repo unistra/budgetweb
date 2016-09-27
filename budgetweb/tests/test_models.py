@@ -264,11 +264,11 @@ class PlanFinancementModelTest(TestCase):
         self.pfi_ecp.save()
 
         self.assertListEqual(
-            self.pfi_ecp.get_years(), [2017, 2018, 2019, 2020, 2021])
+            self.pfi_ecp.get_years(), [2017, 2018, 2019, 2020])
         self.assertListEqual(
             self.pfi_ecp.get_years(year_number=2), [2017, 2018, 2019])
         self.assertListEqual(self.pfi_ecp.get_years(
-            begin_current_period=False), [2015, 2016, 2017, 2018, 2019])
+            begin_current_period=False), [2015, 2016, 2017, 2018])
         self.assertListEqual(
             self.pfi_ecp.get_years(begin_current_period=False, year_number=2),
             [2015, 2016, 2017])
