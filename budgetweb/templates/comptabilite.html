@@ -167,6 +167,11 @@
         }
       });
 
+      $("#formset").submit(function(e) {
+        e.preventDefault();
+        setTimeout(function(){$("#formset").unbind('submit').submit();},1000);
+      });
+
     	$.each(['commentaire', 'lienpiecejointe'], function(index, field) {
     		$('#modal_' + field).on('show.bs.modal', function(e) {
    	           $('#inputform-' + field).attr('value', $(e.relatedTarget).data('formid'));
