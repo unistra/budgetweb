@@ -37,7 +37,7 @@
 				{{ form.date_fin }}
 			</div>
 			<div>
-				<button style="margin-left:50px;" id="submit" type="submit" class="save btn btn-primary">Modifier</button>
+				<button style="margin-left:50px;" id="submit" type="submit" class="save btn btn-primary">{% if PFI.date_fin %}Modifier{% else %}Ajouter{% endif %}</button>
 			</div>
 	</form>
 	</div>

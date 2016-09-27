@@ -128,7 +128,7 @@ msgstr "PFI pluriannuel"
 
 #: budgetweb/templates/detailspfi.html:19
 msgid "Show the resumed PFI"
-msgstr "Voir le résumé du PFI"
+msgstr "Revenir sur la synthèse pluriannuelle du PFI"
 
 #: budgetweb/templates/recette.html:8
 msgid "Receipt forms"

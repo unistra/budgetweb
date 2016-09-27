@@ -8,7 +8,7 @@
 
 {% block content %}
 <div class="col-md-12 well">
-	<div class="title showTree">
+	<div class="title showTree" style="padding-bottom:5px;">
 	{% if typeAffichage == "gbcp" %}
 		<div>&sum; Rec. RE</div>
 		<div>&sum; Rec. AR</div>
@@ -21,8 +21,9 @@
 		<div>&sum; Dép. DC</div>
 	{% endif %}
 	</div><br />
-	<div class="title showTree"">
+	<div class="title showTree">
     {% if typeAffichage == "gbcp" %}
+			  <span style="margin-left:20px;width:160px;" class="bold">Total Unistra</span>
         <div class="bold">{% firstof total.recette_montant_re|intspace "0,00" %} &euro;</div>
         <div class="bold">{% firstof total.recette_montant_ar|intspace "0,00" %} &euro;</div>
         <div>&nbsp;</div>
@@ -33,7 +34,7 @@
         <div>&nbsp;</div>
         <div class="bold">{% firstof total.depense_montant_dc|intspace "0,00" %} &euro;</div>
     {% endif %}
-    </div><br />
+    </div>
 	<div class="tree">
 		<ul>
 		{% include "show_sub_tree.html" %}
