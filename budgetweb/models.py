@@ -1,6 +1,5 @@
-import datetime
 from decimal import Decimal
-from itertools import groupby
+from functools import reduce
 
 from django import forms
 from django.conf import settings
@@ -180,8 +179,24 @@ class PlanFinancement(models.Model):
     def __str__(self):
         return '{0.code}'.format(self)
 
-    # Retourne un tableau avec l'année, la
-    #
+    def clean(self):
+        begin_year = self.date_debut.year
+        end_year = self.date_fin.year
+
+        # Check if the are existing accountings which ar not in the new period
+        has_compta = any(model.objects.filter(
+            Q(pfi=self.pk), Q(annee__lt=begin_year) | Q(annee__gt=end_year))\
+                .exists() for model in (Depense, Recette))
+
+        if has_compta:
+            raise ValidationError(
+                _('There are already entries which are not in the new period'))
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
+
+    # Retourne un tableau avec l'année
     def get_total(self, years=None):
         query_params = {'pfi': self.id}
         if years:
@@ -208,7 +223,8 @@ class PlanFinancement(models.Model):
         if self.date_debut and self.date_fin:
             begin_year = get_current_year() if begin_current_period\
                 else self.date_debut.year
-            end_year = min(begin_year + year_number, self.date_fin.year)
+            end_year = min(begin_year + year_number, self.date_fin.year)\
+                if year_number else self.date_fin.year 
             return list(range(begin_year, end_year + 1))
         return []
 

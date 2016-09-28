@@ -4,6 +4,7 @@ from decimal import Decimal
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.test import TestCase
+from django.utils.translation import ugettext_lazy as _
 
 from budgetweb.models import (Depense, DomaineFonctionnel,
                               NatureComptableDepense, NatureComptableRecette,
@@ -182,6 +183,38 @@ class PlanFinancementModelTest(TestCase):
         plan = PlanFinancement.objects.get(pk=1)
         self.assertEqual(str(plan), 'NA')
 
+    def test_save(self):
+        pfi_pluriannuel = PlanFinancement.objects.get(code='SA5ECP01')
+        Depense.objects.create(
+            pfi=pfi_pluriannuel, structure=pfi_pluriannuel.structure, annee=self.annee,
+            periodebudget=self.periode, domainefonctionnel=self.domaine,
+            naturecomptabledepense=self.naturecomptabledepense,
+            montant_dc=Decimal(1), montant_cp=Decimal(2), montant_ae=Decimal(3)
+        )
+        pfi_pluriannuel.date_debut = datetime.date(2016, 1, 1)
+        pfi_pluriannuel.date_fin = datetime.date(2019, 12, 31)
+        pfi_pluriannuel.save()
+
+        pfi = PlanFinancement.objects.get(pk=pfi_pluriannuel.pk)
+        self.assertTrue(pfi.date_debut)
+
+    def test_save_with_validation_error(self):
+        pfi_pluriannuel = PlanFinancement.objects.get(code='SA5ECP01')
+        Depense.objects.create(
+            pfi=pfi_pluriannuel, structure=pfi_pluriannuel.structure, annee=self.annee,
+            periodebudget=self.periode, domainefonctionnel=self.domaine,
+            naturecomptabledepense=self.naturecomptabledepense,
+            montant_dc=Decimal(1), montant_cp=Decimal(2), montant_ae=Decimal(3)
+        )
+        pfi_pluriannuel.date_debut = datetime.date(2018, 1, 1)
+        pfi_pluriannuel.date_fin = datetime.date(2019, 12, 31)
+
+        with self.assertRaises(ValidationError) as ve:
+            pfi_pluriannuel.save()
+        self.assertEqual(
+            ve.exception.message_dict['__all__'][0],
+            _('There are already entries which are not in the new period'))
+
     def test_get_total(self):
         Depense.objects.create(
             pfi=self.pfi_ecp, structure=self.structure_ecp, annee=self.annee,
@@ -272,6 +305,12 @@ class PlanFinancementModelTest(TestCase):
         self.assertListEqual(
             self.pfi_ecp.get_years(begin_current_period=False, year_number=2),
             [2015, 2016, 2017])
+        self.assertListEqual(
+            self.pfi_ecp.get_years(begin_current_period=False, year_number=0),
+            [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025])
+        self.assertListEqual(
+            self.pfi_ecp.get_years(year_number=0),
+            [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025])
 
 
 class NatureComptableDepenseModelTest(TestCase):
