@@ -30,7 +30,8 @@
         <div class="bold">{% firstof total.depense_montant_cp|intspace "0,00" %} &euro;</div>
         <div class="bold">{% firstof total.depense_montant_ae|intspace "0,00" %} &euro;</div>
     {% else %}
-        <div class="bold">{% firstof total.recette_montant_dc|intspace "0,00" %} &euro;</div>
+        <span style="margin-left:20px;width:160px;" class="bold">Total Unistra</span>
+				<div class="bold">{% firstof total.recette_montant_dc|intspace "0,00" %} &euro;</div>
         <div>&nbsp;</div>
         <div class="bold">{% firstof total.depense_montant_dc|intspace "0,00" %} &euro;</div>
     {% endif %}
