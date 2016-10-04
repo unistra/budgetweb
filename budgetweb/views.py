@@ -201,7 +201,7 @@ def depense(request, pfiid, annee):
             domaines=domaines, user=request.user
         ),
         exclude=[],
-        extra=1,
+        extra=3,
         can_delete=True
     )
     formset = DepenseFormSet(queryset=Depense.objects.filter(
@@ -245,7 +245,7 @@ def recette(request, pfiid, annee):
             user=request.user
         ),
         exclude=[],
-        extra=1,
+        extra=3,
         can_delete=True
     )
     formset = RecetteFormSet(queryset=Recette.objects.filter(
