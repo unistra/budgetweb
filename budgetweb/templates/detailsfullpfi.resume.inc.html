@@ -15,14 +15,14 @@
     </tr>
     <tr>
       {% for type in montants_types %}
-      <th>&sum;  {{ type }}</th>
+      <th>&sum;  {% if type == "DC" %}Charges / Immos{% else %}{{ type }}{% endif %}</th>
       {% endfor %}
       {% for type in montants_types %}
-      <th>&sum; {{ type }}</th>
+      <th>&sum; {% if type == "DC" %}Charges / Immos{% else %}{{ type }}{% endif %}</th>
       {% endfor %}
     </tr>
   </thead>
-  
+
   <tbody>
     {% with enveloppes='Fonctionnement Personnel Investissement' %}
     {% for enveloppe in enveloppes.split %}
@@ -87,10 +87,10 @@
     </tr>
     <tr>
       {% for type in montants_types %}
-      <th>&sum; {{ type }}</th>
+      <th>&sum; {% if type == "DC" %}Charges / Immos{% else %}{{ type }}{% endif %}</th>
       {% endfor %}
       {% for type in montants_types %}
-      <th>&sum; {{ type }}</th>
+      <th>&sum; {% if type == "DC" %}Charges / Immos{% else %}{{ type }}{% endif %}</th>
       {% endfor %}
     </tr>
   </thead>
