@@ -80,7 +80,7 @@ class PlanFinancementAdmin(admin.ModelAdmin):
     list_display = ('structure', 'code', 'label', 'eotp', 'centrecoutderive',
                     'centreprofitderive', 'is_fleche', 'is_pluriannuel',
                     'is_active', 'date_debut', 'date_fin')
-    search_fields = ['structure', 'code', 'eotp', 'centrecoutderive',
+    search_fields = ['structure__code', 'code', 'eotp', 'centrecoutderive',
                      'centreprofitderive', 'is_fleche', 'is_pluriannuel',
                      'is_active', 'date_debut', 'date_fin']
 
