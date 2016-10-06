@@ -147,21 +147,21 @@ def preprod():
 def prod():
     """Define prod stage"""
     env.roledefs = {
-        'web': ['budgetweb.net'],
-        'lb': ['lb.budgetweb.net']
+        'web': ['django-w3.u-strasbg.fr', 'django-w4.u-strasbg.fr'],
+        'lb': ['rp2-m.u-strasbg.fr', 'rp2-s.u-strasbg.fr']
     }
-    # env.user = 'root'  # user for ssh
+    env.user = 'root'  # user for ssh
     env.backends = env.roledefs['web']
-    env.server_name = 'budgetweb.net'
+    env.server_name = 'budgetweb.unistra.fr'
     env.short_server_name = 'budgetweb'
     env.static_folder = '/site_media/'
-    env.server_ip = ''
+    env.server_ip = '130.79.254.18'
     env.no_shared_sessions = False
     env.server_ssl_on = True
-    env.path_to_cert = '/etc/ssl/certs/budgetweb.net.pem'
-    env.path_to_cert_key = '/etc/ssl/private/budgetweb.net.key'
+    env.path_to_cert = '/etc/ssl/certs/wildcard.unistra.fr-cert-chained.pem'
+    env.path_to_cert_key = '/etc/ssl/private/wildcard.unistra.fr-key.pem'
     env.goal = 'prod'
-    env.socket_port = ''
+    env.socket_port = '8007'
     env.map_settings = {
         'default_db_host': "DATABASES['default']['HOST']",
         'default_db_user': "DATABASES['default']['USER']",
