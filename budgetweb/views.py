@@ -218,7 +218,7 @@ def depense(request, pfiid, annee):
     context = {
         'PFI': pfi,
         'formset': formset,
-        'currentYear': periodebudget.annee,
+        'currentYear': annee,
         'is_dfi_member_or_admin': is_dfi_member_or_admin,
         'form_template': 'depense.html'
 
@@ -261,7 +261,7 @@ def recette(request, pfiid, annee):
     context = {
         'PFI': pfi,
         'formset': formset,
-        'currentYear': periodebudget.annee,
+        'currentYear': annee,
         'is_dfi_member_or_admin': is_dfi_member_or_admin,
         'form_template': 'recette.html'
     }
