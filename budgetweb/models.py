@@ -207,7 +207,7 @@ class PlanFinancement(models.Model):
             begin_year = get_current_year() if begin_current_period\
                 else self.date_debut.year
             end_year = min(begin_year + year_number, self.date_fin.year)\
-                if year_number else self.date_fin.year 
+                if year_number else self.date_fin.year
             return list(range(begin_year, end_year + 1))
         return []
 
@@ -444,7 +444,8 @@ class Comptabilite(models.Model):
         structures = [self.structure] + self.structure.get_ancestors()
         for structure in structures:
             montant = StructureMontant.objects.get(
-                structure=structure, periodebudget=self.periodebudget)
+                structure=structure, periodebudget=self.periodebudget,
+                annee=self.annee)
             updated_values = {
                 montant_name(m): getattr(montant, montant_name(m))\
                     - getattr(self, m) for m in self.initial_montants}
