@@ -686,9 +686,9 @@ R50CRYO;NA;Non affecté;non;non;NA;R50CRYO;R50CRYO;Recherche;DIRE
 R50FAS;NA;Non affecté;non;non;NA;R50FAS;R50FAS;Recherche;DIRE
 R50PRCH;NA;Non affecté;non;non;NA;R50PRCH;R50PRCH;Recherche;DIRE
 R50PROJ;NA;Non affecté;non;non;NA;R50PROJ;R50PROJ;Recherche;DIRE
-RIDEXATTR ;NA;Non affecté;non;non;NA;RIDEXATTR ;RIDEXATTR;Recherche;DIRE
-RIDEXIEAS ;NA;Non affecté;non;non;NA;RIDEXIEAS ;RIDEXIEAS;Recherche;DIRE
-RIDEXIPDP ;NA;Non affecté;non;non;NA;RIDEXIPDP ;RIDEXIPDP;Recherche;DIRE
+RIDEXATTR;NA;Non affecté;non;non;NA;RIDEXATTR;RIDEXATTR;Recherche;DIRE
+RIDEXIEAS;NA;Non affecté;non;non;NA;RIDEXIEAS;RIDEXIEAS;Recherche;DIRE
+RIDEXIPDP;NA;Non affecté;non;non;NA;RIDEXIPDP;RIDEXIPDP;Recherche;DIRE
 SAS;NA;Non affecté;non;non;NA;SAS;SAS;Services Communs;SAS
 SAS1;NA;Non affecté;non;non;NA;SAS1LI;SAS1;Services Communs;SAS
 SAS2;NA;Non affecté;non;non;NA;SAS2LA;SAS2;Services Communs;SAS
