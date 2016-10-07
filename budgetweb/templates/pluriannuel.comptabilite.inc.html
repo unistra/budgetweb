@@ -23,7 +23,7 @@
 			{% if forloop.counter == 1 %}
                 <td rowspan="{% pluriannuel_rowspan rowspan montants_types.split %}" style="text-align: center;">{{ periode }}</td>
 			{% endif %}
-				<td rowspan="{{ rowspan }}" style="text-align: center;">{{ type }}</td>
+				<td rowspan="{{ rowspan }}" style="text-align: center;">{% if compta_type == "depense" and type == "DC" %}Charges / Immos{% else %}{% if compta_type == "recette" and type == "DC" %}Produits / Ressources{% else %}{{ type }}{% endif %}{% endif %}</td>
 			{% for enveloppe in enveloppes.split %}
 			{% if enveloppe_values.0 %}
 			{% with year_values=enveloppe_values.0|dictvalue:enveloppe %}
