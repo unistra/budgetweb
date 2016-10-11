@@ -108,6 +108,9 @@ Quelques règles de gestion ont été implémentées :
 Documentation utilisateur
 -------------------------
 
+   Vous trouverez ici un pas à pas très détaillé expliquant le fonctionnement de BudgetWeb.
+   ![Pas à pas détaillé](docs/Documentation.pdf?raw=true "Documentation BudgetWeb")
+
 La gestion des droits permets de donner des accès à des niveaux très fins (structure de niveau 3 où plus selon la structure financière intégrée.
 
 Un champ "is_active" est disponible pour les strcutres et les pfi, cela permet d'afficher / masquer les données voulues.
