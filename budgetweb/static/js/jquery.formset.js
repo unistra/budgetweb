@@ -17,7 +17,7 @@
             totalForms = $('#id_' + options.prefix + '-TOTAL_FORMS'),
             maxForms = $('#id_' + options.prefix + '-MAX_NUM_FORMS'),
             minForms = $('#id_' + options.prefix + '-MIN_NUM_FORMS'),
-            childElementSelector = 'input,select,textarea,label,div',
+            childElementSelector = 'input,select,textarea,label,div,span',
             $$ = $(this),
 
             applyExtraClasses = function(row, ndx) {
@@ -33,6 +33,7 @@
                 if (elem.attr("for")) elem.attr("for", elem.attr("for").replace(idRegex, replacement));
                 if (elem.attr('id')) elem.attr('id', elem.attr('id').replace(idRegex, replacement));
                 if (elem.attr('name')) elem.attr('name', elem.attr('name').replace(idRegex, replacement));
+                if (elem.attr('data-formid')) elem.attr('data-formid', elem.attr('data-formid').replace(idRegex, replacement));
             },
 
             hasChildElements = function(row) {
