@@ -100,4 +100,4 @@ class CalculationTest(TestCase):
         # Check
         out = StringIO()
         call_command('check_structuremontants', stdout=out)
-        self.assertEquals(out.getvalue()[:-1], 'No calculation errors')
+        self.assertEquals(out.getvalue().strip(), 'No calculation errors')

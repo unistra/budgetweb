@@ -1,6 +1,6 @@
 from decimal import Decimal
 
-from django.core.management.base import NoArgsCommand
+from django.core.management.base import BaseCommand
 from django.core.management import call_command
 from django.db import transaction
 
@@ -8,14 +8,25 @@ from budgetweb.models import Depense, Recette, Structure, StructureMontant
 from budgetweb.utils import get_current_year
 
 
-class Command(NoArgsCommand):
+class Command(BaseCommand):
     help = 'Check if the StructureMontant objects are correct'
+
+    def add_arguments(self, parser):
+        # Named (optional) arguments
+        parser.add_argument(
+            '-u', '--update',
+            action='store_true',
+            dest='update',
+            default=False,
+            help='StructureMontant objects are updated if a difference in the '
+                 'calculation is found'
+        )
 
     def get_structure_ancestors(self, structure_id):
         parent = self.structures[structure_id]
         return [parent] + self.get_structure_ancestors(parent) if parent else []
 
-    def handle_noargs(self, **options):
+    def handle(self, *args, **options):
         self.structures = {s.pk: s.parent_id for s in Structure.active.all()}
         comptabilites = {}
         errors = []
@@ -68,9 +79,10 @@ class Command(NoArgsCommand):
                     error_str = 'StructureMontant (pk={0.pk}). {1} : {2} - Calculated : {3}'.format(
                         structure_montant, montant, result1, result2)
                     # If we find a diff, we update them !
-                    sm = StructureMontant.objects.get(pk=structure_montant.pk)
-                    setattr(sm, montant, result1)
-                    sm.save()
+                    if options['update']:
+                        sm = StructureMontant.objects.get(pk=structure_montant.pk)
+                        setattr(sm, montant, result1)
+                        sm.save()
                     errors.append(error_str)
 
         if errors:
