@@ -32,8 +32,9 @@ class Command(BaseCommand):
         errors = []
 
         with transaction.atomic():
-            structure_montants = list(StructureMontant.active_period.filter(
-                structure__is_active=True, annee=get_current_year()))
+            structure_montants = list(StructureMontant.active_period\
+                .filter(structure__is_active=True, annee=get_current_year())\
+                .select_related('structure'))
 
             comptabilites = {
                 'depense': {
@@ -76,7 +77,7 @@ class Command(BaseCommand):
                 result1 = check_result.get(montant, Decimal(0))
                 result2 = getattr(structure_montant, montant) or Decimal(0)
                 if result1 != result2:
-                    error_str = 'StructureMontant (pk={0.pk}). {1} : {2} - Calculated : {3}'.format(
+                    error_str = 'StructureMontant (pk={0.pk}) : {0.structure.code}. {1} : {2} - Calculated : {3}'.format(
                         structure_montant, montant, result1, result2)
                     # If we find a diff, we update them !
                     if options['update']:
