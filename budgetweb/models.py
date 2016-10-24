@@ -1,9 +1,6 @@
 from decimal import Decimal
-from functools import reduce
 
-from django import forms
 from django.conf import settings
-from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
 from django.db import models, transaction
 from django.db.models import F, Q, Sum
@@ -388,39 +385,43 @@ class Comptabilite(models.Model):
         super().__init__(*args, **kwargs)
         # Set the initial montants values for the difference calculation.
         # The values are set to 0 if it is a new object.
-        list(map(lambda x: setattr(
-                self, 'initial_%s' % x,
-                getattr(self, x) if self.id else Decimal(0)),
-            self.initial_montants))
+        # list(map(lambda x: setattr(
+        #         self, 'initial_%s' % x,
+        #         getattr(self, x) if self.id else Decimal(0)),
+        #     self.initial_montants))
 
     @transaction.atomic
-    @require_lock(StructureMontant)
+    @require_lock([StructureMontant, 'budgetweb.Depense', 'budgetweb.Recette'])
     def save(self, *args, **kwargs):
         """
-        Change all the StructureMontant of the structure's asending hierarchy
+        Change all the StructureMontant of the structure's ascending hierarchy
         """
-        comptabilite = kwargs.pop('comptabilite_type')
+        comptabilite = self.__class__.__name__.lower()
+        initial = None
+        if self.pk:
+            initial = self.__class__.objects.get(pk=self.pk)
 
         super().save(*args, **kwargs)
         # Get the ascending hierarchy
         structures = [self.structure] + self.structure.get_ancestors()
         # Difference with the original values
         diffs = {m: getattr(self, m) - (
-            getattr(self, 'initial_%s' % m) or Decimal(0))\
+            getattr(initial, m, None) or Decimal(0))\
                 for m in self.initial_montants}
 
         montant_name = lambda x: '%s_%s' % (comptabilite, x)
         for structure in structures:
             try:
                 obj = StructureMontant.objects.get(
-                    structure=structure, periodebudget=self.periodebudget,
-                    annee=self.annee
+                    structure=structure.pk,
+                    periodebudget=self.periodebudget.pk, annee=self.annee
                 )
+
                 updated_values = {montant_name(k): (F(montant_name(k)) + v)\
                     for k, v in diffs.items()}
                 for key, value in updated_values.items():
                     setattr(obj, key, value)
-                obj.save()
+                obj.save(update_fields=updated_values.keys())
             except StructureMontant.DoesNotExist:
                 updated_values = {montant_name(k): v for k, v in diffs.items()}
                 updated_values.update({
@@ -432,12 +433,12 @@ class Comptabilite(models.Model):
                 obj.save()
 
     @transaction.atomic
-    @require_lock(StructureMontant)
+    @require_lock([StructureMontant, 'budgetweb.Depense', 'budgetweb.Recette'])
     def delete(self, **kwargs):
         """
         Change all the StructureMontant of the structure's asending hierarchy
         """
-        comptabilite = kwargs.pop('comptabilite_type')
+        comptabilite = self.__class__.__name__.lower()
         montant_name = lambda x: '%s_%s' % (comptabilite, x)
 
         # Get the ascending hierarchy
@@ -476,14 +477,6 @@ class Depense(Comptabilite):
             {'initial_montants': ('montant_dc', 'montant_cp', 'montant_ae')})
         super().__init__(*args, **kwargs)
 
-    def delete(self, **kwargs):
-        kwargs.update({'comptabilite_type': 'depense'})
-        super().delete(**kwargs)
-
-    def save(self, *args, **kwargs):
-        kwargs.update({'comptabilite_type': 'depense'})
-        super().save(**kwargs)
-
 
 class Recette(Comptabilite):
     montant_dc = models.DecimalField(verbose_name='Produits / Ressources',
@@ -504,11 +497,3 @@ class Recette(Comptabilite):
         kwargs.update(
             {'initial_montants': ('montant_dc', 'montant_re', 'montant_ar')})
         super().__init__(*args, **kwargs)
-
-    def save(self, *args, **kwargs):
-        kwargs.update({'comptabilite_type': 'recette'})
-        super().save(*args, **kwargs)
-
-    def delete(self, **kwargs):
-        kwargs.update({'comptabilite_type': 'recette'})
-        super().delete(**kwargs)

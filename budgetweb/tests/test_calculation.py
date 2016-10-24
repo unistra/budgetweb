@@ -9,7 +9,16 @@ from django.test import TestCase
 from budgetweb.models import (Depense, DomaineFonctionnel,
                               NatureComptableDepense, NatureComptableRecette,
                               PeriodeBudget, PlanFinancement, Recette,
-                              Structure)
+                              Structure, StructureMontant)
+
+
+def get_random_object(object_list):
+    obj = object_list[random.randint(0, len(object_list) - 1)]
+    return obj
+
+
+def generate_montant(max_montant):
+    return Decimal(random.randrange(max_montant * 100)) / 100
 
 
 class CalculationTest(TestCase):
@@ -54,9 +63,9 @@ class CalculationTest(TestCase):
             'form-MAX_NUM_FORMS': '',
         }
         for i in range(max_form):
-            value = Decimal(random.randrange(max_montant * 100)) / 100
+            value = generate_montant(max_montant)
             data.update({
-                'form-%s-annee' % i: self.periode.annee,
+                'form-%s-annee' % i: self.annee,
                 'form-%s-naturecomptabledepense' % i: self.naturecomptabledepense.pk,
                 'form-%s-pfi' % i: self.pfi_ecp.pk,
                 'form-%s-structure' % i: self.structure_ecp.pk,
@@ -82,7 +91,7 @@ class CalculationTest(TestCase):
         for i in range(max_form):
             value = Decimal(random.randrange(max_montant * 100)) / 100
             data.update({
-                'form-%s-annee' % i: self.periode.annee,
+                'form-%s-annee' % i: self.annee,
                 'form-%s-naturecomptablerecette' % i: self.naturecomptablerecette.pk,
                 'form-%s-pfi' % i: self.pfi_ecp.pk,
                 'form-%s-structure' % i: self.structure_ecp.pk,
@@ -96,6 +105,70 @@ class CalculationTest(TestCase):
         recettes = Recette.objects.all()
         self.assertEqual(response.status_code, 302)
         self.assertEqual(len(recettes), max_form)
+
+        # Check
+        out = StringIO()
+        call_command('check_structuremontants', stdout=out)
+        self.assertEquals(out.getvalue().strip(), 'No calculation errors')
+
+    def test_random_actions_on_comptabilite_models(self):
+        max_montant = 1000
+        insertions_number = 100
+        updates_number = 50
+        deletions_number = 30
+
+        # Insertions
+        for i in range(insertions_number):
+            value = generate_montant(max_montant)
+            depense = Depense(
+                pfi=self.pfi_ecp, structure=self.structure_ecp, annee=self.annee,
+                periodebudget=self.periode, domainefonctionnel=self.domaine,
+                naturecomptabledepense=self.naturecomptabledepense,
+                montant_dc=value, montant_cp=value, montant_ae=value
+            )
+            recette = Recette(
+                pfi=self.pfi_ecp, structure=self.structure_ecp, annee=self.annee,
+                periodebudget=self.periode,
+                naturecomptablerecette=self.naturecomptablerecette,
+                montant_dc=value, montant_re=value, montant_ar=value
+            )
+            depense.save()
+            recette.save()
+
+        # Check
+        out = StringIO()
+        call_command('check_structuremontants', stdout=out)
+        self.assertEquals(out.getvalue().strip(), 'No calculation errors')
+
+        # Updates
+        depenses = Depense.objects.all()
+        recettes = Recette.objects.all()
+        for i in range(updates_number):
+            value = generate_montant(max_montant)
+            depense = get_random_object(depenses)
+            recette = get_random_object(recettes)
+            depense.montant_dc = value
+            depense.montant_cp = value
+            depense.montant_ae = value
+            depense.save()
+            recette.montant_dc = value
+            recette.montant_re = value
+            recette.montant_ar = value
+            recette.save()
+
+        # Check
+        out = StringIO()
+        call_command('check_structuremontants', stdout=out)
+
+        # Deletions
+        random_index = lambda lst: random.randint(0, len(lst) - 1)
+        depenses = list(Depense.objects.all())
+        recettes = list(Recette.objects.all())
+        for i in range(deletions_number):
+            depense = depenses.pop(random_index(depenses))
+            depense.delete()
+            recette = recettes.pop(random_index(recettes))
+            recette.delete()
 
         # Check
         out = StringIO()
