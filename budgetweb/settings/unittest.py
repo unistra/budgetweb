@@ -15,8 +15,16 @@ DEBUG = True
 # Database configuration #
 ##########################
 
-DATABASES['default']['ENGINE'] = 'django.db.backends.sqlite3'
-DATABASES['default']['NAME'] = environ.get('DEFAULT_DB_NAME', 'budgetweb.db')
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': environ.get('DEFAULT_DB_TEST_NAME'),
+        'USER': environ.get('DEFAULT_DB_TEST_USER'),
+        'PASSWORD': environ.get('DEFAULT_DB_TEST_PASSWORD'),
+        'HOST': environ.get('DEFAULT_DB_TEST_HOST'),
+        'PORT': '5432',
+    },
+}
 
 
 #####################
