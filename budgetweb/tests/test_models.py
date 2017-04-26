@@ -44,7 +44,7 @@ class PeriodeBudgetModelTest(TestCase):
 
     def test_str(self):
         periode = PeriodeBudget.objects.get(pk=1)
-        self.assertEqual(str(periode), 'BI -- Budget initial -- 2017')
+        self.assertEqual(str(periode), 'BI - Budget initial - 2017')
 
 
 class DomaineFonctionnelModelTest(TestCase):
