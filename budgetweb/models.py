@@ -135,6 +135,13 @@ class Structure(models.Model):
         parent = self.parent
         return [parent] + parent.get_ancestors() if parent else []
 
+    def get_first_ancestor(self):
+        print(self)
+        if self.parent is None:
+            return self
+        else:
+            return self.parent.get_first_ancestor()
+
     def get_children(self):
         children = []
         for sons in self.get_sons():

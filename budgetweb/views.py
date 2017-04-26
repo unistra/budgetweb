@@ -380,7 +380,8 @@ def detailscf(request, structid):
         'years': years
     }
 
-    if structparent.depth > 2:
+    if structparent.depth > 2 or\
+       structparent.get_first_ancestor().code != "1010":
         sum_depenses = Depense.objects.filter(**queryset).values('annee').annotate(
             sum_dc=Sum('montant_dc'),
             sum_ae=Sum('montant_ae'),
