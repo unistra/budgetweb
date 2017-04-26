@@ -14,7 +14,8 @@ from django.contrib.auth.models import User
 
 from .models import (Depense, DomaineFonctionnel, NatureComptableDepense,
                      NatureComptableRecette, PeriodeBudget, PlanFinancement,
-                     Recette, Structure, StructureAuthorizations)
+                     Recette, Structure, StructureAuthorizations,
+                     StructureMontant)
 
 
 class DepenseAdmin(admin.ModelAdmin):
@@ -96,6 +97,15 @@ class RecetteAdmin(admin.ModelAdmin):
     search_fields = ['pfi', 'structure', 'naturecomptablerecette',
                      'periodebudget', 'annee']
 admin.site.register(Recette, RecetteAdmin)
+
+
+class StructureMontantAdmin(admin.ModelAdmin):
+    list_display = ('structure', 'periodebudget', 'annee',
+                    'depense_montant_dc', 'depense_montant_cp',
+                    'depense_montant_ae', 'recette_montant_dc',
+                    'recette_montant_ar', 'recette_montant_re')
+    search_fields = ['structure', 'periodebudget__code', 'annee']
+admin.site.register(StructureMontant, StructureMontantAdmin)
 
 
 class StructureAdmin(admin.ModelAdmin):
