@@ -5,7 +5,6 @@ from django.conf import settings
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.http import HttpResponseForbidden
-from django.utils.importlib import import_module
 
 from .exceptions import StructureUnauthorizedException
 
