@@ -41,7 +41,7 @@
                        </ul>
                     </li>
                         {% if user.is_authenticated %}
-                        <li id="logout-menu"><a href="/accounts/logout/" title="{% trans "Logout" %}"><span class="glyphicon glyphicon-log-out"></span> ({{ request.user.username }})</a></li>
+                        <li id="logout-menu"><a id="logout" href="/accounts/logout/" title="{% trans "Logout" %}"><span class="glyphicon glyphicon-log-out"></span> ({{ request.user.username }})</a></li>
                         {% else %}
                         <li id="login-menu"><a href="/accounts/login/" title="{% trans "Login" %}"><span class="glyphicon  glyphicon-log-out"></span></a></li>
                         {% endif %}
