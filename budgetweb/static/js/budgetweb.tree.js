@@ -1,5 +1,10 @@
 jQuery(document).ready(function($) {
 
+    // Remove localStore on logout
+    $("#logout").on("click", function() {
+      localStorage.removeItem("open_structures");
+    });
+
     function unique(value, index, arr) {
         return arr.indexOf(value) === index;
     }
