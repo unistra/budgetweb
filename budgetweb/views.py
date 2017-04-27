@@ -186,7 +186,7 @@ def modelformset_factory_with_kwargs(cls, **formset_kwargs):
 def depense(request, pfiid, annee):
     # Values for the form initialization
     pfi = PlanFinancement.objects.get(pk=pfiid)
-    periodebudget = PeriodeBudget.active.first()
+    periodebudget = PeriodeBudget.activebudget.first()
     is_dfi_member = request.user.groups.filter(name=settings.DFI_GROUP_NAME).exists()
     is_dfi_member_or_admin = is_dfi_member or request.user.is_superuser
     natures = OrderedDict(((n.pk, n) for n in\
@@ -206,7 +206,8 @@ def depense(request, pfiid, annee):
     )
     formset = DepenseFormSet(queryset=Depense.objects.filter(
         pfi=pfi,
-        annee=annee
+        annee=annee,
+        periodebudget=periodebudget
     ).order_by('naturecomptabledepense__priority', '-montant_ae'))
 
     if request.method == "POST":
@@ -231,7 +232,7 @@ def depense(request, pfiid, annee):
 def recette(request, pfiid, annee):
     # Values for the form initialization
     pfi = PlanFinancement.objects.get(pk=pfiid)
-    periodebudget = PeriodeBudget.active.first()
+    periodebudget = PeriodeBudget.activebudget.first()
     is_dfi_member = request.user.groups.filter(name=settings.DFI_GROUP_NAME).exists()
     is_dfi_member_or_admin = is_dfi_member or request.user.is_superuser
     natures = OrderedDict(((n.pk, n) for n in\
@@ -249,7 +250,9 @@ def recette(request, pfiid, annee):
         can_delete=True
     )
     formset = RecetteFormSet(queryset=Recette.objects.filter(
-        pfi=pfi, annee=annee
+        pfi=pfi,
+        annee=annee,
+        periodebudget=periodebudget
     ).order_by('naturecomptablerecette__priority', '-montant_ar'))
 
     if request.method == "POST":

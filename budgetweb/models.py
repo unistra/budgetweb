@@ -20,6 +20,12 @@ class ActiveVirementManager(models.Manager):
                                              code__startswith='VIR')
 
 
+class ActiveBudgetManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(is_active=True,
+                                             code__startswith='B')
+
+
 class ActivePeriodManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().\
@@ -71,10 +77,12 @@ class PeriodeBudget(models.Model):
     date_fin_admin = models.DateField('Date de début de la saisie pour les superutilisateurs', blank=True, null=True)
 
     objects = models.Manager()
-    # Un premier manager pour récupérer les periodes de type BI / BR1 / BRx
+    # Un premier manager pour récupérer les periodes actives
     active = ActiveManager()
-    # Un deuxième manager pour récupérer les périodes de type VIR1 / VIRx
+    # Un deuxième manager pour récupérer la période Virement active (VIRx)
     activevirement = ActiveVirementManager()
+    # Un troisième manager pour récupérer la période Budgétaire active (BI/BRx)
+    activebudget = ActiveBudgetManager()
 
     def __str__(self):
         return '{0.code} - {0.label} - {0.annee}'.format(self)
@@ -136,7 +144,6 @@ class Structure(models.Model):
         return [parent] + parent.get_ancestors() if parent else []
 
     def get_first_ancestor(self):
-        print(self)
         if self.parent is None:
             return self
         else:
