@@ -256,7 +256,7 @@ class PlanFinancement(models.Model):
         from .utils import get_current_year
 
         if self.date_debut and self.date_fin:
-            begin_year = get_current_year() if begin_current_period\
+            begin_year = get_current_year()-1 if begin_current_period\
                 else self.date_debut.year
             end_year = min(begin_year + year_number, self.date_fin.year)\
                 if year_number else self.date_fin.year
