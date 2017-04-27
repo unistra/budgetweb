@@ -283,13 +283,15 @@ def detailspfi(request, pfiid):
             'naturecomptabledepense', 'periodebudget', 'pfi',
             'domainefonctionnel', 'pfi__structure')\
         .annotate(enveloppe=F('naturecomptabledepense__enveloppe'))\
-        .order_by('annee', 'naturecomptabledepense__priority')
+        .order_by('annee', 'periodebudget__pk',
+                  'naturecomptabledepense__priority')
     recettes = Recette.objects.filter(
         pfi=pfi).prefetch_related(
             'naturecomptablerecette', 'periodebudget', 'pfi',
             'pfi__structure')\
         .annotate(enveloppe=F('naturecomptablerecette__enveloppe'))\
-        .order_by('annee', 'naturecomptablerecette__priority')
+        .order_by('annee', 'periodebudget__pk',
+                  'naturecomptablerecette__priority')
 
     # Depenses and recettes per year for the resume template
     year_depenses = depenses.values(
