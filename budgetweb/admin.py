@@ -69,8 +69,14 @@ admin.site.register(NatureComptableRecette, NatureComptableRecetteAdmin)
 
 class PeriodeBudgetAdmin(admin.ModelAdmin):
     field = ('code', 'label', 'annee', 'is_active')
-    list_display = ('code', 'label', 'annee', 'is_active')
+    list_display = ('code', 'label', 'annee', 'is_active', 'ordre',
+                    'date_debut_saisie', 'date_fin_saisie',
+                    'date_debut_retardataire', 'date_fin_retardataire',
+                    'date_debut_dfi', 'date_fin_dfi',
+                    'date_debut_admin', 'date_fin_admin')
     search_fields = ['code', 'label', 'annee', 'is_active']
+    ordering = ['annee', 'ordre']
+
 admin.site.register(PeriodeBudget, PeriodeBudgetAdmin)
 
 

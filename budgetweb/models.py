@@ -67,14 +67,36 @@ class PeriodeBudget(models.Model):
     label = models.CharField('Libellé long', max_length=255)
     annee = models.PositiveIntegerField('Année')
     is_active = models.BooleanField('Activé (oui/,non)', default=True)
-    date_debut_saisie = models.DateField('Date de début de la saisie pour les utilisateurs', blank=True, null=True)
-    date_fin_saisie = models.DateField('Date de fin de la saisie pour les utilisateurs', blank=True, null=True)
-    date_debut_retardataire = models.DateField('Date de début de la saisie pour les utilisateurs appartenant au groupe RETARDATAIRE', blank=True, null=True)
-    date_fin_retardataire = models.DateField('Date de début de la saisie pour les utilisateurs appartenant au groupe RETARDATAIRE', blank=True, null=True)
-    date_debut_dfi = models.DateField('Date de début de la saisie pour les utilisateurs appartenant au groupe DFI', blank=True, null=True)
-    date_fin_dfi = models.DateField('Date de début de la saisie pour les utilisateurs appartenant au groupe DFI', blank=True, null=True)
-    date_debut_admin = models.DateField('Date de début de la saisie pour les super-utilisateurs', blank=True, null=True)
-    date_fin_admin = models.DateField('Date de début de la saisie pour les superutilisateurs', blank=True, null=True)
+
+    # Différentes dates pour les saisies.
+    date_debut_saisie = models.DateField('Date de début de la saisie \
+                                          pour les utilisateurs',
+                                         blank=True, null=True)
+    date_fin_saisie = \
+        models.DateField('Date de fin de la saisie pour les utilisateurs',
+                         blank=True, null=True)
+    date_debut_retardataire = \
+        models.DateField('Date de début de la saisie pour les utilisateurs \
+                          appartenant au groupe RETARDATAIRE',
+                         blank=True, null=True)
+    date_fin_retardataire = \
+        models.DateField('Date de début de la saisie pour les utilisateurs \
+                          appartenant au groupe RETARDATAIRE',
+                         blank=True, null=True)
+    date_debut_dfi = \
+        models.DateField('Date de début de la saisie pour les utilisateurs \
+                          appartenant au groupe DFI', blank=True, null=True)
+    date_fin_dfi = \
+        models.DateField('Date de début de la saisie pour les utilisateurs \
+                          appartenant au groupe DFI', blank=True, null=True)
+    date_debut_admin = \
+        models.DateField('Date de début de la saisie pour les \
+                          super-utilisateurs', blank=True, null=True)
+    date_fin_admin = \
+        models.DateField('Date de début de la saisie pour les \
+                          superutilisateurs', blank=True, null=True)
+    ordre = models.PositiveIntegerField('Sous-ordre de tri pour les périodes \
+                                         budgétaire', default=0)
 
     objects = models.Manager()
     # Un premier manager pour récupérer les periodes actives
