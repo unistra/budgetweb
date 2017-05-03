@@ -18,8 +18,9 @@ from budgetweb.apps.structure.models import (
 from .decorators import is_ajax_get, is_authorized_structure
 from .forms import DepenseForm, PlanFinancementPluriForm, RecetteForm
 from .models import Depense, PeriodeBudget, Recette, StructureMontant
-from .utils import (get_authorized_structures_ids, get_current_year,
-                    get_detail_pfi_by_period)
+from .utils import (
+    get_authorized_structures_ids, get_current_year, get_detail_pfi_by_period,
+    get_pfi_total_types, get_pfi_years)
 
 
 # @login_required
@@ -163,13 +164,13 @@ def pluriannuel(request, pfiid):
         form = PlanFinancementPluriForm(instance=pfi)
 
     if pfi.date_debut and pfi.date_fin:
-        depense, recette = pfi.get_total_types()
+        depense, recette = get_pfi_total_types(pfi)
     else:
         depense = recette = {}
 
     context = {
         'PFI': pfi, 'form': form, 'depense': depense, 'recette': recette,
-        'currentYear': get_current_year(), 'years': pfi.get_years()
+        'currentYear': get_current_year(), 'years': get_pfi_years(pfi)
     }
     return render(request, 'pluriannuel.html', context)
 
