@@ -1,2 +1,4 @@
 django<1.9
 django-cas-sso
+britney
+britney_utils

@@ -15,7 +15,7 @@ from django.contrib.auth.models import User
 from .models import (Depense, DomaineFonctionnel, NatureComptableDepense,
                      NatureComptableRecette, PeriodeBudget, PlanFinancement,
                      Recette, Structure, StructureAuthorizations,
-                     StructureMontant)
+                     StructureMontant, Virement)
 
 
 class DepenseAdmin(admin.ModelAdmin):
@@ -122,6 +122,18 @@ class StructureAdmin(admin.ModelAdmin):
     class Meta:
         ordering = ['is_active', 'code']
 admin.site.register(Structure, StructureAdmin)
+
+
+class VirementAdmin(admin.ModelAdmin):
+    field = ('document_number', 'document_type', 'version', 'perimetre',
+             'process')
+    list_display = ('document_number', 'document_type', 'version',
+                    'perimetre', 'process')
+    search_fields = ['document_number', 'depense__structure__code']
+
+    class Meta:
+        ordering = ['document_number']
+admin.site.register(Virement, VirementAdmin)
 
 
 class StructureAuthorizationsForm(forms.ModelForm):
