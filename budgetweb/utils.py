@@ -1,7 +1,8 @@
 from decimal import Decimal
 from itertools import chain, groupby
 
-from budgetweb.models import PeriodeBudget, Structure, StructureAuthorizations
+from budgetweb.models import PeriodeBudget, StructureAuthorizations
+from budgetweb.apps.structure.models import Structure
 
 
 # TODO : Ajouter une exception si jamais pas de période ouverte
@@ -15,7 +16,7 @@ def get_authorized_structures_ids(user):
     the full ascending hierarchy
     """
     if user.is_superuser:
-        user_structures = list(Structure.active.all()\
+        user_structures = list(Structure.active.all()
             .values_list('pk', flat=True))
         return (user_structures, user_structures)
     else:

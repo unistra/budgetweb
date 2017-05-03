@@ -1,15 +1,15 @@
 from django.contrib.auth.models import User
 from django.test import TestCase
 
-from budgetweb.models import Structure
+from budgetweb.apps.structure.models import Structure
 from budgetweb.utils import get_authorized_structures_ids, get_current_year
 
 
 class UtilsTest(TestCase):
 
     fixtures = [
-        'tests/structures.json', 'tests/periodebudgets.json',
-        'tests/structureauthorizations.json'
+        'tests/structures', 'tests/periodebudgets',
+        'tests/structureauthorizations'
     ]
 
     def test_get_current_year(self):

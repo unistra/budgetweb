@@ -1,6 +1,6 @@
 [
 {
-    "model": "budgetweb.domainefonctionnel",
+    "model": "structure.domainefonctionnel",
     "fields": {
         "label": "Formation initiale et continue de niveau Licence",
         "is_active": true,
@@ -10,7 +10,7 @@
     "pk": 1
 },
 {
-    "model": "budgetweb.domainefonctionnel",
+    "model": "structure.domainefonctionnel",
     "fields": {
         "label": "Formation initiale et continue de niveau Master",
         "is_active": true,
@@ -20,7 +20,7 @@
     "pk": 2
 },
 {
-    "model": "budgetweb.domainefonctionnel",
+    "model": "structure.domainefonctionnel",
     "fields": {
         "label": "Formation initiale et continue de niveau Doctorat",
         "is_active": true,
@@ -30,7 +30,7 @@
     "pk": 3
 },
 {
-    "model": "budgetweb.domainefonctionnel",
+    "model": "structure.domainefonctionnel",
     "fields": {
         "label": "Biblioth\u00e8ques et documentation",
         "is_active": true,
@@ -40,7 +40,7 @@
     "pk": 4
 },
 {
-    "model": "budgetweb.domainefonctionnel",
+    "model": "structure.domainefonctionnel",
     "fields": {
         "label": "Recherche universitaire en sciences de la vie, biotechnologie et sant\u00e9",
         "is_active": true,
@@ -50,7 +50,7 @@
     "pk": 5
 },
 {
-    "model": "budgetweb.domainefonctionnel",
+    "model": "structure.domainefonctionnel",
     "fields": {
         "label": "Recherche universitaire en math\u00e9matiques, sciences et techniques de l'information et de la communication, micro et nanotechnologies",
         "is_active": true,
@@ -60,7 +60,7 @@
     "pk": 6
 },
 {
-    "model": "budgetweb.domainefonctionnel",
+    "model": "structure.domainefonctionnel",
     "fields": {
         "label": "Recherche universitaire en physique, chimie et sciences pour l'ing\u00e9nieur",
         "is_active": true,
@@ -70,7 +70,7 @@
     "pk": 7
 },
 {
-    "model": "budgetweb.domainefonctionnel",
+    "model": "structure.domainefonctionnel",
     "fields": {
         "label": "Recherche universitaire en physique nucl\u00e9aire et des hautes \u00e9nergies",
         "is_active": true,
@@ -80,7 +80,7 @@
     "pk": 8
 },
 {
-    "model": "budgetweb.domainefonctionnel",
+    "model": "structure.domainefonctionnel",
     "fields": {
         "label": "Recherche universitaire en sciences de la terre, de l'univers et de l'environnement",
         "is_active": true,
@@ -90,7 +90,7 @@
     "pk": 9
 },
 {
-    "model": "budgetweb.domainefonctionnel",
+    "model": "structure.domainefonctionnel",
     "fields": {
         "label": "Recherche universitaire en sciences de l'homme et de la soci\u00e9t\u00e9",
         "is_active": true,
@@ -100,7 +100,7 @@
     "pk": 10
 },
 {
-    "model": "budgetweb.domainefonctionnel",
+    "model": "structure.domainefonctionnel",
     "fields": {
         "label": "Recherche universitaire interdisciplinaire et transversale",
         "is_active": true,
@@ -110,7 +110,7 @@
     "pk": 11
 },
 {
-    "model": "budgetweb.domainefonctionnel",
+    "model": "structure.domainefonctionnel",
     "fields": {
         "label": "Diffusion des savoirs et mus\u00e9es",
         "is_active": true,
@@ -120,7 +120,7 @@
     "pk": 12
 },
 {
-    "model": "budgetweb.domainefonctionnel",
+    "model": "structure.domainefonctionnel",
     "fields": {
         "label": "Immobilier",
         "is_active": true,
@@ -130,7 +130,7 @@
     "pk": 13
 },
 {
-    "model": "budgetweb.domainefonctionnel",
+    "model": "structure.domainefonctionnel",
     "fields": {
         "label": "Pilotage et support",
         "is_active": true,
@@ -140,7 +140,7 @@
     "pk": 14
 },
 {
-    "model": "budgetweb.domainefonctionnel",
+    "model": "structure.domainefonctionnel",
     "fields": {
         "label": "Aides directes aux \u00e9tudiants",
         "is_active": true,
@@ -150,7 +150,7 @@
     "pk": 15
 },
 {
-    "model": "budgetweb.domainefonctionnel",
+    "model": "structure.domainefonctionnel",
     "fields": {
         "label": "Aides indirectes",
         "is_active": true,
@@ -160,7 +160,7 @@
     "pk": 16
 },
 {
-    "model": "budgetweb.domainefonctionnel",
+    "model": "structure.domainefonctionnel",
     "fields": {
         "label": "Sant\u00e9 des \u00e9tudiants et activit\u00e9s associatives, culturelles et sportives",
         "is_active": true,
@@ -170,7 +170,7 @@
     "pk": 17
 },
 {
-    "model": "budgetweb.domainefonctionnel",
+    "model": "structure.domainefonctionnel",
     "fields": {
         "label": "D\u00e9penses non d\u00e9caissables",
         "is_active": true,

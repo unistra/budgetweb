@@ -16,7 +16,7 @@
     "label_fonds": "Droits d'inscription",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 2,
@@ -35,7 +35,7 @@
     "label_fonds": "Formation continue, dipl\u00f4mes propres et VAE",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 3,
@@ -54,7 +54,7 @@
     "label_fonds": "Formation continue, dipl\u00f4mes propres et VAE",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 4,
@@ -73,7 +73,7 @@
     "label_fonds": "Formation continue, dipl\u00f4mes propres et VAE",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 5,
@@ -92,7 +92,7 @@
     "label_fonds": "Contrats et prestations de recherche hors ANR",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 6,
@@ -111,7 +111,7 @@
     "label_fonds": "Contrats et prestations de recherche hors ANR",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 7,
@@ -130,7 +130,7 @@
     "label_fonds": "Valorisation",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 8,
@@ -149,7 +149,7 @@
     "label_fonds": "Autres recettes",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 9,
@@ -168,7 +168,7 @@
     "label_fonds": "Autres recettes",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 10,
@@ -187,7 +187,7 @@
     "label_fonds": "Taxe d'apprentissage",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 11,
@@ -206,7 +206,7 @@
     "label_fonds": "ANR investissements d'avenir",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 12,
@@ -225,7 +225,7 @@
     "label_fonds": "ANR hors investissements d'avenir",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 13,
@@ -244,7 +244,7 @@
     "label_fonds": "Subvention d'exploitation et financement des actifs UE",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 14,
@@ -263,7 +263,7 @@
     "label_fonds": "Subvention d'exploitation et financement des actifs R\u00e9gion",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 15,
@@ -282,7 +282,7 @@
     "label_fonds": "Subvention d'exploitation et financement des actifs Autres",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 16,
@@ -301,7 +301,7 @@
     "label_fonds": "Subvention d'exploitation et financement des actifs Autres",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 17,
@@ -320,7 +320,7 @@
     "label_fonds": "Subvention d'exploitation et financement des actifs Autres",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 18,
@@ -339,7 +339,7 @@
     "label_fonds": "Autres recettes",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 19,
@@ -358,7 +358,7 @@
     "label_fonds": "Fondations - fonds propres, r\u00e9serves, dons et legs ",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 20,
@@ -377,7 +377,7 @@
     "label_fonds": "Autres recettes",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 21,
@@ -396,7 +396,7 @@
     "label_fonds": "Autres recettes",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 22,
@@ -415,7 +415,7 @@
     "label_fonds": "Autres recettes",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 23,
@@ -434,7 +434,7 @@
     "label_fonds": "Non affect\u00e9",
     "is_ar_and_re": false
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 24,
@@ -453,7 +453,7 @@
     "label_fonds": "Non affect\u00e9",
     "is_ar_and_re": false
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 25,
@@ -472,7 +472,7 @@
     "label_fonds": "Non affect\u00e9",
     "is_ar_and_re": false
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 26,
@@ -491,7 +491,7 @@
     "label_fonds": "Non affect\u00e9",
     "is_ar_and_re": false
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 27,
@@ -510,7 +510,7 @@
     "label_fonds": "Non affect\u00e9",
     "is_ar_and_re": false
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 28,
@@ -529,7 +529,7 @@
     "label_fonds": "Non affect\u00e9",
     "is_ar_and_re": false
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 29,
@@ -548,7 +548,7 @@
     "label_fonds": "Subvention d'exploitation et financement des actifs Autres",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 30,
@@ -567,7 +567,7 @@
     "label_fonds": "ANR investissements d'avenir",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 31,
@@ -586,7 +586,7 @@
     "label_fonds": "Subvention d'exploitation et financement des actifs UE",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 32,
@@ -605,7 +605,7 @@
     "label_fonds": "Subvention d'exploitation et financement des actifs R\u00e9gion",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 33,
@@ -624,7 +624,7 @@
     "label_fonds": "Subvention d'exploitation et financement des actifs Autres",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 34,
@@ -643,7 +643,7 @@
     "label_fonds": "Subvention d'exploitation et financement des actifs Autres",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 35,
@@ -662,7 +662,7 @@
     "label_fonds": "Subvention d'exploitation et financement des actifs Autres",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 36,
@@ -681,7 +681,7 @@
     "label_fonds": "Droits d'inscription",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 37,
@@ -700,7 +700,7 @@
     "label_fonds": "Formation continue, dipl\u00f4mes propres et VAE",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 38,
@@ -719,7 +719,7 @@
     "label_fonds": "Formation continue, dipl\u00f4mes propres et VAE",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 39,
@@ -738,7 +738,7 @@
     "label_fonds": "Formation continue, dipl\u00f4mes propres et VAE",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 40,
@@ -757,7 +757,7 @@
     "label_fonds": "Contrats et prestations de recherche hors ANR",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 41,
@@ -776,7 +776,7 @@
     "label_fonds": "Contrats et prestations de recherche hors ANR",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 42,
@@ -795,7 +795,7 @@
     "label_fonds": "Valorisation",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 43,
@@ -814,7 +814,7 @@
     "label_fonds": "Autres recettes",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 44,
@@ -833,7 +833,7 @@
     "label_fonds": "Autres recettes",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 45,
@@ -852,7 +852,7 @@
     "label_fonds": "Taxe d'apprentissage",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 46,
@@ -871,7 +871,7 @@
     "label_fonds": "Subvention pour charges de service public",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 47,
@@ -890,7 +890,7 @@
     "label_fonds": "ANR investissements d'avenir",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 48,
@@ -909,7 +909,7 @@
     "label_fonds": "ANR hors investissements d'avenir",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 49,
@@ -928,7 +928,7 @@
     "label_fonds": "Subvention d'exploitation et financement des actifs UE",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 50,
@@ -947,7 +947,7 @@
     "label_fonds": "Subvention d'exploitation et financement des actifs R\u00e9gion",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 51,
@@ -966,7 +966,7 @@
     "label_fonds": "Subvention d'exploitation et financement des actifs Autres",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 52,
@@ -985,7 +985,7 @@
     "label_fonds": "Subvention d'exploitation et financement des actifs Autres",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 53,
@@ -1004,7 +1004,7 @@
     "label_fonds": "Subvention d'exploitation et financement des actifs Autres",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 54,
@@ -1023,7 +1023,7 @@
     "label_fonds": "Autres recettes",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 55,
@@ -1042,7 +1042,7 @@
     "label_fonds": "Fondations - fonds propres, r\u00e9serves, dons et legs ",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 56,
@@ -1061,7 +1061,7 @@
     "label_fonds": "Autres recettes",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 57,
@@ -1080,7 +1080,7 @@
     "label_fonds": "Autres recettes",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 58,
@@ -1099,7 +1099,7 @@
     "label_fonds": "Autres recettes",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 59,
@@ -1118,7 +1118,7 @@
     "label_fonds": "Non affect\u00e9",
     "is_ar_and_re": false
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 60,
@@ -1137,7 +1137,7 @@
     "label_fonds": "Non affect\u00e9",
     "is_ar_and_re": false
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 61,
@@ -1156,7 +1156,7 @@
     "label_fonds": "Non affect\u00e9",
     "is_ar_and_re": false
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 62,
@@ -1175,7 +1175,7 @@
     "label_fonds": "Non affect\u00e9",
     "is_ar_and_re": false
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 63,
@@ -1194,7 +1194,7 @@
     "label_fonds": "Non affect\u00e9",
     "is_ar_and_re": false
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 64,
@@ -1213,7 +1213,7 @@
     "label_fonds": "Non affect\u00e9",
     "is_ar_and_re": false
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 65,
@@ -1232,7 +1232,7 @@
     "label_fonds": "Subvention d'exploitation et financement des actifs Autres",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 66,
@@ -1251,7 +1251,7 @@
     "label_fonds": "ANR investissements d'avenir",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 67,
@@ -1270,7 +1270,7 @@
     "label_fonds": "Subvention d'exploitation et financement des actifs UE",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 68,
@@ -1289,7 +1289,7 @@
     "label_fonds": "Subvention d'exploitation et financement des actifs R\u00e9gion",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 69,
@@ -1308,7 +1308,7 @@
     "label_fonds": "Subvention d'exploitation et financement des actifs Autres",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 70,
@@ -1327,7 +1327,7 @@
     "label_fonds": "Subvention d'exploitation et financement des actifs Autres",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 },
 {
   "pk": 71,
@@ -1346,6 +1346,6 @@
     "label_fonds": "Subvention d'exploitation et financement des actifs Autres",
     "is_ar_and_re": true
   },
-  "model": "budgetweb.naturecomptablerecette"
+  "model": "structure.naturecomptablerecette"
 }
 ]

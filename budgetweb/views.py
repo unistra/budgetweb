@@ -12,11 +12,12 @@ from django.forms.models import modelformset_factory
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import (get_object_or_404, redirect, render)
 
+from budgetweb.apps.structure.models import (
+    DomaineFonctionnel, NatureComptableDepense, NatureComptableRecette,
+    PlanFinancement, Structure)
 from .decorators import is_ajax_get, is_authorized_structure
 from .forms import DepenseForm, PlanFinancementPluriForm, RecetteForm
-from .models import (Depense, DomaineFonctionnel, NatureComptableDepense,
-                     NatureComptableRecette, PeriodeBudget, PlanFinancement,
-                     Recette, Structure, StructureMontant)
+from .models import Depense, PeriodeBudget, Recette, StructureMontant
 from .utils import (get_authorized_structures_ids, get_current_year,
                     get_detail_pfi_by_period)
 
