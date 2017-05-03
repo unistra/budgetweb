@@ -40,3 +40,4 @@ for logger in LOGGING['loggers']:
     LOGGING['loggers'][logger]['level'] = 'DEBUG'
 
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
+TEST_MODE = True

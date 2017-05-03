@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('budgetweb', '0003_auto_20170427_1132'),
-        ('structure', '0001_initial'),
+        ('structure', '0002_migrate_data'),
     ]
 
     operations = [
@@ -64,20 +64,5 @@ class Migration(migrations.Migration):
             model_name='structuremontant',
             name='structure',
             field=models.ForeignKey(to='structure.Structure'),
-        ),
-        migrations.DeleteModel(
-            name='DomaineFonctionnel',
-        ),
-        migrations.DeleteModel(
-            name='NatureComptableDepense',
-        ),
-        migrations.DeleteModel(
-            name='NatureComptableRecette',
-        ),
-        migrations.DeleteModel(
-            name='PlanFinancement',
-        ),
-        migrations.DeleteModel(
-            name='Structure',
         ),
     ]
