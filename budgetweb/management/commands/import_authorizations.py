@@ -4,7 +4,8 @@ import re
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
 
-from budgetweb.models import Structure, StructureAuthorizations
+from budgetweb.models import StructureAuthorizations
+from budgetweb.apps.structure.models import Structure
 
 
 ADMINS = (('ludovic.hutin', 'ludovic.hutin@unistra.fr'),)

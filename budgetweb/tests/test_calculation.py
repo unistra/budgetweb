@@ -24,10 +24,9 @@ def generate_montant(max_montant):
 class CalculationTest(TestCase):
 
     fixtures = [
-        'tests/periodebudgets.json', 'tests/structures.json',
-        'tests/domainefonctionnels.json', 'tests/planfinancements.json',
-        'tests/naturecomptabledepenses.json',
-        'tests/naturecomptablerecettes.json'
+        'tests/periodebudgets', 'tests/structures',
+        'tests/domainefonctionnels', 'tests/planfinancements',
+        'tests/naturecomptabledepenses', 'tests/naturecomptablerecettes'
     ]
 
     def setUp(self):

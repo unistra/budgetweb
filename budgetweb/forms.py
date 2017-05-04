@@ -1,11 +1,11 @@
-from collections import OrderedDict
 from decimal import Decimal
 
 from django import forms
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 
-from .models import (Depense, PlanFinancement, Recette, NatureComptableDepense)
+from budgetweb.apps.structure.models import PlanFinancement
+from .models import Depense, Recette
 
 
 class RecetteForm(forms.ModelForm):

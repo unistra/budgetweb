@@ -2,7 +2,7 @@ import csv
 
 from django.core.management.base import BaseCommand
 
-from budgetweb.models import NatureComptableDepense
+from budgetweb.apps.structure.models import NatureComptableDepense
 
 
 class Command(BaseCommand):

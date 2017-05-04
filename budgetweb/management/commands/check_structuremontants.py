@@ -3,8 +3,9 @@ from decimal import Decimal
 from django.core.management.base import BaseCommand
 from django.db import transaction
 
-from budgetweb.models import Depense, Recette, Structure, StructureMontant
+from budgetweb.models import Depense, Recette, StructureMontant
 from budgetweb.utils import get_current_year
+from budgetweb.apps.structure.models import Structure
 
 
 class Command(BaseCommand):

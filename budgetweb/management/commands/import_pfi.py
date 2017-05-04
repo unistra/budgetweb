@@ -2,7 +2,7 @@ import csv
 
 from django.core.management.base import BaseCommand
 
-from budgetweb.models import PlanFinancement, Structure
+from budgetweb.apps.structure.models import PlanFinancement, Structure
 
 
 class Command(BaseCommand):

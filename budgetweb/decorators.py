@@ -1,4 +1,5 @@
 from functools import wraps
+from importlib import import_module
 
 from django.apps import apps as django_apps
 from django.conf import settings
