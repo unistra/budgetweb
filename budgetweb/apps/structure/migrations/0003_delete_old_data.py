@@ -11,10 +11,6 @@ def delete_old_data(apps, schema_editor):
         'NatureComptableRecette', 'PlanFinancement', 'Structure',
     ]
 
-    # Returns if the migration is launched by the unit tests
-    if getattr(settings, 'TEST_MODE', False):
-        return
-
     # Erase the old tables
     with connection.cursor() as cursor:
         for table in tables:

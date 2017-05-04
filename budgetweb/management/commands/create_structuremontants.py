@@ -7,7 +7,8 @@ from django import db
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
-from budgetweb.models import (Depense, Recette, StructureMontant)
+from budgetweb.models import (
+    Depense, PeriodeBudget, Recette, StructureMontant)
 from budgetweb.apps.structure.models import (
     DomaineFonctionnel, NatureComptableDepense, NatureComptableRecette,
     PlanFinancement)

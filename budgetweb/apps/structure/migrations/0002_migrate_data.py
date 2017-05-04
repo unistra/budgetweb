@@ -11,10 +11,6 @@ def migrate_structure_data(apps, schema_editor):
         'NatureComptableRecette', 'PlanFinancement', 'Structure',
     ]
 
-    # Returns if the migration is launched by the unit tests
-    if getattr(settings, 'TEST_MODE', False):
-        return
-
     with connection.cursor() as cursor:
         for table in tables:
             name = table.lower()
@@ -37,6 +33,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('structure', '0001_initial'),
+        ('budgetweb', '0003_auto_20170427_1132')
     ]
 
     operations = [
