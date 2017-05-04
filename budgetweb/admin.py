@@ -12,7 +12,7 @@ from django.contrib.admin.widgets import FilteredSelectMultiple
 
 from budgetweb.apps.structure.models import Structure
 from .models import (Depense, PeriodeBudget, Recette, StructureAuthorizations,
-                     StructureMontant)
+                     StructureMontant, Virement)
 
 
 class DepenseAdmin(admin.ModelAdmin):
@@ -53,6 +53,18 @@ class StructureMontantAdmin(admin.ModelAdmin):
                     'recette_montant_ar', 'recette_montant_re')
     search_fields = ['structure', 'periodebudget__code', 'annee']
 admin.site.register(StructureMontant, StructureMontantAdmin)
+
+
+class VirementAdmin(admin.ModelAdmin):
+    field = ('document_number', 'document_type', 'version', 'perimetre',
+             'process')
+    list_display = ('document_number', 'document_type', 'version',
+                    'perimetre', 'process')
+    search_fields = ['document_number', 'depense__structure__code']
+
+    class Meta:
+        ordering = ['document_number']
+admin.site.register(Virement, VirementAdmin)
 
 
 class StructureAuthorizationsForm(forms.ModelForm):

@@ -1,3 +1,5 @@
 django<1.9
 django-cas-sso
 psycopg2
+britney
+britney_utils

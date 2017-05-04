@@ -152,6 +152,10 @@ class Comptabilite(models.Model):
     periodebudget = models.ForeignKey('PeriodeBudget',
                                       verbose_name='Période budgétaire')
     annee = models.PositiveIntegerField(verbose_name='Année')
+    virement = models.ForeignKey('Virement',
+                                 verbose_name='Renvoie vers le virement \
+                                 correspondant s\'il existe', null=True,
+                                 blank=True)
     creele = models.DateTimeField(auto_now_add=True, blank=True)
     creepar = models.CharField(max_length=100, blank=True, null=True)
     modifiele = models.DateTimeField(verbose_name='Date de modification',
@@ -281,3 +285,23 @@ class Recette(Comptabilite):
         kwargs.update(
             {'initial_montants': ('montant_dc', 'montant_re', 'montant_ar')})
         super().__init__(*args, **kwargs)
+
+
+class Virement(models.Model):
+    document_number = models.PositiveIntegerField(
+                        verbose_name='Numéro de document SIFAC')
+    document_type = models.CharField(
+                        verbose_name="Type de document SIFAC",
+                        max_length=100)
+    version = models.CharField(
+                        verbose_name="Version de budget",
+                        max_length=100)
+    perimetre = models.CharField(verbose_name="Périmètre financier",
+                                 max_length=10)
+    process = models.CharField(verbose_name="Type de virement", max_length=10)
+    creator_login = models.CharField(
+                        verbose_name="Compte SIFAC ayant créé le virement",
+                        max_length=100)
+    creation_date = models.DateTimeField(
+                        verbose_name="Date de création du virement")
+    value_date = models.DateField(verbose_name="Date de valeur")
