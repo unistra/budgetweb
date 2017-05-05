@@ -65,4 +65,19 @@ class Migration(migrations.Migration):
             name='structure',
             field=models.ForeignKey(to='structure.Structure'),
         ),
+        migrations.DeleteModel(
+            name='DomaineFonctionnel',
+        ),
+        migrations.DeleteModel(
+            name='NatureComptableDepense',
+        ),
+        migrations.DeleteModel(
+            name='NatureComptableRecette',
+        ),
+        migrations.DeleteModel(
+            name='PlanFinancement',
+        ),
+        migrations.DeleteModel(
+            name='Structure',
+        ),
     ]
