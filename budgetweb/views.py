@@ -297,13 +297,13 @@ def detailspfi(request, pfiid):
 
     # Depenses and recettes per year for the resume template
     year_depenses = depenses.values(
-            'annee', 'enveloppe', 'periodebudget__code')\
+            'annee', 'enveloppe', 'periodebudget__period__code')\
         .annotate(
             sum_dc=Sum('montant_dc'),
             sum_ae=Sum('montant_ae'),
             sum_cp=Sum('montant_cp'))
     year_recettes = recettes.values(
-            'annee', 'enveloppe', 'periodebudget__code')\
+            'annee', 'enveloppe', 'periodebudget__period__code')\
         .annotate(
             sum_dc=Sum('montant_dc'),
             sum_ar=Sum('montant_ar'),
@@ -364,13 +364,13 @@ def detailscf(request, structid):
 
     # Depenses and recettes per year for the resume template
     year_depenses = depenses.values(
-            'annee', 'enveloppe', 'periodebudget__code')\
+            'annee', 'enveloppe', 'periodebudget__period__code')\
         .annotate(
             sum_dc=Sum('montant_dc'),
             sum_ae=Sum('montant_ae'),
             sum_cp=Sum('montant_cp')).order_by('periodebudget__ordre')
     year_recettes = recettes.values(
-            'annee', 'enveloppe', 'periodebudget__code')\
+            'annee', 'enveloppe', 'periodebudget__period__code')\
         .annotate(
             sum_dc=Sum('montant_dc'),
             sum_ar=Sum('montant_ar'),

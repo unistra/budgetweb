@@ -4,8 +4,7 @@
     "model": "budgetweb.periodebudget",
     "fields": {
         "is_active": true,
-        "label": "Budget initial",
-        "code": "BI",
+        "period": 1,
         "annee": 2017
     }
 },
@@ -14,8 +13,7 @@
     "model": "budgetweb.periodebudget",
     "fields": {
         "is_active": false,
-        "label": "Budget initial 2016",
-        "code": "BI 2016",
+        "period": 1,
         "annee": 2016
     }
 }
