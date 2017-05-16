@@ -28,6 +28,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(primary_key=True, serialize=False, verbose_name='ID', auto_created=True)),
                 ('code', models.CharField(verbose_name='Code', max_length=20)),
                 ('label', models.CharField(verbose_name='Label', max_length=255)),
+                ('order', models.PositiveIntegerField(verbose_name='Order', default=0)),
             ],
         ),
         migrations.RunPython(forwards_migrate_period, reverse_migrate_period)

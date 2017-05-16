@@ -25,13 +25,13 @@ admin.site.register(Depense, DepenseAdmin)
 
 
 class PeriodeBudgetAdmin(admin.ModelAdmin):
-    list_display = ('period_code', 'annee', 'is_active', 'ordre',
+    list_display = ('period_code', 'annee', 'is_active',
                     'date_debut_saisie', 'date_fin_saisie',
                     'date_debut_retardataire', 'date_fin_retardataire',
                     'date_debut_dfi', 'date_fin_dfi',
                     'date_debut_admin', 'date_fin_admin')
     search_fields = ['period__code', 'annee', 'is_active']
-    ordering = ['annee', 'ordre']
+    ordering = ['annee', 'period__order']
 
     def period_code(self, obj):
         return obj.period.code

@@ -2,7 +2,8 @@
 {
     "fields": {
         "code": "BI",
-        "label": "Budget initial"
+        "label": "Budget initial",
+        "order": 1
     },
     "model": "budgetweb.period",
     "pk": 1
@@ -10,7 +11,8 @@
 {
     "fields": {
         "code": "VIR1",
-        "label": "Virement 1"
+        "label": "Virement 1",
+        "order": 2
     },
     "model": "budgetweb.period",
     "pk": 2
@@ -18,7 +20,8 @@
 {
     "fields": {
         "code": "BR1",
-        "label": "Budget rectificatif 1"
+        "label": "Budget rectificatif 1",
+        "order": 3
     },
     "model": "budgetweb.period",
     "pk": 3
@@ -26,7 +29,8 @@
 {
     "fields": {
         "code": "VIR2",
-        "label": "Virement 2"
+        "label": "Virement 2",
+        "order": 4
     },
     "model": "budgetweb.period",
     "pk": 4
@@ -34,7 +38,8 @@
 {
     "fields": {
         "code": "BR2",
-        "label": "Budget rectificatif 2"
+        "label": "Budget rectificatif 2",
+        "order": 5
     },
     "model": "budgetweb.period",
     "pk": 5
@@ -42,7 +47,8 @@
 {
     "fields": {
         "code": "VIR3",
-        "label": "Virement 3"
+        "label": "Virement 3",
+        "order": 6
     },
     "model": "budgetweb.period",
     "pk": 6
@@ -50,7 +56,8 @@
 {
     "fields": {
         "code": "BR3",
-        "label": "Budget rectificatif 3"
+        "label": "Budget rectificatif 3",
+        "order": 7
     },
     "model": "budgetweb.period",
     "pk": 7
@@ -58,7 +65,8 @@
 {
     "fields": {
         "code": "VIR4",
-        "label": "Virement 4"
+        "label": "Virement 4",
+        "order": 8
     },
     "model": "budgetweb.period",
     "pk": 8
@@ -66,7 +74,8 @@
 {
     "fields": {
         "code": "BR4",
-        "label": "Budget rectificatif 4"
+        "label": "Budget rectificatif 4",
+        "order": 9
     },
     "model": "budgetweb.period",
     "pk": 9
@@ -74,7 +83,8 @@
 {
     "fields": {
         "code": "VIR5",
-        "label": "Virement 5"
+        "label": "Virement 5",
+        "order": 10
     },
     "model": "budgetweb.period",
     "pk": 10
@@ -82,7 +92,8 @@
 {
     "fields": {
         "code": "BR5",
-        "label": "Budget rectificatif 5"
+        "label": "Budget rectificatif 5",
+        "order": 11
     },
     "model": "budgetweb.period",
     "pk": 11
@@ -90,7 +101,8 @@
 {
     "fields": {
         "code": "VIR6",
-        "label": "Virement 6"
+        "label": "Virement 6",
+        "order": 12
     },
     "model": "budgetweb.period",
     "pk": 12
@@ -98,7 +110,8 @@
 {
     "fields": {
         "code": "BR6",
-        "label": "Budget rectificatif 6"
+        "label": "Budget rectificatif 6",
+        "order": 13
     },
     "model": "budgetweb.period",
     "pk": 13
@@ -106,7 +119,8 @@
 {
     "fields": {
         "code": "VIR7",
-        "label": "Virement 7"
+        "label": "Virement 7",
+        "order": 14
     },
     "model": "budgetweb.period",
     "pk": 14
@@ -114,7 +128,8 @@
 {
     "fields": {
         "code": "BR7",
-        "label": "Budget rectificatif 7"
+        "label": "Budget rectificatif 7",
+        "order": 15
     },
     "model": "budgetweb.period",
     "pk": 15
@@ -122,7 +137,8 @@
 {
     "fields": {
         "code": "VIR8",
-        "label": "Virement 8"
+        "label": "Virement 8",
+        "order": 16
     },
     "model": "budgetweb.period",
     "pk": 16
@@ -130,7 +146,8 @@
 {
     "fields": {
         "code": "BR8",
-        "label": "Budget rectificatif 8"
+        "label": "Budget rectificatif 8",
+        "order": 17
     },
     "model": "budgetweb.period",
     "pk": 17
@@ -138,7 +155,8 @@
 {
     "fields": {
         "code": "VIR9",
-        "label": "Virement 9"
+        "label": "Virement 9",
+        "order": 18
     },
     "model": "budgetweb.period",
     "pk": 18
@@ -146,7 +164,8 @@
 {
     "fields": {
         "code": "BR9",
-        "label": "Budget rectificatif 9"
+        "label": "Budget rectificatif 9",
+        "order": 19
     },
     "model": "budgetweb.period",
     "pk": 19
@@ -154,7 +173,8 @@
 {
     "fields": {
         "code": "VIR10",
-        "label": "Virement 10"
+        "label": "Virement 10",
+        "order": 20
     },
     "model": "budgetweb.period",
     "pk": 20
@@ -162,7 +182,8 @@
 {
     "fields": {
         "code": "BR10",
-        "label": "Budget rectificatif 10"
+        "label": "Budget rectificatif 10",
+        "order": 21
     },
     "model": "budgetweb.period",
     "pk": 21
@@ -170,7 +191,8 @@
 {
     "fields": {
         "code": "VIR11",
-        "label": "Virement 11"
+        "label": "Virement 11",
+        "order": 22
     },
     "model": "budgetweb.period",
     "pk": 22
@@ -178,7 +200,8 @@
 {
     "fields": {
         "code": "BR11",
-        "label": "Budget rectificatif 11"
+        "label": "Budget rectificatif 11",
+        "order": 23
     },
     "model": "budgetweb.period",
     "pk": 23
@@ -186,7 +209,8 @@
 {
     "fields": {
         "code": "VIR12",
-        "label": "Virement 12"
+        "label": "Virement 12",
+        "order": 24
     },
     "model": "budgetweb.period",
     "pk": 24
@@ -194,7 +218,8 @@
 {
     "fields": {
         "code": "BR12",
-        "label": "Budget rectificatif 12"
+        "label": "Budget rectificatif 12",
+        "order": 25
     },
     "model": "budgetweb.period",
     "pk": 25

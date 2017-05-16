@@ -19,6 +19,10 @@ class Migration(migrations.Migration):
             model_name='periodebudget',
             name='label',
         ),
+        migrations.RemoveField(
+            model_name='periodebudget',
+            name='ordre',
+        ),
         migrations.AddField(
             model_name='periodebudget',
             name='period',
