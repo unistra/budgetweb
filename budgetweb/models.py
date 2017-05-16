@@ -20,20 +20,20 @@ class ActiveManager(models.Manager):
 class ActiveVirementManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(is_active=True,
-                                             code__startswith='VIR')
+                                             period__code__startswith='VIR')
 
 
 class ActiveBudgetManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(is_active=True,
-                                             code__startswith='B')
+                                             period__code__startswith='B')
 
 
 class ActivePeriodManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().\
                     filter(periodebudget__is_active=True).\
-                    filter(periodebudget__code__startswith='B')
+                    filter(periodebudget__period__code__startswith='B')
 
 
 class StructureAuthorizations(models.Model):
@@ -60,14 +60,24 @@ class StructureAuthorizations(models.Model):
         super().save(*args, **kwargs)
 
 
+class Period(models.Model):
+
+    code = models.CharField(_('Code'), max_length=20)
+    label = models.CharField(_('Label'), max_length=255)
+    order = models.PositiveIntegerField(_('Order'), default=0)
+
+    def __str__(self):
+        return '{0.code} - {0.label}'.format(self)
+
+
 class PeriodeBudget(models.Model):
     """
     Gestion des périodes de budget. Une seule active
     avec bloqué=False. Les dépenses et les recettes
     sont saisies pour une période
     """
-    code = models.CharField('Libellé court', max_length=20)
-    label = models.CharField('Libellé long', max_length=255)
+
+    period = models.ForeignKey(Period, verbose_name=_('Period'))
     annee = models.PositiveIntegerField('Année')
     is_active = models.BooleanField('Activé (oui/,non)', default=True)
 
@@ -98,8 +108,6 @@ class PeriodeBudget(models.Model):
     date_fin_admin = \
         models.DateField('Date de début de la saisie pour les \
                           superutilisateurs', blank=True, null=True)
-    ordre = models.PositiveIntegerField('Sous-ordre de tri pour les périodes \
-                                         budgétaire', default=0)
 
     objects = models.Manager()
     # Un premier manager pour récupérer les periodes actives
@@ -110,7 +118,7 @@ class PeriodeBudget(models.Model):
     activebudget = ActiveBudgetManager()
 
     def __str__(self):
-        return '{0.code} - {0.label} - {0.annee}'.format(self)
+        return '{0.period} - {0.annee}'.format(self)
 
 
 class StructureMontant(models.Model):

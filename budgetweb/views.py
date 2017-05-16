@@ -285,25 +285,25 @@ def detailspfi(request, pfiid):
             'naturecomptabledepense', 'periodebudget', 'pfi',
             'domainefonctionnel', 'pfi__structure')\
         .annotate(enveloppe=F('naturecomptabledepense__enveloppe'))\
-        .order_by('annee', 'periodebudget__ordre',
+        .order_by('annee', 'periodebudget__period__order',
                   'naturecomptabledepense__priority')
     recettes = Recette.objects.filter(
         pfi=pfi).prefetch_related(
             'naturecomptablerecette', 'periodebudget', 'pfi',
             'pfi__structure')\
         .annotate(enveloppe=F('naturecomptablerecette__enveloppe'))\
-        .order_by('annee', 'periodebudget__ordre',
+        .order_by('annee', 'periodebudget__period__order',
                   'naturecomptablerecette__priority')
 
     # Depenses and recettes per year for the resume template
     year_depenses = depenses.values(
-            'annee', 'enveloppe', 'periodebudget__code')\
+            'annee', 'enveloppe', 'periodebudget__period__code')\
         .annotate(
             sum_dc=Sum('montant_dc'),
             sum_ae=Sum('montant_ae'),
             sum_cp=Sum('montant_cp'))
     year_recettes = recettes.values(
-            'annee', 'enveloppe', 'periodebudget__code')\
+            'annee', 'enveloppe', 'periodebudget__period__code')\
         .annotate(
             sum_dc=Sum('montant_dc'),
             sum_ar=Sum('montant_ar'),
@@ -316,12 +316,12 @@ def detailspfi(request, pfiid):
     sum_depenses = Depense.objects.filter(pfi=pfi).values('annee').annotate(
         sum_dc=Sum('montant_dc'),
         sum_ae=Sum('montant_ae'),
-        sum_cp=Sum('montant_cp')).order_by('periodebudget__ordre')
+        sum_cp=Sum('montant_cp')).order_by('periodebudget__period__order')
     sum_depenses = to_dict(groupby(sum_depenses, lambda x: x['annee']))
     sum_recettes = Recette.objects.filter(pfi=pfi).values('annee').annotate(
         sum_dc=Sum('montant_dc'),
         sum_ar=Sum('montant_ar'),
-        sum_re=Sum('montant_re')).order_by('periodebudget__ordre')
+        sum_re=Sum('montant_re')).order_by('periodebudget__period__order')
     sum_recettes = to_dict(groupby(sum_recettes, lambda x: x['annee']))
 
     resume_depenses, resume_recettes = get_detail_pfi_by_period(
@@ -352,29 +352,29 @@ def detailscf(request, structid):
             'naturecomptabledepense', 'periodebudget', 'pfi',
             'domainefonctionnel', 'pfi__structure')\
         .annotate(enveloppe=F('naturecomptabledepense__enveloppe'))\
-        .order_by('annee', 'periodebudget__ordre',
+        .order_by('annee', 'periodebudget__period__order',
                   'naturecomptabledepense__priority')
     recettes = Recette.objects.filter(**queryset)\
         .prefetch_related(
             'naturecomptablerecette', 'periodebudget', 'pfi',
             'pfi__structure')\
         .annotate(enveloppe=F('naturecomptablerecette__enveloppe'))\
-        .order_by('annee', 'periodebudget__ordre',
+        .order_by('annee', 'periodebudget__period__order',
                   'naturecomptablerecette__priority')
 
     # Depenses and recettes per year for the resume template
     year_depenses = depenses.values(
-            'annee', 'enveloppe', 'periodebudget__code')\
+            'annee', 'enveloppe', 'periodebudget__period__code')\
         .annotate(
             sum_dc=Sum('montant_dc'),
             sum_ae=Sum('montant_ae'),
-            sum_cp=Sum('montant_cp')).order_by('periodebudget__ordre')
+            sum_cp=Sum('montant_cp')).order_by('periodebudget__period__order')
     year_recettes = recettes.values(
-            'annee', 'enveloppe', 'periodebudget__code')\
+            'annee', 'enveloppe', 'periodebudget__period__code')\
         .annotate(
             sum_dc=Sum('montant_dc'),
             sum_ar=Sum('montant_ar'),
-            sum_re=Sum('montant_re')).order_by('periodebudget__ordre')
+            sum_re=Sum('montant_re')).order_by('periodebudget__period__order')
 
     depenses = to_dict(groupby(depenses, lambda x: x.annee))
     recettes = to_dict(groupby(recettes, lambda x: x.annee))
@@ -394,12 +394,12 @@ def detailscf(request, structid):
         sum_depenses = Depense.objects.filter(**queryset).values('annee').annotate(
             sum_dc=Sum('montant_dc'),
             sum_ae=Sum('montant_ae'),
-            sum_cp=Sum('montant_cp')).order_by('periodebudget__ordre')
+            sum_cp=Sum('montant_cp')).order_by('periodebudget__period__order')
         sum_depenses = to_dict(groupby(sum_depenses, lambda x: x['annee']))
         sum_recettes = Recette.objects.filter(**queryset).values('annee').annotate(
             sum_dc=Sum('montant_dc'),
             sum_ar=Sum('montant_ar'),
-            sum_re=Sum('montant_re')).order_by('periodebudget__ordre')
+            sum_re=Sum('montant_re')).order_by('periodebudget__period__order')
         sum_recettes = to_dict(groupby(sum_recettes, lambda x: x['annee']))
         context.update({
             'listeDepense': depenses, 'listeRecette': recettes,

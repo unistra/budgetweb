@@ -25,14 +25,17 @@ admin.site.register(Depense, DepenseAdmin)
 
 
 class PeriodeBudgetAdmin(admin.ModelAdmin):
-    field = ('code', 'label', 'annee', 'is_active')
-    list_display = ('code', 'label', 'annee', 'is_active', 'ordre',
+    list_display = ('period_code', 'annee', 'is_active',
                     'date_debut_saisie', 'date_fin_saisie',
                     'date_debut_retardataire', 'date_fin_retardataire',
                     'date_debut_dfi', 'date_fin_dfi',
                     'date_debut_admin', 'date_fin_admin')
-    search_fields = ['code', 'label', 'annee', 'is_active']
-    ordering = ['annee', 'ordre']
+    search_fields = ['period__code', 'annee', 'is_active']
+    ordering = ['annee', 'period__order']
+
+    def period_code(self, obj):
+        return obj.period.code
+
 
 admin.site.register(PeriodeBudget, PeriodeBudgetAdmin)
 
@@ -51,12 +54,12 @@ class StructureMontantAdmin(admin.ModelAdmin):
                     'depense_montant_dc', 'depense_montant_cp',
                     'depense_montant_ae', 'recette_montant_dc',
                     'recette_montant_ar', 'recette_montant_re')
-    search_fields = ['structure', 'periodebudget__code', 'annee']
+    search_fields = ['structure', 'periodebudget__period__code', 'annee']
 admin.site.register(StructureMontant, StructureMontantAdmin)
 
 
 class VirementAdmin(admin.ModelAdmin):
-    field = ('document_number', 'document_type', 'version', 'perimetre',
+    fields = ('document_number', 'document_type', 'version', 'perimetre',
              'process')
     list_display = ('document_number', 'document_type', 'version',
                     'perimetre', 'process')
