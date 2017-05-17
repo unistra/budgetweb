@@ -11,21 +11,13 @@
             <a class="recette-color" href="{% url 'recette' pfiid=node.id annee=currentYear %}">Rec.</a>
           {% endif %}
         </span>
-    {% with depense=pfi_depenses|dictvalue:node.id %}
-    {% with recette=pfi_recettes|dictvalue:node.id %}
-    {% if typeAffichage == "gbcp" %}
-        <div>{% firstof recette.sum_recette_re|intspace "0,00" %} &euro;</div>
-        <div>{% firstof recette.sum_recette_ar|intspace "0,00" %} &euro;</div>
+      {% for col in cols.0 %}
+        <div>{% firstof pfi_depenses|dictvalue:node.id|getattribute:col.1|intspace "0,00" %} &euro;</div>
+      {% endfor %}
         <div>&nbsp;</div>
-        <div>{% firstof depense.sum_depense_cp|intspace "0,00" %} &euro;</div>
-        <div>{% firstof depense.sum_depense_ae|intspace "0,00" %} &euro;</div>
-    {% else %}
-        <div>{% firstof recette.sum_recette_dc|intspace "0,00" %} &euro;</div>
-        <div>&nbsp;</div>
-        <div>{% firstof depense.sum_depense_dc|intspace "0,00" %} &euro;</div>
-    {% endif %}
-{% endwith %}
-{% endwith %}
+      {% for col in cols.1 %}
+        <div>{% firstof pfi_recettes|dictvalue:node.id|getattribute:col.1|intspace "0,00" %} &euro;</div>
+      {% endfor %}
         <ul id="{{ node.code }}"></ul>
       </div>
     </li>
@@ -38,17 +30,13 @@
           <i class="glyphicon glyphicon-plus"></i>{% if structure.depth < 3  %}{{ structure.label }}{% else %}{{ structure.code }}{% endif %}
         </span> - <a href="{% url 'detailscf' structid=structure.id %}">Détails</a>
 
-	{% if typeAffichage == "gbcp" %}
-	    <div>{% firstof montants.recette_montant_re|intspace "0,00" %} &euro;</div>
-	    <div>{% firstof montants.recette_montant_ar|intspace "0,00" %} &euro;</div>
-	    <div>&nbsp;</div>
-	    <div>{% firstof montants.depense_montant_cp|intspace "0,00" %} &euro;</div>
-	    <div>{% firstof montants.depense_montant_ae|intspace "0,00" %} &euro;</div>
-	 {% else %}
-	    <div>{% firstof montants.recette_montant_dc|intspace "0,00" %} &euro;</div>
-	    <div>&nbsp;</div>
-	    <div>{% firstof montants.depense_montant_dc|intspace "0,00" %} &euro;</div>
-	 {% endif %}
+      {% for col in cols.0 %}
+        <div>{% firstof montants|getattribute:col.1|intspace "0,00" %} &euro;</div>
+      {% endfor %}
+	      <div>&nbsp;</div>
+      {% for col in cols.1 %}
+        <div>{% firstof montants|getattribute:col.1|intspace "0,00" %} &euro;</div>
+      {% endfor %}
       </div>
       <ul id="cf{{ structure.id }}"></ul>
     </li>

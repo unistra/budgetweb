@@ -40,7 +40,15 @@ def dictvalue(value, key):
     """
     Get a dict value by its key
     """
-    return value.get(key)
+    return value.get(key, None)
+
+
+@register.filter(is_safe=True)
+def getattribute(value, key):
+    """
+    Get an object's attribute
+    """
+    return getattr(value, key, None)
 
 
 @register.simple_tag

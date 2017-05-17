@@ -92,6 +92,48 @@ def api_get_managment_rules_recette_by_id(request, id_naturecomptablerecette):
 
 @login_required
 def show_tree(request, type_affichage, structid=0):
+    active_period = PeriodeBudget.active.first()
+    period_code = active_period.period.code
+
+    """
+    BAn = BI + sum(VIR(1..n)) + sum(BR(1..n-1))
+    BRn = BRn
+    BMn = BAn + BRn
+    """
+
+    cols = {
+        'gbcp': {
+            'BI': (
+                (('&sum; Dép. AE', 'depense_montant_ae'),
+                 ('&sum; Dép. CP', 'depense_montant_cp'),),
+                [('&sum; Rec. AR', 'recette_montant_ar'),
+                 ('&sum; Rec. RE', 'recette_montant_re',)],
+            ),
+            'BR': (
+                (('&sum; Dép. AE BA', 'depense_montant_ae_ba'),
+                 ('&sum; Dép. AE VIR', 'depense_montant_ae_vir'),
+                 ('&sum; Dép. AE BM', 'depense_montant_ae_bm'),
+                 ('&sum; Dép. CP BA', 'depense_montant_cp_ba'),
+                 ('&sum; Dép. CP VIR', 'depense_montant_cp_vir'),
+                 ('&sum; Dép. CP BM', 'depense_montant_cp_bm'),),
+                (('&sum; Rec. AR BA', 'recette_montant_ar_ba'),
+                 ('&sum; Rec. AR VIR', 'recette_montant_ar_vir'),
+                 ('&sum; Rec. AR BM', 'recette_montant_ar_bm'),
+                 ('&sum; Rec. RE BA', 'recette_montant_re_ba'),
+                 ('&sum; Rec. RE VIR', 'recette_montant_re_vir'),
+                 ('&sum; Rec. RE BM', 'recette_montant_re_bm'),),
+            )
+        },
+        'dc': {
+            'BI': (
+                (('<span style="font-size:0.8em;">&sum; Dép. Charges / Immos</span>', 'depense_montant_dc'),),
+                (('<span style="font-size:0.7em;">&sum; Rec. Produits / Ressources</span>', 'recette_montant_dc'),),
+            ),
+            'BR':((()),(()))
+        }
+    }
+
+    #############################################
     # Authorized structures list
     is_tree_node = request.is_ajax()
     queryset = {'parent__id': structid} if structid else {'parent': None}
@@ -109,16 +151,16 @@ def show_tree(request, type_affichage, structid=0):
         pfis = PlanFinancement.active.filter(structure__id=structid)
         pfi_depenses = {pfi.pk: pfi for pfi in pfis\
                 .filter(depense__annee=get_current_year()).annotate(
-                    sum_depense_ae=Sum('depense__montant_ae'),
-                    sum_depense_cp=Sum('depense__montant_cp'),
-                    sum_depense_dc=Sum('depense__montant_dc'))
+                    depense_montant_ae=Sum('depense__montant_ae'),
+                    depense_montant_cp=Sum('depense__montant_cp'),
+                    depense_montant_dc=Sum('depense__montant_dc'))
 
         }
         pfi_recettes = {pfi.pk: pfi for pfi in pfis\
                 .filter(recette__annee=get_current_year()).annotate(
-                    sum_recette_ar=Sum('recette__montant_ar'),
-                    sum_recette_re=Sum('recette__montant_re'),
-                    sum_recette_dc=Sum('recette__montant_dc'))
+                    recette_montant_ar=Sum('recette__montant_ar'),
+                    recette_montant_re=Sum('recette__montant_re'),
+                    recette_montant_dcZ=Sum('recette__montant_dc'))
         }
         pfis = pfis.all()
     else:
@@ -129,7 +171,8 @@ def show_tree(request, type_affichage, structid=0):
         'pfis': pfis,
         'pfi_depenses': pfi_depenses, 'pfi_recettes': pfi_recettes,
         'typeAffichage': type_affichage,
-        'currentYear': get_current_year()
+        'currentYear': get_current_year(),
+        'cols': [v for k, v in cols[type_affichage].items() if period_code.startswith(k)][0],
     }
 
     # Total sums

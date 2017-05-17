@@ -9,32 +9,23 @@
 {% block content %}
 <div class="col-md-12 well">
 	<div class="title showTree" style="padding-bottom:5px;">
-	{% if typeAffichage == "gbcp" %}
-		<div>&sum; Rec. RE</div>
-		<div>&sum; Rec. AR</div>
-		<div>&nbsp;</div>
-		<div>&sum; Dép. CP</div>
-		<div>&sum; Dép. AE</div>
-	{% else %}
-		<div style="font-size:0.7em;">&sum; Rec. Produits / Ressources</div>
-		<div>&nbsp;</div>
-		<div style="font-size:0.8em;">&sum; Dép. Charges / Immos</div>
-	{% endif %}
+    {% for col in cols.0 %}
+	<div>{{ col.0 | safe }}</div>
+    {% endfor %}
+	<div>&nbsp;</div>
+    {% for col in cols.1 %}
+	<div>{{ col.0 | safe }}</div>
+    {% endfor %}
 	</div><br />
 	<div class="title showTree">
-    {% if typeAffichage == "gbcp" %}
-			  <span style="margin-left:20px;width:160px;" class="bold">Total Unistra</span>
-        <div class="bold">{% firstof total.recette_montant_re|intspace "0,00" %} &euro;</div>
-        <div class="bold">{% firstof total.recette_montant_ar|intspace "0,00" %} &euro;</div>
+	    <span style="margin-left:20px;width:160px;" class="bold">Total Unistra</span>
+        {% for col in cols.0 %}
+        <div class="bold">{% firstof total|dictvalue:col.1|intspace "0,00" %} &euro;</div>
+        {% endfor %}
         <div>&nbsp;</div>
-        <div class="bold">{% firstof total.depense_montant_cp|intspace "0,00" %} &euro;</div>
-        <div class="bold">{% firstof total.depense_montant_ae|intspace "0,00" %} &euro;</div>
-    {% else %}
-        <span style="margin-left:20px;width:160px;" class="bold">Total Unistra</span>
-				<div class="bold">{% firstof total.recette_montant_dc|intspace "0,00" %} &euro;</div>
-        <div>&nbsp;</div>
-        <div class="bold">{% firstof total.depense_montant_dc|intspace "0,00" %} &euro;</div>
-    {% endif %}
+        {% for col in cols.1 %}
+        <div class="bold">{% firstof total|dictvalue:col.1|intspace "0,00" %} &euro;</div>
+        {% endfor %}
     </div>
 	<div class="tree">
 		<ul>
