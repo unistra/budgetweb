@@ -82,7 +82,7 @@ class PeriodeBudget(models.Model):
     is_active = models.BooleanField('Activé (oui/,non)', default=True)
 
     # Différentes dates pour les saisies.
-    date_debut_saisie = models.DateField('Date de début de la saisie \
+    v = models.DateField('Date de début de la saisie \
                                           pour les utilisateurs',
                                          blank=True, null=True)
     date_fin_saisie = \
@@ -93,20 +93,20 @@ class PeriodeBudget(models.Model):
                           appartenant au groupe RETARDATAIRE',
                          blank=True, null=True)
     date_fin_retardataire = \
-        models.DateField('Date de début de la saisie pour les utilisateurs \
+        models.DateField('Date de fin de la saisie pour les utilisateurs \
                           appartenant au groupe RETARDATAIRE',
                          blank=True, null=True)
     date_debut_dfi = \
         models.DateField('Date de début de la saisie pour les utilisateurs \
                           appartenant au groupe DFI', blank=True, null=True)
     date_fin_dfi = \
-        models.DateField('Date de début de la saisie pour les utilisateurs \
+        models.DateField('Date de fin de la saisie pour les utilisateurs \
                           appartenant au groupe DFI', blank=True, null=True)
     date_debut_admin = \
         models.DateField('Date de début de la saisie pour les \
                           super-utilisateurs', blank=True, null=True)
     date_fin_admin = \
-        models.DateField('Date de début de la saisie pour les \
+        models.DateField('Date de fin de la saisie pour les \
                           superutilisateurs', blank=True, null=True)
 
     objects = models.Manager()

@@ -15,7 +15,8 @@ from django.shortcuts import (get_object_or_404, redirect, render)
 from budgetweb.apps.structure.models import (
     DomaineFonctionnel, NatureComptableDepense, NatureComptableRecette,
     PlanFinancement, Structure)
-from .decorators import is_ajax_get, is_authorized_structure
+from .decorators import (is_ajax_get, is_authorized_structure,
+                         is_authorized_editing)
 from .forms import DepenseForm, PlanFinancementPluriForm, RecetteForm
 from .models import Depense, PeriodeBudget, Recette, StructureMontant
 from .utils import (
@@ -152,6 +153,7 @@ def show_tree(request, type_affichage, structid=0):
 
 @login_required
 @is_authorized_structure
+@is_authorized_editing
 def pluriannuel(request, pfiid):
     pfi = get_object_or_404(PlanFinancement, pk=pfiid)
     if request.method == "POST":
@@ -185,6 +187,7 @@ def modelformset_factory_with_kwargs(cls, **formset_kwargs):
 
 @login_required
 @is_authorized_structure
+@is_authorized_editing
 def depense(request, pfiid, annee):
     # Values for the form initialization
     pfi = PlanFinancement.objects.get(pk=pfiid)
@@ -231,6 +234,7 @@ def depense(request, pfiid, annee):
 
 @login_required
 @is_authorized_structure
+@is_authorized_editing
 def recette(request, pfiid, annee):
     # Values for the form initialization
     pfi = PlanFinancement.objects.get(pk=pfiid)
