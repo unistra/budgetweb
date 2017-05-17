@@ -153,6 +153,17 @@ if __name__ == '__main__':
         doc_number = vir_header['DOCUMENT']
         datestring = vir_header['CRTDATE'] + " " + vir_header['CRTTIME'] + \
                                              " +0200"
+
+        if vir_header['PROCESS'] != 'TRAN':
+            print('Le process du virement (%s) ne match pas (%s)'
+                  % (doc_number, vir_header['PROCESS']))
+            continue
+
+        if vir_header['VERSION'] != '000':
+            print('Le process du virement (%s) ne match pas (%s)'
+                  % (doc_number, vir_header['VERSION']))
+            continue
+
         vir_date = datetime.strptime(datestring, '%Y-%m-%d %H:%M:%S %z')
         vir = 0
 
@@ -186,5 +197,5 @@ if __name__ == '__main__':
                     print("Suppression du virement en erreur %s"
                           % vir.document_number)
                     vir.delete()
-    print('Missing Structure : %s' % (', '.join(list_cf_error)))
-    print('Missing PFI : %s' % (', '.join(list_pfi_error)))
+    print('Missing Structure : %s' % (', '.join(set(list_cf_error))))
+    print('Missing PFI : %s' % (', '.join(set(list_pfi_error))))
