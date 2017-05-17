@@ -13,8 +13,7 @@ js_info_dict = {
 }
 
 urlpatterns = [
-    url(r'^accounts/login/$', 'django_cas.views.login'),
-    url(r'^accounts/logout/$', 'django_cas.views.logout'),
+    url(r'^accounts/', include('django_cas.urls', namespace='django_cas')),
     url(r'^$', home, name='home'),
 
     # Ajax
