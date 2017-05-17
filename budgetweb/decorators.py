@@ -7,7 +7,9 @@ from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.http import HttpResponseForbidden
 
-from .exceptions import StructureUnauthorizedException
+from .exceptions import (StructureUnauthorizedException,
+                         EditingUnauthorizedException,
+                         PeriodeBudgetUninitializeError)
 
 
 POSTGRESQL_LOCK_MODES = (
@@ -45,6 +47,67 @@ def is_authorized_structure(func):
         except:
             return HttpResponseForbidden(
                 StructureUnauthorizedException().message)
+        return func(request, *args, **kwargs)
+    return wrapper
+
+
+def is_authorized_editing(func):
+    """
+    Check if the user can write something in the period
+    """
+    @wraps(func)
+    def wrapper(request, *args, **kwargs):
+        from budgetweb.apps.structure.models import PlanFinancement
+        from .models import PeriodeBudget
+        from datetime import datetime
+        try:
+            is_authorized = False
+            user = request.user
+            periode_active = PeriodeBudget.activebudget.first()
+
+            if periode_active.date_debut_saisie is None or \
+               periode_active.date_fin_saisie is None or \
+               periode_active.date_debut_retardataire is None or \
+               periode_active.date_fin_retardataire is None or \
+               periode_active.date_debut_dfi is None or \
+               periode_active.date_fin_dfi is None or \
+               periode_active.date_debut_admin is None or \
+               periode_active.date_fin_admin is None:
+                raise PeriodeBudgetUninitializeError
+
+            date_today = datetime.now().date()
+
+            if periode_active.date_debut_saisie <= date_today and\
+               periode_active.date_fin_saisie >= date_today:
+                is_authorized = True
+
+            is_late_group_member = request.user.groups.filter(
+                                        name=settings.LATE_GROUP_NAME).exists()
+            if periode_active.date_debut_retardataire <= date_today and\
+               periode_active.date_fin_retardataire >= date_today and\
+               is_late_group_member:
+                is_authorized = True
+
+            is_dfi_member = request.user.groups.filter(
+                                        name=settings.LATE_GROUP_NAME).exists()
+            if periode_active.date_debut_dfi <= date_today and\
+               periode_active.date_fin_dfi >= date_today and\
+               is_dfi_member:
+                is_authorized = True
+
+            if periode_active.date_debut_admin <= date_today and\
+               periode_active.date_fin_admin >= date_today and\
+               request.user.is_superuser:
+                is_authorized = True
+
+            if not is_authorized:
+                raise EditingUnauthorizedException
+        except EditingUnauthorizedException as e:
+            return HttpResponseForbidden(
+                EditingUnauthorizedException().message)
+        except PeriodeBudgetUninitializeError as e:
+            return HttpResponseForbidden(
+                PeriodeBudgetUninitializeError().message)
         return func(request, *args, **kwargs)
     return wrapper
 
