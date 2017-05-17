@@ -31,7 +31,7 @@
   {% for depense in depenses %}
     <tr class="{% cycle 'row1' 'row2' %}">
       <td>{{ depense.annee }}</td>
-      <td>{{ depense.periodebudget.code }}</td>
+      <td>{{ depense.periodebudget.period.code }}</td>
       <td>{{ depense.pfi.code }}</td>
       <td>{{ depense.pfi.structure.code }}</td>
       <td>{{ depense.naturecomptabledepense.enveloppe }}</td>

@@ -30,7 +30,7 @@
     {% for recette in recettes %}
       <tr class="{% cycle 'row1' 'row2' %}">
         <td>{{ recette.annee }}</td>
-        <td>{{ recette.periodebudget.code }}</td>
+        <td>{{ recette.periodebudget.period.code }}</td>
         <td>{{ recette.pfi.code }}</td>
         <td>{{ recette.pfi.structure.code }}</td>
         <td>{{ recette.naturecomptablerecette.enveloppe }}</td>
