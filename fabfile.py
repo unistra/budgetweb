@@ -110,6 +110,7 @@ def test():
         'default_db_user': "DATABASES['default']['USER']",
         'default_db_password': "DATABASES['default']['PASSWORD']",
         'default_db_name': "DATABASES['default']['NAME']",
+        'sifacws_apikey': "SIFACWS_APIKEY",
     }
     execute(build_env)
 

@@ -1,17 +1,20 @@
-import json
-import django
-
-from django.db import IntegrityError, transaction
-from django.utils.dateparse import parse_datetime
-from britney.middleware import auth
-
-from budgetweb.models import *
-from budgetweb.utils import get_current_year
-
 from datetime import datetime
 from decimal import Decimal
+import json
 
 import britney_utils
+import django
+from britney.middleware import auth
+from django.conf import settings
+from django.db import transaction
+
+from budgetweb.apps.structure.models import Structure
+from budgetweb.models import (
+    Depense, DomaineFonctionnel, NatureComptableDepense,
+    NatureComptableRecette, PeriodeBudget, PlanFinancement, Recette, Virement)
+from budgetweb.utils import get_current_year
+
+
 django.setup()
 
 list_pfi_error = []
@@ -127,19 +130,18 @@ def parseItemData(item_data, virement, type):
 if __name__ == '__main__':
     client = britney_utils.get_client(
         'test',
-        'https://rest-api-test.u-strasbg.fr/sifacws/description.json',
+        settings.SIFACWS_DESC,
         middlewares=(
            (auth.ApiKey, {
                'key_name': 'Authorization',
-               'key_value': 'Token XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+               'key_value': 'Token %s' % settings.SIFACWS_APIKEY
            }),
         ),
-        base_url='https://sifacws-test.u-strasbg.fr/',
+        base_url=settings.SIFACWS_URL,
     )
     params = {'format': 'json'}
     ct = client.list_transfers(creation_date='20170101', **params)
     data = json.loads(ct.content.decode('utf-8'))
-    # print('RESULT : {}'.format(data))
 
     # Traitement des résultats un par un.
     for virement_info in data:

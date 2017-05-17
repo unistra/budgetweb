@@ -36,3 +36,12 @@ for logger in LOGGING['loggers']:
 
 DIPSTRAP_VERSION = '{{ dipstrap_version }}'
 DIPSTRAP_STATIC_URL += '%s/' % DIPSTRAP_VERSION
+
+
+#################
+# Interfaces SI #
+#################
+
+SIFACWS_DESC = 'https://rest-api-test.u-strasbg.fr/sifacws/description.json'
+SIFACWS_URL = 'https://sifacws-test.u-strasbg.fr/'
+SIFACWS_APIKEY = '{{ sifacws_apikey }}'
