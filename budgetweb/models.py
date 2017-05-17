@@ -82,7 +82,7 @@ class PeriodeBudget(models.Model):
     is_active = models.BooleanField('Activé (oui/,non)', default=True)
 
     # Différentes dates pour les saisies.
-    v = models.DateField('Date de début de la saisie \
+    date_debut_saisie = models.DateField('Date de début de la saisie \
                                           pour les utilisateurs',
                                          blank=True, null=True)
     date_fin_saisie = \
