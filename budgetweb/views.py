@@ -18,6 +18,7 @@ from budgetweb.apps.structure.models import (
 from .decorators import is_ajax_get, is_authorized_structure
 from .forms import DepenseForm, PlanFinancementPluriForm, RecetteForm
 from .models import Depense, PeriodeBudget, Recette, StructureMontant
+from .templatetags.budgetweb_tags import sum_montants
 from .utils import (
     get_authorized_structures_ids, get_current_year, get_detail_pfi_by_period,
     get_pfi_total_types, get_pfi_years)
@@ -96,54 +97,109 @@ def show_tree(request, type_affichage, structid=0):
     period_code = active_period.period.code
 
     """
-    BAn = BI + sum(VIR(1..n)) + sum(BR(1..n-1))
+    BROLDn = Σ(BR(1..n-1))
+    VIRn = Σ(VIR(1..n))
+    BAn = BI + VIRn + BROLDn
     BRn = BRn
-    BMn = BAn + BRn
+    BMn = BAn + BRn = montants
     """
-
-    cols = {
-        'gbcp': {
-            'BI': (
-                (('&sum; Dép. AE', 'depense_montant_ae'),
-                 ('&sum; Dép. CP', 'depense_montant_cp'),),
-                [('&sum; Rec. AR', 'recette_montant_ar'),
-                 ('&sum; Rec. RE', 'recette_montant_re',)],
+    default_filters = {'annee': active_period.annee}
+    periods_infos = {
+        'BI': {
+            'prefetches': (
+                Prefetch(
+                    'structuremontant_set',
+                    queryset=StructureMontant.objects.filter(
+                        periodebudget__period__code='BI', **default_filters),
+                    to_attr='montants'),
             ),
-            'BR': (
-                (('&sum; Dép. AE BA', 'depense_montant_ae_ba'),
-                 ('&sum; Dép. AE VIR', 'depense_montant_ae_vir'),
-                 ('&sum; Dép. AE BM', 'depense_montant_ae_bm'),
-                 ('&sum; Dép. CP BA', 'depense_montant_cp_ba'),
-                 ('&sum; Dép. CP VIR', 'depense_montant_cp_vir'),
-                 ('&sum; Dép. CP BM', 'depense_montant_cp_bm'),),
-                (('&sum; Rec. AR BA', 'recette_montant_ar_ba'),
-                 ('&sum; Rec. AR VIR', 'recette_montant_ar_vir'),
-                 ('&sum; Rec. AR BM', 'recette_montant_ar_bm'),
-                 ('&sum; Rec. RE BA', 'recette_montant_re_ba'),
-                 ('&sum; Rec. RE VIR', 'recette_montant_re_vir'),
-                 ('&sum; Rec. RE BM', 'recette_montant_re_bm'),),
-            )
+            'cols': {
+                'gbcp': (
+                    # Dépenses
+                    (('&sum; Dép. AE', (('montants', 'depense_montant_ae'),)),
+                     ('&sum; Dép. CP', (('montants', 'depense_montant_cp'),))),
+                    # Recettes
+                    (('&sum; Rec. AR', (('montants', 'recette_montant_ar'),)),
+                     ('&sum; Rec. RE', (('montants', 'recette_montant_re'),)))
+                ),
+                'dc' : (
+                    # Dépenses
+                    (('<span style="font-size:0.8em;">&sum; Dép. Charges / Immos</span>',
+                      (('monrants', 'depense_montant_dc'),))),
+                    # Recettes
+                    (('<span style="font-size:0.7em;">&sum; Rec. Produits / Ressources</span>',
+                      (('montants', 'recette_montant_dc'),))),
+                ),
+            },
         },
-        'dc': {
-            'BI': (
-                (('<span style="font-size:0.8em;">&sum; Dép. Charges / Immos</span>', 'depense_montant_dc'),),
-                (('<span style="font-size:0.7em;">&sum; Rec. Produits / Ressources</span>', 'recette_montant_dc'),),
+        'BR': {
+            'prefetches': (
+                Prefetch(
+                    'structuremontant_set',
+                    queryset=StructureMontant.objects.filter(
+                        periodebudget__period__code='BI', **default_filters),
+                    to_attr='bi'),
+                Prefetch(
+                    'structuremontant_set',
+                    queryset=StructureMontant.objects.filter(
+                        periodebudget__period__code__startswith='VIR', **default_filters),
+                    to_attr='vir'),
+                Prefetch(
+                    'structuremontant_set',
+                    queryset=StructureMontant.objects.filter(
+                        periodebudget__period__code__startswith='BR', **default_filters),
+                    to_attr='br'),
+                Prefetch(
+                    'structuremontant_set',
+                    queryset=StructureMontant.objects.filter(**default_filters),
+                    to_attr='bm'),
+                Prefetch(
+                    'structuremontant_set',
+                    queryset=StructureMontant.objects.filter(
+                        periodebudget__period__code__startswith='BR', **default_filters
+                    ).exclude(periodebudget__period__code=period_code),
+                    to_attr='br_old')
             ),
-            'BR':((()),(()))
+            'cols': {
+                'gbcp': (
+                    # Dépenses
+                    (('&sum; Dép. AE BA', 
+                        (('bi', 'depense_montant_ae'), ('vir', 'depense_montant_ae'), ('br_old', 'depense_montant_ae'))),
+                     ('&sum; Dép. AE VIR', (('vir', 'depense_montant_ae'),)),
+                     ('&sum; Dép. AE BM', (('bm', 'depense_montant_ae'),)),
+                     ('&sum; Dép. CP BA',
+                        (('bi', 'depense_montant_cp'), ('vir', 'depense_montant_cp'), ('br_old', 'depense_montant_cp'))),
+                     ('&sum; Dép. CP VIR', (('vir', 'depense_montant_cp'),)),
+                     ('&sum; Dép. CP BM', (('bm', 'depense_montant_cp'),))),
+                    # Recettes
+                    (('&sum; Rec. AR BA',
+                        (('bi', 'recette_montant_ar'), ('vir', 'recette_montant_ar'), ('br_old', 'recette_montant_ar'))),
+                     ('&sum; Rec. AR VIR', (('vir', 'recette_montant_ar'),)),
+                     ('&sum; Rec. AR BM', (('bm', 'recette_montant_ar'),)),
+                     ('&sum; Rec. RE BA',
+                        (('bi', 'recette_montant_re'), ('vir', 'recette_montant_re'), ('br_old', 'recette_montant_re'))),
+                     ('&sum; Rec. RE VIR', (('vir', 'recette_montant_re'),)),
+                     ('&sum; Rec. RE BM', (('bm', 'recette_montant_re'),))),
+                ),
+                'dc' : (
+                    # Dépenses
+                    (((()))),
+                    # Recettes
+                    (((())))
+                ),
+            },
         }
     }
+    active_period_infos = [v for k, v in periods_infos.items() if period_code.startswith(k)][0]
+    active_fields = active_period_infos['cols'][type_affichage]
 
-    #############################################
     # Authorized structures list
     is_tree_node = request.is_ajax()
     queryset = {'parent__id': structid} if structid else {'parent': None}
     authorized_structures, hierarchy_structures =\
         get_authorized_structures_ids(request.user)
-    structures = Structure.active.prefetch_related(Prefetch(
-        'structuremontant_set',
-        queryset=StructureMontant.active_period.filter(
-                                        annee=get_current_year()).all(),
-        to_attr='montants')
+    structures = Structure.active.prefetch_related(
+        *active_period_infos.get('prefetches', [])
     ).filter(pk__in=hierarchy_structures, **queryset).order_by('code')
 
     # if the PFI's structure is in the authorized structures
@@ -160,7 +216,7 @@ def show_tree(request, type_affichage, structid=0):
                 .filter(recette__annee=get_current_year()).annotate(
                     recette_montant_ar=Sum('recette__montant_ar'),
                     recette_montant_re=Sum('recette__montant_re'),
-                    recette_montant_dcZ=Sum('recette__montant_dc'))
+                    recette_montant_dc=Sum('recette__montant_dc'))
         }
         pfis = pfis.all()
     else:
@@ -172,21 +228,18 @@ def show_tree(request, type_affichage, structid=0):
         'pfi_depenses': pfi_depenses, 'pfi_recettes': pfi_recettes,
         'typeAffichage': type_affichage,
         'currentYear': get_current_year(),
-        'cols': [v for k, v in cols[type_affichage].items() if period_code.startswith(k)][0],
+        'cols': active_fields,
     }
 
     # Total sums
     if not is_tree_node:
-        fields = (
-            'depense_montant_ae', 'depense_montant_cp', 'depense_montant_dc',
-            'recette_montant_ar', 'recette_montant_re', 'recette_montant_dc')
-        total = {}
+        fields = active_fields
+        total = [[Decimal(0)] * len(field) for field in fields]
+
         for structure in structures:
-            montants = structure.montants
-            if montants:
-                for name in fields:
-                    total[name] = total.get(name, Decimal(0))\
-                        + getattr(montants[0], name)
+            for index0, field in enumerate(fields):
+                for index1, montants in enumerate(field):
+                    total[index0][index1] += sum_montants(structure, montants[1])
         context['total'] = total
 
     template = 'show_sub_tree.html' if is_tree_node else 'showtree.html'

@@ -65,3 +65,15 @@ def pluriannuel_rowspan(base_rowspan, montants_types):
     Return the pluriannuel rowspan
     """
     return base_rowspan * (len(montants_types))
+
+
+@register.filter(is_safe=True)
+def sum_montants(structure, fields):
+    result = Decimal(0)
+    for attr, value in fields:
+        try:
+            montant = getattr(getattr(structure, attr)[0], value)
+        except Exception:
+            montant = Decimal(0)
+        result += montant
+    return result

@@ -163,7 +163,6 @@ def get_pfi_total_types(pfi):
                 nature_dict = type_dict[0].setdefault(
                     c['enveloppe'], [dict.fromkeys(years, None), None])
                 nature_dict[0][annee] = montant
-                nature_dict[0][annee] = montant
                 # Total per enveloppe
                 nature_dict[1] = (nature_dict[1] or Decimal(0)) + montant
 

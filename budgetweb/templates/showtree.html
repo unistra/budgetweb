@@ -19,12 +19,12 @@
 	</div><br />
 	<div class="title showTree">
 	    <span style="margin-left:20px;width:160px;" class="bold">Total Unistra</span>
-        {% for col in cols.0 %}
-        <div class="bold">{% firstof total|dictvalue:col.1|intspace "0,00" %} &euro;</div>
+        {% for col in total.0 %}
+        <div class="bold">{% firstof col|intspace "0,00" %} &euro;</div>
         {% endfor %}
         <div>&nbsp;</div>
-        {% for col in cols.1 %}
-        <div class="bold">{% firstof total|dictvalue:col.1|intspace "0,00" %} &euro;</div>
+        {% for col in total.1 %}
+        <div class="bold">{% firstof col|intspace "0,00" %} &euro;</div>
         {% endfor %}
     </div>
 	<div class="tree">
