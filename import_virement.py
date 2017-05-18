@@ -61,7 +61,7 @@ def parseItemData(item_data, virement, type):
             montant = montant * -1
 
         if type_budget == '9F':
-            montant_cp = Decimal(montant)
+            montant_dc = montant_cp = Decimal(montant)
         if type_budget == '9G':
             montant_ae = Decimal(montant)
 
@@ -101,7 +101,7 @@ def parseItemData(item_data, virement, type):
             montant = montant * -1
 
         if type_budget == '9F':
-            montant_re = Decimal(montant)
+            montant_dc = montant_re = Decimal(montant)
         if type_budget == '9G':
             montant_ar = Decimal(montant)
 
