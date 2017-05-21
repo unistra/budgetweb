@@ -31,6 +31,9 @@ urlpatterns = [
         views.api_get_managment_rules_recette_by_id,
         name='api_get_managment_rules_recette_by_id'),
 
+    url(r'^api/updateMontantDC/', views.api_set_dcfield_value_by_id,
+        name='api_set_dcfield_value_by_id'),
+
     # Base de l'arbre.
     url(r'^showtree/(?P<type_affichage>\w+)/(?P<structid>\w+)/$',
         views.show_tree, name="show_tree_structid"),

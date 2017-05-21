@@ -39,7 +39,20 @@
         <td>{{ recette.naturecomptablerecette.code_fonds }}</td>
         <td class="montant" nowrap>{{ recette.montant_ar|intspace }} &euro;</td>
         <td class="montant" nowrap>{{ recette.montant_re|intspace }} &euro;</td>
-        <td class="montant" nowrap>{{ recette.montant_dc|intspace }} &euro;</td>
+
+        <td class="montant" nowrap>
+          {% if recette.periodebudget.period.code|startswith:'VIR' %}
+            <a href="#" data-backdrop="false" data-toggle="modal"
+               data-target="#modalMontantDC"
+               data-pk="{{ recette.pk }}"
+               data-type="recette"
+               data-value="{{ recette.montant_dc }}">
+                {{ recette.montant_dc|intspace }} &euro;
+            </a>
+          {% else %}
+            {{ recette.montant_dc|intspace }} &euro;
+          {% endif %}
+        </td>
         <td align="center">
           {% if recette.commentaire %}
             <a href="#">

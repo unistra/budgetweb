@@ -9,9 +9,9 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.db.models import F, Prefetch, Sum
 from django.forms.models import modelformset_factory
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import (get_object_or_404, redirect, render)
-
+from django.utils.translation import ugettext as _
 from budgetweb.apps.structure.models import (
     DomaineFonctionnel, NatureComptableDepense, NatureComptableRecette,
     PlanFinancement, Structure)
@@ -89,6 +89,35 @@ def api_get_managment_rules_recette_by_id(request, id_naturecomptablerecette):
 
     return HttpResponse(
         json.dumps(response_data), content_type='application/json')
+
+
+@is_ajax_get
+def api_set_dcfield_value_by_id(request):
+    try:
+        is_dfi_member = request.user.groups.filter(
+                                    name=settings.DFI_GROUP_NAME).exists()
+        is_dfi_member_or_admin = is_dfi_member or request.user.is_superuser
+        pk = int(request.GET.get('pk'))
+        type_compta = request.GET.get('type')
+        montant = request.GET.get('montant').replace(',', '.')
+        if is_dfi_member_or_admin:
+            if type_compta == "depense":
+                compta = Depense.objects.get(pk=pk)
+            else:
+                compta = Recette.objects.get(pk=pk)
+            montant_dc = Decimal(montant)
+            compta.montant_dc = montant_dc
+            compta.save()
+            return JsonResponse(
+                {'message': _('The new value has been saved')}, status=201)
+        else:
+            return JsonResponse(
+                {'message': _('You are not allowed to do that')}, status=400)
+    except Exception as e:
+        return JsonResponse(
+            {'message': _('Something wrong in \
+                           api_set_dcfield_value_by_id %s') % e},
+            status=400)
 
 
 @login_required

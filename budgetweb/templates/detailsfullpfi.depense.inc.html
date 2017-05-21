@@ -40,7 +40,19 @@
       <td>{{ depense.domainefonctionnel.code }}</td>
       <td class="montant" nowrap>{{ depense.montant_ae|intspace }} &euro;</td>
       <td class="montant" nowrap>{{ depense.montant_cp|intspace }} &euro;</td>
-      <td class="montant" nowrap>{{ depense.montant_dc|intspace }} &euro;</td>
+      <td class="montant" nowrap>
+        {% if depense.periodebudget.period.code|startswith:'VIR' %}
+          <a href="#" data-backdrop="false" data-toggle="modal"
+             data-target="#modalMontantDC"
+             data-pk="{{ depense.pk }}"
+             data-type="depense"
+             data-value="{{ depense.montant_dc }}">
+              {{ depense.montant_dc|intspace }} &euro;
+          </a>
+        {% else %}
+          {{ depense.montant_dc|intspace }} &euro;
+        {% endif %}
+      </td>
       <td align="center">
       {% if depense.commentaire %}
         <a href="#">

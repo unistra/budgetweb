@@ -57,3 +57,10 @@ def pluriannuel_rowspan(base_rowspan, montants_types):
     Return the pluriannuel rowspan
     """
     return base_rowspan * (len(montants_types))
+
+
+@register.filter('startswith')
+def startswith(text, starts):
+    if isinstance(text, str):
+        return text.startswith(starts)
+    return False
