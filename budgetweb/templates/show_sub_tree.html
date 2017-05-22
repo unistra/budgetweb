@@ -12,11 +12,11 @@
           {% endif %}
         </span>
       {% for col in cols.0 %}
-        <div>{% firstof pfi_depenses|dictvalue:node.id|getattribute:col.1|intspace "0,00" %} &euro;</div>
+        <div>{{ node|sum_pfis:col.1|floatformat:2|intspace }}  &euro;</div>
       {% endfor %}
         <div>&nbsp;</div>
       {% for col in cols.1 %}
-        <div>{% firstof pfi_recettes|dictvalue:node.id|getattribute:col.1|intspace "0,00" %} &euro;</div>
+        <div>{{ node|sum_pfis:col.1|floatformat:2|intspace }}  &euro;</div>
       {% endfor %}
         <ul id="{{ node.code }}"></ul>
       </div>
@@ -31,11 +31,11 @@
         </span> - <a href="{% url 'detailscf' structid=structure.id %}">Détails</a>
 
       {% for col in cols.0 %}
-        <div>{{ structure|sum_montants:col.1|intspace }} &euro;</div>
+        <div>{{ structure|sum_montants:col.1|floatformat:2|intspace }} &euro;</div>
       {% endfor %}
 	      <div>&nbsp;</div>
       {% for col in cols.1 %}
-        <div>{{ structure|sum_montants:col.1|intspace }} &euro;</div>
+        <div>{{ structure|sum_montants:col.1|floatformat:2|intspace }} &euro;</div>
       {% endfor %}
       </div>
       <ul id="cf{{ structure.id }}"></ul>

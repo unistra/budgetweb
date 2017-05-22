@@ -1,10 +1,8 @@
-from collections import OrderedDict
 from decimal import Decimal
 import re
 
 from django import template
 from django.conf import settings
-from django.template.base import Variable, VariableDoesNotExist
 from django.utils.encoding import force_text
 from django.utils.formats import number_format
 
@@ -70,10 +68,24 @@ def pluriannuel_rowspan(base_rowspan, montants_types):
 @register.filter(is_safe=True)
 def sum_montants(structure, fields):
     result = Decimal(0)
-    for attr, value in fields:
+    for attr, value in fields['structure_montants']:
         try:
             montant = getattr(getattr(structure, attr)[0], value)
         except Exception:
             montant = Decimal(0)
         result += montant
+    return result
+
+
+@register.filter(is_safe=True)
+def sum_pfis(pfi, fields):
+    result = Decimal(0)
+    for attr, field in fields['pfis']:
+        compta = getattr(pfi, attr, [])
+        for montant in compta:
+            try:
+                value = getattr(montant, field)
+            except Exception:
+                value = Decimal(0)
+            result += value
     return result
