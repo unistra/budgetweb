@@ -95,8 +95,8 @@ def api_get_managment_rules_recette_by_id(request, id_naturecomptablerecette):
 def show_tree(request, type_affichage, structid=0):
     active_period = PeriodeBudget.active.select_related('period').first()
     period_code = active_period.period.code
-    infos = tree_infos(active_period, period_code)
-    active_fields = infos['cols'][type_affichage]
+    prefetches, columns = tree_infos(active_period, period_code)
+    active_fields = columns[type_affichage]
 
     # Authorized structures list
     is_tree_node = request.is_ajax()
@@ -106,16 +106,16 @@ def show_tree(request, type_affichage, structid=0):
 
     structures = Structure.active.prefetch_related(
         *(Prefetch('structuremontant_set', **prefetch)
-            for prefetch in infos['prefetches']['structure_montants'])
+            for prefetch in prefetches['structure_montants'])
     ).filter(pk__in=hierarchy_structures, **queryset).order_by('code')
 
     # if the PFI's structure is in the authorized structures
     if int(structid) in authorized_structures:
         pfis = PlanFinancement.active.prefetch_related(*chain(
             (Prefetch('depense_set', **prefetch)
-                for prefetch in infos['prefetches']['pfis']['depense']),
+                for prefetch in prefetches['pfis']['depense']),
             (Prefetch('recette_set', **prefetch)
-                for prefetch in infos['prefetches']['pfis']['recette']),)
+                for prefetch in prefetches['pfis']['recette']),)
         ).filter(structure__id=structid)
     else:
         pfis = []

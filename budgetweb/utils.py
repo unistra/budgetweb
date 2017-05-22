@@ -187,191 +187,189 @@ def tree_infos(active_period, period_code):
 
     structuremontant_filters = {'annee': active_period.annee}
     pfi_filters = {'periodebudget__annee': active_period.annee}
-    period_infos = {}
+    prefetches = {}
+    cols = {}
 
     if period_code == 'BI':
-        period_infos = {
-            'prefetches': {
-                'structure_montants': (
-                    {'queryset': StructureMontant.objects.filter(
-                        periodebudget__period__code='BI', **structuremontant_filters),
-                     'to_attr': 'montants'},
-                ),
-                'pfis': {
-                    'depense': (
-                        {'queryset': Depense.objects.filter(
-                            periodebudget__period__code='BI', **pfi_filters),
-                         'to_attr': 'depense_bi'},),
-                    'recette': (
-                        {'queryset': Recette.objects.filter(
-                            periodebudget__period__code='BI', **pfi_filters),
-                         'to_attr': 'recette_bi'},),
-                },
-            },
-            'cols': {
-                'gbcp': (
-                    # Dépenses
-                    (('&sum; Dép. AE',
-                        {'structure_montants': (('montants', 'depense_montant_ae'),),
-                         'pfis': (('depense_bi', 'montant_ae'),)}),
-                     ('&sum; Dép. CP',
-                        {'structure_montants': (('montants', 'depense_montant_cp'),),
-                         'pfis': (('depense_bi', 'montant_cp'),)}),),
-                    # Recettes
-                    (('&sum; Rec. AR',
-                        {'structure_montants': (('montants', 'recette_montant_ar'),),
-                         'pfis': (('recette_bi', 'montant_ar'),)}),
-                     ('&sum; Rec. RE',
-                        {'structure_montants': (('montants', 'recette_montant_re'),),
-                         'pfis': (('recette_bi', 'montant_re'),)}),)
-                ),
-                'dc' : (
-                    # Dépenses
-                    (('<span style="font-size:0.8em;">&sum; Dép. Charges / Immos</span>',
-                        {'structure_montants': (('montants', 'depense_montant_dc'),),
-                         'pfis': (('depense_bi', 'montant_dc'),)}),),
-                    # Recettes
-                    (('<span style="font-size:0.7em;">&sum; Rec. Produits / Ressources</span>',
-                        {'structure_montants': (('montants', 'recette_montant_dc'),),
-                         'pfis': (('recette_bi', 'montant_dc'),)}),),
-                ),
-            },
+        prefetches = {
+            'structure_montants': (
+                {'queryset': StructureMontant.objects.filter(
+                    periodebudget__period__code='BI', **structuremontant_filters),
+                 'to_attr': 'montants'},
+            ),
+            'pfis': {
+                'depense': (
+                    {'queryset': Depense.objects.filter(
+                        periodebudget__period__code='BI', **pfi_filters),
+                     'to_attr': 'depense_bi'},),
+                'recette': (
+                    {'queryset': Recette.objects.filter(
+                        periodebudget__period__code='BI', **pfi_filters),
+                     'to_attr': 'recette_bi'},),
+            }
+        }
+        cols = {
+            'gbcp': (
+                # Dépenses
+                (('&sum; Dép. AE',
+                    {'structure_montants': (('montants', 'depense_montant_ae'),),
+                     'pfis': (('depense_bi', 'montant_ae'),)}),
+                 ('&sum; Dép. CP',
+                    {'structure_montants': (('montants', 'depense_montant_cp'),),
+                     'pfis': (('depense_bi', 'montant_cp'),)}),),
+                # Recettes
+                (('&sum; Rec. AR',
+                    {'structure_montants': (('montants', 'recette_montant_ar'),),
+                     'pfis': (('recette_bi', 'montant_ar'),)}),
+                 ('&sum; Rec. RE',
+                    {'structure_montants': (('montants', 'recette_montant_re'),),
+                     'pfis': (('recette_bi', 'montant_re'),)}),)
+            ),
+            'dc' : (
+                # Dépenses
+                (('<span style="font-size:0.8em;">&sum; Dép. Charges / Immos</span>',
+                    {'structure_montants': (('montants', 'depense_montant_dc'),),
+                     'pfis': (('depense_bi', 'montant_dc'),)}),),
+                # Recettes
+                (('<span style="font-size:0.7em;">&sum; Rec. Produits / Ressources</span>',
+                    {'structure_montants': (('montants', 'recette_montant_dc'),),
+                     'pfis': (('recette_bi', 'montant_dc'),)}),),
+            ),
         }
     elif period_code.startswith('BR'):
-        period_infos = {
-            'prefetches': {
-                'structure_montants': (
-                    {'queryset': StructureMontant.objects.filter(
-                        periodebudget__period__code='BI', **structuremontant_filters),
-                     'to_attr': 'bi'},
-                    {'queryset': StructureMontant.objects.filter(
-                        periodebudget__period__code__startswith='VIR', **structuremontant_filters),
-                     'to_attr': 'vir'},
-                    {'queryset': StructureMontant.objects.filter(
-                        periodebudget__period__code__startswith='BR', **structuremontant_filters),
-                     'to_attr': 'br'},
-                    {'queryset': StructureMontant.objects.filter(**structuremontant_filters),
-                     'to_attr': 'bm'},
-                    {'queryset': StructureMontant.objects.filter(
-                            periodebudget__period__code__startswith='BR', **structuremontant_filters
+        prefetches = {
+            'structure_montants': (
+                {'queryset': StructureMontant.objects.filter(
+                    periodebudget__period__code='BI', **structuremontant_filters),
+                 'to_attr': 'bi'},
+                {'queryset': StructureMontant.objects.filter(
+                    periodebudget__period__code__startswith='VIR', **structuremontant_filters),
+                 'to_attr': 'vir'},
+                {'queryset': StructureMontant.objects.filter(
+                    periodebudget__period__code__startswith='BR', **structuremontant_filters),
+                 'to_attr': 'br'},
+                {'queryset': StructureMontant.objects.filter(**structuremontant_filters),
+                 'to_attr': 'bm'},
+                {'queryset': StructureMontant.objects.filter(
+                        periodebudget__period__code__startswith='BR', **structuremontant_filters
+                    ).exclude(periodebudget__period__code=period_code),
+                 'to_attr': 'br_old'},
+            ),
+            'pfis': {
+                'depense': (
+                    {'queryset': Depense.objects.filter(
+                        periodebudget__period__code='BI', **pfi_filters),
+                     'to_attr': 'depense_bi'},
+                    {'queryset': Depense.objects.filter(
+                        periodebudget__period__code__startswith='VIR', **pfi_filters),
+                     'to_attr': 'depense_vir'},
+                    {'queryset': Depense.objects.filter(
+                        periodebudget__period__code__startswith='BR', **pfi_filters),
+                     'to_attr': 'depense_br'
+                    },
+                    {'queryset': Depense.objects.filter(**pfi_filters),
+                     'to_attr': 'depense_bm'},
+                    {'queryset': Depense.objects.filter(
+                            periodebudget__period__code__startswith='BR', **pfi_filters
                         ).exclude(periodebudget__period__code=period_code),
-                     'to_attr': 'br_old'},
+                     'to_attr': 'depense_br_old'}
                 ),
-                'pfis': {
-                    'depense': (
-                        {'queryset': Depense.objects.filter(
-                            periodebudget__period__code='BI', **pfi_filters),
-                         'to_attr': 'depense_bi'},
-                        {'queryset': Depense.objects.filter(
-                            periodebudget__period__code__startswith='VIR', **pfi_filters),
-                         'to_attr': 'depense_vir'},
-                        {'queryset': Depense.objects.filter(
-                            periodebudget__period__code__startswith='BR', **pfi_filters),
-                         'to_attr': 'depense_br'
-                        },
-                        {'queryset': Depense.objects.filter(**pfi_filters),
-                         'to_attr': 'depense_bm'},
-                        {'queryset': Depense.objects.filter(
-                                periodebudget__period__code__startswith='BR', **pfi_filters
-                            ).exclude(periodebudget__period__code=period_code),
-                         'to_attr': 'depense_br_old'}
-                    ),
-                    'recette': (
-                        {'queryset': Recette.objects.filter(
-                            periodebudget__period__code='BI', **pfi_filters),
-                         'to_attr': 'recette_bi'},
-                        {'queryset': Recette.objects.filter(
-                            periodebudget__period__code__startswith='VIR', **pfi_filters),
-                         'to_attr': 'recette_vir'},
-                        {'queryset': Recette.objects.filter(
-                            periodebudget__period__code__startswith='BR', **pfi_filters),
-                         'to_attr': 'recette_br'},
-                        {'queryset': Recette.objects.filter(**pfi_filters),
-                         'to_attr': 'recette_bm'},
-                        {'queryset': Recette.objects.filter(
-                                periodebudget__period__code__startswith='BR', **pfi_filters
-                            ).exclude(periodebudget__period__code=period_code),
-                         'to_attr': 'recette_br_old'}
-                    ),
-                }
-            },
-            'cols': {
-                'gbcp': (
-                    # Dépenses
-                    (('&sum; Dép. AE BA', 
-                        {'structure_montants':
-                            (('bi', 'depense_montant_ae'), ('vir', 'depense_montant_ae'), ('br_old', 'depense_montant_ae')),
-                         'pfis':
-                            (('depense_bi', 'montant_ae'), ('depense_vir', 'montant_ae'), ('depense_br_old', 'montant_ae'))
-                        }),
-                     ('&sum; Dép. AE VIR',
-                        {'structure_montants': (('vir', 'depense_montant_ae'),),
-                         'pfis': (('depense_vir', 'montant_ae'),)}),
-                     ('&sum; Dép. AE BM',
-                        {'structure_montants': (('bm', 'depense_montant_ae'),),
-                         'pfis': (('depense_bm', 'montant_ae'),)}),
-                     ('&sum; Dép. CP BA',
-                        {'structure_montants' :
-                            (('bi', 'depense_montant_cp'), ('vir', 'depense_montant_cp'), ('br_old', 'depense_montant_cp')),
-                         'pfis': 
-                            (('depense_bi', 'montant_cp'), ('depense_vir', 'montant_cp'), ('depense_br_old', 'montant_cp'))}),
-                     ('&sum; Dép. CP VIR',
-                        {'structure_montants': (('vir', 'depense_montant_cp'),),
-                         'pfis': (('depense_vir', 'montant_cp'),)}),
-                     ('&sum; Dép. CP BM',
-                        {'structure_montants': (('bm', 'depense_montant_cp'),),
-                         'pfis': (('depense_bm', 'montant_cp'),)})),
-                    # Recettes
-                    (('&sum; Rec. AR BA',
-                        {'structure_montants':
-                            (('bi', 'recette_montant_ar'), ('vir', 'recette_montant_ar'), ('br_old', 'recette_montant_ar')),
-                         'pfis':
-                            (('recette_bi', 'montant_ar'), ('recette_vir', 'montant_ar'), ('recette_br_old', 'montant_ar'))}),
-                     ('&sum; Rec. AR VIR',
-                        {'structure_montants': (('vir', 'recette_montant_ar'),),
-                         'pfis': (('recette_vir', 'montant_ar'),)}),
-                     ('&sum; Rec. AR BM',
-                        {'structure_montants': (('bm', 'recette_montant_ar'),),
-                         'pfis': (('recette_bm', 'montant_ar'),)}),
-                     ('&sum; Rec. RE BA',
-                        {'structure_montants': 
-                            (('bi', 'recette_montant_re'), ('vir', 'recette_montant_re'), ('br_old', 'recette_montant_re')),
-                         'pfis': 
-                            (('recette_bi', 'montant_re'), ('recette_vir', 'montant_re'), ('recette_br_old', 'montant_re'))}),
-                     ('&sum; Rec. RE VIR', 
-                        {'structure_montants': (('vir', 'recette_montant_re'),),
-                         'pfis': (('recette_vir', 'montant_re'),)}),
-                     ('&sum; Rec. RE BM',
-                        {'structure_montants': (('bm', 'recette_montant_re'),),
-                         'pfis': (('recette_bm', 'montant_re'),)})),
+                'recette': (
+                    {'queryset': Recette.objects.filter(
+                        periodebudget__period__code='BI', **pfi_filters),
+                     'to_attr': 'recette_bi'},
+                    {'queryset': Recette.objects.filter(
+                        periodebudget__period__code__startswith='VIR', **pfi_filters),
+                     'to_attr': 'recette_vir'},
+                    {'queryset': Recette.objects.filter(
+                        periodebudget__period__code__startswith='BR', **pfi_filters),
+                     'to_attr': 'recette_br'},
+                    {'queryset': Recette.objects.filter(**pfi_filters),
+                     'to_attr': 'recette_bm'},
+                    {'queryset': Recette.objects.filter(
+                            periodebudget__period__code__startswith='BR', **pfi_filters
+                        ).exclude(periodebudget__period__code=period_code),
+                     'to_attr': 'recette_br_old'}
                 ),
-                'dc' : (
-                    # Dépenses
-                    (('&sum; Dép. DC BA',
-                        {'structure_montants': 
-                            (('bi', 'depense_montant_dc'), ('vir', 'depense_montant_dc'), ('br_old', 'depense_montant_dc')),
-                         'pfis':
-                            (('depense_bi', 'montant_dc'), ('depense_vir', 'montant_dc'), ('depense_br_old', 'montant_dc'))}),
-                     ('&sum; Dép. DC VIR', 
-                        {'structure_montants': (('vir', 'depense_montant_dc'),),
-                         'pfis': (('depense_vir', 'montant_dc'),)}),
-                     ('&sum; Dép. DC BM',
-                        {'structure_montants': (('bm', 'depense_montant_dc'),),
-                         'pfis': (('depense_bm', 'montant_dc'),)}),),
-                    # Recettes
-                    (('&sum; Rec. DC BA',
-                        {'structure_montants':
-                            (('bi', 'recette_montant_dc'), ('vir', 'recette_montant_dc'), ('br_old', 'recette_montant_dc')),
-                         'pfis':
-                            (('recette_bi', 'montant_dc'), ('recette_vir', 'montant_dc'), ('recette_br_old', 'montant_dc'))}),
-                     ('&sum; Rec. DC VIR',
-                        {'structure_montants': (('vir', 'recette_montant_dc'),),
-                         'pfis': (('recette_vir', 'montant_dc'),)}),
-                     ('&sum; Rec. DC BM',
-                        {'structure_montants': (('bm', 'recette_montant_dc'),),
-                         'pfis': (('recette_bm', 'montant_dc'),)}),),
-                ),
-            },
+            }
+        }
+        cols = {
+            'gbcp': (
+                # Dépenses
+                (('&sum; Dép. AE BA', 
+                    {'structure_montants':
+                        (('bi', 'depense_montant_ae'), ('vir', 'depense_montant_ae'), ('br_old', 'depense_montant_ae')),
+                     'pfis':
+                        (('depense_bi', 'montant_ae'), ('depense_vir', 'montant_ae'), ('depense_br_old', 'montant_ae'))
+                    }),
+                 ('&sum; Dép. AE VIR',
+                    {'structure_montants': (('vir', 'depense_montant_ae'),),
+                     'pfis': (('depense_vir', 'montant_ae'),)}),
+                 ('&sum; Dép. AE BM',
+                    {'structure_montants': (('bm', 'depense_montant_ae'),),
+                     'pfis': (('depense_bm', 'montant_ae'),)}),
+                 ('&sum; Dép. CP BA',
+                    {'structure_montants' :
+                        (('bi', 'depense_montant_cp'), ('vir', 'depense_montant_cp'), ('br_old', 'depense_montant_cp')),
+                     'pfis': 
+                        (('depense_bi', 'montant_cp'), ('depense_vir', 'montant_cp'), ('depense_br_old', 'montant_cp'))}),
+                 ('&sum; Dép. CP VIR',
+                    {'structure_montants': (('vir', 'depense_montant_cp'),),
+                     'pfis': (('depense_vir', 'montant_cp'),)}),
+                 ('&sum; Dép. CP BM',
+                    {'structure_montants': (('bm', 'depense_montant_cp'),),
+                     'pfis': (('depense_bm', 'montant_cp'),)})),
+                # Recettes
+                (('&sum; Rec. AR BA',
+                    {'structure_montants':
+                        (('bi', 'recette_montant_ar'), ('vir', 'recette_montant_ar'), ('br_old', 'recette_montant_ar')),
+                     'pfis':
+                        (('recette_bi', 'montant_ar'), ('recette_vir', 'montant_ar'), ('recette_br_old', 'montant_ar'))}),
+                 ('&sum; Rec. AR VIR',
+                    {'structure_montants': (('vir', 'recette_montant_ar'),),
+                     'pfis': (('recette_vir', 'montant_ar'),)}),
+                 ('&sum; Rec. AR BM',
+                    {'structure_montants': (('bm', 'recette_montant_ar'),),
+                     'pfis': (('recette_bm', 'montant_ar'),)}),
+                 # ('&sum; Rec. RE BA',
+                 #    {'structure_montants': 
+                 #        (('bi', 'recette_montant_re'), ('vir', 'recette_montant_re'), ('br_old', 'recette_montant_re')),
+                 #     'pfis': 
+                 #        (('recette_bi', 'montant_re'), ('recette_vir', 'montant_re'), ('recette_br_old', 'montant_re'))}),
+                 # ('&sum; Rec. RE VIR', 
+                 #    {'structure_montants': (('vir', 'recette_montant_re'),),
+                 #     'pfis': (('recette_vir', 'montant_re'),)}),
+                 # ('&sum; Rec. RE BM',
+                 #    {'structure_montants': (('bm', 'recette_montant_re'),),
+                 #     'pfis': (('recette_bm', 'montant_re'),)})
+                 ),
+            ),
+            'dc' : (
+                # Dépenses
+                (('&sum; Dép. DC BA',
+                    {'structure_montants': 
+                        (('bi', 'depense_montant_dc'), ('vir', 'depense_montant_dc'), ('br_old', 'depense_montant_dc')),
+                     'pfis':
+                        (('depense_bi', 'montant_dc'), ('depense_vir', 'montant_dc'), ('depense_br_old', 'montant_dc'))}),
+                 ('&sum; Dép. DC VIR', 
+                    {'structure_montants': (('vir', 'depense_montant_dc'),),
+                     'pfis': (('depense_vir', 'montant_dc'),)}),
+                 ('&sum; Dép. DC BM',
+                    {'structure_montants': (('bm', 'depense_montant_dc'),),
+                     'pfis': (('depense_bm', 'montant_dc'),)}),),
+                # Recettes
+                (('&sum; Rec. DC BA',
+                    {'structure_montants':
+                        (('bi', 'recette_montant_dc'), ('vir', 'recette_montant_dc'), ('br_old', 'recette_montant_dc')),
+                     'pfis':
+                        (('recette_bi', 'montant_dc'), ('recette_vir', 'montant_dc'), ('recette_br_old', 'montant_dc'))}),
+                 ('&sum; Rec. DC VIR',
+                    {'structure_montants': (('vir', 'recette_montant_dc'),),
+                     'pfis': (('recette_vir', 'montant_dc'),)}),
+                 ('&sum; Rec. DC BM',
+                    {'structure_montants': (('bm', 'recette_montant_dc'),),
+                     'pfis': (('recette_bm', 'montant_dc'),)}),),
+            ),
         }
 
-    return period_infos
+    return prefetches, cols
