@@ -2,7 +2,7 @@
 
 from collections import OrderedDict
 from decimal import Decimal
-from itertools import groupby
+from itertools import chain, groupby
 import json
 
 from django.conf import settings
@@ -19,9 +19,10 @@ from .decorators import (is_ajax_get, is_authorized_structure,
                          is_authorized_editing)
 from .forms import DepenseForm, PlanFinancementPluriForm, RecetteForm
 from .models import Depense, PeriodeBudget, Recette, StructureMontant
+from .templatetags.budgetweb_tags import sum_montants
 from .utils import (
     get_authorized_structures_ids, get_current_year, get_detail_pfi_by_period,
-    get_pfi_total_types, get_pfi_years)
+    get_pfi_total_types, get_pfi_years, tree_infos)
 
 
 # @login_required
@@ -122,58 +123,50 @@ def api_set_dcfield_value_by_id(request):
 
 @login_required
 def show_tree(request, type_affichage, structid=0):
+    active_period = PeriodeBudget.active.select_related('period').first()
+    period_code = active_period.period.code
+    prefetches, columns = tree_infos(active_period, period_code)
+    active_fields = columns[type_affichage]
+
     # Authorized structures list
     is_tree_node = request.is_ajax()
     queryset = {'parent__id': structid} if structid else {'parent': None}
     authorized_structures, hierarchy_structures =\
         get_authorized_structures_ids(request.user)
-    structures = Structure.active.prefetch_related(Prefetch(
-        'structuremontant_set',
-        queryset=StructureMontant.active_period.filter(
-                                        annee=get_current_year()).all(),
-        to_attr='montants')
+
+    structures = Structure.active.prefetch_related(
+        *(Prefetch('structuremontant_set', **prefetch)
+            for prefetch in prefetches['structure_montants'])
     ).filter(pk__in=hierarchy_structures, **queryset).order_by('code')
 
     # if the PFI's structure is in the authorized structures
     if int(structid) in authorized_structures:
-        pfis = PlanFinancement.active.filter(structure__id=structid)
-        pfi_depenses = {pfi.pk: pfi for pfi in pfis\
-                .filter(depense__annee=get_current_year()).annotate(
-                    sum_depense_ae=Sum('depense__montant_ae'),
-                    sum_depense_cp=Sum('depense__montant_cp'),
-                    sum_depense_dc=Sum('depense__montant_dc'))
-
-        }
-        pfi_recettes = {pfi.pk: pfi for pfi in pfis\
-                .filter(recette__annee=get_current_year()).annotate(
-                    sum_recette_ar=Sum('recette__montant_ar'),
-                    sum_recette_re=Sum('recette__montant_re'),
-                    sum_recette_dc=Sum('recette__montant_dc'))
-        }
-        pfis = pfis.all()
+        pfis = PlanFinancement.active.prefetch_related(*chain(
+            (Prefetch('depense_set', **prefetch)
+                for prefetch in prefetches['pfis']['depense']),
+            (Prefetch('recette_set', **prefetch)
+                for prefetch in prefetches['pfis']['recette']),)
+        ).filter(structure__id=structid)
     else:
-        pfis = pfi_depenses = pfi_recettes = []
+        pfis = []
 
     context = {
         'structures': structures,
         'pfis': pfis,
-        'pfi_depenses': pfi_depenses, 'pfi_recettes': pfi_recettes,
         'typeAffichage': type_affichage,
-        'currentYear': get_current_year()
+        'currentYear': get_current_year(),
+        'cols': active_fields,
     }
 
     # Total sums
     if not is_tree_node:
-        fields = (
-            'depense_montant_ae', 'depense_montant_cp', 'depense_montant_dc',
-            'recette_montant_ar', 'recette_montant_re', 'recette_montant_dc')
-        total = {}
+        fields = active_fields
+        total = [[Decimal(0)] * len(field) for field in fields]
+
         for structure in structures:
-            montants = structure.montants
-            if montants:
-                for name in fields:
-                    total[name] = total.get(name, Decimal(0))\
-                        + getattr(montants[0], name)
+            for index0, field in enumerate(fields):
+                for index1, montants in enumerate(field):
+                    total[index0][index1] += sum_montants(structure, montants[1])
         context['total'] = total
 
     template = 'show_sub_tree.html' if is_tree_node else 'showtree.html'
