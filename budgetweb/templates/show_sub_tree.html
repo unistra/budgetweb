@@ -16,7 +16,7 @@
       {% for col in cols.0 %}
         <div class="td">{{ node|sum_pfis:col.1|floatformat:2|intspace }}  &euro;</div>
       {% endfor %}
-        <div class="td">&nbsp;</div>
+        <div class="td empty">&nbsp;</div>
       {% for col in cols.1 %}
         <div class="td">{{ node|sum_pfis:col.1|floatformat:2|intspace }}  &euro;</div>
       {% endfor %}
@@ -36,7 +36,7 @@
       {% for col in cols.0 %}
         <div class="td">{{ structure|sum_montants:col.1|floatformat:2|intspace }} &euro;</div>
       {% endfor %}
-	      <div class="td">&nbsp;</div>
+	      <div class="td empty">&nbsp;</div>
       {% for col in cols.1 %}
         <div class="td">{{ structure|sum_montants:col.1|floatformat:2|intspace }} &euro;</div>
       {% endfor %}

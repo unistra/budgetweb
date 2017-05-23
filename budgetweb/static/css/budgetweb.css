@@ -190,9 +190,16 @@ input.decimal{
 }
 
 .td.struct {
-  min-width: 300px;
-  max-width: 300px;
+  /*min-width: 300px;
+  max-width: 300px;*/
+  min-width: 20%;
+  max-width: 20%;
   justify-content: left;
+  white-space: normal;
+}
+
+.td.empty {
+  max-width: 100px;
 }
 
 .th {
