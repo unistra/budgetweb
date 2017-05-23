@@ -7,24 +7,27 @@
 {% endblock %}
 
 {% block content %}
-<div class="col-md-12 well">
-	<div class="title showTree" style="padding-bottom:5px;">
+<div class="col-md-12 well flextable">
+	<div class="tr th">
+    <div class="td struct">&nbsp;</div>
     {% for col in cols.0 %}
-	<div>{{ col.0 | safe }}</div>
+	<div class="td">{{ col.0 | safe }}</div>
     {% endfor %}
-	<div>&nbsp;</div>
+	<div class="td">&nbsp;</div>
     {% for col in cols.1 %}
-	<div>{{ col.0 | safe }}</div>
+	<div class="td">{{ col.0 | safe }}</div>
     {% endfor %}
-	</div><br />
-	<div class="title showTree">
-	    <span style="margin-left:20px;width:160px;" class="bold">Total Unistra</span>
+	</div>
+	<div class="tr">
+        <div class="td struct">
+	       <span style="margin-left:20px;width:160px;" class="bold">Total Unistra</span>
+        </div>
         {% for col in total.0 %}
-        <div class="bold">{% firstof col|floatformat:2|intspace "0,00" %} &euro;</div>
+        <div class="bold td">{% firstof col|floatformat:2|intspace "0,00" %} &euro;</div>
         {% endfor %}
-        <div>&nbsp;</div>
+        <div class="td">&nbsp;</div>
         {% for col in total.1 %}
-        <div class="bold">{% firstof col|floatformat:2|intspace "0,00" %} &euro;</div>
+        <div class="bold td">{% firstof col|floatformat:2|intspace "0,00" %} &euro;</div>
         {% endfor %}
     </div>
 	<div class="tree">

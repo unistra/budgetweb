@@ -1,22 +1,24 @@
 {% load budgetweb_tags %}
 {% for node in pfis %}
     <li>
-      <div class="showTree">
-        <span style="width:160px;" class="pfi">
-          <a href="{% url 'detailspfi' pfiid=node.id %}">{{ node.code }}</a>
-          {% if node.is_pluriannuel %}
-          <a class="pluri-color" href="{% url 'pluriannuel' pfiid=node.id %}">Dép. &amp; Rec.</a>&nbsp;
-          {% else %}
-            <a class="depense-color" href="{% url 'depense' pfiid=node.id annee=currentYear %}">Dép.</a>&nbsp;
-            <a class="recette-color" href="{% url 'recette' pfiid=node.id annee=currentYear %}">Rec.</a>
-          {% endif %}
-        </span>
+      <div class="tr">
+        <div class="td struct">
+          <span style="width:160px;" class="pfi">
+            <a href="{% url 'detailspfi' pfiid=node.id %}">{{ node.code }}</a>
+            {% if node.is_pluriannuel %}
+            <a class="pluri-color" href="{% url 'pluriannuel' pfiid=node.id %}">Dép. &amp; Rec.</a>&nbsp;
+            {% else %}
+              <a class="depense-color" href="{% url 'depense' pfiid=node.id annee=currentYear %}">Dép.</a>&nbsp;
+              <a class="recette-color" href="{% url 'recette' pfiid=node.id annee=currentYear %}">Rec.</a>
+            {% endif %}
+          </span>
+        </div>
       {% for col in cols.0 %}
-        <div>{{ node|sum_pfis:col.1|floatformat:2|intspace }}  &euro;</div>
+        <div class="td">{{ node|sum_pfis:col.1|floatformat:2|intspace }}  &euro;</div>
       {% endfor %}
-        <div>&nbsp;</div>
+        <div class="td">&nbsp;</div>
       {% for col in cols.1 %}
-        <div>{{ node|sum_pfis:col.1|floatformat:2|intspace }}  &euro;</div>
+        <div class="td">{{ node|sum_pfis:col.1|floatformat:2|intspace }}  &euro;</div>
       {% endfor %}
         <ul id="{{ node.code }}"></ul>
       </div>
@@ -25,17 +27,18 @@
 {% for structure in structures %}
     {% with montants=structure.montants.0 %}
     <li class="parent_li">
-      <div class="showTree">
-        <span style="width:auto;" class="cf" structid="{{ structure.id }}" title="Ouvrir cette branche">
-          <i class="glyphicon glyphicon-plus"></i>{% if structure.depth < 3  %}{{ structure.label }}{% else %}{{ structure.code }}{% endif %}
-        </span> - <a href="{% url 'detailscf' structid=structure.id %}">Détails</a>
-
+      <div class="tr">
+        <div class="td struct" style="padding-left: {{ structure.depth|add:-1|multiply:20|add:10 }}px;">
+          <span style="width:auto;" class="cf" structid="{{ structure.id }}" title="Ouvrir cette branche">
+            <i class="glyphicon glyphicon-plus"></i>{% if structure.depth < 3  %}{{ structure.label }}{% else %}{{ structure.code }}{% endif %}
+          </span> - <a href="{% url 'detailscf' structid=structure.id %}">Détails</a>
+        </div>
       {% for col in cols.0 %}
-        <div>{{ structure|sum_montants:col.1|floatformat:2|intspace }} &euro;</div>
+        <div class="td">{{ structure|sum_montants:col.1|floatformat:2|intspace }} &euro;</div>
       {% endfor %}
-	      <div>&nbsp;</div>
+	      <div class="td">&nbsp;</div>
       {% for col in cols.1 %}
-        <div>{{ structure|sum_montants:col.1|floatformat:2|intspace }} &euro;</div>
+        <div class="td">{{ structure|sum_montants:col.1|floatformat:2|intspace }} &euro;</div>
       {% endfor %}
       </div>
       <ul id="cf{{ structure.id }}"></ul>

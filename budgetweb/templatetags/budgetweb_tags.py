@@ -96,3 +96,8 @@ def sum_pfis(pfi, fields):
                 value = Decimal(0)
             result += value
     return result
+
+
+@register.filter(is_safe=True)
+def multiply(a, b):
+    return int(a) * int(b)
