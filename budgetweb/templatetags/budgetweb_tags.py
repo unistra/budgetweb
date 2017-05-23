@@ -98,6 +98,6 @@ def sum_pfis(pfi, fields):
     return result
 
 
-@register.filter(is_safe=True)
-def multiply(a, b):
-    return int(a) * int(b)
+@register.simple_tag
+def tree_padding_left(structure):
+    return (structure.depth - 1) * 20

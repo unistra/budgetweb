@@ -62,7 +62,6 @@
 
           if ($nature.val() != "") {
             $.getJSON("/api/naturecomptabledepense/rules/" + $nature.val() + "/", function(data) {
-                console.log(data);
                 // Première règle de gestion.
                 if ( is_dfi_member_or_admin) {
                   if (data.is_decalage_tresorerie) {  // Si "décalage de trésorerie" = oui alors AE <> CP = DC
@@ -130,7 +129,6 @@
 
           if ($nature.val() != "") {
             $.getJSON("/api/naturecomptablerecette/rules/" + $nature.val() + "/", function(data) {
-                console.log(data);
                 // Première règle de gestion.
                 if ( is_dfi_member_or_admin) {
                   if (data.is_ar_and_re) {   // * Si "AR et RE" = oui  alors AR = RE

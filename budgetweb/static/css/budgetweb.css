@@ -203,7 +203,7 @@ input.decimal{
 
 .th > .td {
   white-space: normal;
-  justify-content: center;
+  justify-content: right;
 }
 
 .tr {
@@ -217,12 +217,11 @@ input.decimal{
   flex-flow: row nowrap;
   flex-grow: 1;
   flex-basis: 0;
-  padding: 0.5em;
+  padding: 0.2em;
   word-break: break-word;
   overflow: hidden;
   text-overflow: ellipsis;
   min-width: 0px;
   white-space: nowrap;
-  border-bottom: 1px solid #d0d0d0;
-  justify-content: center;
+  justify-content: right;
 }

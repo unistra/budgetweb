@@ -2,7 +2,7 @@
 {% for node in pfis %}
     <li>
       <div class="tr">
-        <div class="td struct">
+        <div class="td struct" style="padding-left: {% tree_padding_left node.structure %}px;">
           <span style="width:160px;" class="pfi">
             <a href="{% url 'detailspfi' pfiid=node.id %}">{{ node.code }}</a>
             {% if node.is_pluriannuel %}
@@ -28,10 +28,10 @@
     {% with montants=structure.montants.0 %}
     <li class="parent_li">
       <div class="tr">
-        <div class="td struct" style="padding-left: {{ structure.depth|add:-1|multiply:20|add:10 }}px;">
+        <div class="td struct" style="padding-left: {% tree_padding_left structure %}px;">
           <span style="width:auto;" class="cf" structid="{{ structure.id }}" title="Ouvrir cette branche">
             <i class="glyphicon glyphicon-plus"></i>{% if structure.depth < 3  %}{{ structure.label }}{% else %}{{ structure.code }}{% endif %}
-          </span> - <a href="{% url 'detailscf' structid=structure.id %}">Détails</a>
+          </span>&nbsp;-&nbsp;<a href="{% url 'detailscf' structid=structure.id %}">Détails</a>
         </div>
       {% for col in cols.0 %}
         <div class="td">{{ structure|sum_montants:col.1|floatformat:2|intspace }} &euro;</div>
