@@ -26,7 +26,7 @@ class Command(BaseCommand):
                                                     code__iexact=struct_code)
                         nb_exist = PlanFinancement.objects.filter(
                                                     code__iexact=row[1])
-                        if nb_exist and row['1'] != 'NA':
+                        if nb_exist and row[1] != 'NA':
                             print("Le PFI %s existe deja" % row[1])
                         else:
                             created = PlanFinancement.objects.update_or_create(
