@@ -101,3 +101,36 @@ def sum_pfis(pfi, fields):
 @register.simple_tag
 def tree_padding_left(structure):
     return (structure.depth - 1) * 20
+
+
+@register.filter
+def previous(some_list, current_index):
+    """
+    Returns the previous element of the list using the current index if it
+    exists.
+    Otherwise returns an empty string.
+    """
+    return some_list[int(current_index) - 1]  # access the previous element
+
+
+@register.filter('sum_by_code')
+def sum_by_code(dict, args):
+    code, type = args.split(', ')
+    result = []
+    if type == "depense":
+        montant_ae = montant_cp = montant_dc = Decimal(0.00)
+        for ligne in dict:
+            if ligne.naturecomptabledepense.code_compte_budgetaire == code:
+                montant_ae += ligne.montant_ae
+                montant_cp += ligne.montant_cp
+                montant_dc += ligne.montant_dc
+        result = [montant_ae, montant_cp, montant_dc]
+    if type == "recette":
+        montant_ar = montant_re = montant_dc = Decimal(0.00)
+        for ligne in dict:
+            if ligne.naturecomptablerecette.code_compte_budgetaire == code:
+                montant_ar += ligne.montant_ar
+                montant_re += ligne.montant_re
+                montant_dc += ligne.montant_dc
+        result = [montant_ar, montant_re, montant_dc]
+    return result

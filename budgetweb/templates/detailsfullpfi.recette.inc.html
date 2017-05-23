@@ -28,6 +28,22 @@
   </thead>
   <tbody>
     {% for recette in recettes %}
+    {% with previous_element=recettes|previous:forloop.counter0 %}
+    {% ifchanged recette.naturecomptablerecette.code_compte_budgetaire %}
+      {% if not forloop.first %}
+      <tr class="{% cycle 'row1' 'row2' %}">
+        <td colspan="8" style="text-align:right;padding-right:20px;font-weight:bold;">Sous total par compte budgétaire</td>
+        {% with code_compte=previous_element.naturecomptablerecette.code_compte_budgetaire|add:", recette" %}
+          {% with list_value=recettes|sum_by_code:code_compte %}
+            {% for value in list_value %}
+              <td class="montant bold" nowrap>{{ value|intspace}} &euro;</td>
+            {% endfor %}
+          {% endwith %}
+        {% endwith%}
+        <td colspan="2"></td>
+      </tr>
+      {% endif %}
+    {% endifchanged %}
       <tr class="{% cycle 'row1' 'row2' %}">
         <td>{{ recette.annee }}</td>
         <td>{{ recette.periodebudget.period.code }}</td>
@@ -72,7 +88,21 @@
           {% endif %}
         </td>
       </tr>
-      {% empty %}
+      {% if forloop.last %}
+        <tr class="{% cycle 'row1' 'row2' %}">
+          <td colspan="8" style="text-align:right;padding-right:20px;font-weight:bold;">Sous total par compte budgétaire</td>
+          {% with code_compte=previous_element.naturecomptablerecette.code_compte_budgetaire|add:", recette" %}
+            {% with list_value=recettes|sum_by_code:code_compte %}
+              {% for value in list_value %}
+                <td class="montant bold" nowrap>{{ value|intspace}} &euro;</td>
+              {% endfor %}
+            {% endwith %}
+          {% endwith%}
+          <td colspan="2"></td>
+      </tr>
+      {% endif %}
+    {% endwith %}
+    {% empty %}
         <tr><td colspan="13">Aucune recette trouvée pour ce PFI</td></tr>
     {% endfor %}
       <tr>
