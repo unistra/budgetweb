@@ -29,6 +29,22 @@
   </thead>
   <tbody>
   {% for depense in depenses %}
+    {% with previous_element=depenses|previous:forloop.counter0 %}
+    {% ifchanged depense.naturecomptabledepense.code_compte_budgetaire %}
+      {% if not forloop.first %}
+      <tr class="{% cycle 'row1' 'row2' %}">
+        <td colspan="8" style="text-align:right;padding-right:20px;font-weight:bold;">Sous total par compte budgétaire</td>
+        {% with code_compte=previous_element.naturecomptabledepense.code_compte_budgetaire|add:", depense" %}
+          {% with list_value=depenses|sum_by_code:code_compte %}
+            {% for value in list_value %}
+              <td class="montant bold" nowrap>{{ value|intspace}} &euro;</td>
+            {% endfor %}
+          {% endwith %}
+        {% endwith%}
+        <td colspan="2"></td>
+      </tr>
+      {% endif %}
+    {% endifchanged %}
     <tr class="{% cycle 'row1' 'row2' %}">
       <td>{{ depense.annee }}</td>
       <td>{{ depense.periodebudget.period.code }}</td>
@@ -72,6 +88,20 @@
         {% endif %}
       </td>
     </tr>
+    {% if forloop.last %}
+      <tr class="{% cycle 'row1' 'row2' %}">
+        <td colspan="8" style="text-align:right;padding-right:20px;font-weight:bold;">Sous total par compte budgétaire</td>
+        {% with code_compte=previous_element.naturecomptabledepense.code_compte_budgetaire|add:", depense" %}
+          {% with list_value=depenses|sum_by_code:code_compte %}
+            {% for value in list_value %}
+              <td class="montant bold" nowrap>{{ value|intspace}} &euro;</td>
+            {% endfor %}
+          {% endwith %}
+        {% endwith%}
+        <td colspan="2"></td>
+    </tr>
+    {% endif %}
+  {% endwith %}
 {% empty %}
     <tr><td colspan="13">Aucune dépense trouvée pour ce PFI</td></tr>
 {% endfor %}
