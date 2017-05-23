@@ -96,3 +96,8 @@ def sum_pfis(pfi, fields):
                 value = Decimal(0)
             result += value
     return result
+
+
+@register.simple_tag
+def tree_padding_left(structure):
+    return (structure.depth - 1) * 20

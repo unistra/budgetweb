@@ -146,7 +146,7 @@ def show_tree(request, type_affichage, structid=0):
                 for prefetch in prefetches['pfis']['depense']),
             (Prefetch('recette_set', **prefetch)
                 for prefetch in prefetches['pfis']['recette']),)
-        ).filter(structure__id=structid)
+        ).select_related('structure').filter(structure__id=structid)
     else:
         pfis = []
 

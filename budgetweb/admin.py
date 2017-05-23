@@ -9,10 +9,21 @@ from functools import reduce
 from django import forms
 from django.contrib import admin
 from django.contrib.admin.widgets import FilteredSelectMultiple
+from django.utils.translation import ugettext_lazy as _
 
 from budgetweb.apps.structure.models import Structure
 from .models import (Depense, PeriodeBudget, Recette, StructureAuthorizations,
                      StructureMontant, Virement)
+
+
+def deactivate_periods(modeladmin, request, queryset):
+    queryset.update(is_active=False)
+deactivate_periods.short_description = _("Mark selected periods as deactivated")
+
+
+def activate_periods(modeladmin, request, queryset):
+    queryset.update(is_active=True)
+activate_periods.short_description = _("Mark selected periods as activated")
 
 
 class DepenseAdmin(admin.ModelAdmin):
@@ -32,6 +43,7 @@ class PeriodeBudgetAdmin(admin.ModelAdmin):
                     'date_debut_admin', 'date_fin_admin')
     search_fields = ['period__code', 'annee', 'is_active']
     ordering = ['annee', 'period__order']
+    actions = [deactivate_periods, activate_periods]
 
     def period_code(self, obj):
         return obj.period.code

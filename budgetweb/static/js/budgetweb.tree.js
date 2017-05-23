@@ -1,20 +1,15 @@
 jQuery(document).ready(function($) {
 
-    // Remove localStore on logout
-    $("#logout").on("click", function() {
-      localStorage.removeItem("open_structures");
-    });
-
     function unique(value, index, arr) {
         return arr.indexOf(value) === index;
     }
 
     function getOpenStructures() {
-        return JSON.parse(localStorage.getItem("open_structures") || "[]");
+        return JSON.parse(sessionStorage.getItem("open_structures") || "[]");
     }
 
     function setOpenStructures(open_structures) {
-        localStorage.setItem("open_structures", JSON.stringify(open_structures));
+        sessionStorage.setItem("open_structures", JSON.stringify(open_structures));
     }
 
     function removeOpenStructure(open_structures, code) {
@@ -27,19 +22,19 @@ jQuery(document).ready(function($) {
 
     function loadChildrenCF(cf, elt) {
         $.ajax({
-            url : window.location.href + cf + "/", // the endpoint,commonly same url
-            type : "GET", // http method
-            data : {}, // data sent with the post request
-            async: false,
+            url : window.location.href + cf + "/",
+            type : "GET",
+            data : {},
+            async: false, //FIXME: obsolète (https://xhr.spec.whatwg.org/#sync-warning)
             // handle a successful response
             success : function(json) {
             	var $ul_cf = $("#cf" + cf);
-                // Get the parent span for the structures loaded from localStorage
-                elt = (typeof elt !== 'undefined' ? elt : $ul_cf.siblings("div").children("span.cf"));
+                // Get the parent span for the structures loaded from sessionStorage
+                elt = (typeof elt !== 'undefined' ? elt : $ul_cf.siblings("div").find("span.cf"));
                 elt.attr('title', 'Fermer cette branche').find(' > i').addClass('glyphicon-minus').removeClass('glyphicon-plus');
                 $ul_cf.empty().append(json);
 
-                // Add the cf to localStorage
+                // Add the cf to sessionStorage
                 var openStructures = getOpenStructures();
                 openStructures.push(cf);
                 // Add an unique structure code
@@ -64,20 +59,20 @@ jQuery(document).ready(function($) {
 
     }
 
-    // Open the CF stored in localStorage
+    // Open the CF stored in sessionStorage
     loadSessionCF();
 
     $('.tree li:has(ul)').addClass('parent_li');
     $('span.cf').unbind('click');
     $('.tree li.parent_li').on('click', 'span.cf', function (e) {
         var $this = $(this);
-        var children = $this.parent('div').parent('li.parent_li').find('> ul li');
+        var children = $this.parent('div').closest('li.parent_li').find('> ul li');
         var struct_id = $this.attr('structid');
         if (children.is(":visible")) {
             children.hide('fast');
             $this.attr('title', 'Ouvrir cette branche').find(' > i').addClass('glyphicon-plus').removeClass('glyphicon-minus');
 
-            // Remove the closed CF and its children from localStorage
+            // Remove the closed CF and its children from sessionStorage
             var open_structures = getOpenStructures();
             removeOpenStructure(open_structures, struct_id);
             $.each(children.find("[structid]"), function(index) {
