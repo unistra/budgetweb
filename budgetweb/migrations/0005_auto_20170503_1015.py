@@ -7,19 +7,11 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('budgetweb', '0003_auto_20170427_1132'),
-        ('structure', '0002_migrate_data'),
+        ('budgetweb', '0004_migrate_structure'),
+        ('structure', '0001_initial'),
     ]
 
-    operations = [
-        migrations.RemoveField(
-            model_name='planfinancement',
-            name='structure',
-        ),
-        migrations.RemoveField(
-            model_name='structure',
-            name='parent',
-        ),
+    state_operations = [
         migrations.AlterField(
             model_name='depense',
             name='domainefonctionnel',
@@ -65,19 +57,8 @@ class Migration(migrations.Migration):
             name='structure',
             field=models.ForeignKey(to='structure.Structure'),
         ),
-        migrations.DeleteModel(
-            name='DomaineFonctionnel',
-        ),
-        migrations.DeleteModel(
-            name='NatureComptableDepense',
-        ),
-        migrations.DeleteModel(
-            name='NatureComptableRecette',
-        ),
-        migrations.DeleteModel(
-            name='PlanFinancement',
-        ),
-        migrations.DeleteModel(
-            name='Structure',
-        ),
+    ]
+
+    operations = [#state_operations
+        migrations.SeparateDatabaseAndState(state_operations=state_operations)
     ]

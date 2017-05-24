@@ -7,9 +7,10 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
+        ('budgetweb', '0004_migrate_structure')
     ]
 
-    operations = [
+    state_operations = [
         migrations.CreateModel(
             name='DomaineFonctionnel',
             fields=[
@@ -100,4 +101,8 @@ class Migration(migrations.Migration):
             name='structure',
             field=models.ForeignKey(to='structure.Structure', verbose_name='Structure'),
         ),
+    ]
+
+    operations = [
+        migrations.SeparateDatabaseAndState(state_operations=state_operations)
     ]

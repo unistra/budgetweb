@@ -160,10 +160,10 @@ class Comptabilite(models.Model):
     periodebudget = models.ForeignKey('PeriodeBudget',
                                       verbose_name='Période budgétaire')
     annee = models.PositiveIntegerField(verbose_name='Année')
-    virement = models.ForeignKey('Virement',
-                                 verbose_name='Renvoie vers le virement \
-                                 correspondant s\'il existe', null=True,
-                                 blank=True)
+    virement = models.ForeignKey(
+        'Virement',
+        verbose_name="Renvoie vers le virement correspondant s'il existe",
+        null=True, blank=True)
     creele = models.DateTimeField(auto_now_add=True, blank=True)
     creepar = models.CharField(max_length=100, blank=True, null=True)
     modifiele = models.DateTimeField(verbose_name='Date de modification',

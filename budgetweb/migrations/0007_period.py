@@ -18,7 +18,7 @@ def reverse_migrate_period(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('budgetweb', '0006_auto_20170501_1354'),
+        ('budgetweb', '0006_virement'),
     ]
 
     operations = [

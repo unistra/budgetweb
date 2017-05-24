@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('budgetweb', '0004_auto_20170503_1015'),
+        ('budgetweb', '0005_auto_20170503_1015'),
     ]
 
     operations = [
@@ -24,5 +24,19 @@ class Migration(migrations.Migration):
                 ('creation_date', models.DateTimeField(verbose_name='Date de création du virement')),
                 ('value_date', models.DateField(verbose_name='Date de valeur')),
             ],
+        ),
+        migrations.AddField(
+            model_name='depense',
+            name='virement',
+            field=models.ForeignKey(
+                verbose_name="Renvoie vers le virement correspondant s'il existe",
+                to='budgetweb.Virement', null=True, blank=True),
+        ),
+        migrations.AddField(
+            model_name='recette',
+            name='virement',
+            field=models.ForeignKey(
+                verbose_name="Renvoie vers le virement correspondant s'il existe",
+                to='budgetweb.Virement', null=True, blank=True),
         ),
     ]
