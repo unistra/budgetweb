@@ -120,7 +120,8 @@ class Command(NoArgsCommand):
             period = PeriodeBudget.activevirement.get(annee=get_current_year())
         except (PeriodeBudget.DoesNotExist,
                 PeriodeBudget.MultipleObjectsReturned) as e:
-            print("Something wrong with Periode %s (%s)", get_current_year(), e)
+            print("Something wrong with Periode %s (%s)" % (
+                get_current_year(), e))
             raise CreationVirementException()
 
         type_budget = item_data['BUDCAT']
@@ -143,8 +144,8 @@ class Command(NoArgsCommand):
                                 code_compte_budgetaire=code_compte_budgetaire)
             except (NatureComptableDepense.DoesNotExist,
                     NatureComptableDepense.MultipleObjectsReturned) as e:
-                print("Something wrong with NCD %s (%s)",
-                      code_compte_budgetaire, e)
+                print("Something wrong with NCD %s (%s)" % (
+                    code_compte_budgetaire, e))
                 raise CreationVirementException()
 
             try:
@@ -152,7 +153,8 @@ class Command(NoArgsCommand):
                                                 code=item_data['FUNC_AREA'])
             except (DomaineFonctionnel.DoesNotExist,
                     DomaineFonctionnel.MultipleObjectsReturned) as e:
-                print("Something wrong with DF %s (%s)", item_data['FUNC_AREA'], e)
+                print("Something wrong with DF %s (%s)" % (
+                    item_data['FUNC_AREA'], e))
                 raise CreationVirementException()
 
             commentaire = "%s (%s)" % (
@@ -185,8 +187,8 @@ class Command(NoArgsCommand):
                                 code_compte_budgetaire=code_compte_budgetaire)
             except (NatureComptableRecette.DoesNotExist,
                     NatureComptableRecette.MultipleObjectsReturned) as e:
-                print("Something wrong with NCR %s (%s)",
-                      code_compte_budgetaire, e)
+                print("Something wrong with NCR %s (%s)" % (
+                      code_compte_budgetaire, e))
                 raise CreationVirementException()
 
             commentaire = "%s (%s)" % (
