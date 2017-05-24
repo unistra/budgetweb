@@ -117,7 +117,9 @@ class Command(NoArgsCommand):
             raise CreationVirementException()
 
         try:
-            period = PeriodeBudget.activevirement.get(annee=get_current_year())
+            period = PeriodeBudget.active.get(
+                annee=get_current_year(),
+                period__code__startswith="VIR")
         except (PeriodeBudget.DoesNotExist,
                 PeriodeBudget.MultipleObjectsReturned) as e:
             print("Something wrong with Periode %s (%s)" % (
