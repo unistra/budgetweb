@@ -199,6 +199,11 @@ input.decimal{
   white-space: normal;
 }
 
+.tree li.parent_li>div span {
+    cursor:pointer;
+}
+
+
 .td.empty {
   max-width: 100px;
 }
