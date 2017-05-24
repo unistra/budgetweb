@@ -194,7 +194,8 @@ input.decimal{
   max-width: 300px;*/
   min-width: 20%;
   max-width: 20%;
-  justify-content: left;
+  justify-content: flex-start;
+  -webkit-justify-content: flex-start;
   white-space: normal;
 }
 
@@ -210,7 +211,8 @@ input.decimal{
 
 .th > .td {
   white-space: normal;
-  justify-content: right;
+  justify-content: flex-end;
+  -webkit-justify-content: flex-end;
 }
 
 .tr {
@@ -230,5 +232,6 @@ input.decimal{
   text-overflow: ellipsis;
   min-width: 0px;
   white-space: nowrap;
-  justify-content: right;
+  justify-content: flex-end;
+  -webkit-justify-content: flex-end;
 }
