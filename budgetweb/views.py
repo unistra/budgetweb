@@ -371,6 +371,7 @@ def detailscf(request, structid):
     liste_structure = list(structparent.get_unordered_children())
     liste_structure.insert(0, structparent)
     structure_ids = [s.pk for s in liste_structure]
+    current_year = get_current_year()
 
     queryset = {'pfi__structure__in': structure_ids}
     depenses = Depense.objects.filter(**queryset)\
@@ -390,13 +391,15 @@ def detailscf(request, structid):
 
     # Depenses and recettes per year for the resume template
     year_depenses = depenses.values(
-            'annee', 'enveloppe', 'periodebudget__period__code')\
+            'annee', 'enveloppe', 'periodebudget__period__code',
+            'periodebudget__period__order')\
         .annotate(
             sum_dc=Sum('montant_dc'),
             sum_ae=Sum('montant_ae'),
             sum_cp=Sum('montant_cp')).order_by('periodebudget__period__order')
     year_recettes = recettes.values(
-            'annee', 'enveloppe', 'periodebudget__period__code')\
+            'annee', 'enveloppe', 'periodebudget__period__code',
+            'periodebudget__period__order')\
         .annotate(
             sum_dc=Sum('montant_dc'),
             sum_ar=Sum('montant_ar'),
@@ -409,10 +412,13 @@ def detailscf(request, structid):
     resume_depenses, resume_recettes = get_detail_pfi_by_period(
         [year_depenses, year_recettes])
 
+    periods = PeriodeBudget.objects.filter(annee=current_year)\
+        .order_by('period__order').values_list('period__code', flat=True)
+
     context = {
-        'cf': structparent, 'currentYear': get_current_year(),
+        'cf': structparent, 'currentYear': current_year,
         'resume_depenses': resume_depenses, 'resume_recettes': resume_recettes,
-        'years': years
+        'years': years, 'periods': periods
     }
 
     if structparent.depth > 2 or\
