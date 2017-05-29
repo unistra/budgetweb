@@ -19,19 +19,27 @@
       </ul>
       <div style="display: inline-block;width:100%;" class="tab-content">
         <div role="tabpanel" class="tab-pane active" id="gbcp{{ year }}">
-        {% include "detailsfullpfi.resume.inc.html" with montant_group="gbcp" montants_types_depense="AE CP" montants_types_recette="AR RE" %}
+          <table class="resumepfi">
+          {% include "inc/detailsfullpfi.resume.html" with montant_group="gbcp" table_title="Dépense" compta=resume_depenses|dictvalue:year montants_types_compta="AE CP" enveloppes="Fonctionnement Personnel Investissement" %}
+
+          {% include "inc/detailsfullpfi.resume.html" with montant_group="gbcp" table_title="Recette" compta=resume_recettes|dictvalue:year montants_types_compta="AR RE" enveloppes="Fonctionnement Investissement" is_last=True %}
+          </table>
         </div>
         <div role="tabpanel" class="tab-pane" id="dc{{ year }}">
-        {% include "detailsfullpfi.resume.inc.html" with montant_group="dc" montants_types_depense="DC" montants_types_recette="DC" %}
+          <table class="resumepfi">
+          {% include "inc/detailsfullpfi.resume.html" with montant_group="dc" table_title="Dépense" compta=resume_depenses|dictvalue:year montants_types_compta="DC" enveloppes="Fonctionnement Personnel Investissement" %}
+
+          {% include "inc/detailsfullpfi.resume.html" with montant_group="dc" table_title="Recette" compta=resume_recettes|dictvalue:year montants_types_compta="DC" enveloppes="Fonctionnement Investissement" is_last=True %}
+          </table>
         </div>
       </div>
       {% if listeDepense %}
       <br />
-        {% include "detailsfullpfi.depense.inc.html" with depenses=listeDepense|dictvalue:year sums=sommeDepense|dictvalue:year %}
+        {% include "inc/detailsfullpfi.depense.html" with depenses=listeDepense|dictvalue:year sums=sommeDepense|dictvalue:year %}
       {% endif %}
       {% if listeRecette %}
       <br />
-        {% include "detailsfullpfi.recette.inc.html" with recettes=listeRecette|dictvalue:year sums=sommeRecette|dictvalue:year %}
+        {% include "inc/detailsfullpfi.recette.html" with recettes=listeRecette|dictvalue:year sums=sommeRecette|dictvalue:year %}
       {% endif %}
       </div>
     </fieldset>
@@ -76,15 +84,9 @@
 <script>
 $(document).ready(function() {
     $('#modalCommentaire').on('show.bs.modal', function(e) {
-       var d = e;
-       var f = $(e.relatedTarget);
-       var g =f.data('formid');
        $('#modalcomm').empty().val($(e.relatedTarget).data('formid'));
     });
     $('#modalPieceJointe').on('show.bs.modal', function(e) {
-        var d = e;
-        var f = $(e.relatedTarget);
-        var g =f.data('formid');
        $('#modalpiecejointe').empty().append($(e.relatedTarget).data('formid'));
     });
 });

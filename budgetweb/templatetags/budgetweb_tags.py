@@ -38,7 +38,10 @@ def dictvalue(value, key):
     """
     Get a dict value by its key
     """
-    return value.get(key, None)
+    try:
+        return value.get(key, None)
+    except Exception:
+        return None
 
 
 @register.filter(is_safe=True)
@@ -50,11 +53,11 @@ def getattribute(value, key):
 
 
 @register.simple_tag
-def resume_colspan(periodes1, periodes2, montants_types):
+def resume_colspan(periodes, montants_types):
     """
     Return the resume colspan
     """
-    return (1 + (len(montants_types) * (len(periodes1 or periodes2) + 1)))
+    return (1 + (len(montants_types) * (len(periodes) + 1)))
 
 
 @register.simple_tag
@@ -114,12 +117,12 @@ def previous(some_list, current_index):
 
 
 @register.filter('sum_by_code')
-def sum_by_code(dict, args):
+def sum_by_code(values, args):
     code, type = args.split(', ')
     result = []
     if type == "depense":
         montant_ae = montant_cp = montant_dc = Decimal(0.00)
-        for ligne in dict:
+        for ligne in values:
             if ligne.naturecomptabledepense.code_compte_budgetaire == code:
                 montant_ae += ligne.montant_ae
                 montant_cp += ligne.montant_cp
@@ -127,7 +130,7 @@ def sum_by_code(dict, args):
         result = [montant_ae, montant_cp, montant_dc]
     if type == "recette":
         montant_ar = montant_re = montant_dc = Decimal(0.00)
-        for ligne in dict:
+        for ligne in values:
             if ligne.naturecomptablerecette.code_compte_budgetaire == code:
                 montant_ar += ligne.montant_ar
                 montant_re += ligne.montant_re
