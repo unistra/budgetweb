@@ -89,7 +89,7 @@ def is_authorized_editing(func):
                 is_authorized = True
 
             is_dfi_member = request.user.groups.filter(
-                                        name=settings.LATE_GROUP_NAME).exists()
+                                        name=settings.DFI_GROUP_NAME).exists()
             if periode_active.date_debut_dfi <= date_today and\
                periode_active.date_fin_dfi >= date_today and\
                is_dfi_member:
