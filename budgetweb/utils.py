@@ -38,45 +38,39 @@ def get_authorized_structures_ids(user):
 def get_detail_pfi_by_period(totals):
     # FIXME: docstring
     montants_dict = {'gbcp': ('AE', 'CP', 'AR', 'RE'), 'dc': ('DC',)}
-    montant_type = lambda x: [
-        k for k, v in montants_dict.items() if x in v][0]
     details = []
 
-    # Group by year
     for compta in totals:
         compta_details = {}
         for year, year_values in groupby(compta, lambda x: x['annee']):
-            compta_types = {k: [{}, {}] for k in montants_dict.keys()}
-            periodes_set = set()
-            for c in year_values:
-                periode = c['periodebudget__period__code']
-                periodes_set.add(periode)
-                fields = [k for k in c.keys() if k.startswith('sum_')]
-                for field in fields:
-                    montant = c[field]
-                    field_name = field.split('_')[-1].upper()
-                    mt = montant_type(field_name)
-                    ct = compta_types[mt]
-                    nature_dict = ct[0].setdefault(
-                        c['enveloppe'], [{}, {}])
-                    type_dict = nature_dict[0].setdefault(
-                        periode, {})
-                    type_dict[field_name] = montant
+            year_values = list(year_values)
+            yd = compta_details.setdefault(year, {})
+            for compta_types, montants in montants_dict.items():
+                compta_types_dict = yd.setdefault(compta_types, [{}, {}])
+                for e, e_values in groupby(year_values, lambda x: x['enveloppe']):
+                    e_values = list(e_values)
+                    enveloppe_dict = compta_types_dict[0].setdefault(e, [{}, {}])
+                    for period, values in groupby(e_values, lambda x: x['periodebudget__period__code']):
+                        periods_dict = enveloppe_dict[0].setdefault(period, {})
+                        total_period = compta_types_dict[1].setdefault(period, {})
+                        final_total = compta_types_dict[1].setdefault('total', {})
+                        values = list(values)[0]
+                        for m in montants:
+                            value = values.get('sum_%s' % m.lower(), None)
+                            if value is not None:
+                                enveloppe_dict[1].setdefault(m, Decimal(0))
+                                total_period.setdefault(m, Decimal(0))
+                                periods_dict[m] = value
 
-                    # Total per periode and montant_type
-                    nature_dict[1].setdefault(field_name, Decimal(0))
-                    nature_dict[1][field_name] += montant
+                                # Totals :
+                                # per enveloppe
+                                enveloppe_dict[1][m] += value
+                                # per periode and montant_type
+                                total_period[m] += value
+                                # per enveloppe and periods
+                                final_total.setdefault(m, Decimal(0))
+                                final_total[m] += value
 
-                    # Total per enveloppe
-                    total_enveloppe = compta_types[mt][1].setdefault(periode, {})
-                    total_enveloppe[field_name] = total_enveloppe.get(field_name, Decimal(0)) + montant
-
-                    # Total per enveloppe and periods
-                    total = compta_types[mt][1].setdefault('total', {})
-                    total[field_name] = total.get(field_name, Decimal(0)) + montant
-
-            # TODO: order periodes_set and global periodes_set for depenses and recettes
-            compta_details[year] = (compta_types, periodes_set)
         details.append(compta_details)
     return details
 
@@ -186,7 +180,7 @@ def tree_infos(active_period, period_code):
     """
 
     structuremontant_filters = {'annee': active_period.annee}
-    pfi_filters = {'periodebudget__annee': active_period.annee}
+    pfi_filters = {'annee': active_period.annee}
     prefetches = {}
     cols = {}
 

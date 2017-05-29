@@ -69,7 +69,7 @@ class Command(NoArgsCommand):
                     # Creation du virement.
                     if not Virement.objects.filter(
                             document_number=doc_number).count():
-                        print("Création du Virement %s", doc_number)
+                        print("Création du Virement %s" % doc_number)
                         vir = Virement.objects.create(
                             document_number=doc_number,
                             document_type=vir_header['DOCTYPE'],

@@ -15,5 +15,5 @@ class PeriodeBudgetUninitializeError(Exception):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.message = "Les périodes budgétaires ne sont pas configurées \
-                        correctements. \n\
+                        correctement. \n\
                         Tous les champs dates doivent être configurés."
