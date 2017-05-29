@@ -34,12 +34,16 @@
       <tr class="{% cycle 'row1' 'row2' %}">
         <td colspan="8" style="text-align:right;padding-right:20px;font-weight:bold;">Sous total par compte budgétaire</td>
         {% with code_compte=previous_element.naturecomptablerecette.code_compte_budgetaire|add:", recette" %}
-          {% with list_value=recettes|sum_by_code:code_compte %}
-            {% for value in list_value %}
-              <td class="montant bold" nowrap>{{ value|intspace}} &euro;</td>
-            {% endfor %}
+          {% with code_compte_cf=code_compte|add:", " %}
+            {% with code_compte_cf_full=code_compte_cf|add:previous_element.pfi.structure.code %}
+              {% with list_value=recettes|sum_by_code:code_compte_cf_full %}
+                {% for value in list_value %}
+                  <td class="montant bold" nowrap>{{ value|intspace}} &euro;</td>
+                {% endfor %}
+              {% endwith %}
+            {% endwith %}
           {% endwith %}
-        {% endwith%}
+        {% endwith %}
         <td colspan="2"></td>
       </tr>
       {% endif %}
@@ -92,12 +96,16 @@
         <tr class="{% cycle 'row1' 'row2' %}">
           <td colspan="8" style="text-align:right;padding-right:20px;font-weight:bold;">Sous total par compte budgétaire</td>
           {% with code_compte=previous_element.naturecomptablerecette.code_compte_budgetaire|add:", recette" %}
-            {% with list_value=recettes|sum_by_code:code_compte %}
-              {% for value in list_value %}
-                <td class="montant bold" nowrap>{{ value|intspace}} &euro;</td>
-              {% endfor %}
+            {% with code_compte_cf=code_compte|add:", " %}
+              {% with code_compte_cf_full=code_compte_cf|add:previous_element.pfi.structure.code %}
+                {% with list_value=recettes|sum_by_code:code_compte_cf_full %}
+                  {% for value in list_value %}
+                    <td class="montant bold" nowrap>{{ value|intspace}} &euro;</td>
+                  {% endfor %}
+                {% endwith %}
+              {% endwith %}
             {% endwith %}
-          {% endwith%}
+          {% endwith %}
           <td colspan="2"></td>
       </tr>
       {% endif %}

@@ -118,12 +118,13 @@ def previous(some_list, current_index):
 
 @register.filter('sum_by_code')
 def sum_by_code(values, args):
-    code, type = args.split(', ')
+    code, type, cf = args.split(', ')
     result = []
     if type == "depense":
         montant_ae = montant_cp = montant_dc = Decimal(0.00)
         for ligne in values:
-            if ligne.naturecomptabledepense.code_compte_budgetaire == code:
+            if ligne.naturecomptabledepense.code_compte_budgetaire == code and\
+               ligne.pfi.structure.code == cf:
                 montant_ae += ligne.montant_ae
                 montant_cp += ligne.montant_cp
                 montant_dc += ligne.montant_dc
@@ -131,7 +132,8 @@ def sum_by_code(values, args):
     if type == "recette":
         montant_ar = montant_re = montant_dc = Decimal(0.00)
         for ligne in values:
-            if ligne.naturecomptablerecette.code_compte_budgetaire == code:
+            if ligne.naturecomptablerecette.code_compte_budgetaire == code and\
+               ligne.pfi.structure.code == cf:
                 montant_ar += ligne.montant_ar
                 montant_re += ligne.montant_re
                 montant_dc += ligne.montant_dc
