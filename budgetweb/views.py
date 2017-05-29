@@ -378,15 +378,19 @@ def detailscf(request, structid):
             'naturecomptabledepense', 'periodebudget__period', 'pfi',
             'domainefonctionnel', 'pfi__structure')\
         .annotate(enveloppe=F('naturecomptabledepense__enveloppe'))\
-        .order_by('annee', 'periodebudget__period__order',
-                  'naturecomptabledepense__priority')
+        .order_by('annee', 'structure',
+                  'naturecomptabledepense__code_nature_comptable',
+                  'periodebudget__period__order',
+                  'virement__document_number')
     recettes = Recette.objects.filter(**queryset)\
         .select_related(
             'naturecomptablerecette', 'periodebudget__period', 'pfi',
             'pfi__structure')\
         .annotate(enveloppe=F('naturecomptablerecette__enveloppe'))\
-        .order_by('annee', 'periodebudget__period__order',
-                  'naturecomptablerecette__priority')
+        .order_by('annee', 'structure',
+                  'naturecomptablerecette__code_nature_comptable',
+                  'periodebudget__period__order',
+                  'virement__document_number')
 
     # Depenses and recettes per year for the resume template
     year_depenses = depenses.values(
