@@ -48,9 +48,9 @@ class Command(NoArgsCommand):
             vir_sender = virement_info['sender_item_date']
 
             doc_number = vir_header['DOCUMENT']
-            datestring = vir_header['CRTDATE'] + " " + vir_header['CRTTIME'] + \
-                                                 " +0200"
 
+            datestring = vir_header['CRTDATE'] + " " + vir_header['CRTTIME'] +\
+                                                 " +0200"
             if vir_header['PROCESS'] != 'TRAN':
                 print('Le process du virement (%s) ne match pas (%s)'
                       % (doc_number, vir_header['PROCESS']))
@@ -81,10 +81,12 @@ class Command(NoArgsCommand):
                             value_date=vir_header['DOCDATE'])
 
                         for item_data in vir_item_data:
-                            self.parseItemData(item_data, vir, "receiver")
+                            self.parseItemData(item_data, vir,
+                                               "receiver", vir_date)
 
                         for item_data in vir_sender:
-                            self.parseItemData(item_data, vir, "sender")
+                            self.parseItemData(item_data, vir,
+                                               "sender", vir_date)
 
                     else:
                         print("Le virement %s docnumber existe déjà."
@@ -97,29 +99,26 @@ class Command(NoArgsCommand):
         print('Missing Structure : %s' % (', '.join(set(self.list_cf_error))))
         print('Missing PFI : %s' % (', '.join(set(self.list_pfi_error))))
 
-    def parseItemData(self, item_data, virement, type):
+    def parseItemData(self, item_data, virement, type, vir_date):
         cf_code = item_data['FUNDS_CTR']
+        pfi_code = item_data['MEASURE']
         try:
             cf = Structure.objects.get(code=cf_code)
-        except (Structure.DoesNotExist, Structure.MultipleObjectsReturned) as e:
+            pfi = PlanFinancement.objects.get(code=pfi_code, structure=cf)
+            period = PeriodeBudget.objects.get(
+                annee=get_current_year(),
+                period__code__startswith="VIR")
+        except (Structure.DoesNotExist,
+                Structure.MultipleObjectsReturned) as e:
             print("Something wrong with CF %s (%s)" % (cf_code, e))
             self.list_cf_error.append(cf_code)
             raise CreationVirementException()
-
-        pfi_code = item_data['MEASURE']
-        try:
-            pfi = PlanFinancement.objects.get(code=pfi_code, structure=cf)
         except (PlanFinancement.DoesNotExist,
                 PlanFinancement.MultipleObjectsReturned) as e:
             print("Something wrong with PFI %s on CF %s (%s)" % (pfi_code,
                   cf_code, e))
             self.list_pfi_error.append(pfi_code)
             raise CreationVirementException()
-
-        try:
-            period = PeriodeBudget.active.get(
-                annee=get_current_year(),
-                period__code__startswith="VIR")
         except (PeriodeBudget.DoesNotExist,
                 PeriodeBudget.MultipleObjectsReturned) as e:
             print("Something wrong with Periode %s (%s)" % (
@@ -128,11 +127,14 @@ class Command(NoArgsCommand):
 
         type_budget = item_data['BUDCAT']
 
+        # Virement Depense
         if item_data['CTEM_CATEGORY'] == '3':
             # On est en dépense.
             montant_ae = montant_cp = montant_dc = Decimal('0.00')
-            montant = abs(item_data['TOTAL_AMOUNT_LCUR'])
+            montant = round(item_data['TOTAL_AMOUNT_TCUR'], 2)
             if type == "sender":
+                montant = montant * -1
+            if item_data['TOTAL_AMOUNT_TCUR'] < 0:
                 montant = montant * -1
 
             if type_budget == '9F':
@@ -144,15 +146,13 @@ class Command(NoArgsCommand):
             try:
                 naturecomptabledep = NatureComptableDepense.active.get(
                                 code_compte_budgetaire=code_compte_budgetaire)
+                domaine = DomaineFonctionnel.active.get(
+                                code=item_data['FUNC_AREA'])
             except (NatureComptableDepense.DoesNotExist,
                     NatureComptableDepense.MultipleObjectsReturned) as e:
                 print("Something wrong with NCD %s (%s)" % (
                     code_compte_budgetaire, e))
                 raise CreationVirementException()
-
-            try:
-                domaine = DomaineFonctionnel.active.get(
-                                                code=item_data['FUNC_AREA'])
             except (DomaineFonctionnel.DoesNotExist,
                     DomaineFonctionnel.MultipleObjectsReturned) as e:
                 print("Something wrong with DF %s (%s)" % (
@@ -172,10 +172,13 @@ class Command(NoArgsCommand):
 
             return True
 
+        # Virement Recette
         if item_data['CTEM_CATEGORY'] == '2':
             montant_ar = montant_re = montant_dc = Decimal('0.00')
-            montant = abs(item_data['TOTAL_AMOUNT_LCUR'])
+            montant = round(item_data['TOTAL_AMOUNT_TCUR'], 2)
             if type == "sender":
+                montant = montant * -1
+            if item_data['TOTAL_AMOUNT_TCUR'] < 0:
                 montant = montant * -1
 
             if type_budget == '9F':
