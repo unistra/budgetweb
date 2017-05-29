@@ -180,7 +180,7 @@ def tree_infos(active_period, period_code):
     """
 
     structuremontant_filters = {'annee': active_period.annee}
-    pfi_filters = {'periodebudget__annee': active_period.annee}
+    pfi_filters = {'annee': active_period.annee}
     prefetches = {}
     cols = {}
 

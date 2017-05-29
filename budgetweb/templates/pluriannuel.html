@@ -49,7 +49,7 @@
 <div class="tab-content">
     <div role="tabpanel" class="tab-pane active" id="gbcp">
 	{% if depense %}
-	{% include "inc/pluriannuel.comptabilite.inc.html" with types=depense.gbcp compta_type="depense" label="Liste des dépenses" montants_types="AE CP" enveloppes="Fonctionnement Personnel Investissement"%}
+	{% include "inc/pluriannuel.comptabilite.html" with types=depense.gbcp compta_type="depense" label="Liste des dépenses" montants_types="AE CP" enveloppes="Fonctionnement Personnel Investissement"%}
 	{% endif %}
 	{% if recette %}
 	{% include "inc/pluriannuel.comptabilite.html" with types=recette.gbcp compta_type="recette" label="Liste des recettes" montants_types="AR RE" enveloppes="Fonctionnement Investissement"%}

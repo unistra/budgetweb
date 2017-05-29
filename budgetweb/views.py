@@ -303,23 +303,17 @@ def recette(request, pfiid, annee):
 @is_authorized_structure
 def detailspfi(request, pfiid):
     to_dict = lambda x: {k: list(v) for k, v in x}
-    pfi = PlanFinancement.objects.get(pk=pfiid)
+    pfi = PlanFinancement.objects.select_related('structure').get(pk=pfiid)
     current_year = get_current_year()
 
-    depenses = Depense.objects.filter(
-        pfi=pfi).prefetch_related(
-            'naturecomptabledepense', 'periodebudget', 'pfi',
+    depenses = Depense.objects.filter(pfi=pfi).select_related(
+            'naturecomptabledepense', 'periodebudget__period', 'pfi',
             'domainefonctionnel', 'pfi__structure')\
-        .annotate(enveloppe=F('naturecomptabledepense__enveloppe'))\
-        .order_by('annee', 'naturecomptabledepense__code_compte_budgetaire',
-                  'periodebudget__period__order')
-    recettes = Recette.objects.filter(
-        pfi=pfi).prefetch_related(
-            'naturecomptablerecette', 'periodebudget', 'pfi',
+        .annotate(enveloppe=F('naturecomptabledepense__enveloppe'))
+    recettes = Recette.objects.filter(pfi=pfi).select_related(
+            'naturecomptablerecette', 'periodebudget__period', 'pfi',
             'pfi__structure')\
-        .annotate(enveloppe=F('naturecomptablerecette__enveloppe'))\
-        .order_by('annee', 'naturecomptablerecette__code_compte_budgetaire',
-                  'periodebudget__period__order')
+        .annotate(enveloppe=F('naturecomptablerecette__enveloppe'))
 
     # Depenses and recettes per year for the resume template
     year_depenses = depenses.values(
@@ -335,8 +329,12 @@ def detailspfi(request, pfiid):
             sum_ar=Sum('montant_ar'),
             sum_re=Sum('montant_re'))
 
-    depenses = to_dict(groupby(depenses, lambda x: x.annee))
-    recettes = to_dict(groupby(recettes, lambda x: x.annee))
+    depenses = to_dict(groupby(depenses.order_by(
+        'annee', 'naturecomptabledepense__code_compte_budgetaire',
+        'periodebudget__period__order'), lambda x: x.annee))
+    recettes = to_dict(groupby(recettes.order_by(
+        'annee', 'naturecomptablerecette__code_compte_budgetaire',
+        'periodebudget__period__order'), lambda x: x.annee))
     years = (depenses.keys() | recettes.keys()) or [current_year]
 
     sum_depenses = Depense.objects.filter(pfi=pfi).values('annee').annotate(
@@ -353,12 +351,15 @@ def detailspfi(request, pfiid):
     resume_depenses, resume_recettes = get_detail_pfi_by_period(
         [year_depenses, year_recettes])
 
+    periods = PeriodeBudget.objects.filter(annee=current_year)\
+        .order_by('period__order').values_list('period__code', flat=True)
+
     context = {
         'PFI': pfi, 'currentYear': current_year,
         'listeDepense': depenses, 'listeRecette': recettes,
         'sommeDepense': sum_depenses, 'sommeRecette': sum_recettes,
         'resume_depenses': resume_depenses, 'resume_recettes': resume_recettes,
-        'years': years
+        'years': years, 'periods': periods
     }
     return render(request, 'detailsfullpfi.html', context)
 
@@ -375,15 +376,15 @@ def detailscf(request, structid):
 
     queryset = {'pfi__structure__in': structure_ids}
     depenses = Depense.objects.filter(**queryset)\
-        .prefetch_related(
-            'naturecomptabledepense', 'periodebudget', 'pfi',
+        .select_related(
+            'naturecomptabledepense', 'periodebudget__period', 'pfi',
             'domainefonctionnel', 'pfi__structure')\
         .annotate(enveloppe=F('naturecomptabledepense__enveloppe'))\
         .order_by('annee', 'periodebudget__period__order',
                   'naturecomptabledepense__priority')
     recettes = Recette.objects.filter(**queryset)\
-        .prefetch_related(
-            'naturecomptablerecette', 'periodebudget', 'pfi',
+        .select_related(
+            'naturecomptablerecette', 'periodebudget__period', 'pfi',
             'pfi__structure')\
         .annotate(enveloppe=F('naturecomptablerecette__enveloppe'))\
         .order_by('annee', 'periodebudget__period__order',
