@@ -69,4 +69,5 @@ jQuery(document).ready(function($) {
             'html': html
         }).appendTo(parent);
     };
+    $('[data-toggle="tooltip"]').tooltip();
 });

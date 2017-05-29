@@ -11,11 +11,11 @@
 	<div class="tr th">
     <div class="td struct">&nbsp;</div>
     {% for col in cols.0 %}
-	<div class="td">{{ col.0 | safe }}</div>
+	<div class="td" data-placement="bottom" data-toggle="tooltip" data-title="{{ col.1 | safe }}">{{ col.0 | safe }}</div>
     {% endfor %}
 	<div class="td empty">&nbsp;</div>
     {% for col in cols.1 %}
-	<div class="td">{{ col.0 | safe }}</div>
+	<div class="td" data-placement="bottom" data-toggle="tooltip" data-title="{{ col.1 | safe }}">{{ col.0 | safe }}</div>
     {% endfor %}
 	</div>
 	<div class="tr">

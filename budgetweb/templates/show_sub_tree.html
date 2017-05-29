@@ -14,11 +14,11 @@
           </span>
         </div>
       {% for col in cols.0 %}
-        <div class="td">{{ node|sum_pfis:col.1|floatformat:2|intspace }}  &euro;</div>
+        <div class="td">{{ node|sum_pfis:col.2|floatformat:2|intspace }}  &euro;</div>
       {% endfor %}
         <div class="td empty">&nbsp;</div>
       {% for col in cols.1 %}
-        <div class="td">{{ node|sum_pfis:col.1|floatformat:2|intspace }}  &euro;</div>
+        <div class="td">{{ node|sum_pfis:col.2|floatformat:2|intspace }}  &euro;</div>
       {% endfor %}
         <ul id="{{ node.code }}"></ul>
       </div>
@@ -34,11 +34,11 @@
           </span>&nbsp;-&nbsp;<a href="{% url 'detailscf' structid=structure.id %}">Détails</a>
         </div>
       {% for col in cols.0 %}
-        <div class="td">{{ structure|sum_montants:col.1|floatformat:2|intspace }} &euro;</div>
+        <div class="td">{{ structure|sum_montants:col.2|floatformat:2|intspace }} &euro;</div>
       {% endfor %}
 	      <div class="td empty">&nbsp;</div>
       {% for col in cols.1 %}
-        <div class="td">{{ structure|sum_montants:col.1|floatformat:2|intspace }} &euro;</div>
+        <div class="td">{{ structure|sum_montants:col.2|floatformat:2|intspace }} &euro;</div>
       {% endfor %}
       </div>
       <ul id="cf{{ structure.id }}"></ul>

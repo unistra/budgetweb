@@ -211,27 +211,27 @@ def tree_infos(active_period, period_code):
         cols = {
             'gbcp': (
                 # Dépenses
-                (('&sum; Dép. AE',
+                (('&sum; Dép. AE', 'Sommes des dépenses en AE',
                     {'structure_montants': (('montants', 'depense_montant_ae'),),
                      'pfis': (('depense_bi', 'montant_ae'),)}),
-                 ('&sum; Dép. CP',
+                 ('&sum; Dép. CP', 'Sommes des dépenses en CP',
                     {'structure_montants': (('montants', 'depense_montant_cp'),),
                      'pfis': (('depense_bi', 'montant_cp'),)}),),
                 # Recettes
-                (('&sum; Rec. AR',
+                (('&sum; Rec. AR', 'Sommes des recettes en AR',
                     {'structure_montants': (('montants', 'recette_montant_ar'),),
                      'pfis': (('recette_bi', 'montant_ar'),)}),
-                 ('&sum; Rec. RE',
+                 ('&sum; Rec. RE', 'Sommes des recettes en RE',
                     {'structure_montants': (('montants', 'recette_montant_re'),),
                      'pfis': (('recette_bi', 'montant_re'),)}),)
             ),
-            'dc' : (
+            'dc': (
                 # Dépenses
-                (('<span style="font-size:0.8em;">&sum; Dép. Charges / Immos</span>',
+                (('<span style="font-size:0.8em;">&sum; Dép. Charges / Immos</span>', 'Sommes des dépenses en DC',
                     {'structure_montants': (('montants', 'depense_montant_dc'),),
                      'pfis': (('depense_bi', 'montant_dc'),)}),),
                 # Recettes
-                (('<span style="font-size:0.7em;">&sum; Rec. Produits / Ressources</span>',
+                (('<span style="font-size:0.7em;">&sum; Rec. Produits / Ressources</span>', 'Sommes des recettes en DC',
                     {'structure_montants': (('montants', 'recette_montant_dc'),),
                      'pfis': (('recette_bi', 'montant_dc'),)}),),
             ),
@@ -296,47 +296,47 @@ def tree_infos(active_period, period_code):
         cols = {
             'gbcp': (
                 # Dépenses
-                (('&sum; Dép. AE BA', 
+                (('&sum; Dép. AE BA', 'Le budget actualité (BA) correspond au budget initial (BI) additionné aux virements (VIR)',
                     {'structure_montants':
                         (('bi', 'depense_montant_ae'), ('vir', 'depense_montant_ae'), ('br_old', 'depense_montant_ae')),
                      'pfis':
                         (('depense_bi', 'montant_ae'), ('depense_vir', 'montant_ae'), ('depense_br_old', 'montant_ae'))
                     }),
-                 ('&sum; Dép. AE BR',
+                 ('&sum; Dép. AE BR', 'Le budget rectificiatif (BR) correspond aux saisies en cours.',
                     {'structure_montants': (('br', 'depense_montant_ae'),),
                      'pfis': (('depense_br', 'montant_ae'),)}),
-                 ('&sum; Dép. AE BM',
+                 ('&sum; Dép. AE BM', 'Le budget modifié (BM) correspond au budget actualisé (BA) additionné au budget rectificiatif (BR)',
                     {'structure_montants': (('bm', 'depense_montant_ae'),),
                      'pfis': (('depense_bm', 'montant_ae'),)}),
-                 ('&sum; Dép. CP BA',
+                 ('&sum; Dép. CP BA', 'Le budget actualité (BA) correspond au budget initial (BI) additionné aux virements (VIR)',
                     {'structure_montants' :
                         (('bi', 'depense_montant_cp'), ('vir', 'depense_montant_cp'), ('br_old', 'depense_montant_cp')),
-                     'pfis': 
+                     'pfis':
                         (('depense_bi', 'montant_cp'), ('depense_vir', 'montant_cp'), ('depense_br_old', 'montant_cp'))}),
-                 ('&sum; Dép. CP BR',
+                 ('&sum; Dép. CP BR', 'Le budget rectificiatif (BR) correspond aux saisies en cours.',
                     {'structure_montants': (('br', 'depense_montant_cp'),),
                      'pfis': (('depense_br', 'montant_cp'),)}),
-                 ('&sum; Dép. CP BM',
+                 ('&sum; Dép. CP BM', 'Le budget modifié (BM) correspond au budget actualisé (BA) additionné au budget rectificiatif (BR)',
                     {'structure_montants': (('bm', 'depense_montant_cp'),),
                      'pfis': (('depense_bm', 'montant_cp'),)})),
                 # Recettes
-                (('&sum; Rec. AR BA',
+                (('&sum; Rec. AR BA', 'Le budget actualité (BA) correspond au budget initial (BI) additionné aux virements (VIR)',
                     {'structure_montants':
                         (('bi', 'recette_montant_ar'), ('vir', 'recette_montant_ar'), ('br_old', 'recette_montant_ar')),
                      'pfis':
                         (('recette_bi', 'montant_ar'), ('recette_vir', 'montant_ar'), ('recette_br_old', 'montant_ar'))}),
-                 ('&sum; Rec. AR BR',
+                 ('&sum; Rec. AR BR', 'Le budget rectificiatif (BR) correspond aux saisies en cours.',
                     {'structure_montants': (('br', 'recette_montant_ar'),),
                      'pfis': (('recette_br', 'montant_ar'),)}),
-                 ('&sum; Rec. AR BM',
+                 ('&sum; Rec. AR BM', 'Le budget modifié (BM) correspond au budget actualisé (BA) additionné au budget rectificiatif (BR)',
                     {'structure_montants': (('bm', 'recette_montant_ar'),),
                      'pfis': (('recette_bm', 'montant_ar'),)}),
                  # ('&sum; Rec. RE BA',
-                 #    {'structure_montants': 
+                 #    {'structure_montants':
                  #        (('bi', 'recette_montant_re'), ('vir', 'recette_montant_re'), ('br_old', 'recette_montant_re')),
-                 #     'pfis': 
+                 #     'pfis':
                  #        (('recette_bi', 'montant_re'), ('recette_vir', 'montant_re'), ('recette_br_old', 'montant_re'))}),
-                 # ('&sum; Rec. RE VIR', 
+                 # ('&sum; Rec. RE VIR',
                  #    {'structure_montants': (('vir', 'recette_montant_re'),),
                  #     'pfis': (('recette_vir', 'montant_re'),)}),
                  # ('&sum; Rec. RE BM',
@@ -346,27 +346,27 @@ def tree_infos(active_period, period_code):
             ),
             'dc' : (
                 # Dépenses
-                (('&sum; Dép. DC BA',
-                    {'structure_montants': 
+                (('&sum; Dép. DC BA', 'Le budget actualité (BA) correspond au budget initial (BI) additionné aux virements (VIR)',
+                    {'structure_montants':
                         (('bi', 'depense_montant_dc'), ('vir', 'depense_montant_dc'), ('br_old', 'depense_montant_dc')),
                      'pfis':
                         (('depense_bi', 'montant_dc'), ('depense_vir', 'montant_dc'), ('depense_br_old', 'montant_dc'))}),
-                 ('&sum; Dép. DC BR', 
+                 ('&sum; Dép. DC BR', 'Le budget rectificiatif (BR) correspond aux saisies en cours.',
                     {'structure_montants': (('br', 'depense_montant_dc'),),
                      'pfis': (('depense_br', 'montant_dc'),)}),
-                 ('&sum; Dép. DC BM',
+                 ('&sum; Dép. DC BM', 'Le budget modifié (BM) correspond au budget actualisé (BA) additionné au budget rectificiatif (BR)',
                     {'structure_montants': (('bm', 'depense_montant_dc'),),
                      'pfis': (('depense_bm', 'montant_dc'),)}),),
                 # Recettes
-                (('&sum; Rec. DC BA',
+                (('&sum; Rec. DC BA', 'Le budget actualité (BA) correspond au budget initial (BI) additionné aux virements (VIR)',
                     {'structure_montants':
                         (('bi', 'recette_montant_dc'), ('vir', 'recette_montant_dc'), ('br_old', 'recette_montant_dc')),
                      'pfis':
                         (('recette_bi', 'montant_dc'), ('recette_vir', 'montant_dc'), ('recette_br_old', 'montant_dc'))}),
-                 ('&sum; Rec. DC BR',
+                 ('&sum; Rec. DC BR', 'Le budget rectificiatif (BR) correspond aux saisies en cours.',
                     {'structure_montants': (('br', 'recette_montant_dc'),),
                      'pfis': (('recette_br', 'montant_dc'),)}),
-                 ('&sum; Rec. DC BM',
+                 ('&sum; Rec. DC BM', 'Le budget modifié (BM) correspond au budget actualisé (BA) additionné au budget rectificiatif (BR)',
                     {'structure_montants': (('bm', 'recette_montant_dc'),),
                      'pfis': (('recette_bm', 'montant_dc'),)}),),
             ),

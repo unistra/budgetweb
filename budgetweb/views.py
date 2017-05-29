@@ -149,7 +149,6 @@ def show_tree(request, type_affichage, structid=0):
         ).select_related('structure').filter(structure__id=structid)
     else:
         pfis = []
-
     context = {
         'structures': structures,
         'pfis': pfis,
@@ -162,11 +161,10 @@ def show_tree(request, type_affichage, structid=0):
     if not is_tree_node:
         fields = active_fields
         total = [[Decimal(0)] * len(field) for field in fields]
-
         for structure in structures:
             for index0, field in enumerate(fields):
                 for index1, montants in enumerate(field):
-                    total[index0][index1] += sum_montants(structure, montants[1])
+                    total[index0][index1] += sum_montants(structure, montants[2])
         context['total'] = total
 
     template = 'show_sub_tree.html' if is_tree_node else 'showtree.html'
