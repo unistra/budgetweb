@@ -3,9 +3,9 @@ from itertools import chain, groupby
 
 from django.db.models import F, Prefetch, Sum
 
-from budgetweb.models import PeriodeBudget, StructureAuthorizations
 from budgetweb.apps.structure.models import Structure
-from .models import Depense, Recette, StructureMontant
+from .models import (Depense, PeriodeBudget, StructureAuthorizations, Recette,
+                     StructureMontant)
 
 
 # TODO : Ajouter une exception si jamais pas de période ouverte

@@ -80,7 +80,8 @@ def sum_montants(structure, fields):
     result = Decimal(0)
     for attr, value in fields['structure_montants']:
         try:
-            montant = getattr(getattr(structure, attr)[0], value)
+            montant = sum(getattr(x, value, Decimal(0))
+                for x in getattr(structure, attr))
         except Exception:
             montant = Decimal(0)
         result += montant
