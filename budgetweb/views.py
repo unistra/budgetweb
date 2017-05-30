@@ -430,12 +430,12 @@ def detailscf(request, structid):
         sum_depenses = Depense.objects.filter(**queryset).values('annee').annotate(
             sum_dc=Sum('montant_dc'),
             sum_ae=Sum('montant_ae'),
-            sum_cp=Sum('montant_cp')).order_by('periodebudget__period__order')
+            sum_cp=Sum('montant_cp'))
         sum_depenses = to_dict(groupby(sum_depenses, lambda x: x['annee']))
         sum_recettes = Recette.objects.filter(**queryset).values('annee').annotate(
             sum_dc=Sum('montant_dc'),
             sum_ar=Sum('montant_ar'),
-            sum_re=Sum('montant_re')).order_by('periodebudget__period__order')
+            sum_re=Sum('montant_re'))
         sum_recettes = to_dict(groupby(sum_recettes, lambda x: x['annee']))
         context.update({
             'listeDepense': depenses, 'listeRecette': recettes,
