@@ -18,14 +18,14 @@
         <li role="presentation"><a href="#dc{{year}}" role="tab" data-toggle="tab">Droit Constaté</a></li>
       </ul>
       <div style="display: inline-block;width:100%;" class="tab-content">
-        <div role="tabpanel" class="tab-pane active" id="gbcp{{ year }}">
+        <div role="tabpanel" class="tab-pane active" id="gbcp{{ year }}" data-tabname="GBCP">
           <table class="resumepfi">
           {% include "inc/detailsfullpfi.resume.html" with montant_group="gbcp" table_title="Dépense" compta=resume_depenses|dictvalue:year montants_types_compta="AE CP" enveloppes="Fonctionnement Personnel Investissement" %}
 
           {% include "inc/detailsfullpfi.resume.html" with montant_group="gbcp" table_title="Recette" compta=resume_recettes|dictvalue:year montants_types_compta="AR RE" enveloppes="Fonctionnement Investissement" is_last=True %}
           </table>
         </div>
-        <div role="tabpanel" class="tab-pane" id="dc{{ year }}">
+        <div role="tabpanel" class="tab-pane" id="dc{{ year }}"  data-tabname="Droit Constaté">
           <table class="resumepfi">
           {% include "inc/detailsfullpfi.resume.html" with montant_group="dc" table_title="Dépense" compta=resume_depenses|dictvalue:year montants_types_compta="DC" enveloppes="Fonctionnement Personnel Investissement" %}
 
@@ -78,68 +78,11 @@
     </div>
   </div>
 </div>
-<div class="modal fade model-wide" id="modalMontantDC" role="dialog">
-  <div class="modal-dialog">
-   <div class="modal-content">
-     <div class="modal-header">
-       <button type="button" class="close" data-dismiss="modal">&times;</button>
-       <h4 class="modal-title">Modification de la valeur du montant en Droit Constaté</h4>
-     </div>
-     <div class="modal-body">
-			<form id="editArticle" name="editArticle" method="POST" class="post-form">
-					{% csrf_token %}
-          <input type="hidden" id="pk" name="pk">
-          <input type="hidden" id="type" name="type">
-          <label for="txtMontantDC">Ancien montant :</label>
-					<input readonly type="text" id="txtMontantDCOrigin" name="txtMontantDCOrigin" value=""><br />
-          <div align="center" style="margin-top:10px;"></div>
-          <label for="txtMontantDC">Nouveau montant :</label>
-					<input type="text" id="txtMontantDC" name="txtMontantDC" value=""><br />
-          <div align="center" style="margin-top:10px;">
-            <button id="modal-submitMontantDC" class="save btn btn-primary"
-                    name="submitUpdate">Modifier le montant</button>
-          </div>
-			 </form>
-       <div id="result" name="result"></div>
-     </div>
-     <div class="modal-footer">
-       <button type="submit" class="btn btn-default" data-dismiss="modal">Fermer</button>
-      </div>
-    </div>
-  </div>
-</div>
 </div>
 {% endblock %}
 {% block foot-javascript %}
 <script>
 $(document).ready(function() {
-    $('#modalMontantDC').on('show.bs.modal', function(e) {
-       $("#result").empty();
-       $('#txtMontantDCOrigin').empty().val($(e.relatedTarget).data('value'));
-       $('#txtMontantDC').empty().val($(e.relatedTarget).data('value'));
-       $('#type').empty().val($(e.relatedTarget).data('type'));
-       $('#pk').empty().val($(e.relatedTarget).data('pk'));
-    });
-    $('#modal-submitMontantDC').on('click', function(e) {
-      e.preventDefault();
-      pk = $('input[name=pk]').val();
-      type = $('input[name=type]').val();
-      montant = $('input[name=txtMontantDC]').val();
-      $.ajax({
-        url : "/api/updateMontantDC/",
-        type : "get",
-        data : { pk : pk,
-                 type : type,
-                 montant : montant },
-       success : function(json) {
-           $("#result").html('<div class="alert alert-success" role="alert">' + json.message + '</div>');
-      },
-      error : function(xhr,errmsg,err) {
-        $("#result").html('<div class="alert alert-danger" role="alert">' + xhr.status + ": " + xhr.responseText + '</div>');
-      }
-      });
-      return True;
-    });
     $('#modalCommentaire').on('show.bs.modal', function(e) {
        $('#modalcomm').empty().val($(e.relatedTarget).data('formid'));
     });

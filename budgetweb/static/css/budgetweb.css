@@ -240,3 +240,26 @@ input.decimal{
   justify-content: flex-end;
   -webkit-justify-content: flex-end;
 }
+
+@media print {
+  fieldset {
+    border: none;
+  }
+
+  .tab-content > .tab-pane {
+    display: block;
+    margin-bottom: 20px;
+    page-break-after: auto;
+    page-break-inside: avoid;
+    position: relative;
+  }
+
+  .tab-content > .tab-pane[data-tabname]:before {
+    content:attr(data-tabname);
+    font-size: 20px;
+  }
+
+  .nav-tabs {
+    display:none;
+  }
+}
