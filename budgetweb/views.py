@@ -110,7 +110,8 @@ def api_set_dcfield_value_by_id(request):
             compta.montant_dc = montant_dc
             compta.save()
             return JsonResponse(
-                {'message': _('The new value has been saved')}, status=201)
+                {'message': _('The new value has been saved. \
+                               This page will be reloaded')}, status=201)
         else:
             return JsonResponse(
                 {'message': _('You are not allowed to do that')}, status=400)

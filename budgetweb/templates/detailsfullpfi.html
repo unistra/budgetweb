@@ -125,16 +125,20 @@ $(document).ready(function() {
         url : "/api/updateMontantDC/",
         type : "get",
         data : { pk : pk,
-    		         type : type,
+                 type : type,
                  montant : montant },
-    	 success : function(json) {
-    		   $("#result").html('<div class="alert alert-success" role="alert">' + json.message + '</div>');
-     	},
-    	error : function(xhr,errmsg,err) {
-    		$("#result").html('<div class="alert alert-danger" role="alert">' + xhr.status + ": " + xhr.responseText + '</div>');
-    	}
+       success : function(json) {
+           function reload_page(){
+             window.location.reload();
+           };
+           $("#result").html('<div class="alert alert-success" role="alert">' + json.message + '</div>');
+           window.setTimeout( reload_page, 500 );
+      },
+      error : function(xhr,errmsg,err) {
+        $("#result").html('<div class="alert alert-danger" role="alert">' + xhr.status + ": " + xhr.responseText + '</div>');
+      }
       });
-      return True;
+      return true;
     });
 
     $('#modalCommentaire').on('show.bs.modal', function(e) {
