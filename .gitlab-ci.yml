@@ -1,3 +1,12 @@
+services:
+  - postgres
+
+variables:
+  POSTGRES_DB: budgetweb
+  POSTGRES_USER: budgetweb
+  POSTGRES_PASSWORD: budgetweb
+
+
 py34:
   script:
   - tox -e py34
