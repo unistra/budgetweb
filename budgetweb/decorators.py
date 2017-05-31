@@ -30,7 +30,7 @@ def is_authorized_structure(func):
     """
     @wraps(func)
     def wrapper(request, *args, **kwargs):
-        from .models import PlanFinancement, StructureAuthorizations
+        from .models import PlanFinancement
         from .utils import get_authorized_structures_ids
 
         try:
@@ -44,7 +44,7 @@ def is_authorized_structure(func):
             is_authorized = structure_id in user_structures
             if not is_authorized:
                 raise StructureUnauthorizedException
-        except:
+        except Exception:
             return HttpResponseForbidden(
                 StructureUnauthorizedException().message)
         return func(request, *args, **kwargs)
@@ -57,7 +57,6 @@ def is_authorized_editing(func):
     """
     @wraps(func)
     def wrapper(request, *args, **kwargs):
-        from budgetweb.apps.structure.models import PlanFinancement
         from .models import PeriodeBudget
         from datetime import datetime
         try:
@@ -65,14 +64,15 @@ def is_authorized_editing(func):
             user = request.user
             periode_active = PeriodeBudget.activebudget.first()
 
-            if periode_active.date_debut_saisie is None or \
-               periode_active.date_fin_saisie is None or \
-               periode_active.date_debut_retardataire is None or \
-               periode_active.date_fin_retardataire is None or \
-               periode_active.date_debut_dfi is None or \
-               periode_active.date_fin_dfi is None or \
-               periode_active.date_debut_admin is None or \
-               periode_active.date_fin_admin is None:
+            if not all([
+                    periode_active.date_debut_saisie,
+                    periode_active.date_fin_saisie,
+                    periode_active.date_debut_retardataire,
+                    periode_active.date_fin_retardataire,
+                    periode_active.date_debut_dfi,
+                    periode_active.date_fin_dfi,
+                    periode_active.date_debut_admin,
+                    periode_active.date_fin_admin]):
                 raise PeriodeBudgetUninitializeError
 
             date_today = datetime.now().date()
@@ -81,15 +81,15 @@ def is_authorized_editing(func):
                periode_active.date_fin_saisie >= date_today:
                 is_authorized = True
 
-            is_late_group_member = request.user.groups.filter(
-                                        name=settings.LATE_GROUP_NAME).exists()
+            is_late_group_member = user.groups.filter(
+                name=settings.LATE_GROUP_NAME).exists()
             if periode_active.date_debut_retardataire <= date_today and\
                periode_active.date_fin_retardataire >= date_today and\
                is_late_group_member:
                 is_authorized = True
 
-            is_dfi_member = request.user.groups.filter(
-                                        name=settings.DFI_GROUP_NAME).exists()
+            is_dfi_member = user.groups.filter(
+                name=settings.DFI_GROUP_NAME).exists()
             if periode_active.date_debut_dfi <= date_today and\
                periode_active.date_fin_dfi >= date_today and\
                is_dfi_member:
@@ -97,15 +97,15 @@ def is_authorized_editing(func):
 
             if periode_active.date_debut_admin <= date_today and\
                periode_active.date_fin_admin >= date_today and\
-               request.user.is_superuser:
+               user.is_superuser:
                 is_authorized = True
 
             if not is_authorized:
                 raise EditingUnauthorizedException
-        except EditingUnauthorizedException as e:
+        except EditingUnauthorizedException:
             return HttpResponseForbidden(
                 EditingUnauthorizedException().message)
-        except PeriodeBudgetUninitializeError as e:
+        except PeriodeBudgetUninitializeError:
             return HttpResponseForbidden(
                 PeriodeBudgetUninitializeError().message)
         return func(request, *args, **kwargs)

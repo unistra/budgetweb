@@ -5,7 +5,15 @@
     "fields": {
         "is_active": true,
         "period": 1,
-        "annee": 2017
+        "annee": 2017,
+        "date_debut_saisie": "2017-01-01",
+        "date_fin_saisie": "2117-01-01",
+        "date_debut_retardataire": "2017-01-01",
+        "date_fin_retardataire": "2117-01-01",
+        "date_debut_dfi": "2017-01-01",
+        "date_fin_dfi": "2117-01-01",
+        "date_debut_admin": "2017-01-01",
+        "date_fin_admin": "2117-01-01"
     }
 },
 {
@@ -14,7 +22,15 @@
     "fields": {
         "is_active": false,
         "period": 1,
-        "annee": 2016
+        "annee": 2016,
+        "date_debut_saisie": "2017-01-01",
+        "date_fin_saisie": "2117-01-01",
+        "date_debut_retardataire": "2017-01-01",
+        "date_fin_retardataire": "2117-01-01",
+        "date_debut_dfi": "2017-01-01",
+        "date_fin_dfi": "2117-01-01",
+        "date_debut_admin": "2017-01-01",
+        "date_fin_admin": "2117-01-01"
     }
 }
 ]
