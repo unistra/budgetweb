@@ -3,7 +3,7 @@ from decimal import Decimal
 from django.core.management.base import BaseCommand
 from django.db import transaction
 
-from budgetweb.models import Depense, Recette, StructureMontant
+from budgetweb.models import Depense, PeriodeBudget, Recette, StructureMontant
 from budgetweb.utils import get_current_year
 from budgetweb.apps.structure.models import Structure
 
@@ -21,6 +21,11 @@ class Command(BaseCommand):
             help='StructureMontant objects are updated if a difference in the '
                  'calculation is found'
         )
+        parser.add_argument(
+            '-p', dest='periods', nargs='+', help='Periods', metavar='PERIOD')
+        parser.add_argument(
+            '-y', dest='years', nargs='+', help='Years', type=int,
+            metavar='YEAR')
 
     def get_structure_ancestors(self, structure_id):
         parent = self.structures[structure_id]
@@ -31,28 +36,43 @@ class Command(BaseCommand):
         comptabilites = {}
         errors = []
 
+        periods = PeriodeBudget.active.all()
+        active_periods = options.get('periods', [])\
+            or periods.values_list('period__code', flat=True)
+        active_years = options.get('years', [])\
+            or set(periods.values_list('annee', flat=True))
+        default_filters = {
+            'annee__in': active_years,
+            'periodebudget__period__code__in': active_periods,
+        }
+
         with transaction.atomic():
-            structure_montants = list(StructureMontant.active_period\
-                .filter(structure__is_active=True, annee=get_current_year())\
-                .select_related('structure'))
+            qs = StructureMontant.objects\
+                .filter(structure__is_active=True, **default_filters)\
+                .select_related('structure', 'periodebudget__period')
+            # print('QS : {}'.format(qs.query))
+            structure_montants = list(qs)
 
             comptabilites = {
                 'depense': {
                     'model': Depense,
                     'values': list(
-                        Depense.active_period.filter(annee=get_current_year())\
-                            .select_related('structure').all()),
+                        Depense.objects.filter(**default_filters)\
+                            .select_related(
+                                'structure', 'periodebudget__period').all()),
                 },
                 'recette': {
                     'model': Recette,
                     'values': list(
-                        Recette.active_period.filter(annee=get_current_year())\
-                            .select_related('structure').all()),
+                        Recette.objects.filter(**default_filters)\
+                            .select_related(
+                                'structure', 'periodebudget__period').all()),
                 },
             }
 
         # Recalculation of the StructureMontant objects
-        check_results = {s: {} for s in self.structures.keys()}
+        # check_results = {s: {} for s in self.structures.keys()}
+        check_results = {}
         for comptabilite, infos in comptabilites.items():
             montant_name = lambda x: '%s_%s' % (comptabilite, x)
             model = infos['model']
@@ -61,8 +81,12 @@ class Command(BaseCommand):
             for value in values:
                 structures = [value.structure.pk] +\
                     self.get_structure_ancestors(value.structure.pk)
+                # print('\tS : {}'.format(structures))
                 for structure in structures:
-                    montants_dict = check_results.setdefault(structure, {})
+                    montant_key = (structure,
+                         value.periodebudget.period.code,
+                         value.annee)
+                    montants_dict = check_results.setdefault(montant_key, {})
                     for montant in intial_montants:
                         key = montant_name(montant)
                         old_value = montants_dict.get(key, Decimal(0))
@@ -70,7 +94,12 @@ class Command(BaseCommand):
 
         # Check the differences
         for structure_montant in structure_montants:
-            check_result = check_results[structure_montant.structure.pk]
+            key = (
+                structure_montant.structure.pk,
+                structure_montant.periodebudget.period.code,
+                structure_montant.annee,
+            )
+            check_result = check_results.get(key, {})
             comptabilite_montants = []
             for comptabilite, infos in comptabilites.items():
                 montant_name = lambda x: '%s_%s' % (comptabilite, x)
@@ -81,7 +110,7 @@ class Command(BaseCommand):
                 if result1 != result2:
                     error_str = 'StructureMontant (pk={0.pk}) : {0.structure.code}. {1} : {2} - Calculated : {3}'.format(
                         structure_montant, montant, result1, result2)
-                    # If we find a diff, we update them !
+                    # If we find a difference, we update it !
                     if options['update']:
                         sm = StructureMontant.objects.get(pk=structure_montant.pk)
                         setattr(sm, montant, result2)
