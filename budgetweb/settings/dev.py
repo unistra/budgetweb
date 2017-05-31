@@ -50,7 +50,7 @@ INSTALLED_APPS += (
     'coverage',
     'debug_toolbar',
 )
-TEST_RUNNER = 'django_coverage.coverage_runner.CoverageRunner'
+# TEST_RUNNER = 'django_coverage.coverage_runner.CoverageRunner'
 
 ############
 # Dipstrap #
