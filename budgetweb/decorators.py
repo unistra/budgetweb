@@ -1,10 +1,10 @@
+from datetime import datetime
 from functools import wraps
 from importlib import import_module
 
 from django.apps import apps as django_apps
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
-from django.db import transaction
 from django.http import HttpResponseForbidden
 
 from .exceptions import (StructureUnauthorizedException,
@@ -58,7 +58,6 @@ def is_authorized_editing(func):
     @wraps(func)
     def wrapper(request, *args, **kwargs):
         from .models import PeriodeBudget
-        from datetime import datetime
         try:
             is_authorized = False
             user = request.user
@@ -77,27 +76,19 @@ def is_authorized_editing(func):
 
             date_today = datetime.now().date()
 
-            if periode_active.date_debut_saisie <= date_today and\
-               periode_active.date_fin_saisie >= date_today:
-                is_authorized = True
-
-            is_late_group_member = user.groups.filter(
-                name=settings.LATE_GROUP_NAME).exists()
-            if periode_active.date_debut_retardataire <= date_today and\
-               periode_active.date_fin_retardataire >= date_today and\
-               is_late_group_member:
-                is_authorized = True
-
-            is_dfi_member = user.groups.filter(
-                name=settings.DFI_GROUP_NAME).exists()
-            if periode_active.date_debut_dfi <= date_today and\
-               periode_active.date_fin_dfi >= date_today and\
-               is_dfi_member:
-                is_authorized = True
-
-            if periode_active.date_debut_admin <= date_today and\
-               periode_active.date_fin_admin >= date_today and\
-               user.is_superuser:
+            if any([
+                (periode_active.date_debut_saisie <= date_today and
+                 periode_active.date_fin_saisie >= date_today),
+                (periode_active.date_debut_retardataire <= date_today and
+                 periode_active.date_fin_retardataire >= date_today and
+                 user.groups.filter(name=settings.LATE_GROUP_NAME).exists()),
+                (periode_active.date_debut_dfi <= date_today and
+                 periode_active.date_fin_dfi >= date_today and
+                 user.groups.filter(name=settings.DFI_GROUP_NAME).exists()),
+                (periode_active.date_debut_admin <= date_today and
+                 periode_active.date_fin_admin >= date_today and
+                 user.is_superuser)
+            ]):
                 is_authorized = True
 
             if not is_authorized:

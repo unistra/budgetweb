@@ -47,11 +47,9 @@ class Command(BaseCommand):
         }
 
         with transaction.atomic():
-            qs = StructureMontant.objects\
+            structure_montants = list(StructureMontant.objects\
                 .filter(structure__is_active=True, **default_filters)\
-                .select_related('structure', 'periodebudget__period')
-            # print('QS : {}'.format(qs.query))
-            structure_montants = list(qs)
+                .select_related('structure', 'periodebudget__period'))
 
             comptabilites = {
                 'depense': {
@@ -81,7 +79,6 @@ class Command(BaseCommand):
             for value in values:
                 structures = [value.structure.pk] +\
                     self.get_structure_ancestors(value.structure.pk)
-                # print('\tS : {}'.format(structures))
                 for structure in structures:
                     montant_key = (structure,
                          value.periodebudget.period.code,
