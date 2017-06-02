@@ -290,7 +290,7 @@ def tree_infos(active_period, period_code):
         cols = {
             'gbcp': (
                 # Dépenses
-                (('&sum; Dép. AE BA', 'Le budget actualité (BA) correspond au budget initial (BI) additionné aux virements (VIR)',
+                (('&sum; Dép. AE BA', 'Le budget actualisé (BA) correspond au budget initial (BI) additionné aux virements (VIR)',
                     {'structure_montants':
                         (('bi', 'depense_montant_ae'), ('vir', 'depense_montant_ae'), ('br_old', 'depense_montant_ae')),
                      'pfis':
@@ -302,7 +302,7 @@ def tree_infos(active_period, period_code):
                  ('&sum; Dép. AE BM', 'Le budget modifié (BM) correspond au budget actualisé (BA) additionné au budget rectificiatif (BR)',
                     {'structure_montants': (('bm', 'depense_montant_ae'),),
                      'pfis': (('depense_bm', 'montant_ae'),)}),
-                 ('&sum; Dép. CP BA', 'Le budget actualité (BA) correspond au budget initial (BI) additionné aux virements (VIR)',
+                 ('&sum; Dép. CP BA', 'Le budget actualisé (BA) correspond au budget initial (BI) additionné aux virements (VIR)',
                     {'structure_montants' :
                         (('bi', 'depense_montant_cp'), ('vir', 'depense_montant_cp'), ('br_old', 'depense_montant_cp')),
                      'pfis':
@@ -314,7 +314,7 @@ def tree_infos(active_period, period_code):
                     {'structure_montants': (('bm', 'depense_montant_cp'),),
                      'pfis': (('depense_bm', 'montant_cp'),)})),
                 # Recettes
-                (('&sum; Rec. AR BA', 'Le budget actualité (BA) correspond au budget initial (BI) additionné aux virements (VIR)',
+                (('&sum; Rec. AR BA', 'Le budget actualisé (BA) correspond au budget initial (BI) additionné aux virements (VIR)',
                     {'structure_montants':
                         (('bi', 'recette_montant_ar'), ('vir', 'recette_montant_ar'), ('br_old', 'recette_montant_ar')),
                      'pfis':
