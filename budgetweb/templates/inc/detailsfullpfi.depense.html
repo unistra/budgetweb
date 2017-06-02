@@ -28,27 +28,9 @@
     </tr>
   </thead>
   <tbody>
-  {% for depense in depenses %}
-    {% with previous_element=depenses|previous:forloop.counter0 %}
-    {% ifchanged depense.naturecomptabledepense.code_compte_budgetaire %}
-      {% if not forloop.first %}
-      <tr class="{% cycle 'row1' 'row2' %}">
-        <td colspan="8" style="text-align:right;padding-right:20px;font-weight:bold;">Sous total par compte budgétaire</td>
-        {% with code_compte=previous_element.naturecomptabledepense.code_compte_budgetaire|add:", depense" %}
-          {% with code_compte_cf=code_compte|add:", " %}
-            {% with code_compte_cf_full=code_compte_cf|add:previous_element.pfi.structure.code %}
-              {% with list_value=depenses|sum_by_code:code_compte_cf_full %}
-                {% for value in list_value %}
-                  <td class="montant bold" nowrap>{{ value|intspace}} &euro;</td>
-                {% endfor %}
-              {% endwith %}
-            {% endwith %}
-          {% endwith %}
-        {% endwith %}
-        <td colspan="2"></td>
-      </tr>
-      {% endif %}
-    {% endifchanged %}
+  {% regroup depenses by naturecomptabledepense.code_compte_budgetaire as depenses_list %}
+  {% for depenses_group in depenses_list %}
+    {% for depense in depenses_group.list %}
     <tr class="{% cycle 'row1' 'row2' %}">
       <td>{{ depense.annee }}</td>
       <td>{{ depense.periodebudget.period.code }}</td>
@@ -91,34 +73,17 @@
           &nbsp;
         {% endif %}
       </td>
-    </tr>
-    {% if forloop.last %}
-      <tr class="{% cycle 'row1' 'row2' %}">
-        <td colspan="8" style="text-align:right;padding-right:20px;font-weight:bold;">Sous total par compte budgétaire</td>
-        {% with code_compte=previous_element.naturecomptabledepense.code_compte_budgetaire|add:", depense" %}
-          {% with code_compte_cf=code_compte|add:", " %}
-            {% with code_compte_cf_full=code_compte_cf|add:previous_element.pfi.structure.code %}
-              {% with list_value=depenses|sum_by_code:code_compte_cf_full %}
-                {% for value in list_value %}
-                  <td class="montant bold" nowrap>{{ value|intspace}} &euro;</td>
-                {% endfor %}
-              {% endwith %}
-            {% endwith %}
-          {% endwith %}
-        {% endwith %}
-        <td colspan="2"></td>
-    </tr>
-    {% endif %}
-  {% endwith %}
-{% empty %}
+    {% endfor %}
+    {% subtotal depenses_group.list "AE CP DC" %}
+  {% empty %}
     <tr><td colspan="13">Aucune dépense trouvée pour ce PFI</td></tr>
-{% endfor %}
-  <tr>
-    <td colspan="8" style="text-align:right;padding-right:20px;font-weight:bold;">Total :</td>
-    <td nowrap style="background-color:#66ff66;font-weight:bold;text-align:right;">{% firstof sums.0.sum_ae|intspace "0,00" %} &euro;</td>
-    <td nowrap style="background-color:#66ff66;font-weight:bold;text-align:right;">{% firstof sums.0.sum_cp|intspace "0,00" %} &euro;</td>
-    <td nowrap style="background-color:#66ff66;font-weight:bold;text-align:right;">{% firstof sums.0.sum_dc|intspace "0,00" %} &euro;</td>
-    <td colspan="2">&nbsp;</td>
-  </tr>
-</tbody>
+  {% endfor %}
+    <tr>
+      <td colspan="8" style="text-align:right;padding-right:20px;font-weight:bold;">Total :</td>
+      <td nowrap style="background-color:#66ff66;font-weight:bold;text-align:right;">{% firstof sums.0.sum_ae|intspace "0,00" %} &euro;</td>
+      <td nowrap style="background-color:#66ff66;font-weight:bold;text-align:right;">{% firstof sums.0.sum_cp|intspace "0,00" %} &euro;</td>
+      <td nowrap style="background-color:#66ff66;font-weight:bold;text-align:right;">{% firstof sums.0.sum_dc|intspace "0,00" %} &euro;</td>
+      <td colspan="2">&nbsp;</td>
+    </tr>
+  </tbody>
 </table>
