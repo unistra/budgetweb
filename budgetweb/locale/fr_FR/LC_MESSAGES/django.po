@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-27 15:10+0200\n"
+"POT-Creation-Date: 2017-06-02 16:01+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,13 +17,154 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: budgetweb/models.py:101
+#: budgetweb/admin.py:21
+msgid "Mark selected periods as deactivated"
+msgstr ""
+
+#: budgetweb/admin.py:26
+msgid "Mark selected periods as activated"
+msgstr ""
+
+#: budgetweb/apps/structure/models.py:15 budgetweb/apps/structure/models.py:32
+#: budgetweb/apps/structure/models.py:104
+#: budgetweb/apps/structure/models.py:137
+#: budgetweb/apps/structure/models.py:169 budgetweb/models.py:65
+#, fuzzy
+#| msgid "EOTP Code"
+msgid "Code"
+msgstr "Code de l'EOTP"
+
+#: budgetweb/apps/structure/models.py:16 budgetweb/apps/structure/models.py:33
+#: budgetweb/apps/structure/models.py:105
+#: budgetweb/apps/structure/models.py:136
+#: budgetweb/apps/structure/models.py:170 budgetweb/models.py:66
+msgid "Label"
+msgstr ""
+
+#: budgetweb/apps/structure/models.py:17
+msgid "Short label"
+msgstr ""
+
+#: budgetweb/apps/structure/models.py:19 budgetweb/apps/structure/models.py:41
+#: budgetweb/apps/structure/models.py:117
+#: budgetweb/apps/structure/models.py:150
+#: budgetweb/apps/structure/models.py:181
+msgid "Is active"
+msgstr ""
+
+#: budgetweb/apps/structure/models.py:37 budgetweb/apps/structure/models.py:111
+msgid "BudgetWeb group 1"
+msgstr ""
+
+#: budgetweb/apps/structure/models.py:39 budgetweb/apps/structure/models.py:113
+msgid "BudgetWeb group 2"
+msgstr ""
+
+#: budgetweb/apps/structure/models.py:43
+msgid "Depth"
+msgstr ""
+
+#: budgetweb/apps/structure/models.py:45
 msgid "Path"
 msgstr "Chemin"
 
-#: budgetweb/models.py:193
+#: budgetweb/apps/structure/models.py:103
+#, fuzzy
+#| msgid "Structure link"
+msgid "Structure"
+msgstr "Structure de rattachement"
+
+#: budgetweb/apps/structure/models.py:106
+msgid "EOTP short label"
+msgstr ""
+
+#: budgetweb/apps/structure/models.py:107
+#, fuzzy
+#| msgid "Derivate cost center"
+msgid "Related cost center"
+msgstr "Centre de coût dérivé"
+
+#: budgetweb/apps/structure/models.py:115
+#: budgetweb/apps/structure/models.py:143
+#: budgetweb/apps/structure/models.py:176
+msgid "Is labeled"
+msgstr ""
+
+#: budgetweb/apps/structure/models.py:116
+#, fuzzy
+#| msgid "Multi-year PFI"
+msgid "Is multi-year"
+msgstr "PFI pluriannuel"
+
+#: budgetweb/apps/structure/models.py:118
+msgid "Begin date"
+msgstr ""
+
+#: budgetweb/apps/structure/models.py:120
+msgid "End date"
+msgstr ""
+
+#: budgetweb/apps/structure/models.py:135
+#: budgetweb/apps/structure/models.py:166
+msgid "Envelope"
+msgstr ""
+
+#: budgetweb/apps/structure/models.py:139
+#: budgetweb/apps/structure/models.py:172
+msgid "Budget account code"
+msgstr ""
+
+#: budgetweb/apps/structure/models.py:141
+#: budgetweb/apps/structure/models.py:174
+msgid "Budget account label"
+msgstr ""
+
+#: budgetweb/apps/structure/models.py:145
+msgid "Is cash shift"
+msgstr ""
+
+#: budgetweb/apps/structure/models.py:147
+#: budgetweb/apps/structure/models.py:179
+msgid "Is non budgetary"
+msgstr ""
+
+#: budgetweb/apps/structure/models.py:148
+msgid "Is PFI/CFG"
+msgstr ""
+
+#: budgetweb/apps/structure/models.py:152
+#: budgetweb/apps/structure/models.py:183
+msgid "Sorting order for the accounting natures"
+msgstr ""
+
+#: budgetweb/apps/structure/models.py:154
+#: budgetweb/apps/structure/models.py:185
+msgid "Sorting sub-order for the accounting natures"
+msgstr ""
+
+#: budgetweb/apps/structure/models.py:167
+msgid "Funds code"
+msgstr ""
+
+#: budgetweb/apps/structure/models.py:168
+msgid "Funds label"
+msgstr ""
+
+#: budgetweb/apps/structure/models.py:177
+msgid "Is AR et RE"
+msgstr ""
+
+#: budgetweb/forms.py:334 budgetweb/tests/test_forms.py:858
 msgid "There are already entries which are not in the new period"
 msgstr "Il existe déjà des entrées qui ne sont pas dans la nouvelle période"
+
+#: budgetweb/models.py:67
+msgid "Order"
+msgstr ""
+
+#: budgetweb/models.py:80
+msgid "Period"
+msgstr ""
 
 #: budgetweb/templates/404.html:6
 msgid "Page not found"
@@ -71,7 +212,7 @@ msgstr "Fermer"
 msgid "Accompanying document link"
 msgstr "Lien vers la pièce jointe"
 
-#: budgetweb/templates/comptabilite.html:183
+#: budgetweb/templates/comptabilite.html:186
 #: budgetweb/templates/depense.html:33 budgetweb/templates/recette.html:33
 msgid "Add"
 msgstr "Ajouter"
@@ -134,6 +275,26 @@ msgstr "PFI pluriannuel"
 msgid "Show the resumed PFI"
 msgstr "Revenir sur la synthèse pluriannuelle du PFI"
 
+#: budgetweb/templates/detailspfi.html:20
+msgid "Show the details PFI"
+msgstr "Afficher le détail des saisies pluriannuelle du PFI"
+
 #: budgetweb/templates/recette.html:9
 msgid "Receipt forms"
 msgstr "Formulaire de saisie des recettes"
+
+#: budgetweb/views.py:113
+msgid ""
+"The new value has been saved.                                This page will "
+"be reloaded"
+msgstr ""
+
+#: budgetweb/views.py:117
+msgid "You are not allowed to do that"
+msgstr ""
+
+#: budgetweb/views.py:120
+#, python-format
+msgid ""
+"Something wrong in                            api_set_dcfield_value_by_id %s"
+msgstr ""

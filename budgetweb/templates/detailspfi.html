@@ -17,6 +17,7 @@
 	 {% if PFI.is_pluriannuel %}
 	 <div>
 		 <h4 style="display: inline-block;margin-left:20px;"><a class="pluri-color" href="{% url 'pluriannuel' pfiid=PFI.id %}">{% trans "Show the resumed PFI"%}.</a></h4>
+		 <h4 style="display: inline-block;margin-left:20px;"><a class="pluri-color" href="{% url 'detailspfi' pfiid=PFI.id %}">{% trans "Show the details PFI"%}.</a></h4>
 	 </div>
 	 {% endif %}
  </div>
