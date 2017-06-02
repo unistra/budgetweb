@@ -107,36 +107,12 @@ def tree_padding_left(structure):
     return (structure.depth - 1) * 20
 
 
-@register.filter
-def previous(some_list, current_index):
-    """
-    Returns the previous element of the list using the current index if it
-    exists.
-    Otherwise returns an empty string.
-    """
-    return some_list[int(current_index) - 1]  # access the previous element
-
-
-@register.filter('sum_by_code')
-def sum_by_code(values, args):
-    code, type, cf = args.split(', ')
-    result = []
-    if type == "depense":
-        montant_ae = montant_cp = montant_dc = Decimal(0.00)
-        for ligne in values:
-            if ligne.naturecomptabledepense.code_compte_budgetaire == code and\
-               ligne.pfi.structure.code == cf:
-                montant_ae += ligne.montant_ae
-                montant_cp += ligne.montant_cp
-                montant_dc += ligne.montant_dc
-        result = [montant_ae, montant_cp, montant_dc]
-    if type == "recette":
-        montant_ar = montant_re = montant_dc = Decimal(0.00)
-        for ligne in values:
-            if ligne.naturecomptablerecette.code_compte_budgetaire == code and\
-               ligne.pfi.structure.code == cf:
-                montant_ar += ligne.montant_ar
-                montant_re += ligne.montant_re
-                montant_dc += ligne.montant_dc
-        result = [montant_ar, montant_re, montant_dc]
-    return result
+@register.inclusion_tag('inc/detailsfullpfi.subtotal.html', takes_context=True)
+def subtotal(context, comptas, types):
+    values = []
+    for montant_type in types.split(' '):
+        result = sum(
+            getattr(compta, 'montant_%s' % montant_type.lower(), Decimal(0))
+            for compta in comptas) or Decimal(0)
+        values.append(result)
+    return {'values': values}
