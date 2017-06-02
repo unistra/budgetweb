@@ -133,9 +133,11 @@ class Command(NoArgsCommand):
             montant_ae = montant_cp = montant_dc = Decimal('0.00')
             montant = round(item_data['TOTAL_AMOUNT_TCUR'], 2)
             if type == "sender":
-                montant = montant * -1
-                if item_data['TOTAL_AMOUNT_TCUR'] < 0:
+                if montant < 0:
                     montant = montant * -1
+                else:
+                    montant = montant * -1
+
 
             if type_budget == '9F':
                 montant_dc = montant_cp = Decimal(montant)
@@ -177,8 +179,9 @@ class Command(NoArgsCommand):
             montant_ar = montant_re = montant_dc = Decimal('0.00')
             montant = round(item_data['TOTAL_AMOUNT_TCUR'], 2)
             if type == "sender":
-                montant = montant * -1
-                if item_data['TOTAL_AMOUNT_TCUR'] < 0:
+                if montant < 0:
+                    montant = montant * -1
+                else:
                     montant = montant * -1
 
             if type_budget == '9F':
