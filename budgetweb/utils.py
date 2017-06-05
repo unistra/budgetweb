@@ -314,28 +314,29 @@ def tree_infos(active_period, period_code):
                     {'structure_montants': (('bm', 'depense_montant_cp'),),
                      'pfis': (('depense_bm', 'montant_cp'),)})),
                 # Recettes
-                (('&sum; Rec. AR BA', 'Le budget actualisé (BA) correspond au budget initial (BI) additionné aux virements (VIR)',
-                    {'structure_montants':
-                        (('bi', 'recette_montant_ar'), ('vir', 'recette_montant_ar'), ('br_old', 'recette_montant_ar')),
-                     'pfis':
-                        (('recette_bi', 'montant_ar'), ('recette_vir', 'montant_ar'), ('recette_br_old', 'montant_ar'))}),
-                 ('&sum; Rec. AR BR', 'Le budget rectificiatif (BR) correspond aux saisies en cours.',
-                    {'structure_montants': (('br', 'recette_montant_ar'),),
-                     'pfis': (('recette_br', 'montant_ar'),)}),
-                 ('&sum; Rec. AR BM', 'Le budget modifié (BM) correspond au budget actualisé (BA) additionné au budget rectificiatif (BR)',
-                    {'structure_montants': (('bm', 'recette_montant_ar'),),
-                     'pfis': (('recette_bm', 'montant_ar'),)}),
-                 # ('&sum; Rec. RE BA',
-                 #    {'structure_montants':
-                 #        (('bi', 'recette_montant_re'), ('vir', 'recette_montant_re'), ('br_old', 'recette_montant_re')),
-                 #     'pfis':
-                 #        (('recette_bi', 'montant_re'), ('recette_vir', 'montant_re'), ('recette_br_old', 'montant_re'))}),
-                 # ('&sum; Rec. RE VIR',
-                 #    {'structure_montants': (('vir', 'recette_montant_re'),),
-                 #     'pfis': (('recette_vir', 'montant_re'),)}),
-                 # ('&sum; Rec. RE BM',
-                 #    {'structure_montants': (('bm', 'recette_montant_re'),),
-                 #     'pfis': (('recette_bm', 'montant_re'),)})
+                #(('&sum; Rec. AR BA', 'Le budget actualisé (BA) correspond au budget initial (BI) additionné aux virements (VIR)',
+                #    {'structure_montants':
+                #        (('bi', 'recette_montant_ar'), ('vir', 'recette_montant_ar'), ('br_old', 'recette_montant_ar')),
+                #     'pfis':
+                #        (('recette_bi', 'montant_ar'), ('recette_vir', 'montant_ar'), ('recette_br_old', 'montant_ar'))}),
+                # ('&sum; Rec. AR BR', 'Le budget rectificiatif (BR) correspond aux saisies en cours.',
+                #    {'structure_montants': (('br', 'recette_montant_ar'),),
+                #     'pfis': (('recette_br', 'montant_ar'),)}),
+                # ('&sum; Rec. AR BM', 'Le budget modifié (BM) correspond au budget actualisé (BA) additionné au budget rectificiatif (BR)',
+                #    {'structure_montants': (('bm', 'recette_montant_ar'),),
+                #     'pfis': (('recette_bm', 'montant_ar'),)}),
+
+                  (('&sum; Rec. RE BA', 'Le budget actualisé (BA) correspond au budget initial (BI) additionné aux virements (VIR)',
+                     {'structure_montants':
+                         (('bi', 'recette_montant_re'), ('vir', 'recette_montant_re'), ('br_old', 'recette_montant_re')),
+                      'pfis':
+                         (('recette_bi', 'montant_re'), ('recette_vir', 'montant_re'), ('recette_br_old', 'montant_re'))}),
+                  ('&sum; Rec. RE BR', 'Le budget rectificiatif (BR) correspond aux saisies en cours.',
+                     {'structure_montants': (('br', 'recette_montant_re'),),
+                      'pfis': (('recette_br', 'montant_re'),)}),
+                  ('&sum; Rec. RE BM', 'Le budget modifié (BM) correspond au budget actualisé (BA) additionné au budget rectificiatif (BR)',
+                     {'structure_montants': (('bm', 'recette_montant_re'),),
+                      'pfis': (('recette_bm', 'montant_re'),)})
                  ),
             ),
             'dc' : (
