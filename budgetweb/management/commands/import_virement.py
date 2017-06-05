@@ -22,6 +22,7 @@ class CreationVirementException(BaseException):
 class Command(NoArgsCommand):
 
     list_pfi_error = []
+    list_pfi_created = []
     list_cf_error = []
 
     def handle_noargs(self, **options):
@@ -45,7 +46,7 @@ class Command(NoArgsCommand):
             # try:
             vir_header = virement_info['header']
             vir_item_data = virement_info['item_data']
-            vir_sender = virement_info['sender_item_date']
+            vir_sender = virement_info['sender_item_data']
 
             doc_number = vir_header['DOCUMENT']
 
@@ -98,6 +99,8 @@ class Command(NoArgsCommand):
                         vir.delete()
         print('Missing Structure : %s' % (', '.join(set(self.list_cf_error))))
         print('Missing PFI : %s' % (', '.join(set(self.list_pfi_error))))
+        for pfi in self.list_pfi_created:
+            print("PFI created : %s" % pfi)
 
     def parseItemData(self, item_data, virement, type, vir_date):
         cf_code = item_data['FUNDS_CTR']
@@ -113,8 +116,19 @@ class Command(NoArgsCommand):
             print("Something wrong with CF %s (%s)" % (cf_code, e))
             self.list_cf_error.append(cf_code)
             raise CreationVirementException()
-        except (PlanFinancement.DoesNotExist,
-                PlanFinancement.MultipleObjectsReturned) as e:
+        except PlanFinancement.DoesNotExist as e:
+            # We create the PFI with default attribute.
+            self.list_pfi_error.append(pfi_code)
+            created = PlanFinancement.objects.create(
+                structure=cf, code=pfi_code, label='FIXIT', eotp='FIXIT',
+                centrecoutderive='FIXIT', centreprofitderive='FIXIT',
+                groupe1='FIXIT', groupe2='FIXIT',
+                is_fleche=False, is_pluriannuel=False,
+                is_active=True)
+            msg = "PFI %s created on structure %s" % (created, cf)
+            self.list_pfi_created.append(msg)
+            raise CreationVirementException()
+        except PlanFinancement.MultipleObjectsReturned as e:
             print("Something wrong with PFI %s on CF %s (%s)" % (pfi_code,
                   cf_code, e))
             self.list_pfi_error.append(pfi_code)
