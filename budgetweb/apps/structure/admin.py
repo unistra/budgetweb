@@ -50,18 +50,18 @@ admin.site.register(NatureComptableRecette, NatureComptableRecetteAdmin)
 
 
 class PlanFinancementAdmin(admin.ModelAdmin):
-    field = ('structure', 'code', 'label', 'eotp', 'centrecoutderive',
+    field = ('pk', 'structure', 'code', 'label', 'eotp', 'centrecoutderive',
              'centreprofitderive', 'is_fleche', 'is_pluriannuel', 'is_active',
              'date_debut', 'date_fin')
-    list_display = ('structure', 'code', 'label', 'eotp', 'centrecoutderive',
-                    'centreprofitderive', 'is_fleche', 'is_pluriannuel',
-                    'is_active', 'date_debut', 'date_fin')
+    list_display = ('pk', 'structure', 'code', 'label', 'eotp',
+                    'centrecoutderive', 'centreprofitderive', 'is_fleche',
+                    'is_pluriannuel', 'is_active', 'date_debut', 'date_fin')
     search_fields = ['structure__code', 'code', 'eotp', 'centrecoutderive',
                      'centreprofitderive', 'is_fleche', 'is_pluriannuel',
                      'is_active', 'date_debut', 'date_fin']
 
     class Meta:
-        ordering = ['is_fleche', 'structure']
+        ordering = ['pk', 'is_fleche', 'structure']
 admin.site.register(PlanFinancement, PlanFinancementAdmin)
 
 
