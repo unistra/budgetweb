@@ -313,9 +313,6 @@ class PlanFinancementPluriForm(forms.ModelForm):
         date_debut = cleaned_data.get("date_debut")
         date_fin = cleaned_data.get("date_fin")
 
-        #DEBUG
-        raise forms.ValidationError("PLOP")
-
         if date_fin and date_debut:
             if date_fin < date_debut:
                 cleaned_data.pop('date_debut')
