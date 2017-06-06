@@ -54,4 +54,4 @@ DIPSTRAP_STATIC_URL += '%s/' % DIPSTRAP_VERSION
 
 SIFACWS_DESC = 'https://rest-api-test.u-strasbg.fr/sifacws/description.json'
 SIFACWS_URL = 'https://sifacws-test.u-strasbg.fr/'
-SIFACWS_APIKEY = environ.get('SIFACWS_APIKEY')
+SIFACWS_APIKEY = '{{ sifacws_apikey }}'
