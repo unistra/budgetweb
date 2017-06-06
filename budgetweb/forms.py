@@ -313,6 +313,9 @@ class PlanFinancementPluriForm(forms.ModelForm):
         date_debut = cleaned_data.get("date_debut")
         date_fin = cleaned_data.get("date_fin")
 
+        #DEBUG
+        raise forms.ValidationError("PLOP")
+
         if date_fin and date_debut:
             if date_fin < date_debut:
                 cleaned_data.pop('date_debut')
@@ -320,7 +323,7 @@ class PlanFinancementPluriForm(forms.ModelForm):
                 raise forms.ValidationError(
                     "La date de début est inférieure à la date de fin !")
 
-            # Check if the are existing accountings which ar not in the new
+            # Check if the are existing accountings which are not in the new
             # period
             has_compta = any(model.objects.filter(
                     Q(pfi=instance.pk),

@@ -116,3 +116,18 @@ def subtotal(context, comptas, types):
             for compta in comptas) or Decimal(0)
         values.append(result)
     return {'values': values}
+
+
+@register.inclusion_tag('modal/commentary.html')
+def commentary_modal(edit=False):
+    return {'edit': edit}
+
+
+@register.inclusion_tag('modal/attachment_link.html')
+def attachment_link_modal(edit=False):
+    return {'edit': edit}
+
+
+@register.inclusion_tag('modal/montant_dc.html')
+def montant_dc_modal(edit=False):
+    return {}

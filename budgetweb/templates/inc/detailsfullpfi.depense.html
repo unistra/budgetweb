@@ -58,7 +58,7 @@
       <td align="center">
       {% if depense.commentaire %}
         <a href="#">
-          <span data-backdrop="false" data-toggle="modal" data-target="#modalCommentaire" data-formid="{{ depense.commentaire }}" class="glyphicon glyphicon-paperclip" title="Afficher"></span>
+          <span data-backdrop="false" data-toggle="modal" data-target="#modal_commentaire" data-formid="{{ depense.commentaire }}" class="glyphicon glyphicon-paperclip" title="Afficher"></span>
         </a>
       {% else %}
           &nbsp;
@@ -67,7 +67,7 @@
       <td align="center">
         {% if depense.lienpiecejointe %}
         <a href="#">
-          <span data-backdrop="false" data-toggle="modal" data-target="#modalPieceJointe" data-formid="{{ depense.lienpiecejointe }}" class="glyphicon glyphicon-paperclip" title="Afficher"></span>
+          <span data-backdrop="false" data-toggle="modal" data-target="#modal_lienpiecejointe" data-formid="{{ depense.lienpiecejointe }}" class="glyphicon glyphicon-paperclip" title="Afficher"></span>
         </a>
         {% else %}
           &nbsp;
@@ -79,11 +79,11 @@
     <tr><td colspan="13">Aucune dépense trouvée pour ce PFI</td></tr>
   {% endfor %}
     <tr>
-      <td colspan="8" style="text-align:right;padding-right:20px;font-weight:bold;">Total :</td>
-      <td nowrap style="background-color:#66ff66;font-weight:bold;text-align:right;">{% firstof sums.0.sum_ae|intspace "0,00" %} &euro;</td>
-      <td nowrap style="background-color:#66ff66;font-weight:bold;text-align:right;">{% firstof sums.0.sum_cp|intspace "0,00" %} &euro;</td>
-      <td nowrap style="background-color:#66ff66;font-weight:bold;text-align:right;">{% firstof sums.0.sum_dc|intspace "0,00" %} &euro;</td>
-      <td colspan="2">&nbsp;</td>
+      <td colspan="8" class="total-txt">Total :</td>
+      <td class="total" nowrap>{% firstof sums.0.sum_ae|intspace "0,00" %} &euro;</td>
+      <td class="total" nowrap>{% firstof sums.0.sum_cp|intspace "0,00" %} &euro;</td>
+      <td class="total" nowrap>{% firstof sums.0.sum_dc|intspace "0,00" %} &euro;</td>
+      <td colspan="2"></td>
     </tr>
   </tbody>
 </table>

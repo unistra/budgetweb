@@ -209,7 +209,7 @@ msgid "Close"
 msgstr "Fermer"
 
 #: budgetweb/templates/comptabilite.html:37
-msgid "Accompanying document link"
+msgid "Attachment link"
 msgstr "Lien vers la pièce jointe"
 
 #: budgetweb/templates/comptabilite.html:186

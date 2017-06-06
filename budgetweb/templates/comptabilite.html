@@ -1,6 +1,5 @@
 {% extends "base.html" %}
-{% load staticfiles %}
-{% load i18n %}
+{% load staticfiles i18n budgetweb_tags %}
 {% block head-additional %}
 <link rel="stylesheet" href="{% static 'css/budgetweb.css' %}"/>
 {% endblock %}
@@ -11,42 +10,9 @@
     {% include form_template %}
 </div>
 
-<div class="modal fade model-wide" id="modal_commentaire" role="dialog">
-  <div class="modal-dialog">
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">{% trans "Comment" %}</h4>
-      </div>
-      <div class="modal-body">
-        <textarea cols="60" id="modal-commentaire-field" name="modal-commentaire-field" rows="10"></textarea>
-        <input type="textfield" size="10" id="inputform-commentaire" name="inputform-commentaire" hidden />
-        <button id="modal-commentaire-submit" data-dismiss="modal" type="submit" class="save btn btn-primary">{% trans "Submit" %}</button>
-      </div>
-      <div class="modal-footer">
-        <button type="submit" class="btn btn-default" data-dismiss="modal">{% trans "Close" %}</button>
-      </div>
-     </div>
-   </div>
-</div>
-<div class="modal fade model-wide" id="modal_lienpiecejointe" role="dialog">
-  <div class="modal-dialog">
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">{% trans "Accompanying document link" %}</h4>
-      </div>
-      <div class="modal-body">
-        <textarea cols="60" id="modal-lienpiecejointe-field" name="modal-lienpiecejointe-field" rows="10"></textarea>
-        <input type="textfield" size="10" id="inputform-lienpiecejointe" name="inputform-lienpiecejointe" hidden />
-        <button id="modal-lienpiecejointe-submit" data-dismiss="modal" type="submit" class="save btn btn-primary">{% trans "Submit" %}</button>
-      </div>
-      <div class="modal-footer">
-        <button type="submit" class="btn btn-default" data-dismiss="modal">{% trans "Close" %}</button>
-      </div>
-     </div>
-   </div>
-</div>
+{% commentary_modal True %}
+{% attachment_link_modal True %}
+
 {% endblock %}
 {% block foot-javascript %}
 <script src="{% static 'js/jquery.formset.js' %}"></script>

@@ -1,6 +1,5 @@
 {% extends "base.html" %}
-{% load staticfiles %}
-{% load budgetweb_tags %}
+{% load staticfiles budgetweb_tags %}
 
 {% block head-additional %}
   <link rel="stylesheet" href="{% static 'css/budgetweb.css' %}"/>
@@ -44,112 +43,8 @@
       </div>
     </fieldset>
   {% endfor %}
-<div class="modal fade model-wide" id="modalCommentaire" role="dialog">
-  <div class="modal-dialog">
-   <!-- Modal content-->
-   <div class="modal-content">
-     <div class="modal-header">
-       <h4 class="modal-title">Commentaire</h4>
-     </div>
-     <div class="modal-body">
-       <textarea style="width:100%;" cols="60" id="modalcomm" name="modalcomm" rows="10" disabled></textarea>
-     </div>
-     <div class="modal-footer">
-       <button type="submit" class="btn btn-default" data-dismiss="modal">Fermer</button>
-     </div>
-    </div>
-  </div>
+{% commentary_modal %}
+{% attachment_link_modal %}
+{% montant_dc_modal %}
 </div>
-<div class="modal fade model-wide" id="modalPieceJointe" role="dialog">
-  <div class="modal-dialog">
-   <!-- Modal content-->
-   <div class="modal-content">
-     <div class="modal-header">
-       <h4 class="modal-title">Lien vers la pièce jointe</h4>
-     </div>
-     <div class="modal-body">
-       <a id="modalpiecejointe" name="modalpiecejointe" href="" target="_blank">
-         <div id="modalpiecejointe" name="modalpiecejointe"></div>
-       </a>
-     </div>
-     <div class="modal-footer">
-       <button type="submit" class="btn btn-default" data-dismiss="modal">Fermer</button>
-     </div>
-    </div>
-  </div>
-</div>
-<div class="modal fade model-wide" id="modalMontantDC" role="dialog">
-  <div class="modal-dialog">
-   <div class="modal-content">
-     <div class="modal-header">
-       <button type="button" class="close" data-dismiss="modal">&times;</button>
-       <h4 class="modal-title">Modification de la valeur du montant en Droit Constaté</h4>
-     </div>
-     <div class="modal-body">
-			<form id="editArticle" name="editArticle" method="POST" class="post-form">
-					{% csrf_token %}
-          <input type="hidden" id="pk" name="pk">
-          <input type="hidden" id="type" name="type">
-          <label for="txtMontantDC">Ancien montant :</label>
-					<input readonly type="text" id="txtMontantDCOrigin" name="txtMontantDCOrigin" value=""><br />
-          <div align="center" style="margin-top:10px;"></div>
-          <label for="txtMontantDC">Nouveau montant :</label>
-					<input type="text" id="txtMontantDC" name="txtMontantDC" value=""><br />
-          <div align="center" style="margin-top:10px;">
-            <button id="modal-submitMontantDC" class="save btn btn-primary"
-                    name="submitUpdate">Modifier le montant</button>
-          </div>
-			 </form>
-       <div id="result" name="result"></div>
-     </div>
-     <div class="modal-footer">
-       <button type="submit" class="btn btn-default" data-dismiss="modal">Fermer</button>
-      </div>
-    </div>
-  </div>
-</div>
-</div>
-{% endblock %}
-{% block foot-javascript %}
-<script>
-$(document).ready(function() {
-    $('#modalMontantDC').on('show.bs.modal', function(e) {
-       $("#result").empty();
-       $('#txtMontantDCOrigin').empty().val($(e.relatedTarget).data('value'));
-       $('#txtMontantDC').empty().val($(e.relatedTarget).data('value'));
-       $('#type').empty().val($(e.relatedTarget).data('type'));
-       $('#pk').empty().val($(e.relatedTarget).data('pk'));
-    });
-    $('#modal-submitMontantDC').on('click', function(e) {
-      e.preventDefault();
-      pk = $('input[name=pk]').val();
-      type = $('input[name=type]').val();
-      montant = $('input[name=txtMontantDC]').val();
-      $.ajax({
-        url : "/api/updateMontantDC/",
-        type : "get",
-        data : { pk : pk,
-                 type : type,
-                 montant : montant },
-       success : function(json) {
-           function reload_page(){
-             window.location.reload();
-           };
-           $("#result").html('<div class="alert alert-success" role="alert">' + json.message + '</div>');
-           window.setTimeout( reload_page, 500 );
-      },
-      error : function(xhr,errmsg,err) {
-        $("#result").html('<div class="alert alert-danger" role="alert">' + xhr.status + ": " + xhr.responseText + '</div>');
-      }
-      });
-      return true;
-    });
-    $('#modalCommentaire').on('show.bs.modal', function(e) {
-       $('#modalcomm').empty().val($(e.relatedTarget).data('formid'));
-    });
-    $('#modalPieceJointe').on('show.bs.modal', function(e) {
-       $('#modalpiecejointe').empty().append($(e.relatedTarget).data('formid'));
-    });
-});
-</script>
 {% endblock %}

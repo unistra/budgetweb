@@ -11,9 +11,12 @@ ul {
 
 label {
   display: inline-block;
-  width: 180px;
   text-align: right;
   vertical-align: top;
+}
+
+textarea {
+  width: 100%;
 }
 
 .table-pluri thead th {
@@ -29,15 +32,26 @@ label {
 }
 
 .table-pluri tbody td {
-    border: 1px solid #000000;
-    padding: 5px;
+  border: 1px solid #000000;
+  padding: 5px;
 }
 .table-pluri tbody td.money {
-    text-align:right;
+  text-align:right;
 }
 
 .table-pluri tbody {
-    border-bottom: 3px solid #000000;
+  border-bottom: 3px solid #000000;
+}
+
+.table-pluri .total {
+  font-weight: bold;
+  text-align: right;
+}
+
+.table-pluri .total-txt {
+  text-align: right;
+  padding-right: 20px;
+  font-weight:bold;
 }
 
 .table-details {
@@ -74,7 +88,7 @@ label {
 .supertable select {
     width: 100%;
 }
-.depense thead th {
+.depense thead th, .depense .total {
   background-color: #66ff66
 }
 .depense tr.row1 {
@@ -86,7 +100,7 @@ label {
 .depense tr.error {
   background-color: #FF9292;
 }
-.recette thead th {
+.recette thead th, .recette .total {
   background-color: #ff6666
 }
 .recette tr.row1 {
@@ -99,9 +113,9 @@ label {
   background-color: #FF9292;
 }
 ul.errorlist {
-    color: #F00;
-    font-weight: bold;
-    list-style-type: none;
+  color: #F00;
+  font-weight: bold;
+  list-style-type: none;
 }
 
 fieldset {
@@ -138,33 +152,33 @@ legend {
 }
 
 td.blank_row {
-    line-height:5px;
+  line-height:5px;
 }
 
 .resumepfi {
-    border: 3px solid black;
+  border: 3px solid black;
 }
 
 .resumepfi th {
-    text-align: center;
-        border: 3px solid #000000;
-        padding: 2px;
+  text-align: center;
+  border: 3px solid #000000;
+  padding: 2px;
 }
 
 .resumepfi td {
-    border: 1px solid #000000;
-    padding: 5px;
-        text-align: right;
+  border: 1px solid #000000;
+  padding: 5px;
+  text-align: right;
 }
 
 .bold {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 input[readonly]{
-    /*background-color:#A9A9A9;*/
-        background-color: transparent;
-        border: none;
+  /*background-color:#A9A9A9;*/
+  background-color: transparent;
+  border: none;
 }
 input.decimal{
         text-align:right;
@@ -175,10 +189,13 @@ input.decimal{
     color: #f00;
 }
 
+/*************/
+/* Flex tree */
+/*************/
+
 .flextable {
   display: flex;
   flex-flow: column nowrap;
-  /*font-size: .8rem;*/
   margin: 0.5rem;
   line-height: 1.5;
   border-bottom: 1px solid #d0d0d0;
@@ -240,6 +257,10 @@ input.decimal{
   justify-content: flex-end;
   -webkit-justify-content: flex-end;
 }
+
+/*****************/
+/* Media queries */
+/*****************/
 
 @media print {
   fieldset {

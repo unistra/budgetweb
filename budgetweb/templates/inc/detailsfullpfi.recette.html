@@ -58,7 +58,7 @@
       <td align="center">
         {% if recette.commentaire %}
           <a href="#">
-            <span data-backdrop="false" data-toggle="modal" data-target="#modalCommentaire" data-formid="{{ recette.commentaire }}" class="glyphicon glyphicon-paperclip" title="Afficher"></span>
+            <span data-backdrop="false" data-toggle="modal" data-target="#modal_commentaire" data-formid="{{ recette.commentaire }}" class="glyphicon glyphicon-paperclip" title="Afficher"></span>
           </a>
         {% else %}
           &nbsp;
@@ -67,7 +67,7 @@
       <td align="center">
         {% if recette.lienpiecejointe %}
           <a href="#">
-            <span data-backdrop="false" data-toggle="modal" data-target="#modalPieceJointe" data-formid="{{ recette.lienpiecejointe }}" class="glyphicon glyphicon-paperclip" title="Afficher"></span>
+            <span data-backdrop="false" data-toggle="modal" data-target="#modal_lienpiecejointe" data-formid="{{ recette.lienpiecejointe }}" class="glyphicon glyphicon-paperclip" title="Afficher"></span>
           </a>
         {% else %}
           &nbsp;
@@ -81,10 +81,10 @@
   {% endfor %}
     
     <tr>
-      <td colspan="8" style="text-align:right;padding-right:20px;font-weight:bold;">Total :</td>
-      <td nowrap style="background-color:#ff6666;font-weight:bold;text-align:right;">{% firstof sums.0.sum_ar|intspace "0,00" %} &euro;</td>
-      <td nowrap style="background-color:#ff6666;font-weight:bold;text-align:right;">{% firstof sums.0.sum_re|intspace "0,00" %} &euro;</td>
-      <td nowrap style="background-color:#ff6666;font-weight:bold;text-align:right;">{% firstof sums.0.sum_dc|intspace "0,00" %} &euro;</td>
+      <td colspan="8" class="total-txt">Total :</td>
+      <td nowrap class="total">{% firstof sums.0.sum_ar|intspace "0,00" %} &euro;</td>
+      <td nowrap class="total">{% firstof sums.0.sum_re|intspace "0,00" %} &euro;</td>
+      <td nowrap class="total">{% firstof sums.0.sum_dc|intspace "0,00" %} &euro;</td>
       <td colspan="2">&nbsp;</td>
     </tr>
   </tbody>

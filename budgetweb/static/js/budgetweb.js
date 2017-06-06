@@ -41,6 +41,46 @@ jQuery(document).ready(function($) {
         loadDetails("/api/"+ model + "/" + $nature.val() + "/", $nature);
     });
 
+    $('#modalMontantDC').on('show.bs.modal', function(e) {
+       $("#result").empty();
+       $('#txtMontantDCOrigin').empty().val($(e.relatedTarget).data('value'));
+       $('#txtMontantDC').empty().val($(e.relatedTarget).data('value'));
+       $('#type').empty().val($(e.relatedTarget).data('type'));
+       $('#pk').empty().val($(e.relatedTarget).data('pk'));
+    });
+
+    $('#modal-submitMontantDC').on('click', function(e) {
+      e.preventDefault();
+      pk = $('input[name=pk]').val();
+      type = $('input[name=type]').val();
+      montant = $('input[name=txtMontantDC]').val();
+      $.ajax({
+        url : "/api/updateMontantDC/",
+        type : "get",
+        data : { pk : pk,
+                 type : type,
+                 montant : montant },
+       success : function(json) {
+           function reload_page(){
+             window.location.reload();
+           };
+           $("#result").html('<div class="alert alert-success" role="alert">' + json.message + '</div>');
+           window.setTimeout( reload_page, 500 );
+      },
+      error : function(xhr,errmsg,err) {
+        $("#result").html('<div class="alert alert-danger" role="alert">' + xhr.status + ": " + xhr.responseText + '</div>');
+      }
+      });
+      return true;
+    });
+
+    $('#modal_commentaire').on('show.bs.modal', function(e) {
+       $('#modal-commentaire-field').empty().val($(e.relatedTarget).data('formid'));
+    });
+    $('#modal_lienpiecejointe').on('show.bs.modal', function(e) {
+       $('#modal-lienpiecejointe-field').empty().append($(e.relatedTarget).data('formid'));
+    });
+
     function loadDetails(url, dest) {
       $.getJSON(url, function(data) {
   			dest.nextAll().empty();
