@@ -339,12 +339,12 @@ def detailspfi(request, pfiid):
     sum_depenses = Depense.objects.filter(pfi=pfi).values('annee').annotate(
         sum_dc=Sum('montant_dc'),
         sum_ae=Sum('montant_ae'),
-        sum_cp=Sum('montant_cp')).order_by('periodebudget__period__order')
+        sum_cp=Sum('montant_cp'))
     sum_depenses = to_dict(groupby(sum_depenses, lambda x: x['annee']))
     sum_recettes = Recette.objects.filter(pfi=pfi).values('annee').annotate(
         sum_dc=Sum('montant_dc'),
         sum_ar=Sum('montant_ar'),
-        sum_re=Sum('montant_re')).order_by('periodebudget__period__order')
+        sum_re=Sum('montant_re'))
     sum_recettes = to_dict(groupby(sum_recettes, lambda x: x['annee']))
 
     resume_depenses, resume_recettes = get_detail_pfi_by_period(
@@ -426,7 +426,7 @@ def detailscf(request, structid):
     }
 
     if structparent.depth > 2 or\
-       structparent.get_first_ancestor().code != "1010":
+            structparent.get_first_ancestor().code != "1010":
         sum_depenses = Depense.objects.filter(**queryset).values('annee').annotate(
             sum_dc=Sum('montant_dc'),
             sum_ae=Sum('montant_ae'),
