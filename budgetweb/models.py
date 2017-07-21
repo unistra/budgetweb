@@ -181,10 +181,10 @@ class Comptabilite(models.Model):
         super().__init__(*args, **kwargs)
         # Set the initial montants values for the difference calculation.
         # The values are set to 0 if it is a new object.
-        # list(map(lambda x: setattr(
-        #         self, 'initial_%s' % x,
-        #         getattr(self, x) if self.id else Decimal(0)),
-        #     self.initial_montants))
+        list(map(lambda x: setattr(
+                self, 'initial_%s' % x,
+                getattr(self, x, Decimal(0))),
+            self.initial_montants))
 
     @transaction.atomic
     @require_lock([StructureMontant, 'budgetweb.Depense', 'budgetweb.Recette'])
@@ -244,8 +244,8 @@ class Comptabilite(models.Model):
                 structure=structure, periodebudget=self.periodebudget,
                 annee=self.annee)
             updated_values = {
-                montant_name(m): getattr(montant, montant_name(m))\
-                    - getattr(self, m) for m in self.initial_montants}
+                montant_name(m): getattr(montant, montant_name(m))
+                - getattr(self, 'initial_%s' % m) for m in self.initial_montants}
             for key, value in updated_values.items():
                 setattr(montant, key, value)
             montant.save()
