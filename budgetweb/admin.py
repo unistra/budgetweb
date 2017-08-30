@@ -30,8 +30,10 @@ class DepenseAdmin(admin.ModelAdmin):
     list_display = ('pfi', 'structure', 'domainefonctionnel',
                     'naturecomptabledepense', 'periodebudget', 'annee',
                     'montant_ae', 'montant_cp', 'montant_dc')
-    search_fields = ['pfi', 'structure', 'domainefonctionnel',
-                     'naturecomptabledepense', 'periodebudget', 'annee']
+    search_fields = ['pfi__code', 'structure__code',
+                     'domainefonctionnel__code',
+                     'naturecomptabledepense__code_nature_comptable',
+                     'periodebudget__period__code', 'annee']
 admin.site.register(Depense, DepenseAdmin)
 
 
@@ -56,8 +58,9 @@ class RecetteAdmin(admin.ModelAdmin):
     list_display = ('pfi', 'structure',
                     'naturecomptablerecette', 'periodebudget', 'annee',
                     'montant_ar', 'montant_re', 'montant_dc')
-    search_fields = ['pfi', 'structure', 'naturecomptablerecette',
-                     'periodebudget', 'annee']
+    search_fields = ['pfi__code', 'structure__code', 'domainefonctionnel',
+                     'naturecomptablerecette__code_nature_comptable',
+                     'periodebudget__period__code', 'annee']
 admin.site.register(Recette, RecetteAdmin)
 
 
@@ -66,7 +69,7 @@ class StructureMontantAdmin(admin.ModelAdmin):
                     'depense_montant_dc', 'depense_montant_cp',
                     'depense_montant_ae', 'recette_montant_dc',
                     'recette_montant_ar', 'recette_montant_re')
-    search_fields = ['structure', 'periodebudget__period__code', 'annee']
+    search_fields = ['structure__code', 'periodebudget__period__code', 'annee']
 admin.site.register(StructureMontant, StructureMontantAdmin)
 
 
