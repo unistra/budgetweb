@@ -12,8 +12,8 @@ from budgetweb.decorators import (is_ajax_get, is_authorized_editing,
 from budgetweb.exceptions import (
     EditingUnauthorizedException, PeriodeBudgetUninitializeError,
     StructureUnauthorizedException)
-from budgetweb.models import (PeriodeBudget, PlanFinancement, Structure,
-                              StructureAuthorizations)
+from budgetweb.apps.structure.models import PlanFinancement, Structure
+from budgetweb.models import PeriodeBudget, StructureAuthorizations
 
 
 class BaseDecoratorsTest(TestCase):

@@ -30,7 +30,7 @@ def is_authorized_structure(func):
     """
     @wraps(func)
     def wrapper(request, *args, **kwargs):
-        from .models import PlanFinancement
+        from budgetweb.apps.structure.models import PlanFinancement
         from .utils import get_authorized_structures_ids
 
         try:

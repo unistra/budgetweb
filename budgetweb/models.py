@@ -4,11 +4,11 @@ from django.conf import settings
 from django.core.validators import URLValidator
 from django.db import models, transaction
 from django.db.models import F
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
 
-from budgetweb.apps.structure.models import (
-    DomaineFonctionnel, NatureComptableDepense, NatureComptableRecette,
-    PlanFinancement, Structure)
+from budgetweb.apps.structure.models import Structure
 from .decorators import require_lock
 
 
@@ -32,8 +32,8 @@ class ActiveBudgetManager(models.Manager):
 class ActivePeriodManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().\
-                    filter(periodebudget__is_active=True).\
-                    filter(periodebudget__period__code__startswith='B')
+            filter(periodebudget__is_active=True).\
+            filter(periodebudget__period__code__startswith='B')
 
 
 class StructureAuthorizations(models.Model):
@@ -58,6 +58,15 @@ class StructureAuthorizations(models.Model):
                 for children in structure.get_children():
                     self.structures.add(children)
         super().save(*args, **kwargs)
+
+
+@receiver(post_save, sender=Structure)
+def my_handler(sender, instance, created, **kwargs):
+        parent = instance.parent
+        # Add the parent's authorizations for a newly created structure
+        if parent and created:
+            for auth in parent.authorized_structures.all():
+                auth.structures.add(instance)
 
 
 class Period(models.Model):

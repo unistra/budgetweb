@@ -5,10 +5,10 @@ import json
 from django.contrib.auth.models import User
 from django.test import TestCase
 
-from budgetweb.models import (Depense, DomaineFonctionnel,
-                              NatureComptableDepense, NatureComptableRecette,
-                              PeriodeBudget, PlanFinancement, Recette,
-                              Structure)
+from budgetweb.apps.structure.models import (
+    DomaineFonctionnel, NatureComptableDepense, NatureComptableRecette,
+    PlanFinancement, Structure)
+from budgetweb.models import Depense, PeriodeBudget, Recette
 
 
 class APIViewsTest(TestCase):
