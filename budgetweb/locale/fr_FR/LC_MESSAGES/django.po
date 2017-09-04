@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-02 16:01+0200\n"
+"POT-Creation-Date: 2017-09-04 09:21+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28,7 +28,7 @@ msgstr ""
 #: budgetweb/apps/structure/models.py:15 budgetweb/apps/structure/models.py:32
 #: budgetweb/apps/structure/models.py:104
 #: budgetweb/apps/structure/models.py:137
-#: budgetweb/apps/structure/models.py:169 budgetweb/models.py:65
+#: budgetweb/apps/structure/models.py:169 budgetweb/models.py:74
 #, fuzzy
 #| msgid "EOTP Code"
 msgid "Code"
@@ -37,7 +37,7 @@ msgstr "Code de l'EOTP"
 #: budgetweb/apps/structure/models.py:16 budgetweb/apps/structure/models.py:33
 #: budgetweb/apps/structure/models.py:105
 #: budgetweb/apps/structure/models.py:136
-#: budgetweb/apps/structure/models.py:170 budgetweb/models.py:66
+#: budgetweb/apps/structure/models.py:170 budgetweb/models.py:75
 msgid "Label"
 msgstr ""
 
@@ -52,11 +52,13 @@ msgstr ""
 msgid "Is active"
 msgstr ""
 
-#: budgetweb/apps/structure/models.py:37 budgetweb/apps/structure/models.py:111
+#: budgetweb/apps/structure/models.py:37
+#: budgetweb/apps/structure/models.py:111
 msgid "BudgetWeb group 1"
 msgstr ""
 
-#: budgetweb/apps/structure/models.py:39 budgetweb/apps/structure/models.py:113
+#: budgetweb/apps/structure/models.py:39
+#: budgetweb/apps/structure/models.py:113
 msgid "BudgetWeb group 2"
 msgstr ""
 
@@ -154,15 +156,15 @@ msgstr ""
 msgid "Is AR et RE"
 msgstr ""
 
-#: budgetweb/forms.py:334 budgetweb/tests/test_forms.py:858
+#: budgetweb/forms.py:334 budgetweb/tests/test_forms.py:859
 msgid "There are already entries which are not in the new period"
 msgstr "Il existe déjà des entrées qui ne sont pas dans la nouvelle période"
 
-#: budgetweb/models.py:67
+#: budgetweb/models.py:76
 msgid "Order"
 msgstr ""
 
-#: budgetweb/models.py:80
+#: budgetweb/models.py:89
 msgid "Period"
 msgstr ""
 
@@ -187,32 +189,18 @@ msgid "DC Menu"
 msgstr "Menu Droit Constaté"
 
 #: budgetweb/templates/base.html:44
+msgid "Administration"
+msgstr "Administration"
+
+#: budgetweb/templates/base.html:47
 msgid "Logout"
 msgstr "Déconnexion"
 
-#: budgetweb/templates/base.html:46
+#: budgetweb/templates/base.html:49
 msgid "Login"
 msgstr "Connexion"
 
-#: budgetweb/templates/comptabilite.html:19
-msgid "Comment"
-msgstr "Commentaire"
-
-#: budgetweb/templates/comptabilite.html:24
-#: budgetweb/templates/comptabilite.html:42
-msgid "Submit"
-msgstr "Valider"
-
-#: budgetweb/templates/comptabilite.html:27
-#: budgetweb/templates/comptabilite.html:45
-msgid "Close"
-msgstr "Fermer"
-
-#: budgetweb/templates/comptabilite.html:37
-msgid "Attachment link"
-msgstr "Lien vers la pièce jointe"
-
-#: budgetweb/templates/comptabilite.html:186
+#: budgetweb/templates/comptabilite.html:152
 #: budgetweb/templates/depense.html:33 budgetweb/templates/recette.html:33
 msgid "Add"
 msgstr "Ajouter"
@@ -237,47 +225,60 @@ msgstr "Caractéristique du programme de financement"
 msgid "link to the fund center"
 msgstr "rattaché au centre financier"
 
-#: budgetweb/templates/detailspfi.html:6
+#: budgetweb/templates/detailspfi.html:7
 msgid "Structure link"
 msgstr "Structure de rattachement"
 
-#: budgetweb/templates/detailspfi.html:7
-msgid "EOTP Code"
-msgstr "Code de l'EOTP"
-
-#: budgetweb/templates/detailspfi.html:10
+#: budgetweb/templates/detailspfi.html:11
 msgid "Derivate cost center"
 msgstr "Centre de coût dérivé"
 
-#: budgetweb/templates/detailspfi.html:11
-msgid "Derivate profit center"
-msgstr "Centre de profit dérivé"
-
-#: budgetweb/templates/detailspfi.html:14
+#: budgetweb/templates/detailspfi.html:15
 msgid "Assigned PFI"
 msgstr "PFI fléché"
 
-#: budgetweb/templates/detailspfi.html:14
-#: budgetweb/templates/detailspfi.html:15
+#: budgetweb/templates/detailspfi.html:16
+#: budgetweb/templates/detailspfi.html:27
 msgid "Yes"
 msgstr "Oui"
 
-#: budgetweb/templates/detailspfi.html:14
-#: budgetweb/templates/detailspfi.html:15
+#: budgetweb/templates/detailspfi.html:16
+#: budgetweb/templates/detailspfi.html:27
 msgid "No"
 msgstr "Non"
 
-#: budgetweb/templates/detailspfi.html:15
+#: budgetweb/templates/detailspfi.html:21
+msgid "EOTP Code"
+msgstr "Code de l'EOTP"
+
+#: budgetweb/templates/detailspfi.html:24
+msgid "Derivate profit center"
+msgstr "Centre de profit dérivé"
+
+#: budgetweb/templates/detailspfi.html:27
 msgid "Multi-year PFI"
 msgstr "PFI pluriannuel"
 
-#: budgetweb/templates/detailspfi.html:19
+#: budgetweb/templates/detailspfi.html:32
 msgid "Show the resumed PFI"
 msgstr "Revenir sur la synthèse pluriannuelle du PFI"
 
-#: budgetweb/templates/detailspfi.html:20
+#: budgetweb/templates/detailspfi.html:35
 msgid "Show the details PFI"
 msgstr "Afficher le détail des saisies pluriannuelle du PFI"
+
+#: budgetweb/templates/modal/attachment_link.html:7
+msgid "Attachment link"
+msgstr "Lien vers la pièce jointe"
+
+#: budgetweb/templates/modal/attachment_link.html:13
+#: budgetweb/templates/modal/commentary.html:13
+msgid "Submit"
+msgstr "Valider"
+
+#: budgetweb/templates/modal/attachment_link.html:19
+msgid "Close"
+msgstr "Fermer"
 
 #: budgetweb/templates/recette.html:9
 msgid "Receipt forms"
@@ -298,3 +299,6 @@ msgstr ""
 msgid ""
 "Something wrong in                            api_set_dcfield_value_by_id %s"
 msgstr ""
+
+#~ msgid "Comment"
+#~ msgstr "Commentaire"
