@@ -88,7 +88,7 @@ class PeriodeBudget(models.Model):
 
     period = models.ForeignKey(Period, verbose_name=_('Period'))
     annee = models.PositiveIntegerField('Année')
-    is_active = models.BooleanField('Activé (oui/,non)', default=True)
+    is_active = models.BooleanField('Activé (oui/non)', default=True)
 
     # Différentes dates pour les saisies.
     date_debut_saisie = models.DateField('Date de début de la saisie \

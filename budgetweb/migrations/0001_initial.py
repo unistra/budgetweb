@@ -88,7 +88,7 @@ class Migration(migrations.Migration):
                 ('code', models.CharField(max_length=20, verbose_name='Libellé court')),
                 ('label', models.CharField(max_length=255, verbose_name='Libellé long')),
                 ('annee', models.PositiveIntegerField(verbose_name='Année')),
-                ('is_active', models.BooleanField(default=True, verbose_name='Activé (oui/,non)')),
+                ('is_active', models.BooleanField(default=True, verbose_name='Activé (oui/non)')),
             ],
         ),
         migrations.CreateModel(

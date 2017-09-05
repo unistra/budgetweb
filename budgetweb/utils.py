@@ -99,14 +99,16 @@ def get_pfi_total(pfi, years=None):
     return depense, recette
 
 
-def get_pfi_years(pfi, begin_current_period=False, year_number=4):
+def get_pfi_years(pfi, begin_current_period=False, year_number=4, year=None):
     from .utils import get_current_year
+
+    current_year = year or get_current_year()
 
     if pfi.date_debut and pfi.date_fin:
         if begin_current_period:
             begin_year = pfi.date_debut.year
         else:
-            begin_year = get_current_year()-1 if pfi.date_debut.year < get_current_year() else get_current_year()
+            begin_year = current_year - 1 if pfi.date_debut.year < current_year else current_year
         end_year = min(begin_year + year_number, pfi.date_fin.year)\
             if year_number else pfi.date_fin.year
         return list(range(begin_year, end_year + 1))
