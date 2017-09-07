@@ -17,6 +17,7 @@ urlpatterns = [
     url(r'^$', home, name='home'),
 
     # Ajax
+    # TODO: move to budgetweb.libs.api
     url(r'^api/(?P<model>naturecomptablerecette|naturecomptabledepense)/enveloppe/(?P<enveloppe>\w+)/(?P<pfiid>\w+)/$',
         views.api_fund_designation_by_nature_and_enveloppe,
         name='api-fund-designation-by-nature-and-enveloppe'),
@@ -30,7 +31,6 @@ urlpatterns = [
     url(r'^api/naturecomptablerecette/rules/(?P<id_naturecomptablerecette>\w+)/$',
         views.api_get_managment_rules_recette_by_id,
         name='api_get_managment_rules_recette_by_id'),
-
     url(r'^api/updateMontantDC/', views.api_set_dcfield_value_by_id,
         name='api_set_dcfield_value_by_id'),
 
@@ -53,6 +53,8 @@ urlpatterns = [
         views.depense, name="depense"),
     url(r'^recette/(?P<pfiid>\w+)/(?P<annee>\w+)/$',
         views.recette, name="recette"),
+
+    url(r'^setyear/$', views.set_year, name='set_year'),
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^jsi18n/$', javascript_catalog, js_info_dict),

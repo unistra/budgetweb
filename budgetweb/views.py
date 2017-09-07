@@ -11,6 +11,7 @@ from django.db.models import F, Prefetch, Sum
 from django.forms.models import modelformset_factory
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import (get_object_or_404, redirect, render)
+from django.utils.http import is_safe_url
 from django.utils.translation import ugettext as _
 from budgetweb.apps.structure.models import (
     DomaineFonctionnel, NatureComptableDepense, NatureComptableRecette,
@@ -18,14 +19,14 @@ from budgetweb.apps.structure.models import (
 from .decorators import (is_ajax_get, is_authorized_structure,
                          is_authorized_editing)
 from .forms import DepenseForm, PlanFinancementPluriForm, RecetteForm
-from .models import Depense, PeriodeBudget, Recette, StructureMontant
+from .models import Depense, PeriodeBudget, Recette
 from .templatetags.budgetweb_tags import sum_montants
 from .utils import (
     get_authorized_structures_ids, get_current_year, get_detail_pfi_by_period,
-    get_pfi_total_types, get_pfi_years, tree_infos)
+    get_pfi_total_types, get_pfi_years, tree_infos, get_selected_year)
 
 
-# @login_required
+@login_required
 def home(request):
     return redirect('show_tree', type_affichage='gbcp')
 
@@ -154,7 +155,7 @@ def show_tree(request, type_affichage, structid=0):
         'structures': structures,
         'pfis': pfis,
         'typeAffichage': type_affichage,
-        'currentYear': get_current_year(),
+        'currentYear': active_period.annee,
         'cols': active_fields,
     }
 
@@ -443,3 +444,22 @@ def detailscf(request, structid):
         })
 
     return render(request, 'detailscf.html', context)
+
+
+def set_year(request):
+    """
+    Redirect to a given url while setting the chosen year in the session.
+    The url and year need to be specified in the request parameters.
+
+    This view is based on django.viwes.i18n.set_language
+    """
+    next = request.POST.get('next', request.GET.get('next'))
+    if not is_safe_url(url=next, host=request.get_host()):
+        next = request.META.get('HTTP_REFERER')
+        if not is_safe_url(url=next, host=request.get_host()):
+            next = '/'
+    response = HttpResponseRedirect(next)
+    if request.method == 'POST':
+        year = request.POST.get('year', None)
+        request.session['period_year'] = int(year)
+    return response

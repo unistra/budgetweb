@@ -32,13 +32,24 @@
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="{% url 'home' %}">{% trans "Home" %}</a></li>
-                       <li class="dropdown">
-                       <a class="dropdown-toggle" data-toggle="dropdown" href="#">BudgetWeb
-                       <span class="caret"></span></a>
-                       <ul class="dropdown-menu">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">BudgetWeb
+                        <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
                             <li><a href="{% url 'show_tree' type_affichage='gbcp'%}">{% trans "GBCP Menu" %}</a></li>
                             <li><a href="{% url 'show_tree' type_affichage='dc'%}">{% trans "DC Menu" %}</a></li>
-                       </ul>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">{% trans "Year" %}
+                        <span class="caret"></span></a>
+                        <ul class="dropdown-menu" id="period_years">
+                            <form action="{% url 'set_year' %}" method="post">{% csrf_token %}
+                                {% for year in period_years %}
+                                <li><button type="submit" name="year" value="{{ year }}">{{ year }}</button></li>
+                                {% endfor %}
+                            </form>
+                        </ul>
                     </li>
                     {% if user.is_staff %}
                     <li id="logout-menu"><a id="administration" href='{% url "admin:index"%}' title="{% trans "Administration" %}">{% trans "Administration" %}</a></li>

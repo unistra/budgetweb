@@ -370,3 +370,7 @@ def tree_infos(active_period, period_code):
         }
 
     return prefetches, cols
+
+
+def get_selected_year(request):
+    return request.session.get('period_year', get_current_year())

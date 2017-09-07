@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-04 09:21+0200\n"
+"POT-Creation-Date: 2017-09-07 09:25+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -154,7 +154,7 @@ msgstr ""
 
 #: budgetweb/apps/structure/models.py:177
 msgid "Is AR et RE"
-msgstr ""
+msgstr "Est AR et RE"
 
 #: budgetweb/forms.py:334 budgetweb/tests/test_forms.py:859
 msgid "There are already entries which are not in the new period"
@@ -162,11 +162,11 @@ msgstr "Il existe déjà des entrées qui ne sont pas dans la nouvelle période"
 
 #: budgetweb/models.py:76
 msgid "Order"
-msgstr ""
+msgstr "Ordre"
 
 #: budgetweb/models.py:89
 msgid "Period"
-msgstr ""
+msgstr "Période"
 
 #: budgetweb/templates/404.html:6
 msgid "Page not found"
@@ -189,14 +189,18 @@ msgid "DC Menu"
 msgstr "Menu Droit Constaté"
 
 #: budgetweb/templates/base.html:44
+msgid "Year"
+msgstr "Année"
+
+#: budgetweb/templates/base.html:53
 msgid "Administration"
 msgstr "Administration"
 
-#: budgetweb/templates/base.html:47
+#: budgetweb/templates/base.html:56
 msgid "Logout"
 msgstr "Déconnexion"
 
-#: budgetweb/templates/base.html:49
+#: budgetweb/templates/base.html:58
 msgid "Login"
 msgstr "Connexion"
 
