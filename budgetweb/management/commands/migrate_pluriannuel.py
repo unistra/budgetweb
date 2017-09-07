@@ -70,7 +70,7 @@ class Command(BaseCommand):
                     (Q(annee=year - 2) | Q(annee=year - 1)),
                     year=year - 1)
 
-                # Budgets postérieurs
+                # Budgets futurs
                 self.create_depenses(
                     pfi, extra_values=['annee'], annee__gte=year)
                 self.create_recettes(
