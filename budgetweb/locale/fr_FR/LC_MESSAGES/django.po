@@ -19,11 +19,11 @@ msgstr ""
 
 #: budgetweb/admin.py:21
 msgid "Mark selected periods as deactivated"
-msgstr ""
+msgstr "Désactiver les périodes sélectionnées"
 
 #: budgetweb/admin.py:26
 msgid "Mark selected periods as activated"
-msgstr ""
+msgstr "Activer les périodes sélectionnées"
 
 #: budgetweb/apps/structure/models.py:15 budgetweb/apps/structure/models.py:32
 #: budgetweb/apps/structure/models.py:104

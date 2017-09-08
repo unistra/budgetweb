@@ -302,8 +302,8 @@ input.decimal{
   text-align: left;
 }
 
-#period_years button:hover, #period_years button:focus{
+#period_years button:hover, #period_years button:focus {
   text-decoration: none;
   color: #fff;
-  background-color: #358cd3
+  background-color: #358cd3;
 }

@@ -41,7 +41,7 @@
                         </ul>
                     </li>
                     <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">{% trans "Year" %}
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">{% trans "Year" %} {{ request.session.period_year }}
                         <span class="caret"></span></a>
                         <ul class="dropdown-menu" id="period_years">
                             <form action="{% url 'set_year' %}" method="post">{% csrf_token %}
