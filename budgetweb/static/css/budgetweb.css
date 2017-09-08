@@ -58,7 +58,7 @@ textarea {
   text-align:center;
 }
 
-.container {
+body > .container {
   width:100%;
 }
 
