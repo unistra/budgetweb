@@ -9,8 +9,10 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.db.models import F, Prefetch, Sum
 from django.forms.models import modelformset_factory
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import (
+    HttpResponse, HttpResponseRedirect, HttpResponseServerError, JsonResponse)
 from django.shortcuts import (get_object_or_404, redirect, render)
+from django.template import loader, Context
 from django.utils.http import is_safe_url
 from django.utils.translation import ugettext as _
 from django.views.decorators.csrf import requires_csrf_token
@@ -487,7 +489,7 @@ def handler500(request, template_name='500.html'):  # pragma: no cover
     t = loader.get_template(template_name)
     return HttpResponseServerError(t.render(
         Context({
-            'error': value.message,
+            'error': value.message if hasattr(value, 'message') else value,
             'type': exctype.__name__,
             'tb': traceback.format_exception(exctype, value, tb)
         })

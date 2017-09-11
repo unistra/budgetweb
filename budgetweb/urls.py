@@ -8,6 +8,8 @@ from . import views
 
 admin.autodiscover()
 
+handler500 = 'budgetweb.views.handler500'
+
 js_info_dict = {
     'packages': ('your.app.package',),
 }

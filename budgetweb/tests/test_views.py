@@ -8,6 +8,7 @@ from django.test import TestCase
 from budgetweb.apps.structure.models import (
     DomaineFonctionnel, NatureComptableDepense, NatureComptableRecette,
     PlanFinancement, Structure)
+from budgetweb.exceptions import StructureUnauthorizedException
 from budgetweb.models import Depense, PeriodeBudget, Recette
 
 
@@ -185,8 +186,8 @@ class ViewsTest(TestCase):
     def test_depense_unauthorized(self):
         view_url = '/depense/26/2017/'
         self.client.login(username='user1', password='pass')
-        response = self.client.get(view_url)
-        self.assertEqual(response.status_code, 403)
+        self.assertRaises(
+            StructureUnauthorizedException, self.client.get, view_url)
 
     def test_depense_add_valid(self):
         # https://github.com/django/django/blob/1.8.14/tests/model_formsets/tests.py
@@ -223,8 +224,8 @@ class ViewsTest(TestCase):
     def test_recette_unauthorized(self):
         view_url = '/recette/26/2017/'
         self.client.login(username='user1', password='pass')
-        response = self.client.get(view_url)
-        self.assertEqual(response.status_code, 403)
+        self.assertRaises(
+            StructureUnauthorizedException, self.client.get, view_url)
 
     def test_recette_add_valid(self):
         # https://github.com/django/django/blob/1.8.14/tests/model_formsets/tests.py
