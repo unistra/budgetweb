@@ -32,17 +32,19 @@ class Command(BaseCommand):
         return [parent] + self.get_structure_ancestors(parent) if parent else []
 
     def handle(self, *args, **options):
+        self.options = options
         self.structures = {s.pk: s.parent_id for s in Structure.active.all()}
+        self.errors = []
         comptabilites = {}
-        errors = []
+        is_update = self.options['update']
 
         periods = PeriodeBudget.active.all()
-        active_periods = options.get('periods', [])\
+        active_periods = self.options.get('periods', [])\
             or periods.values_list('period__code', flat=True)
-        active_years = options.get('years', [])\
+        active_years = self.options.get('years', [])\
             or set(periods.values_list('annee', flat=True))
         default_filters = {
-            'annee__in': active_years,
+            'periodebudget__annee__in': active_years,
             'periodebudget__period__code__in': active_periods,
         }
 
@@ -81,7 +83,7 @@ class Command(BaseCommand):
                     self.get_structure_ancestors(value.structure.pk)
                 for structure in structures:
                     montant_key = (structure,
-                         value.periodebudget.period.code,
+                         value.periodebudget.pk,
                          value.annee)
                     montants_dict = check_results.setdefault(montant_key, {})
                     for montant in intial_montants:
@@ -89,32 +91,60 @@ class Command(BaseCommand):
                         old_value = montants_dict.get(key, Decimal(0))
                         montants_dict[key] = old_value + getattr(value, montant)
 
-        # Check the differences
+        #########################
+        # Check the differences #
+        #########################
+
+        # List of all comptabilites' attributes
+        comptabilite_montants = []
+        for comptabilite, infos in comptabilites.items():
+            comptabilite_montants += list(
+                map(lambda x: '%s_%s' % (comptabilite, x),
+                    infos['model']().initial_montants))
+        
+        # Modified structuremontants
+        modified_structuremontants = []
         for structure_montant in structure_montants:
             key = (
                 structure_montant.structure.pk,
-                structure_montant.periodebudget.period.code,
+                structure_montant.periodebudget.pk,
                 structure_montant.annee,
             )
-            check_result = check_results.get(key, {})
-            comptabilite_montants = []
-            for comptabilite, infos in comptabilites.items():
-                montant_name = lambda x: '%s_%s' % (comptabilite, x)
-                comptabilite_montants += list(map(montant_name, infos['model']().initial_montants))
+            check_result = check_results.pop(key, {})
+
             for montant in comptabilite_montants:
                 result1 = getattr(structure_montant, montant) or Decimal(0)
                 result2 = check_result.get(montant, Decimal(0))
                 if result1 != result2:
-                    error_str = 'StructureMontant (pk={0.pk}) : {0.structure.code}. {1} : {2} - Calculated : {3}'.format(
-                        structure_montant, montant, result1, result2)
+                    self.errors.append(
+                        'StructureMontant (pk={0.pk}) : {0.structure.code}. {1} : {2} - '
+                        'Calculated : {3}'.format(
+                            structure_montant, montant, result1, result2))
                     # If we find a difference, we update it !
-                    if options['update']:
+                    if is_update:
                         sm = StructureMontant.objects.get(pk=structure_montant.pk)
                         setattr(sm, montant, result2)
                         sm.save()
-                    errors.append(error_str)
 
-        if errors:
-            self.stdout.write('ERRORS : \n{}'.format('\n'.join(errors)))
+        # Missing structuremontants
+        created_structuremontants = []
+        for key, results in check_results.items():
+            structure, period, year = key
+            montants = {montant: results.get(montant, Decimal(0))
+                        for montant in comptabilite_montants}
+            self.errors.append(
+                'StructureMontant (NEW) : {0} - Calculated : {1}'.format(
+                    structure, montants))
+
+            if is_update:
+                created_structuremontants.append(StructureMontant(
+                    structure_id=structure, periodebudget_id=period,
+                    annee=year, **montants))
+
+        if created_structuremontants:
+            StructureMontant.objects.bulk_create(created_structuremontants)
+
+        if self.errors:
+            self.stdout.write('ERRORS : \n{}'.format('\n'.join(self.errors)))
         else:
             self.stdout.write('No calculation errors')
