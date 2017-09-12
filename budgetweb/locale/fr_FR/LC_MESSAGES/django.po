@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-07 09:25+0200\n"
+"POT-Creation-Date: 2017-09-12 10:05+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -172,9 +172,14 @@ msgstr "Période"
 msgid "Page not found"
 msgstr "Page non trouvée"
 
-#: budgetweb/templates/500.html:6
-msgid "Error"
-msgstr "Erreur"
+#: budgetweb/templates/admin/budgetweb/periodebudget/change_form.html:9
+msgid "Migration"
+msgstr "Migration"
+
+#: budgetweb/templates/admin/budgetweb/periodebudget/change_form.html:10
+#, python-format
+msgid "Migrate pluriannual pfis for year %(year)s"
+msgstr "Migrer les pfis pluriannuelles pour l'année %(year)s"
 
 #: budgetweb/templates/base.html:34
 msgid "Home"
@@ -192,15 +197,15 @@ msgstr "Menu Droit Constaté"
 msgid "Year"
 msgstr "Année"
 
-#: budgetweb/templates/base.html:53
+#: budgetweb/templates/base.html:55
 msgid "Administration"
 msgstr "Administration"
 
-#: budgetweb/templates/base.html:56
+#: budgetweb/templates/base.html:58
 msgid "Logout"
 msgstr "Déconnexion"
 
-#: budgetweb/templates/base.html:58
+#: budgetweb/templates/base.html:60
 msgid "Login"
 msgstr "Connexion"
 
@@ -263,11 +268,11 @@ msgstr "Centre de profit dérivé"
 msgid "Multi-year PFI"
 msgstr "PFI pluriannuel"
 
-#: budgetweb/templates/detailspfi.html:32
+#: budgetweb/templates/detailspfi.html:33
 msgid "Show the resumed PFI"
 msgstr "Revenir sur la synthèse pluriannuelle du PFI"
 
-#: budgetweb/templates/detailspfi.html:35
+#: budgetweb/templates/detailspfi.html:37
 msgid "Show the details PFI"
 msgstr "Afficher le détail des saisies pluriannuelle du PFI"
 
@@ -288,21 +293,32 @@ msgstr "Fermer"
 msgid "Receipt forms"
 msgstr "Formulaire de saisie des recettes"
 
-#: budgetweb/views.py:113
+#: budgetweb/views.py:121
 msgid ""
 "The new value has been saved.                                This page will "
 "be reloaded"
 msgstr ""
 
-#: budgetweb/views.py:117
+#: budgetweb/views.py:125
 msgid "You are not allowed to do that"
 msgstr ""
 
-#: budgetweb/views.py:120
+#: budgetweb/views.py:128
 #, python-format
 msgid ""
 "Something wrong in                            api_set_dcfield_value_by_id %s"
 msgstr ""
+
+#: budgetweb/views.py:507
+msgid "There are already pluriannual entries for this period"
+msgstr "Il existe déjà des entrées pluriannuelles pour cette période"
+
+#: budgetweb/views.py:511
+msgid "Migration done"
+msgstr ""
+
+#~ msgid "Error"
+#~ msgstr "Erreur"
 
 #~ msgid "Comment"
 #~ msgstr "Commentaire"

@@ -57,10 +57,13 @@ urlpatterns = [
         views.recette, name="recette"),
 
     url(r'^setyear/$', views.set_year, name='set_year'),
+    url(r'^/migrate_pluriannuel/(?P<period_id>\d+)/$',
+        views.migrate_pluriannuel, name='migrate-pluriannuel'),
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^jsi18n/$', javascript_catalog, js_info_dict),
 ]
+
 # debug toolbar for dev
 if settings.DEBUG and 'debug_toolbar'in settings.INSTALLED_APPS:
     import debug_toolbar

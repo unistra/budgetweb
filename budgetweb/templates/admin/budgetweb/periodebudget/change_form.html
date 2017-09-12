@@ -1,0 +1,14 @@
+{% extends "admin/change_form.html" %}
+{% load i18n %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% if change and not original.has_entries %}
+    {% with year=original.annee %}
+    <br />
+    <p style="margin-left: 15px;">
+        <b>{% trans "Migration" %}</b> : <a href='{% url "migrate-pluriannuel" original.pk %}'>
+            {% blocktrans %}Migrate pluriannual pfis for year {{ year }}{% endblocktrans %}</a><br />
+    </p>
+    {% endwith %}
+    {% endif %}
+{% endblock %}

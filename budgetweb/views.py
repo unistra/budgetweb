@@ -6,7 +6,10 @@ from itertools import chain, groupby
 import json
 
 from django.conf import settings
+from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
+from django.core import management
 from django.db.models import F, Prefetch, Sum
 from django.forms.models import modelformset_factory
 from django.http import (
@@ -494,3 +497,21 @@ def handler500(request, template_name='500.html'):  # pragma: no cover
             'tb': traceback.format_exception(exctype, value, tb)
         })
     ))
+
+
+@staff_member_required
+def migrate_pluriannuel(request, period_id):
+    try:
+        period = get_object_or_404(PeriodeBudget, pk=period_id)
+        if period.has_entries():
+            msg = _('There are already pluriannual entries for this period')
+            messages.add_message(request, messages.ERROR, msg)
+        else:
+            management.call_command('migrate_pluriannuel', str(period.annee))
+            msg = _('Migration done')
+            messages.add_message(request, messages.INFO, msg)
+    except Exception as e:
+        msg = 'Error in the migration : %s' % e
+        messages.add_message(request, messages.ERROR, msg)
+
+    return redirect('/admin/budgetweb/periodebudget/%s' % period_id)

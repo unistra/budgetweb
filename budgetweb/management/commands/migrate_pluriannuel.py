@@ -55,8 +55,7 @@ class Command(BaseCommand):
                 self.period = PeriodeBudget.objects.get(
                     annee=year, period__code='BI')
             except PeriodeBudget.DoesNotExist:
-                print('Erreur : Période BI %s inexistante' % year)
-                return
+                raise Exception('Erreur : Période BI %s inexistante' % year)
 
             pfis = PlanFinancement.objects.filter(is_pluriannuel=True)
             for pfi in pfis:
