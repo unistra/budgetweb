@@ -15,8 +15,9 @@ js_info_dict = {
 }
 
 urlpatterns = [
-    url(r'^accounts/', include('django_cas.urls', namespace='django_cas')),
+    url(r'^jsi18n/$', javascript_catalog, js_info_dict),
     url(r'^$', home, name='home'),
+    url(r'^accounts/', include('django_cas.urls', namespace='django_cas')),
 
     # Ajax
     # TODO: move to budgetweb.libs.api
@@ -57,11 +58,11 @@ urlpatterns = [
         views.recette, name="recette"),
 
     url(r'^setyear/$', views.set_year, name='set_year'),
+
+    # Administration
+    url(r'^admin/', include(admin.site.urls)),
     url(r'^/migrate_pluriannuel/(?P<period_id>\d+)/$',
         views.migrate_pluriannuel, name='migrate-pluriannuel'),
-
-    url(r'^admin/', include(admin.site.urls)),
-    url(r'^jsi18n/$', javascript_catalog, js_info_dict),
 ]
 
 # debug toolbar for dev

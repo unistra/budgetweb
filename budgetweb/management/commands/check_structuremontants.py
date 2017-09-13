@@ -35,6 +35,7 @@ class Command(BaseCommand):
         self.options = options
         self.structures = {s.pk: s.parent_id for s in Structure.active.all()}
         self.errors = []
+        verbosity = options.get('verbosity')
         comptabilites = {}
         is_update = self.options['update']
 
@@ -101,7 +102,7 @@ class Command(BaseCommand):
             comptabilite_montants += list(
                 map(lambda x: '%s_%s' % (comptabilite, x),
                     infos['model']().initial_montants))
-        
+
         # Modified structuremontants
         modified_structuremontants = []
         for structure_montant in structure_montants:
@@ -124,7 +125,11 @@ class Command(BaseCommand):
                     if is_update:
                         sm = StructureMontant.objects.get(pk=structure_montant.pk)
                         setattr(sm, montant, result2)
-                        sm.save()
+                        modified_structuremontants.append(sm)
+
+        with transaction.atomic():
+            for sm in modified_structuremontants:
+                sm.save()
 
         # Missing structuremontants
         created_structuremontants = []
@@ -144,7 +149,9 @@ class Command(BaseCommand):
         if created_structuremontants:
             StructureMontant.objects.bulk_create(created_structuremontants)
 
-        if self.errors:
-            self.stdout.write('ERRORS : \n{}'.format('\n'.join(self.errors)))
-        else:
-            self.stdout.write('No calculation errors')
+        if verbosity >= 1:
+            if self.errors:
+                self.stdout.write(
+                    'ERRORS : \n{}'.format('\n'.join(self.errors)))
+            else:
+                self.stdout.write('No calculation errors')

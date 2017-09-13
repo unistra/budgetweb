@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-12 10:05+0200\n"
+"POT-Creation-Date: 2017-09-12 14:26+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -93,10 +93,8 @@ msgid "Is labeled"
 msgstr ""
 
 #: budgetweb/apps/structure/models.py:116
-#, fuzzy
-#| msgid "Multi-year PFI"
 msgid "Is multi-year"
-msgstr "PFI pluriannuel"
+msgstr "Est pluriannuel"
 
 #: budgetweb/apps/structure/models.py:118
 msgid "Begin date"
@@ -294,9 +292,7 @@ msgid "Receipt forms"
 msgstr "Formulaire de saisie des recettes"
 
 #: budgetweb/views.py:121
-msgid ""
-"The new value has been saved.                                This page will "
-"be reloaded"
+msgid "The new value has been saved. This page will be reloaded"
 msgstr ""
 
 #: budgetweb/views.py:125
@@ -305,8 +301,7 @@ msgstr ""
 
 #: budgetweb/views.py:128
 #, python-format
-msgid ""
-"Something wrong in                            api_set_dcfield_value_by_id %s"
+msgid "Something wrong in api_set_dcfield_value_by_id %s"
 msgstr ""
 
 #: budgetweb/views.py:507

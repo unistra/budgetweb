@@ -104,7 +104,7 @@ def api_get_managment_rules_recette_by_id(request, id_naturecomptablerecette):
 def api_set_dcfield_value_by_id(request):
     try:
         is_dfi_member = request.user.groups.filter(
-                                    name=settings.DFI_GROUP_NAME).exists()
+            name=settings.DFI_GROUP_NAME).exists()
         is_dfi_member_or_admin = is_dfi_member or request.user.is_superuser
         pk = int(request.GET.get('pk'))
         type_compta = request.GET.get('type')
@@ -118,15 +118,15 @@ def api_set_dcfield_value_by_id(request):
             compta.montant_dc = montant_dc
             compta.save()
             return JsonResponse(
-                {'message': _('The new value has been saved. \
-                               This page will be reloaded')}, status=201)
+                {'message': _("The new value has been saved. "
+                              "This page will be reloaded")}, status=201)
         else:
             return JsonResponse(
                 {'message': _('You are not allowed to do that')}, status=400)
     except Exception as e:
         return JsonResponse(
-            {'message': _('Something wrong in \
-                           api_set_dcfield_value_by_id %s') % e},
+            {'message': _("Something wrong in "
+                          "api_set_dcfield_value_by_id %s") % e},
             status=400)
 
 
@@ -507,7 +507,8 @@ def migrate_pluriannuel(request, period_id):
             msg = _('There are already pluriannual entries for this period')
             messages.add_message(request, messages.ERROR, msg)
         else:
-            management.call_command('migrate_pluriannuel', str(period.annee))
+            management.call_command(
+                'migrate_pluriannuel', str(period.annee), '-v 0')
             msg = _('Migration done')
             messages.add_message(request, messages.INFO, msg)
     except Exception as e:
