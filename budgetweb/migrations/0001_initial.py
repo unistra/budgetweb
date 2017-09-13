@@ -32,6 +32,8 @@ class Migration(migrations.Migration):
             ],
             options={
                 'abstract': False,
+                'verbose_name': 'expense',
+                'verbose_name_plural': 'expenses'
             },
         ),
         migrations.CreateModel(
@@ -90,6 +92,10 @@ class Migration(migrations.Migration):
                 ('annee', models.PositiveIntegerField(verbose_name='Année')),
                 ('is_active', models.BooleanField(default=True, verbose_name='Activé (oui/non)')),
             ],
+            options={
+                'verbose_name': 'budget period',
+                'verbose_name_plural': 'budget periods'
+            },
         ),
         migrations.CreateModel(
             name='PlanFinancement',
@@ -133,6 +139,8 @@ class Migration(migrations.Migration):
             ],
             options={
                 'abstract': False,
+                'verbose_name': 'receipt',
+                'verbose_name_plural': 'receipts'
             },
         ),
         migrations.CreateModel(
@@ -160,8 +168,8 @@ class Migration(migrations.Migration):
                 ('user', models.OneToOneField(to=settings.AUTH_USER_MODEL)),
             ],
             options={
+                'verbose_name': 'structure authorizations',
                 'verbose_name_plural': 'structures authorizations',
-                'verbose_name': 'structure authorization',
             },
         ),
         migrations.CreateModel(
@@ -179,6 +187,10 @@ class Migration(migrations.Migration):
                 ('periodebudget', models.ForeignKey(to='budgetweb.PeriodeBudget', related_name='periodebudgetmontants')),
                 ('structure', models.ForeignKey(to='budgetweb.Structure')),
             ],
+            options={
+                'verbose_name': 'structure amounts',
+                'verbose_name_plural': 'structures amounts'
+            },
         ),
         migrations.AddField(
             model_name='recette',

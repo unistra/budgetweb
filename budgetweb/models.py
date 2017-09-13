@@ -46,8 +46,8 @@ class StructureAuthorizations(models.Model):
                                         related_name='authorized_structures')
 
     class Meta:
-        verbose_name = 'structure authorization'
-        verbose_name_plural = 'structures authorizations'
+        verbose_name = _('structure authorizations')
+        verbose_name_plural = _('structures authorizations')
 
     def __str__(self):
         return self.user.username
@@ -126,6 +126,10 @@ class PeriodeBudget(models.Model):
     # Un troisième manager pour récupérer la période Budgétaire active (BI/BRx)
     activebudget = ActiveBudgetManager()
 
+    class Meta:
+        verbose_name = _('budget period')
+        verbose_name_plural = _('budget periods')
+
     def __str__(self):
         return '{0.period} - {0.annee}'.format(self)
 
@@ -157,6 +161,8 @@ class StructureMontant(models.Model):
 
     class Meta:
         unique_together = (('structure', 'periodebudget', 'annee'),)
+        verbose_name = _('structure amounts')
+        verbose_name_plural = _('structures amounts')
 
 
 class Comptabilite(models.Model):
@@ -280,6 +286,10 @@ class Depense(Comptabilite):
     naturecomptabledepense = models.ForeignKey(
         'structure.NatureComptableDepense', verbose_name='Nature Comptable')
 
+    class Meta:
+        verbose_name = _('expense')
+        verbose_name_plural = _('expenses')
+
     def __init__(self, *args, **kwargs):
         kwargs.update(
             {'initial_montants': ('montant_dc', 'montant_cp', 'montant_ae')})
@@ -300,6 +310,10 @@ class Recette(Comptabilite):
                                           editable=False)
     naturecomptablerecette = models.ForeignKey(
         'structure.NatureComptableRecette', verbose_name='Nature Comptable')
+
+    class Meta:
+        verbose_name = _('receipt')
+        verbose_name_plural = _('receipts')
 
     def __init__(self, *args, **kwargs):
         kwargs.update(
@@ -325,3 +339,7 @@ class Virement(models.Model):
     creation_date = models.DateTimeField(
                         verbose_name="Date de création du virement")
     value_date = models.DateField(verbose_name="Date de valeur")
+
+    class Meta:
+        verbose_name = _('transfer')
+        verbose_name_plural = _('transfers')

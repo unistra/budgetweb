@@ -24,6 +24,10 @@ class Migration(migrations.Migration):
                 ('creation_date', models.DateTimeField(verbose_name='Date de création du virement')),
                 ('value_date', models.DateField(verbose_name='Date de valeur')),
             ],
+            options={
+                'verbose_name': 'transfer',
+                'verbose_name_plural': 'transfers'
+            },
         ),
         migrations.AddField(
             model_name='depense',

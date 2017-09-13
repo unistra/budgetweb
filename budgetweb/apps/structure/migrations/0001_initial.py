@@ -20,6 +20,10 @@ class Migration(migrations.Migration):
                 ('label_court', models.CharField(blank=True, null=True, default='', max_length=100, verbose_name='Short label')),
                 ('is_active', models.BooleanField(default=True, max_length=100, verbose_name='Is active')),
             ],
+            options={
+                'verbose_name': 'functional domain',
+                'verbose_name_plural': 'functional domains'
+            },
         ),
         migrations.CreateModel(
             name='NatureComptableDepense',
@@ -38,6 +42,10 @@ class Migration(migrations.Migration):
                 ('priority', models.PositiveIntegerField(default=1, verbose_name='Sorting order for the accounting natures')),
                 ('ordre', models.PositiveIntegerField(default=1, verbose_name='Sorting sub-order for the accounting natures')),
             ],
+            options={
+                'verbose_name': 'expense accounting nature',
+                'verbose_name_plural': 'expenses accounting natures'
+            },
         ),
         migrations.CreateModel(
             name='NatureComptableRecette',
@@ -57,6 +65,10 @@ class Migration(migrations.Migration):
                 ('priority', models.PositiveIntegerField(default=1, verbose_name='Sorting order for the accounting natures')),
                 ('ordre', models.PositiveIntegerField(default=1, verbose_name='Sorting sub-order for the accounting natures')),
             ],
+            options={
+                'verbose_name': 'receipt accounting nature',
+                'verbose_name_plural': 'receipts accounting natures'
+            },
         ),
         migrations.CreateModel(
             name='PlanFinancement',
@@ -77,6 +89,8 @@ class Migration(migrations.Migration):
             ],
             options={
                 'ordering': ['label'],
+                'verbose_name': 'financial plan', 'ordering': ['label'],
+                'verbose_name_plural': 'financial plans',
             },
         ),
         migrations.CreateModel(
@@ -94,6 +108,8 @@ class Migration(migrations.Migration):
             ],
             options={
                 'ordering': ['code'],
+                'verbose_name': 'structure', 'ordering': ['code'],
+                'verbose_name_plural': 'structures'
             },
         ),
         migrations.AddField(
