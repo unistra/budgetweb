@@ -6,26 +6,34 @@ from itertools import chain, groupby
 import json
 
 from django.conf import settings
+from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
+from django.core import management
 from django.db.models import F, Prefetch, Sum
 from django.forms.models import modelformset_factory
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import (
+    HttpResponse, HttpResponseRedirect, HttpResponseServerError, JsonResponse)
 from django.shortcuts import (get_object_or_404, redirect, render)
+from django.template import loader, Context
+from django.utils.http import is_safe_url
 from django.utils.translation import ugettext as _
+from django.views.decorators.csrf import requires_csrf_token
+
 from budgetweb.apps.structure.models import (
     DomaineFonctionnel, NatureComptableDepense, NatureComptableRecette,
     PlanFinancement, Structure)
 from .decorators import (is_ajax_get, is_authorized_structure,
                          is_authorized_editing)
 from .forms import DepenseForm, PlanFinancementPluriForm, RecetteForm
-from .models import Depense, PeriodeBudget, Recette, StructureMontant
+from .models import Depense, PeriodeBudget, Recette
 from .templatetags.budgetweb_tags import sum_montants
 from .utils import (
-    get_authorized_structures_ids, get_current_year, get_detail_pfi_by_period,
-    get_pfi_total_types, get_pfi_years, tree_infos)
+    get_authorized_structures_ids, get_detail_pfi_by_period,
+    get_pfi_total_types, get_pfi_years, tree_infos, get_selected_year)
 
 
-# @login_required
+@login_required
 def home(request):
     return redirect('show_tree', type_affichage='gbcp')
 
@@ -96,7 +104,7 @@ def api_get_managment_rules_recette_by_id(request, id_naturecomptablerecette):
 def api_set_dcfield_value_by_id(request):
     try:
         is_dfi_member = request.user.groups.filter(
-                                    name=settings.DFI_GROUP_NAME).exists()
+            name=settings.DFI_GROUP_NAME).exists()
         is_dfi_member_or_admin = is_dfi_member or request.user.is_superuser
         pk = int(request.GET.get('pk'))
         type_compta = request.GET.get('type')
@@ -110,15 +118,15 @@ def api_set_dcfield_value_by_id(request):
             compta.montant_dc = montant_dc
             compta.save()
             return JsonResponse(
-                {'message': _('The new value has been saved. \
-                               This page will be reloaded')}, status=201)
+                {'message': _("The new value has been saved. "
+                              "This page will be reloaded")}, status=201)
         else:
             return JsonResponse(
                 {'message': _('You are not allowed to do that')}, status=400)
     except Exception as e:
         return JsonResponse(
-            {'message': _('Something wrong in \
-                           api_set_dcfield_value_by_id %s') % e},
+            {'message': _("Something wrong in "
+                          "api_set_dcfield_value_by_id %s") % e},
             status=400)
 
 
@@ -126,7 +134,8 @@ def api_set_dcfield_value_by_id(request):
 def show_tree(request, type_affichage, structid=0):
     active_period = PeriodeBudget.active.select_related('period').first()
     period_code = active_period.period.code
-    prefetches, columns = tree_infos(active_period, period_code)
+    selected_year = get_selected_year(request, default_period=active_period)
+    prefetches, columns = tree_infos(selected_year, period_code)
     active_fields = columns[type_affichage]
 
     # Authorized structures list
@@ -154,7 +163,7 @@ def show_tree(request, type_affichage, structid=0):
         'structures': structures,
         'pfis': pfis,
         'typeAffichage': type_affichage,
-        'currentYear': get_current_year(),
+        'currentYear': selected_year,
         'cols': active_fields,
     }
 
@@ -176,6 +185,7 @@ def show_tree(request, type_affichage, structid=0):
 @is_authorized_structure
 @is_authorized_editing
 def pluriannuel(request, pfiid):
+    active_period = PeriodeBudget.active.select_related('period').first()
     pfi = get_object_or_404(PlanFinancement, pk=pfiid)
     if request.method == "POST":
         form = PlanFinancementPluriForm(request.POST, instance=pfi)
@@ -193,7 +203,8 @@ def pluriannuel(request, pfiid):
 
     context = {
         'PFI': pfi, 'form': form, 'depense': depense, 'recette': recette,
-        'currentYear': get_current_year(), 'years': get_pfi_years(pfi)
+        'years': get_pfi_years(pfi), 'origin': 'pluriannuel',
+        'period': active_period
     }
     return render(request, 'pluriannuel.html', context)
 
@@ -211,8 +222,13 @@ def modelformset_factory_with_kwargs(cls, **formset_kwargs):
 @is_authorized_editing
 def depense(request, pfiid, annee):
     # Values for the form initialization
-    pfi = PlanFinancement.objects.get(pk=pfiid)
     periodebudget = PeriodeBudget.activebudget.first()
+
+    # Redirect to detailspfi if the active year is not selected
+    if int(annee) < periodebudget.annee:
+        return HttpResponseRedirect('/detailspfi/%s' % pfiid)
+
+    pfi = PlanFinancement.objects.get(pk=pfiid)
     is_dfi_member = request.user.groups.filter(name=settings.DFI_GROUP_NAME).exists()
     is_dfi_member_or_admin = is_dfi_member or request.user.is_superuser
     natures = OrderedDict(((n.pk, n) for n in\
@@ -258,8 +274,13 @@ def depense(request, pfiid, annee):
 @is_authorized_editing
 def recette(request, pfiid, annee):
     # Values for the form initialization
-    pfi = PlanFinancement.objects.get(pk=pfiid)
     periodebudget = PeriodeBudget.activebudget.first()
+
+    # Redirect to detailspfi if the active year is not selected
+    if int(annee) < periodebudget.annee:
+        return HttpResponseRedirect('/detailspfi/%s' % pfiid)
+
+    pfi = PlanFinancement.objects.get(pk=pfiid)
     is_dfi_member = request.user.groups.filter(name=settings.DFI_GROUP_NAME).exists()
     is_dfi_member_or_admin = is_dfi_member or request.user.is_superuser
     natures = OrderedDict(((n.pk, n) for n in\
@@ -277,9 +298,7 @@ def recette(request, pfiid, annee):
         can_delete=True
     )
     formset = RecetteFormSet(queryset=Recette.objects.filter(
-        pfi=pfi,
-        annee=annee,
-        periodebudget=periodebudget
+        pfi=pfi, annee=annee, periodebudget=periodebudget
     ).order_by('naturecomptablerecette__priority', '-montant_ar'))
 
     if request.method == "POST":
@@ -303,7 +322,7 @@ def recette(request, pfiid, annee):
 def detailspfi(request, pfiid):
     to_dict = lambda x: {k: list(v) for k, v in x}
     pfi = PlanFinancement.objects.select_related('structure').get(pk=pfiid)
-    current_year = get_current_year()
+    current_year = get_selected_year(request)
 
     depenses = Depense.objects.filter(pfi=pfi).select_related(
             'naturecomptabledepense', 'periodebudget__period', 'pfi',
@@ -358,7 +377,7 @@ def detailspfi(request, pfiid):
         'listeDepense': depenses, 'listeRecette': recettes,
         'sommeDepense': sum_depenses, 'sommeRecette': sum_recettes,
         'resume_depenses': resume_depenses, 'resume_recettes': resume_recettes,
-        'years': years, 'periods': periods
+        'years': years, 'periods': periods, 'origin': 'detailspfi',
     }
     return render(request, 'detailsfullpfi.html', context)
 
@@ -371,7 +390,7 @@ def detailscf(request, structid):
     liste_structure = list(structparent.get_unordered_children())
     liste_structure.insert(0, structparent)
     structure_ids = [s.pk for s in liste_structure]
-    current_year = get_current_year()
+    current_year = get_selected_year(request)
 
     queryset = {'pfi__structure__in': structure_ids}
     depenses = Depense.objects.filter(**queryset)\
@@ -443,3 +462,57 @@ def detailscf(request, structid):
         })
 
     return render(request, 'detailscf.html', context)
+
+
+def set_year(request):
+    """
+    Redirect to a given url while setting the chosen year in the session.
+    The url and year need to be specified in the request parameters.
+
+    This view is based on django.viwes.i18n.set_language
+    """
+    next = request.POST.get('next', request.GET.get('next'))
+    if not is_safe_url(url=next, host=request.get_host()):
+        next = request.META.get('HTTP_REFERER')
+        if not is_safe_url(url=next, host=request.get_host()):
+            next = '/'
+    response = HttpResponseRedirect(next)
+    if request.method == 'POST':
+        year = request.POST.get('year', None)
+        request.session['period_year'] = int(year)
+    return response
+
+
+@requires_csrf_token
+def handler500(request, template_name='500.html'):  # pragma: no cover
+    import sys
+    import traceback
+    #copy of django.views.defaults.server_error
+    exctype, value, tb = sys.exc_info()
+    t = loader.get_template(template_name)
+    return HttpResponseServerError(t.render(
+        Context({
+            'error': value.message if hasattr(value, 'message') else value,
+            'type': exctype.__name__,
+            'tb': traceback.format_exception(exctype, value, tb)
+        })
+    ))
+
+
+@staff_member_required
+def migrate_pluriannuel(request, period_id):
+    try:
+        period = get_object_or_404(PeriodeBudget, pk=period_id)
+        if period.has_entries():
+            msg = _('There are already pluriannual entries for this period')
+            messages.add_message(request, messages.ERROR, msg)
+        else:
+            management.call_command(
+                'migrate_pluriannuel', str(period.annee), '-v 0')
+            msg = _('Migration done')
+            messages.add_message(request, messages.INFO, msg)
+    except Exception as e:
+        msg = 'Error in the migration : %s' % e
+        messages.add_message(request, messages.ERROR, msg)
+
+    return redirect('/admin/budgetweb/periodebudget/%s' % period_id)

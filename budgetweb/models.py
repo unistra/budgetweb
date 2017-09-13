@@ -129,6 +129,9 @@ class PeriodeBudget(models.Model):
     def __str__(self):
         return '{0.period} - {0.annee}'.format(self)
 
+    def has_entries(self):
+        return self.depense_set.exists() or self.recette_set.exists()
+
 
 class StructureMontant(models.Model):
     structure = models.ForeignKey('structure.Structure')

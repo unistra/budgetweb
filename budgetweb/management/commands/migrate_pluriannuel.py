@@ -1,3 +1,4 @@
+from django.core.management import call_command
 from django.core.management.base import BaseCommand
 from django.db.models import Q, Sum
 
@@ -21,8 +22,8 @@ class Command(BaseCommand):
             .values(*values)\
             .annotate(Sum('montant_ae'), Sum('montant_cp'), Sum('montant_dc'))
 
-        for depense in depenses:
-            Depense.objects.create(
+        depenses_list = [
+            Depense(
                 structure_id=depense['structure'], pfi=pfi,
                 periodebudget=self.period, annee=year or depense['annee'],
                 naturecomptabledepense_id=depense['naturecomptabledepense'],
@@ -30,6 +31,9 @@ class Command(BaseCommand):
                 montant_ae=depense['montant_ae__sum'],
                 montant_cp=depense['montant_cp__sum'],
                 montant_dc=depense['montant_dc__sum'])
+            for depense in depenses
+        ]
+        return depenses_list
 
     def create_recettes(self, pfi, *args, **kwargs):
         year = kwargs.pop('year', None)
@@ -40,38 +44,59 @@ class Command(BaseCommand):
             .values(*values)\
             .annotate(Sum('montant_ar'), Sum('montant_re'), Sum('montant_dc'))
 
-        for recette in recettes:
-            Recette.objects.create(
+        recettes_list = [
+            Recette(
                 structure_id=recette['structure'], pfi=pfi,
                 periodebudget=self.period, annee=year or recette['annee'],
                 naturecomptablerecette_id=recette['naturecomptablerecette'],
                 montant_ar=recette['montant_ar__sum'],
                 montant_re=recette['montant_re__sum'],
                 montant_dc=recette['montant_dc__sum'])
+            for recette in recettes
+        ]
+        return recettes_list
 
     def handle(self, *args, **options):
+        verbosity = options.get('verbosity')
+
         for year in options.get('year'):
             try:
                 self.period = PeriodeBudget.objects.get(
                     annee=year, period__code='BI')
             except PeriodeBudget.DoesNotExist:
-                print('Erreur : Période BI %s inexistante' % year)
-                return
+                raise Exception('Erreur : Période BI %s inexistante' % year)
+
+            if self.period.has_entries():
+                raise Exception('Erreur : Entrées déjà existantes pour la '
+                                'période BI %s ' % year)
 
             pfis = PlanFinancement.objects.filter(is_pluriannuel=True)
+            depenses = []
+            recettes = []
             for pfi in pfis:
                 # Budget antérieur
-                self.create_depenses(
+                depenses.extend(self.create_depenses(
                     pfi,
                     (Q(annee=year - 2) | Q(annee=year - 1)),
-                    year=year - 1)
-                self.create_recettes(
+                    year=year - 1))
+                recettes.extend(self.create_recettes(
                     pfi,
                     (Q(annee=year - 2) | Q(annee=year - 1)),
-                    year=year - 1)
+                    year=year - 1))
 
                 # Budgets futurs
-                self.create_depenses(
-                    pfi, extra_values=['annee'], annee__gte=year)
-                self.create_recettes(
-                    pfi, extra_values=['annee'], annee__gte=year)
+                depenses.extend(self.create_depenses(
+                    pfi, extra_values=['annee'], annee__gte=year))
+                recettes.extend(self.create_recettes(
+                    pfi, extra_values=['annee'], annee__gte=year))
+
+            # bulk_create does not trigger the save method.
+            # Therefore, this script needs to launch check_structuremontants
+            Depense.objects.bulk_create(depenses)
+            Recette.objects.bulk_create(recettes)
+
+            check_structuremontants_parameters = filter(
+                bool, ('-v %s' % verbosity,))
+
+            call_command('check_structuremontants', '-u', '-y %s' % year ,
+                         *check_structuremontants_parameters, stdout=self.stdout)

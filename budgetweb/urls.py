@@ -8,15 +8,19 @@ from . import views
 
 admin.autodiscover()
 
+handler500 = 'budgetweb.views.handler500'
+
 js_info_dict = {
     'packages': ('your.app.package',),
 }
 
 urlpatterns = [
-    url(r'^accounts/', include('django_cas.urls', namespace='django_cas')),
+    url(r'^jsi18n/$', javascript_catalog, js_info_dict),
     url(r'^$', home, name='home'),
+    url(r'^accounts/', include('django_cas.urls', namespace='django_cas')),
 
     # Ajax
+    # TODO: move to budgetweb.libs.api
     url(r'^api/(?P<model>naturecomptablerecette|naturecomptabledepense)/enveloppe/(?P<enveloppe>\w+)/(?P<pfiid>\w+)/$',
         views.api_fund_designation_by_nature_and_enveloppe,
         name='api-fund-designation-by-nature-and-enveloppe'),
@@ -30,7 +34,6 @@ urlpatterns = [
     url(r'^api/naturecomptablerecette/rules/(?P<id_naturecomptablerecette>\w+)/$',
         views.api_get_managment_rules_recette_by_id,
         name='api_get_managment_rules_recette_by_id'),
-
     url(r'^api/updateMontantDC/', views.api_set_dcfield_value_by_id,
         name='api_set_dcfield_value_by_id'),
 
@@ -54,9 +57,14 @@ urlpatterns = [
     url(r'^recette/(?P<pfiid>\w+)/(?P<annee>\w+)/$',
         views.recette, name="recette"),
 
+    url(r'^setyear/$', views.set_year, name='set_year'),
+
+    # Administration
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^jsi18n/$', javascript_catalog, js_info_dict),
+    url(r'^/migrate_pluriannuel/(?P<period_id>\d+)/$',
+        views.migrate_pluriannuel, name='migrate-pluriannuel'),
 ]
+
 # debug toolbar for dev
 if settings.DEBUG and 'debug_toolbar'in settings.INSTALLED_APPS:
     import debug_toolbar

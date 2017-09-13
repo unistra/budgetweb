@@ -28,12 +28,15 @@
 			</div>
 		</div>
 		{% if PFI.is_pluriannuel %}
+		{% if origin != "pluriannuel" %}
 		<div class="col-xs-12">
 			<h4 style="display: inline-block;margin-left:20px;"><a class="pluri-color" href="{% url 'pluriannuel' pfiid=PFI.id %}">{% trans "Show the resumed PFI"%}.</a></h4>
 		</div>
+		{% elif origin != "detailspfi" %}
 		<div class="col-xs-12">
             <h4 style="display: inline-block;margin-left:20px;"><a class="pluri-color" href="{% url 'detailspfi' pfiid=PFI.id %}">{% trans "Show the details PFI"%}.</a></h4>
         </div>
+        {% endif %}
 		{% endif %}
 	</div>
 </fieldset>

@@ -45,8 +45,7 @@ def is_authorized_structure(func):
             if not is_authorized:
                 raise StructureUnauthorizedException
         except Exception:
-            return HttpResponseForbidden(
-                StructureUnauthorizedException().message)
+            raise StructureUnauthorizedException
         return func(request, *args, **kwargs)
     return wrapper
 
@@ -58,47 +57,43 @@ def is_authorized_editing(func):
     @wraps(func)
     def wrapper(request, *args, **kwargs):
         from .models import PeriodeBudget
-        try:
-            is_authorized = False
-            user = request.user
-            periode_active = PeriodeBudget.activebudget.first()
+        is_authorized = False
+        user = request.user
+        periode_active = PeriodeBudget.activebudget.first()
 
-            if not all([
-                    periode_active.date_debut_saisie,
-                    periode_active.date_fin_saisie,
-                    periode_active.date_debut_retardataire,
-                    periode_active.date_fin_retardataire,
-                    periode_active.date_debut_dfi,
-                    periode_active.date_fin_dfi,
-                    periode_active.date_debut_admin,
-                    periode_active.date_fin_admin]):
-                raise PeriodeBudgetUninitializeError
+        if not all([
+                periode_active.date_debut_saisie,
+                periode_active.date_fin_saisie,
+                periode_active.date_debut_retardataire,
+                periode_active.date_fin_retardataire,
+                periode_active.date_debut_dfi,
+                periode_active.date_fin_dfi,
+                periode_active.date_debut_admin,
+                periode_active.date_fin_admin]):
+            raise PeriodeBudgetUninitializeError
 
-            date_today = datetime.now().date()
+        date_today = datetime.now().date()
 
-            if any([
-                (periode_active.date_debut_saisie <= date_today and
-                 periode_active.date_fin_saisie >= date_today),
-                (periode_active.date_debut_retardataire <= date_today and
-                 periode_active.date_fin_retardataire >= date_today and
-                 user.groups.filter(name=settings.LATE_GROUP_NAME).exists()),
-                (periode_active.date_debut_dfi <= date_today and
-                 periode_active.date_fin_dfi >= date_today and
-                 user.groups.filter(name=settings.DFI_GROUP_NAME).exists()),
-                (periode_active.date_debut_admin <= date_today and
-                 periode_active.date_fin_admin >= date_today and
-                 user.is_superuser)
-            ]):
-                is_authorized = True
+        if any([
+            (periode_active.date_debut_saisie <= date_today and
+             periode_active.date_fin_saisie >= date_today),
+            (periode_active.date_debut_retardataire <= date_today and
+             periode_active.date_fin_retardataire >= date_today and
+             user.groups.filter(name=settings.LATE_GROUP_NAME).exists()),
+            (periode_active.date_debut_dfi <= date_today and
+             periode_active.date_fin_dfi >= date_today and
+             user.groups.filter(name=settings.DFI_GROUP_NAME).exists()),
+            (periode_active.date_debut_admin <= date_today and
+             periode_active.date_fin_admin >= date_today and
+             user.is_superuser)
+        ]):
+            is_authorized = True
 
-            if not is_authorized:
-                raise EditingUnauthorizedException
-        except EditingUnauthorizedException:
-            return HttpResponseForbidden(
-                EditingUnauthorizedException().message)
-        except PeriodeBudgetUninitializeError:
-            return HttpResponseForbidden(
-                PeriodeBudgetUninitializeError().message)
+        if not is_authorized:
+            raise EditingUnauthorizedException
+        # TODO Django > 1.8 :
+        # Raise PermissionDenied with an exception parameter
+        # https://docs.djangoproject.com/en/1.11/ref/views/#django.views.defaults.permission_denied
         return func(request, *args, **kwargs)
     return wrapper
 

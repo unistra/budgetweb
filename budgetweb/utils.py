@@ -172,7 +172,7 @@ def get_pfi_total_types(pfi):
     return types
 
 
-def tree_infos(active_period, period_code):
+def tree_infos(year, period_code):
     """
     BROLDn = Σ(BR(1..n-1))
     VIRn = Σ(VIR(1..n))
@@ -181,8 +181,8 @@ def tree_infos(active_period, period_code):
     BMn = BAn + BRn = montants
     """
 
-    structuremontant_filters = {'annee': active_period.annee}
-    pfi_filters = {'annee': active_period.annee}
+    structuremontant_filters = {'annee': year}
+    pfi_filters = {'annee': year}
     prefetches = {}
     cols = {}
 
@@ -370,3 +370,13 @@ def tree_infos(active_period, period_code):
         }
 
     return prefetches, cols
+
+
+def get_selected_year(request, default_period=None):
+    session_year = request.session.get('period_year')
+    if not session_year:
+        if default_period:
+            return default_period.annee
+        else:
+            return get_current_year()
+    return session_year
