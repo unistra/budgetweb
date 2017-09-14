@@ -61,7 +61,7 @@ urlpatterns = [
 
     # Administration
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^/migrate_pluriannuel/(?P<period_id>\d+)/$',
+    url(r'^migrate_pluriannuel/(?P<period_id>\d+)/$',
         views.migrate_pluriannuel, name='migrate-pluriannuel'),
 ]
 
