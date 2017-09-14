@@ -106,7 +106,7 @@ class PlanFinancement(models.Model):
     Gestion des Plans de financement. En cours de précisions
     """
     structure = models.ForeignKey('Structure',
-                                  verbose_name=_('Structure'))
+                                  verbose_name=_('structure'))
     code = models.CharField(_('Code'), max_length=100, default='NA')
     label = models.CharField(_('Label'), max_length=255)
     eotp = models.CharField(_('EOTP short label'), max_length=100)
@@ -135,7 +135,7 @@ class PlanFinancement(models.Model):
         verbose_name_plural = _('financial plans')
 
     def __str__(self):
-        return '{0.code}'.format(self)
+        return '{0.structure.code} - {0.code}'.format(self)
 
 
 class NatureComptableDepense(models.Model):
@@ -169,8 +169,8 @@ class NatureComptableDepense(models.Model):
         verbose_name_plural = _('expenses accounting natures')
 
     def __str__(self):
-        return '{0.code_nature_comptable} - {0.label_nature_comptable}'\
-            .format(self)
+        return '{0.code_nature_comptable} - {0.label_nature_comptable} '\
+               '({0.code_compte_budgetaire})'.format(self)
 
 
 class NatureComptableRecette(models.Model):
@@ -204,5 +204,5 @@ class NatureComptableRecette(models.Model):
         verbose_name_plural = _('receipts accounting natures')
 
     def __str__(self):
-        return '{0.code_nature_comptable} - {0.label_nature_comptable}'\
-            .format(self)
+        return '{0.code_nature_comptable} - {0.label_nature_comptable} '\
+               '({0.code_compte_budgetaire})'.format(self)

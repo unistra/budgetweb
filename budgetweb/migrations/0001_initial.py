@@ -164,8 +164,8 @@ class Migration(migrations.Migration):
             name='StructureAuthorizations',
             fields=[
                 ('id', models.AutoField(primary_key=True, auto_created=True, serialize=False, verbose_name='ID')),
-                ('structures', models.ManyToManyField(to='budgetweb.Structure', related_name='authorized_structures')),
-                ('user', models.OneToOneField(to=settings.AUTH_USER_MODEL)),
+                ('structures', models.ManyToManyField(to='budgetweb.Structure', related_name='authorized_structures', verbose_name='structures')),
+                ('user', models.OneToOneField(to=settings.AUTH_USER_MODEL, verbose_name='User')),
             ],
             options={
                 'verbose_name': 'structure authorizations',
@@ -184,8 +184,8 @@ class Migration(migrations.Migration):
                 ('recette_montant_re', models.DecimalField(max_digits=12, decimal_places=2, default=Decimal('0'))),
                 ('recette_montant_ar', models.DecimalField(max_digits=12, decimal_places=2, default=Decimal('0'))),
                 ('modification_date', models.DateTimeField(auto_now=True)),
-                ('periodebudget', models.ForeignKey(to='budgetweb.PeriodeBudget', related_name='periodebudgetmontants')),
-                ('structure', models.ForeignKey(to='budgetweb.Structure')),
+                ('periodebudget', models.ForeignKey(to='budgetweb.PeriodeBudget', related_name='periodebudgetmontants', verbose_name='budget period')),
+                ('structure', models.ForeignKey(to='budgetweb.Structure', verbose_name='structure')),
             ],
             options={
                 'verbose_name': 'structure amounts',

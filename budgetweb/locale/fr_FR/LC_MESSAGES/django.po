@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-13 16:22+0200\n"
+"POT-Creation-Date: 2017-09-13 17:46+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,19 +25,21 @@ msgstr "Désactiver les périodes sélectionnées"
 msgid "Mark selected periods as activated"
 msgstr "Activer les périodes sélectionnées"
 
+#: budgetweb/apps/structure/admin.py:33 budgetweb/apps/structure/admin.py:53
+msgid "accounting nature"
+msgstr "nature comptable"
+
 #: budgetweb/apps/structure/models.py:15 budgetweb/apps/structure/models.py:36
 #: budgetweb/apps/structure/models.py:110
 #: budgetweb/apps/structure/models.py:145
-#: budgetweb/apps/structure/models.py:181 budgetweb/models.py:74
-#, fuzzy
-#| msgid "EOTP Code"
+#: budgetweb/apps/structure/models.py:181 budgetweb/models.py:76
 msgid "Code"
-msgstr "Code de l'EOTP"
+msgstr "Code"
 
 #: budgetweb/apps/structure/models.py:16 budgetweb/apps/structure/models.py:37
 #: budgetweb/apps/structure/models.py:111
 #: budgetweb/apps/structure/models.py:144
-#: budgetweb/apps/structure/models.py:182 budgetweb/models.py:75
+#: budgetweb/apps/structure/models.py:182 budgetweb/models.py:77
 msgid "Label"
 msgstr "Libellé"
 
@@ -79,25 +81,19 @@ msgid "Path"
 msgstr "Chemin"
 
 #: budgetweb/apps/structure/models.py:56
+#: budgetweb/apps/structure/models.py:109 budgetweb/models.py:144
 msgid "structure"
 msgstr "structure"
 
-#: budgetweb/apps/structure/models.py:57
+#: budgetweb/apps/structure/models.py:57 budgetweb/models.py:48
 msgid "structures"
 msgstr "structures"
-
-#: budgetweb/apps/structure/models.py:109
-#, fuzzy
-#| msgid "structure"
-msgid "Structure"
-msgstr "structure"
 
 #: budgetweb/apps/structure/models.py:112
 msgid "EOTP short label"
 msgstr "libellé court de l'EOTP"
 
 #: budgetweb/apps/structure/models.py:113
-#, fuzzy
 msgid "Related cost center"
 msgstr "Centre de coût associé"
 
@@ -130,40 +126,40 @@ msgstr "plans de financement"
 #: budgetweb/apps/structure/models.py:143
 #: budgetweb/apps/structure/models.py:178
 msgid "Envelope"
-msgstr ""
+msgstr "Enveloppe"
 
 #: budgetweb/apps/structure/models.py:147
 #: budgetweb/apps/structure/models.py:184
 msgid "Budget account code"
-msgstr ""
+msgstr "Code compte budgétaire"
 
 #: budgetweb/apps/structure/models.py:149
 #: budgetweb/apps/structure/models.py:186
 msgid "Budget account label"
-msgstr ""
+msgstr "Libellé compte budgétaire"
 
 #: budgetweb/apps/structure/models.py:153
 msgid "Is cash shift"
-msgstr ""
+msgstr "Est décalage trésorerie"
 
 #: budgetweb/apps/structure/models.py:155
 #: budgetweb/apps/structure/models.py:191
 msgid "Is non budgetary"
-msgstr ""
+msgstr "Est non budgétaire"
 
 #: budgetweb/apps/structure/models.py:156
 msgid "Is PFI/CFG"
-msgstr ""
+msgstr "Est PFI/CFG"
 
 #: budgetweb/apps/structure/models.py:160
 #: budgetweb/apps/structure/models.py:195
 msgid "Sorting order for the accounting natures"
-msgstr ""
+msgstr "Ordre de tri des natures comptables"
 
 #: budgetweb/apps/structure/models.py:162
 #: budgetweb/apps/structure/models.py:197
 msgid "Sorting sub-order for the accounting natures"
-msgstr ""
+msgstr "Sous-ordre de tri des natures comptables"
 
 #: budgetweb/apps/structure/models.py:168
 msgid "expense accounting nature"
@@ -175,11 +171,11 @@ msgstr "natures comptables dépenses"
 
 #: budgetweb/apps/structure/models.py:179
 msgid "Funds code"
-msgstr ""
+msgstr "Code des fonds"
 
 #: budgetweb/apps/structure/models.py:180
 msgid "Funds label"
-msgstr ""
+msgstr "Libellé des fonds"
 
 #: budgetweb/apps/structure/models.py:189
 msgid "Is AR et RE"
@@ -197,59 +193,63 @@ msgstr "natures comptables recettes"
 msgid "There are already entries which are not in the new period"
 msgstr "Il existe déjà des entrées qui ne sont pas dans la nouvelle période"
 
-#: budgetweb/models.py:49
+#: budgetweb/models.py:45
+msgid "User"
+msgstr "Utilisateur"
+
+#: budgetweb/models.py:51
 msgid "structure authorizations"
 msgstr "Autorisations de la structure"
 
-#: budgetweb/models.py:50
+#: budgetweb/models.py:52
 msgid "structures authorizations"
 msgstr "Autorisations des structures"
 
-#: budgetweb/models.py:76
+#: budgetweb/models.py:78
 msgid "Order"
 msgstr "Ordre"
 
-#: budgetweb/models.py:89
+#: budgetweb/models.py:91
 msgid "Period"
 msgstr "Période"
 
-#: budgetweb/models.py:130
+#: budgetweb/models.py:132 budgetweb/models.py:146
 msgid "budget period"
 msgstr "période budgétaire"
 
-#: budgetweb/models.py:131
+#: budgetweb/models.py:133
 msgid "budget periods"
 msgstr "périodes budgétaires"
 
-#: budgetweb/models.py:164
+#: budgetweb/models.py:168
 msgid "structure amounts"
 msgstr "Montants de la structure"
 
-#: budgetweb/models.py:165
+#: budgetweb/models.py:169
 msgid "structures amounts"
 msgstr "Montants des structures"
 
-#: budgetweb/models.py:290
+#: budgetweb/models.py:294
 msgid "expense"
 msgstr "dépense"
 
-#: budgetweb/models.py:291
+#: budgetweb/models.py:295
 msgid "expenses"
 msgstr "dépenses"
 
-#: budgetweb/models.py:315
+#: budgetweb/models.py:319
 msgid "receipt"
 msgstr "recette"
 
-#: budgetweb/models.py:316
+#: budgetweb/models.py:320
 msgid "receipts"
 msgstr "recettes"
 
-#: budgetweb/models.py:344
+#: budgetweb/models.py:348
 msgid "transfer"
 msgstr "virement"
 
-#: budgetweb/models.py:345
+#: budgetweb/models.py:349
 msgid "transfers"
 msgstr "virements"
 
@@ -397,7 +397,7 @@ msgstr "Il existe déjà des entrées pluriannuelles pour cette période"
 
 #: budgetweb/views.py:512
 msgid "Migration done"
-msgstr ""
+msgstr "Migration effectuée"
 
 #~ msgid "Error"
 #~ msgstr "Erreur"

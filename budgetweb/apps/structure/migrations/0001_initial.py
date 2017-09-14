@@ -115,7 +115,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='planfinancement',
             name='structure',
-            field=models.ForeignKey(to='structure.Structure', verbose_name='Structure'),
+            field=models.ForeignKey(to='structure.Structure', verbose_name='structure'),
         ),
     ]
 

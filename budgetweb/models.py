@@ -41,9 +41,11 @@ class StructureAuthorizations(models.Model):
     Gestion des autorisations utilisateurs sur les CF
     Possibilités: * P* PAIE* ou un nom précis
     """
-    user = models.OneToOneField(to=settings.AUTH_USER_MODEL)
+    user = models.OneToOneField(to=settings.AUTH_USER_MODEL,
+                                verbose_name=_('User'))
     structures = models.ManyToManyField('structure.Structure',
-                                        related_name='authorized_structures')
+                                        related_name='authorized_structures',
+                                        verbose_name=_('structures'))
 
     class Meta:
         verbose_name = _('structure authorizations')
@@ -138,8 +140,10 @@ class PeriodeBudget(models.Model):
 
 
 class StructureMontant(models.Model):
-    structure = models.ForeignKey('structure.Structure')
+    structure = models.ForeignKey('structure.Structure',
+                                  verbose_name=_('structure'))
     periodebudget = models.ForeignKey('PeriodeBudget',
+                                      verbose_name=_('budget period'),
                                       related_name='periodebudgetmontants')
     annee = models.PositiveIntegerField(verbose_name='Année')
     depense_montant_dc = models.DecimalField(
