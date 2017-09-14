@@ -32,6 +32,8 @@ class Migration(migrations.Migration):
             ],
             options={
                 'abstract': False,
+                'verbose_name': 'expense',
+                'verbose_name_plural': 'expenses'
             },
         ),
         migrations.CreateModel(
@@ -90,6 +92,10 @@ class Migration(migrations.Migration):
                 ('annee', models.PositiveIntegerField(verbose_name='Année')),
                 ('is_active', models.BooleanField(default=True, verbose_name='Activé (oui/non)')),
             ],
+            options={
+                'verbose_name': 'budget period',
+                'verbose_name_plural': 'budget periods'
+            },
         ),
         migrations.CreateModel(
             name='PlanFinancement',
@@ -133,6 +139,8 @@ class Migration(migrations.Migration):
             ],
             options={
                 'abstract': False,
+                'verbose_name': 'receipt',
+                'verbose_name_plural': 'receipts'
             },
         ),
         migrations.CreateModel(
@@ -156,12 +164,12 @@ class Migration(migrations.Migration):
             name='StructureAuthorizations',
             fields=[
                 ('id', models.AutoField(primary_key=True, auto_created=True, serialize=False, verbose_name='ID')),
-                ('structures', models.ManyToManyField(to='budgetweb.Structure', related_name='authorized_structures')),
-                ('user', models.OneToOneField(to=settings.AUTH_USER_MODEL)),
+                ('structures', models.ManyToManyField(to='budgetweb.Structure', related_name='authorized_structures', verbose_name='structures')),
+                ('user', models.OneToOneField(to=settings.AUTH_USER_MODEL, verbose_name='User')),
             ],
             options={
+                'verbose_name': 'structure authorizations',
                 'verbose_name_plural': 'structures authorizations',
-                'verbose_name': 'structure authorization',
             },
         ),
         migrations.CreateModel(
@@ -176,9 +184,13 @@ class Migration(migrations.Migration):
                 ('recette_montant_re', models.DecimalField(max_digits=12, decimal_places=2, default=Decimal('0'))),
                 ('recette_montant_ar', models.DecimalField(max_digits=12, decimal_places=2, default=Decimal('0'))),
                 ('modification_date', models.DateTimeField(auto_now=True)),
-                ('periodebudget', models.ForeignKey(to='budgetweb.PeriodeBudget', related_name='periodebudgetmontants')),
-                ('structure', models.ForeignKey(to='budgetweb.Structure')),
+                ('periodebudget', models.ForeignKey(to='budgetweb.PeriodeBudget', related_name='periodebudgetmontants', verbose_name='budget period')),
+                ('structure', models.ForeignKey(to='budgetweb.Structure', verbose_name='structure')),
             ],
+            options={
+                'verbose_name': 'structure amounts',
+                'verbose_name_plural': 'structures amounts'
+            },
         ),
         migrations.AddField(
             model_name='recette',
