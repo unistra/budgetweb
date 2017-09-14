@@ -181,8 +181,9 @@ def tree_infos(year, period_code):
     BMn = BAn + BRn = montants
     """
 
-    structuremontant_filters = {'annee': year}
-    pfi_filters = {'annee': year}
+    structuremontant_filters = {
+        'annee': year, 'periodebudget__annee': year}
+    pfi_filters = {'annee': year, 'periodebudget__annee': year}
     prefetches = {}
     cols = {}
 
