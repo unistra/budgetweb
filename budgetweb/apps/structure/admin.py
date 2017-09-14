@@ -29,7 +29,7 @@ class NatureComptableDepenseAdmin(admin.ModelAdmin):
                      'label_compte_budgetaire', 'is_fleche', 'is_active']
 
     def get_str(self, obj):
-        return str(obj)
+        return '{0} ({1.code_compte_budgetaire})'.format(str(obj), obj)
     get_str.short_description = _('accounting nature')
 
 admin.site.register(NatureComptableDepense, NatureComptableDepenseAdmin)
@@ -49,7 +49,7 @@ class NatureComptableRecetteAdmin(admin.ModelAdmin):
                      'is_active']
 
     def get_str(self, obj):
-        return str(obj)
+        return '{0} ({1.code_compte_budgetaire})'.format(str(obj), obj)
     get_str.short_description = _('accounting nature')
 
 admin.site.register(NatureComptableRecette, NatureComptableRecetteAdmin)

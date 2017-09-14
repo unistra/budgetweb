@@ -169,8 +169,8 @@ class NatureComptableDepense(models.Model):
         verbose_name_plural = _('expenses accounting natures')
 
     def __str__(self):
-        return '{0.code_nature_comptable} - {0.label_nature_comptable} '\
-               '({0.code_compte_budgetaire})'.format(self)
+        return '{0.code_nature_comptable} - {0.label_nature_comptable}'\
+            .format(self)
 
 
 class NatureComptableRecette(models.Model):
@@ -204,5 +204,5 @@ class NatureComptableRecette(models.Model):
         verbose_name_plural = _('receipts accounting natures')
 
     def __str__(self):
-        return '{0.code_nature_comptable} - {0.label_nature_comptable} '\
-               '({0.code_compte_budgetaire})'.format(self)
+        return '{0.code_nature_comptable} - {0.label_nature_comptable}'\
+            .format(self)
