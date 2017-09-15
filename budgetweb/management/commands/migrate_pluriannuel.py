@@ -90,7 +90,7 @@ class Command(BaseCommand):
                 recettes.extend(self.create_recettes(
                     pfi, extra_values=['annee'], annee__gte=year))
 
-            # bulk_create does not trigger the save method.
+            # bulk_create is faster but it does not trigger the save method.
             # Therefore, this script needs to launch check_structuremontants
             Depense.objects.bulk_create(depenses)
             Recette.objects.bulk_create(recettes)
