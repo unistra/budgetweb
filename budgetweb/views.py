@@ -132,50 +132,55 @@ def api_set_dcfield_value_by_id(request):
 
 @login_required
 def show_tree(request, type_affichage, structid=0):
-    active_period = PeriodeBudget.active.select_related('period').first()
-    period_code = active_period.period.code
-    selected_year = get_selected_year(request, default_period=active_period)
-    prefetches, columns = tree_infos(selected_year, period_code)
-    active_fields = columns[type_affichage]
-
-    # Authorized structures list
     is_tree_node = request.is_ajax()
-    queryset = {'parent__id': structid} if structid else {'parent': None}
-    authorized_structures, hierarchy_structures =\
-        get_authorized_structures_ids(request.user)
-
-    structures = Structure.active.prefetch_related(
-        *(Prefetch('structuremontant_set', **prefetch)
-            for prefetch in prefetches['structure_montants'])
-    ).filter(pk__in=hierarchy_structures, **queryset).order_by('code')
-
-    # if the PFI's structure is in the authorized structures
-    if int(structid) in authorized_structures:
-        pfis = PlanFinancement.active.prefetch_related(*chain(
-            (Prefetch('depense_set', **prefetch)
-                for prefetch in prefetches['pfis']['depense']),
-            (Prefetch('recette_set', **prefetch)
-                for prefetch in prefetches['pfis']['recette']),)
-        ).select_related('structure').filter(structure__id=structid)
-    else:
-        pfis = []
+    active_period = PeriodeBudget.active.select_related('period').first()
     context = {
-        'structures': structures,
-        'pfis': pfis,
         'typeAffichage': type_affichage,
-        'currentYear': selected_year,
-        'cols': active_fields,
     }
 
-    # Total sums
-    if not is_tree_node:
-        fields = active_fields
-        total = [[Decimal(0)] * len(field) for field in fields]
-        for structure in structures:
-            for index0, field in enumerate(fields):
-                for index1, montants in enumerate(field):
-                    total[index0][index1] += sum_montants(structure, montants[2])
-        context['total'] = total
+    if active_period:
+        period_code = active_period.period.code
+        selected_year = get_selected_year(request, default_period=active_period)
+        prefetches, columns = tree_infos(selected_year, period_code)
+        active_fields = columns[type_affichage]
+
+        # Authorized structures list
+        queryset = {'parent__id': structid} if structid else {'parent': None}
+        authorized_structures, hierarchy_structures =\
+            get_authorized_structures_ids(request.user)
+
+        structures = Structure.active.prefetch_related(
+            *(Prefetch('structuremontant_set', **prefetch)
+                for prefetch in prefetches['structure_montants'])
+        ).filter(pk__in=hierarchy_structures, **queryset).order_by('code')
+
+        # if the PFI's structure is in the authorized structures
+        if int(structid) in authorized_structures:
+            pfis = PlanFinancement.active.prefetch_related(*chain(
+                (Prefetch('depense_set', **prefetch)
+                    for prefetch in prefetches['pfis']['depense']),
+                (Prefetch('recette_set', **prefetch)
+                    for prefetch in prefetches['pfis']['recette']),)
+            ).select_related('structure').filter(structure__id=structid)
+        else:
+            pfis = []
+
+        context.update({
+            'structures': structures,
+            'pfis': pfis,
+            'currentYear': selected_year,
+            'cols': active_fields,
+        })
+
+        # Total sums
+        if not is_tree_node:
+            fields = active_fields
+            total = [[Decimal(0)] * len(field) for field in fields]
+            for structure in structures:
+                for index0, field in enumerate(fields):
+                    for index1, montants in enumerate(field):
+                        total[index0][index1] += sum_montants(structure, montants[2])
+            context['total'] = total
 
     template = 'show_sub_tree.html' if is_tree_node else 'showtree.html'
     return render(request, template, context)

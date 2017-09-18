@@ -8,9 +8,11 @@ from .models import (Depense, PeriodeBudget, StructureAuthorizations, Recette,
                      StructureMontant)
 
 
-# TODO : Ajouter une exception si jamais pas de période ouverte
 def get_current_year():
-    return PeriodeBudget.active.first().annee
+    try:
+        return PeriodeBudget.active.first().annee
+    except Exception:
+        return None
 
 
 def get_authorized_structures_ids(user):
