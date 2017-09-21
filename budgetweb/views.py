@@ -326,14 +326,16 @@ def recette(request, pfiid, annee):
 @is_authorized_structure
 def detailspfi(request, pfiid):
     to_dict = lambda x: {k: list(v) for k, v in x}
-    pfi = PlanFinancement.objects.select_related('structure').get(pk=pfiid)
     current_year = get_selected_year(request)
-
-    depenses = Depense.objects.filter(pfi=pfi).select_related(
+    pfi = PlanFinancement.objects.select_related('structure').get(pk=pfiid)
+    compta_filters = {'pfi': pfi, 'periodebudget__annee': current_year}
+    depenses = Depense.objects.filter(**compta_filters)\
+        .select_related(
             'naturecomptabledepense', 'periodebudget__period', 'pfi',
             'domainefonctionnel', 'pfi__structure')\
         .annotate(enveloppe=F('naturecomptabledepense__enveloppe'))
-    recettes = Recette.objects.filter(pfi=pfi).select_related(
+    recettes = Recette.objects.filter(**compta_filters)\
+        .select_related(
             'naturecomptablerecette', 'periodebudget__period', 'pfi',
             'pfi__structure')\
         .annotate(enveloppe=F('naturecomptablerecette__enveloppe'))
@@ -360,15 +362,18 @@ def detailspfi(request, pfiid):
         'periodebudget__period__order'), lambda x: x.annee))
     years = (depenses.keys() | recettes.keys()) or [current_year]
 
-    sum_depenses = Depense.objects.filter(pfi=pfi).values('annee').annotate(
-        sum_dc=Sum('montant_dc'),
-        sum_ae=Sum('montant_ae'),
-        sum_cp=Sum('montant_cp'))
+    # TODO: refactoring avec year_depenses
+    sum_depenses = Depense.objects.filter(**compta_filters).values('annee')\
+        .annotate(
+            sum_dc=Sum('montant_dc'),
+            sum_ae=Sum('montant_ae'),
+            sum_cp=Sum('montant_cp'))
     sum_depenses = to_dict(groupby(sum_depenses, lambda x: x['annee']))
-    sum_recettes = Recette.objects.filter(pfi=pfi).values('annee').annotate(
-        sum_dc=Sum('montant_dc'),
-        sum_ar=Sum('montant_ar'),
-        sum_re=Sum('montant_re'))
+    sum_recettes = Recette.objects.filter(**compta_filters).values('annee')\
+        .annotate(
+            sum_dc=Sum('montant_dc'),
+            sum_ar=Sum('montant_ar'),
+            sum_re=Sum('montant_re'))
     sum_recettes = to_dict(groupby(sum_recettes, lambda x: x['annee']))
 
     resume_depenses, resume_recettes = get_detail_pfi_by_period(
@@ -396,9 +401,11 @@ def detailscf(request, structid):
     liste_structure.insert(0, structparent)
     structure_ids = [s.pk for s in liste_structure]
     current_year = get_selected_year(request)
+    compta_filters = {
+        'pfi__structure__in': structure_ids,
+        'periodebudget__annee': current_year}
 
-    queryset = {'pfi__structure__in': structure_ids}
-    depenses = Depense.objects.filter(**queryset)\
+    depenses = Depense.objects.filter(**compta_filters)\
         .select_related(
             'naturecomptabledepense', 'periodebudget__period', 'pfi',
             'domainefonctionnel', 'pfi__structure')\
@@ -407,7 +414,7 @@ def detailscf(request, structid):
                   'naturecomptabledepense__code_nature_comptable',
                   'periodebudget__period__order',
                   'virement__document_number')
-    recettes = Recette.objects.filter(**queryset)\
+    recettes = Recette.objects.filter(**compta_filters)\
         .select_related(
             'naturecomptablerecette', 'periodebudget__period', 'pfi',
             'pfi__structure')\
@@ -451,12 +458,12 @@ def detailscf(request, structid):
 
     if structparent.depth > 2 or\
             structparent.get_first_ancestor().code != "1010":
-        sum_depenses = Depense.objects.filter(**queryset).values('annee').annotate(
+        sum_depenses = Depense.objects.filter(**compta_filters).values('annee').annotate(
             sum_dc=Sum('montant_dc'),
             sum_ae=Sum('montant_ae'),
             sum_cp=Sum('montant_cp'))
         sum_depenses = to_dict(groupby(sum_depenses, lambda x: x['annee']))
-        sum_recettes = Recette.objects.filter(**queryset).values('annee').annotate(
+        sum_recettes = Recette.objects.filter(**compta_filters).values('annee').annotate(
             sum_dc=Sum('montant_dc'),
             sum_ar=Sum('montant_ar'),
             sum_re=Sum('montant_re'))
