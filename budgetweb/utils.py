@@ -139,13 +139,16 @@ def get_pfi_total_types(pfi):
     """
     montants_dict = {'gbcp': ('AE', 'CP', 'AR', 'RE'), 'dc': ('DC',)}
     default_period = 'BI'
-    montant_type = lambda x: [
-        k for k, v in montants_dict.items() if x in v][0]
+
+    def montant_type(x):
+        return [k for k, v in montants_dict.items() if x in v][0]
+
     types = []
     years = get_pfi_years(pfi)
 
     for comptabilite in get_pfi_total(pfi, years=years):
-        compta_types = {k: {default_period: {}} for k in montants_dict.keys()}
+        compta_types = {
+            k: [{default_period: {}}, {}] for k in montants_dict.keys()}
         for c in comptabilite:
             fields = [k for k in c.keys() if k.startswith('sum_')]
             for field in fields:
@@ -155,12 +158,15 @@ def get_pfi_total_types(pfi):
                 field_name = field.split('_')[-1].upper()
                 mt = montant_type(field_name)
                 ct = compta_types[mt]
-                periode_dict = ct.setdefault(periode, {})
+                periode_dict = ct[0].setdefault(periode, {})
+                total_year_dict = ct[1].setdefault(
+                    field_name, dict.fromkeys(years, Decimal(0)))
                 type_dict = periode_dict.setdefault(
                     field_name, [{}, dict.fromkeys(years, None)])
                 nature_dict = type_dict[0].setdefault(
                     c['enveloppe'], [dict.fromkeys(years, None), None])
                 nature_dict[0][annee] = montant
+
                 # Total per enveloppe
                 nature_dict[1] = (nature_dict[1] or Decimal(0)) + montant
 
@@ -170,7 +176,13 @@ def get_pfi_total_types(pfi):
                     (type_dict[1][annee] or Decimal(0)) + montant
                 type_dict[1]['total'] =\
                     type_dict[1].get('total', Decimal(0)) + montant
+
+                # Total per year
+                total_year_dict[annee] =\
+                    total_year_dict.get(annee, Decimal(0)) + montant
+
         types.append(compta_types)
+
     return types
 
 
