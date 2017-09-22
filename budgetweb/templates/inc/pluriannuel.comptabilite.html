@@ -9,7 +9,7 @@
 				<th>Type</th>
 				<th>Enveloppe</th>
 				{% for year in years %}
-					<th {% if year >= period.annee %}colspan="2"{% endif %}>{{ year }}</th>
+                    <th colspan="2">{{ year }}</th>
 				{% endfor %}
 				<th>Total</th>
 			</tr>
@@ -31,11 +31,9 @@
 				<td nowrap=""><span class="pluri">{{ enveloppe }}</span></td>
 			     	{% for year in years %}
 				<td nowrap="" class="montant">{% if year_values.0 %}{% firstof year_values.0|dictvalue:year|intspace "0,00" %}{% else %}0,00{% endif %} &euro;</td>
-                {% if year >= period.annee %}
 				<td rowspan="{{ rowspan }}" style="text-align:center;">
                     <a href="/{{ compta_type }}/{{ PFI.id }}/{{ year }}/">Détails<br>(obligatoires)</a>
                 </td>
-                {% endif %}
 				    {% endfor %}
 				<td nowrap="" class="montant">{% firstof year_values.1|intspace "0,00" %} &euro;</td>
 				{% else %}
@@ -53,10 +51,9 @@
 			    <td nowrap=""><span class="pluri">{{ enveloppe }}</span></td>
                     {% for year in years %}
                 <td nowrap="" class="montant">0,00 &euro;</td>
-                {% if year >= period.annee %}<a href="/{{ compta_type }}/{{ PFI.id }}/{{ year }}/">Détails<br>(obligatoires)</a>
                 <td rowspan="{{ rowspan }}" class="table-details">
+                <a href="/{{ compta_type }}/{{ PFI.id }}/{{ year }}/">Détails<br>(obligatoires)</a>
                 </td>
-                {% endif %}
                     {% endfor %}
                 <td nowrap="" class="montant">0,00 &euro;</td>
             </tr>
@@ -91,7 +88,7 @@
         {% endif %}
                 <td colspan="2" style="text-align: center;">{{ type }}</td>
             {% for year in years %}
-                <td nowrap="" class="montant"{% if year >= period.annee %} colspan="2"{% endif %}>
+                <td nowrap="" class="montant" colspan="2">
                     {% firstof type_values|dictvalue:year|intspace "0,00" %} &euro;</td>
                 </td>
             {% endfor %}

@@ -209,7 +209,6 @@ def pluriannuel(request, pfiid):
     context = {
         'PFI': pfi, 'form': form, 'depense': depense, 'recette': recette,
         'years': get_pfi_years(pfi), 'origin': 'pluriannuel',
-        'period': active_period
     }
     return render(request, 'pluriannuel.html', context)
 
@@ -228,12 +227,12 @@ def modelformset_factory_with_kwargs(cls, **formset_kwargs):
 def depense(request, pfiid, annee):
     # Values for the form initialization
     periodebudget = PeriodeBudget.activebudget.first()
+    pfi = PlanFinancement.objects.get(pk=pfiid)
 
     # Redirect to detailspfi if the active year is not selected
-    if int(annee) < periodebudget.annee:
+    if int(annee) < periodebudget.annee and not pfi.is_pluriannuel:
         return HttpResponseRedirect('/detailspfi/%s' % pfiid)
 
-    pfi = PlanFinancement.objects.get(pk=pfiid)
     is_dfi_member = request.user.groups.filter(name=settings.DFI_GROUP_NAME).exists()
     is_dfi_member_or_admin = is_dfi_member or request.user.is_superuser
     natures = OrderedDict(((n.pk, n) for n in\
@@ -280,12 +279,12 @@ def depense(request, pfiid, annee):
 def recette(request, pfiid, annee):
     # Values for the form initialization
     periodebudget = PeriodeBudget.activebudget.first()
+    pfi = PlanFinancement.objects.get(pk=pfiid)
 
     # Redirect to detailspfi if the active year is not selected
-    if int(annee) < periodebudget.annee:
+    if int(annee) < periodebudget.annee and not pfi.is_pluriannuel:
         return HttpResponseRedirect('/detailspfi/%s' % pfiid)
 
-    pfi = PlanFinancement.objects.get(pk=pfiid)
     is_dfi_member = request.user.groups.filter(name=settings.DFI_GROUP_NAME).exists()
     is_dfi_member_or_admin = is_dfi_member or request.user.is_superuser
     natures = OrderedDict(((n.pk, n) for n in\
