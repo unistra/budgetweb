@@ -77,26 +77,27 @@ def get_detail_pfi_by_period(totals):
     return details
 
 
-def get_pfi_total(pfi, years=None):
+def get_pfi_total(pfi, year=None):
     """
     Retourne un tableau avec l'année
     """
-    query_params = {'pfi': pfi.id}
-    if years:
-        query_params.update({'annee__in': years})
+    year = year or get_current_year()
+    query_params = {'pfi': pfi.id, 'periodebudget__annee': year}
 
     depense = Depense.objects.filter(**query_params)\
         .annotate(enveloppe=F('naturecomptabledepense__enveloppe'))\
         .values('annee', 'periodebudget__period__code', 'enveloppe')\
         .annotate(sum_depense_ae=Sum('montant_ae'),
                   sum_depense_cp=Sum('montant_cp'),
-                  sum_depense_dc=Sum('montant_dc'))
+                  sum_depense_dc=Sum('montant_dc'))\
+        .order_by('annee')
     recette = Recette.objects.filter(**query_params)\
         .annotate(enveloppe=F('naturecomptablerecette__enveloppe'))\
         .values('annee', 'periodebudget__period__code', 'enveloppe')\
         .annotate(sum_recette_ar=Sum('montant_ar'),
                   sum_recette_re=Sum('montant_re'),
-                  sum_recette_dc=Sum('montant_dc'))
+                  sum_recette_dc=Sum('montant_dc'))\
+        .order_by('annee')
 
     return depense, recette
 
@@ -117,7 +118,7 @@ def get_pfi_years(pfi, begin_current_period=False, year_number=4, year=None):
     return []
 
 
-def get_pfi_total_types(pfi):
+def get_pfi_total_types(pfi, year):
     # FIXME: docstring
     """
     Output format example for "depense":
@@ -144,9 +145,9 @@ def get_pfi_total_types(pfi):
         return [k for k, v in montants_dict.items() if x in v][0]
 
     types = []
-    years = get_pfi_years(pfi)
+    years = get_pfi_years(pfi, year=year)
 
-    for comptabilite in get_pfi_total(pfi, years=years):
+    for comptabilite in get_pfi_total(pfi, year):
         compta_types = {
             k: [{default_period: {}}, {}] for k in montants_dict.keys()}
         for c in comptabilite:

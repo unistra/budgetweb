@@ -130,14 +130,14 @@ class PFIUtilsTest(TestCase):
             montant_ar=Decimal(60)
         )
         total_depense, total_recette = get_pfi_total(
-            self.pfi_ecp, years=[self.annee])
+            self.pfi_ecp, year=self.annee)
 
-        self.assertEqual(total_depense[0]['sum_depense_dc'], Decimal(1))
-        self.assertEqual(total_depense[0]['sum_depense_cp'], Decimal(2))
-        self.assertEqual(total_depense[0]['sum_depense_ae'], Decimal(3))
-        self.assertEqual(total_recette[0]['sum_recette_dc'], Decimal(4))
-        self.assertEqual(total_recette[0]['sum_recette_re'], Decimal(5))
-        self.assertEqual(total_recette[0]['sum_recette_ar'], Decimal(6))
+        self.assertEqual(total_depense[0]['sum_depense_dc'], Decimal(10))
+        self.assertEqual(total_depense[0]['sum_depense_cp'], Decimal(20))
+        self.assertEqual(total_depense[0]['sum_depense_ae'], Decimal(30))
+        self.assertEqual(total_recette[0]['sum_recette_dc'], Decimal(40))
+        self.assertEqual(total_recette[0]['sum_recette_re'], Decimal(50))
+        self.assertEqual(total_recette[0]['sum_recette_ar'], Decimal(60))
 
     def test_get_pfi_years(self):
         self.pfi_ecp.date_debut = datetime.date(2015, 1, 1)

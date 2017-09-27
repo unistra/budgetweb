@@ -191,6 +191,7 @@ def show_tree(request, type_affichage, structid=0):
 @is_authorized_editing
 def pluriannuel(request, pfiid):
     active_period = PeriodeBudget.active.select_related('period').first()
+    current_year = get_selected_year(request)
     pfi = get_object_or_404(PlanFinancement, pk=pfiid)
     if request.method == "POST":
         form = PlanFinancementPluriForm(request.POST, instance=pfi)
@@ -202,13 +203,13 @@ def pluriannuel(request, pfiid):
         form = PlanFinancementPluriForm(instance=pfi)
 
     if pfi.date_debut and pfi.date_fin:
-        depense, recette = get_pfi_total_types(pfi)
+        depense, recette = get_pfi_total_types(pfi, current_year)
     else:
         depense = recette = {}
 
     context = {
         'PFI': pfi, 'form': form, 'depense': depense, 'recette': recette,
-        'years': get_pfi_years(pfi), 'origin': 'pluriannuel',
+        'years': get_pfi_years(pfi, year=current_year), 'origin': 'pluriannuel',
     }
     return render(request, 'pluriannuel.html', context)
 
