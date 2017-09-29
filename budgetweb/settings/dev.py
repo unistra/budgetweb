@@ -70,3 +70,11 @@ MIDDLEWARE_CLASSES += (
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 INTERNAL_IPS = ('127.0.0.1', '0.0.0.0')
+
+#################
+# Interfaces SI #
+#################
+
+SIFACWS_DESC = 'https://FIXIT/sifacws/description.json'
+SIFACWS_URL = 'https://FIXIT/'
+SIFACWS_APIKEY = 'FIXIT'

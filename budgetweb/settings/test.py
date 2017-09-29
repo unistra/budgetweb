@@ -36,3 +36,12 @@ for logger in LOGGING['loggers']:
 
 DIPSTRAP_VERSION = '{{ dipstrap_version }}'
 DIPSTRAP_STATIC_URL += '%s/' % DIPSTRAP_VERSION
+
+#################
+# Interfaces SI #
+#################
+
+SIFACWS_DESC = 'https://FIXIT/sifacws/description.json'
+SIFACWS_URL = 'https://FIXIT/'
+SIFACWS_APIKEY = 'FIXIT'
+

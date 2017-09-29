@@ -318,3 +318,5 @@ CAS_USER_CREATION = True
 CAS_USERNAME_FORMAT = lambda username: username.lower()
 
 DFI_GROUP_NAME = 'DFI'
+LATE_GROUP_NAME = 'RETARDATAIRE'
+
