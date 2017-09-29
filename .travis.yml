@@ -1,5 +1,5 @@
 services:
-  - postgressql
+  - postgresql
 
 postgres:
   adapter: postgresql
