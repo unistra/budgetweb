@@ -24,12 +24,10 @@ DEBUG = True
 # name : PROJECT_ROOT_DIR/default.db
 
 
-DATABASES['default']['ENGINE'] = 'django.db.backends.sqlite3'
-DATABASES['default']['NAME'] = 'budgetweb.db'
-# DATABASES['default']['HOST'] = environ.get('DEFAULT_DB_HOST', 'localhost')
-# DATABASES['default']['USER'] = environ.get('DEFAULT_DB_USER', '')
-# DATABASES['default']['PASSWORD'] = environ.get('DEFAULT_DB_PASSWORD', '')
-# DATABASES['default']['NAME'] = environ.get('DEFAULT_DB_NAME', 'budgetweb')
+DATABASES['default']['HOST'] = environ.get('DEFAULT_DB_HOST', 'localhost')
+DATABASES['default']['USER'] = environ.get('DEFAULT_DB_USER', '')
+DATABASES['default']['PASSWORD'] = environ.get('DEFAULT_DB_PASSWORD', '')
+DATABASES['default']['NAME'] = environ.get('DEFAULT_DB_NAME', 'budgetweb')
 
 
 #####################
@@ -52,7 +50,7 @@ INSTALLED_APPS += (
     'coverage',
     'debug_toolbar',
 )
-TEST_RUNNER = 'django_coverage.coverage_runner.CoverageRunner'
+#TEST_RUNNER = 'django_coverage.coverage_runner.CoverageRunner'
 
 ############
 # Dipstrap #
