@@ -12,7 +12,7 @@ DATABASES = {
         'NAME': 'budgetweb',
         'USER': 'budgetweb',
         'PASSWORD': 'budgetweb',
-        'HOST': environ.get('POSTGRES_PORT_5432_TCP_ADDR', 'db'),
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }
