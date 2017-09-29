@@ -9,103 +9,80 @@ from functools import reduce
 from django import forms
 from django.contrib import admin
 from django.contrib.admin.widgets import FilteredSelectMultiple
-from django.contrib.auth.admin import UserAdmin
-from django.contrib.auth.models import User
+from django.utils.translation import ugettext_lazy as _
 
-from .models import (Depense, DomaineFonctionnel, NatureComptableDepense,
-                     NatureComptableRecette, PeriodeBudget, PlanFinancement,
-                     Recette, Structure, StructureAuthorizations)
+from budgetweb.apps.structure.models import Structure
+from .models import (Depense, PeriodeBudget, Recette, StructureAuthorizations,
+                     StructureMontant, Virement)
+
+
+def deactivate_periods(modeladmin, request, queryset):
+    queryset.update(is_active=False)
+deactivate_periods.short_description = _("Mark selected periods as deactivated")
+
+
+def activate_periods(modeladmin, request, queryset):
+    queryset.update(is_active=True)
+activate_periods.short_description = _("Mark selected periods as activated")
 
 
 class DepenseAdmin(admin.ModelAdmin):
     list_display = ('pfi', 'structure', 'domainefonctionnel',
                     'naturecomptabledepense', 'periodebudget', 'annee',
                     'montant_ae', 'montant_cp', 'montant_dc')
-    search_fields = ['pfi', 'structure', 'domainefonctionnel',
-                     'naturecomptabledepense', 'periodebudget', 'annee']
+    search_fields = ['pfi__code', 'structure__code',
+                     'domainefonctionnel__code',
+                     'naturecomptabledepense__code_nature_comptable',
+                     'periodebudget__period__code', 'annee']
 admin.site.register(Depense, DepenseAdmin)
 
 
-class DomaineFonctionnelAdmin(admin.ModelAdmin):
-    list_display = ('code', 'label_court', 'label')
-    search_fields = ['code', 'label_court', 'label']
-admin.site.register(DomaineFonctionnel, DomaineFonctionnelAdmin)
-
-
-class NatureComptableDepenseAdmin(admin.ModelAdmin):
-    field = ('is_fleche', 'enveloppe', 'label_nature_comptable',
-             'code_nature_comptable', 'code_compte_budgetaire',
-             'label_compte_budgetaire', 'is_decalage_tresorerie',
-             'is_non_budgetaire', 'is_pi_cfg', 'is_active')
-    list_display = ('is_active', 'is_fleche', 'enveloppe',
-                    'code_nature_comptable', 'label_nature_comptable',
-                    'code_compte_budgetaire', 'label_compte_budgetaire',
-                    'is_decalage_tresorerie', 'is_non_budgetaire',
-                    'is_pi_cfg')
-    search_fields = ['enveloppe', 'label_nature_comptable',
-                     'code_nature_comptable', 'code_compte_budgetaire',
-                     'label_compte_budgetaire', 'is_fleche', 'is_active']
-
-admin.site.register(NatureComptableDepense, NatureComptableDepenseAdmin)
-
-
-class NatureComptableRecetteAdmin(admin.ModelAdmin):
-    field = ('is_fleche', 'enveloppe', 'code_fonds', 'label_fonds',
-             'code_nature_comptable', 'label_nature_comptable',
-             'code_compte_budgetaire', 'label_compte_budgetaire',
-             'is_ar_and_re', 'is_non_budgetaire', 'is_active')
-    list_display = ('is_fleche', 'enveloppe', 'code_fonds', 'label_fonds',
-                    'code_nature_comptable', 'label_nature_comptable',
-                    'code_compte_budgetaire', 'label_compte_budgetaire',
-                    'is_ar_and_re', 'is_non_budgetaire', 'is_active')
-    search_fields = ['is_fleche', 'enveloppe', 'code_fonds', 'label_fonds',
-                     'code_nature_comptable', 'label_nature_comptable',
-                     'code_compte_budgetaire', 'label_compte_budgetaire',
-                     'is_active']
-
-admin.site.register(NatureComptableRecette, NatureComptableRecetteAdmin)
-
-
 class PeriodeBudgetAdmin(admin.ModelAdmin):
-    field = ('code', 'label', 'annee', 'is_active')
-    list_display = ('code', 'label', 'annee', 'is_active')
-    search_fields = ['code', 'label', 'annee', 'is_active']
+    list_display = ('period_code', 'annee', 'is_active',
+                    'date_debut_saisie', 'date_fin_saisie',
+                    'date_debut_retardataire', 'date_fin_retardataire',
+                    'date_debut_dfi', 'date_fin_dfi',
+                    'date_debut_admin', 'date_fin_admin')
+    search_fields = ['period__code', 'annee', 'is_active']
+    ordering = ['annee', 'period__order']
+    actions = [deactivate_periods, activate_periods]
+
+    def period_code(self, obj):
+        return obj.period.code
+
+
 admin.site.register(PeriodeBudget, PeriodeBudgetAdmin)
-
-
-class PlanFinancementAdmin(admin.ModelAdmin):
-    field = ('structure', 'code', 'label', 'eotp', 'centrecoutderive',
-             'centreprofitderive', 'is_fleche', 'is_pluriannuel', 'is_active',
-             'date_debut', 'date_fin')
-    list_display = ('structure', 'code', 'label', 'eotp', 'centrecoutderive',
-                    'centreprofitderive', 'is_fleche', 'is_pluriannuel',
-                    'is_active', 'date_debut', 'date_fin')
-    search_fields = ['structure__code', 'code', 'eotp', 'centrecoutderive',
-                     'centreprofitderive', 'is_fleche', 'is_pluriannuel',
-                     'is_active', 'date_debut', 'date_fin']
-
-    class Meta:
-        ordering = ['is_fleche', 'structure']
-admin.site.register(PlanFinancement, PlanFinancementAdmin)
 
 
 class RecetteAdmin(admin.ModelAdmin):
     list_display = ('pfi', 'structure',
                     'naturecomptablerecette', 'periodebudget', 'annee',
                     'montant_ar', 'montant_re', 'montant_dc')
-    search_fields = ['pfi', 'structure', 'naturecomptablerecette',
-                     'periodebudget', 'annee']
+    search_fields = ['pfi__code', 'structure__code', 'domainefonctionnel',
+                     'naturecomptablerecette__code_nature_comptable',
+                     'periodebudget__period__code', 'annee']
 admin.site.register(Recette, RecetteAdmin)
 
 
-class StructureAdmin(admin.ModelAdmin):
-    field = ('code', 'parent', 'groupe1', 'label', 'is_active')
-    list_display = ('code', 'parent', 'groupe1', 'label', 'is_active')
-    search_fields = ['code', 'label', 'groupe1']
+class StructureMontantAdmin(admin.ModelAdmin):
+    list_display = ('structure', 'periodebudget', 'annee',
+                    'depense_montant_dc', 'depense_montant_cp',
+                    'depense_montant_ae', 'recette_montant_dc',
+                    'recette_montant_ar', 'recette_montant_re')
+    search_fields = ['structure__code', 'periodebudget__period__code', 'annee']
+admin.site.register(StructureMontant, StructureMontantAdmin)
+
+
+class VirementAdmin(admin.ModelAdmin):
+    fields = ('document_number', 'document_type', 'version', 'perimetre',
+             'process')
+    list_display = ('document_number', 'document_type', 'version',
+                    'perimetre', 'process')
+    search_fields = ['document_number', 'depense__structure__code']
 
     class Meta:
-        ordering = ['is_active', 'code']
-admin.site.register(Structure, StructureAdmin)
+        ordering = ['document_number']
+admin.site.register(Virement, VirementAdmin)
 
 
 class StructureAuthorizationsForm(forms.ModelForm):

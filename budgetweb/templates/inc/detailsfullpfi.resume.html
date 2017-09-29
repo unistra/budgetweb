@@ -1,0 +1,76 @@
+{% load budgetweb_tags %}
+
+{% with montants_types=montants_types_compta.split %}
+{% if compta %}
+{% with resume_montant_group=compta|dictvalue:montant_group %}
+  <thead>
+    <tr>
+      <th rowspan="2">{{ table_title }}</th>
+      {% for period in periods %}
+      <th colspan="{{ montants_types|length }}">{{ period }}</th>
+      {% endfor %}
+      <th colspan="{{ montants_types|length }}">Total</th>
+    </tr>
+    <tr>
+      {% for period in periods %}
+        {% for type in montants_types %}
+      <th>&sum;  {% if type == "DC" %}Charges / Immos{% else %}{{ type }}{% endif %}</th>
+        {% endfor %}
+      {% endfor %}
+      {% for type in montants_types %}
+      <th>&sum; {% if type == "DC" %}Charges / Immos{% else %}{{ type }}{% endif %}</th>
+      {% endfor %}
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for enveloppe in enveloppes.split %}
+    <tr>
+      <td>{{ enveloppe }}</td>
+      {% with enveloppes_montants=resume_montant_group.0|dictvalue:enveloppe %}
+      {% for period in periods %}
+          {% if enveloppes_montants.0 %}
+          {% with types_montants=enveloppes_montants.0|dictvalue:period %}
+              {% for type in montants_types %}
+      <td>{% if types_montants %}{{ types_montants|dictvalue:type|intspace }}{% else %}0,00{% endif %} &euro;</td>
+              {% endfor %}
+          {% endwith %}
+          {% else %}
+              {% for type in montants_types %}
+      <td>0,00 &euro;</td>
+              {% endfor %}
+          {% endif %}
+      {% endfor %}
+      {% for type in montants_types %}
+      <td>{% if enveloppes_montants.1 %}
+        {{ enveloppes_montants.1|dictvalue:type|intspace }}
+      {% else %}0,00
+      {% endif %} &euro;</td>
+      {% endfor %}
+      {% endwith %}
+    </tr>
+    {% endfor %}
+    <tr>
+      <td>Total</td>
+    {% for period in periods %}
+        {% with total_enveloppes=resume_montant_group.1|dictvalue:period %}
+        {% for type in montants_types %}
+      <td class="bold">{% firstof total_enveloppes|dictvalue:type|intspace "0,00" %} &euro;</td>
+        {% endfor %}
+        {% endwith %}
+    {% endfor %}
+    {% with totals=resume_montant_group.1.total %}
+    {% for type in montants_types %}
+      <td class="bold">{% firstof totals|dictvalue:type|intspace "0,00" %} &euro;</td>
+    {% endfor %}
+    {% endwith %}
+    </tr>
+    {% if not is_last %}
+    <tr>
+      <td class="blank_row" colspan="{% resume_colspan periods montants_types %}">&nbsp;</td>
+    </tr>
+    {% endif %}
+  </tbody>
+{% endwith %}
+{% endif %}
+{% endwith %}

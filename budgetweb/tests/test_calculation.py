@@ -6,10 +6,10 @@ from django.contrib.auth.models import User
 from django.core.management import call_command
 from django.test import TestCase
 
-from budgetweb.models import (Depense, DomaineFonctionnel,
-                              NatureComptableDepense, NatureComptableRecette,
-                              PeriodeBudget, PlanFinancement, Recette,
-                              Structure, StructureMontant)
+from budgetweb.apps.structure.models import (
+    DomaineFonctionnel, NatureComptableDepense, NatureComptableRecette,
+    PlanFinancement, Structure)
+from budgetweb.models import Depense, PeriodeBudget, Recette, StructureMontant
 
 
 def get_random_object(object_list):
@@ -24,10 +24,9 @@ def generate_montant(max_montant):
 class CalculationTest(TestCase):
 
     fixtures = [
-        'tests/periodebudgets.json', 'tests/structures.json',
-        'tests/domainefonctionnels.json', 'tests/planfinancements.json',
-        'tests/naturecomptabledepenses.json',
-        'tests/naturecomptablerecettes.json'
+        'tests/periodebudgets', 'tests/structures',
+        'tests/domainefonctionnels', 'tests/planfinancements',
+        'tests/naturecomptabledepenses', 'tests/naturecomptablerecettes'
     ]
 
     def setUp(self):

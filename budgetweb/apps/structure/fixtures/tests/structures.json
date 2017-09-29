@@ -1,0 +1,418 @@
+[
+{
+    "fields": {
+        "label": "Universit\u00e9 de Strasbourg",
+        "code": "ETAB",
+        "parent": null,
+        "is_active": true,
+        "groupe1": "Etablissement",
+        "depth": 1,
+        "path": ""
+    },
+    "pk": 1,
+    "model": "structure.structure"
+},
+{
+    "fields": {
+        "label": "Recherche",
+        "code": "RCH",
+        "parent": 1,
+        "is_active": true,
+        "groupe1": "Recherche",
+        "depth": 2,
+        "path": "/1"
+    },
+    "pk": 2,
+    "model": "structure.structure"
+},
+{
+    "fields": {
+        "label": "Services Centraux",
+        "code": "SCX",
+        "parent": 1,
+        "is_active": true,
+        "groupe1": "Services Centraux",
+        "depth": 2,
+        "path": "/1"
+    },
+    "pk": 3,
+    "model": "structure.structure"
+},
+{
+    "fields": {
+        "label": "Paie",
+        "code": "PAIE",
+        "parent": 1,
+        "is_active": true,
+        "groupe1": "Paie",
+        "depth": 2,
+        "path": "/1"
+    },
+    "pk": 4,
+    "model": "structure.structure"
+},
+{
+    "fields": {
+        "label": "DEP PAIE RP BETA",
+        "code": "PAIE7R101",
+        "parent": 4,
+        "is_active": true,
+        "groupe1": "Recherche",
+        "depth": 3,
+        "path": "/1/4"
+    },
+    "pk": 5,
+    "model": "structure.structure"
+},
+{
+    "fields": {
+        "label": "BETA UMR 7522",
+        "code": "R101SEG",
+        "parent": 2,
+        "is_active": true,
+        "groupe1": "Recherche",
+        "depth": 3,
+        "path": "/1/2"
+    },
+    "pk": 6,
+    "model": "structure.structure"
+},
+{
+    "fields": {
+        "label": "DEP PAIE RP ECP",
+        "code": "PAIE7ECP",
+        "parent": 4,
+        "is_active": true,
+        "groupe1": "Composantes",
+        "depth": 3,
+        "path": "/1/4"
+    },
+    "pk": 7,
+    "model": "structure.structure"
+},
+{
+    "fields": {
+        "label": "ECPM",
+        "code": "ECP",
+        "parent": 1,
+        "is_active": true,
+        "groupe1": "Composantes",
+        "depth": 2,
+        "path": "/1"
+    },
+    "pk": 8,
+    "model": "structure.structure"
+},
+{
+    "fields": {
+        "label": "ECP-LOG IMMO ET SECU",
+        "code": "ECP1",
+        "parent": 8,
+        "is_active": true,
+        "groupe1": "Composantes",
+        "depth": 3,
+        "path": "/1/8"
+    },
+    "pk": 9,
+    "model": "structure.structure"
+},
+{
+    "fields": {
+        "label": "BETA EQ 2  GENERAL",
+        "code": "R101SEGE02",
+        "parent": 6,
+        "is_active": true,
+        "groupe1": "Recherche",
+        "depth": 4,
+        "path": "/1/2/6"
+    },
+    "pk": 10,
+    "model": "structure.structure"
+},
+{
+    "fields": {
+        "label": "ECP-PIL ET LOG COMP",
+        "code": "ECP2",
+        "parent": 8,
+        "is_active": true,
+        "groupe1": "Composantes",
+        "depth": 3,
+        "path": "/1/8"
+    },
+    "pk": 11,
+    "model": "structure.structure"
+},
+{
+    "fields": {
+        "label": "DEP PAIE RP DIN",
+        "code": "PAIE7DIN",
+        "parent": 4,
+        "is_active": true,
+        "groupe1": "Services Centraux",
+        "depth": 3,
+        "path": "/1/4"
+    },
+    "pk": 12,
+    "model": "structure.structure"
+},
+{
+    "fields": {
+        "label": "BETA EQ 5  LEES",
+        "code": "R101SEGE05",
+        "parent": 6,
+        "is_active": true,
+        "groupe1": "Recherche",
+        "depth": 4,
+        "path": "/1/2/6"
+    },
+    "pk": 13,
+    "model": "structure.structure"
+},
+{
+    "fields": {
+        "label": "BETA EQ 4  CEREQ",
+        "code": "R101SEGE04",
+        "parent": 6,
+        "is_active": true,
+        "groupe1": "Recherche",
+        "depth": 4,
+        "path": "/1/2/6"
+    },
+    "pk": 14,
+    "model": "structure.structure"
+},
+{
+    "fields": {
+        "label": "DI",
+        "code": "DIN",
+        "parent": 3,
+        "is_active": true,
+        "groupe1": "Services Centraux",
+        "depth": 3,
+        "path": "/1/3"
+    },
+    "pk": 15,
+    "model": "structure.structure"
+},
+{
+    "fields": {
+        "label": "BETA EQ 1  ECHANGES",
+        "code": "R101SEGE01",
+        "parent": 6,
+        "is_active": true,
+        "groupe1": "Recherche",
+        "depth": 4,
+        "path": "/1/2/6"
+    },
+    "pk": 16,
+    "model": "structure.structure"
+},
+{
+    "fields": {
+        "label": "ECP-FORM DN",
+        "code": "ECP3",
+        "parent": 8,
+        "is_active": true,
+        "groupe1": "Composantes",
+        "depth": 3,
+        "path": "/1/8"
+    },
+    "pk": 17,
+    "model": "structure.structure"
+},
+{
+    "fields": {
+        "label": "BETA EQ 3  THEMES",
+        "code": "R101SEGE03",
+        "parent": 6,
+        "is_active": true,
+        "groupe1": "Recherche",
+        "depth": 4,
+        "path": "/1/2/6"
+    },
+    "pk": 18,
+    "model": "structure.structure"
+},
+{
+    "fields": {
+        "label": "DIN-JOUVENCE INFO",
+        "code": "DINJOU",
+        "parent": 15,
+        "is_active": true,
+        "groupe1": "Services Centraux",
+        "depth": 4,
+        "path": "/1/3/15"
+    },
+    "pk": 19,
+    "model": "structure.structure"
+},
+{
+    "fields": {
+        "label": "ECP-LANGUES",
+        "code": "ECP3DP2",
+        "parent": 17,
+        "is_active": true,
+        "groupe1": "Composantes",
+        "depth": 4,
+        "path": "/1/8/17"
+    },
+    "pk": 20,
+    "model": "structure.structure"
+},
+{
+    "fields": {
+        "label": "DIN-FONCT DI",
+        "code": "DINFCT",
+        "parent": 15,
+        "is_active": true,
+        "groupe1": "Services Centraux",
+        "depth": 4,
+        "path": "/1/3/15"
+    },
+    "pk": 21,
+    "model": "structure.structure"
+},
+{
+    "fields": {
+        "label": "ECP-CHIMIE ANA",
+        "code": "ECP3DP4",
+        "parent": 17,
+        "is_active": true,
+        "groupe1": "Composantes",
+        "depth": 4,
+        "path": "/1/8/17"
+    },
+    "pk": 22,
+    "model": "structure.structure"
+},
+{
+    "fields": {
+        "label": "DIN-OSIRIS",
+        "code": "DINOSI",
+        "parent": 15,
+        "is_active": true,
+        "groupe1": "Services Centraux",
+        "depth": 4,
+        "path": "/1/3/15"
+    },
+    "pk": 23,
+    "model": "structure.structure"
+},
+{
+    "fields": {
+        "label": "ECP-MATERIAUX",
+        "code": "ECP3DP5",
+        "parent": 17,
+        "is_active": true,
+        "groupe1": "Composantes",
+        "depth": 4,
+        "path": "/1/8/17"
+    },
+    "pk": 24,
+    "model": "structure.structure"
+},
+{
+    "fields": {
+        "label": "ECP-POLYMERES",
+        "code": "ECP3DP6",
+        "parent": 17,
+        "is_active": true,
+        "groupe1": "Composantes",
+        "depth": 4,
+        "path": "/1/8/17"
+    },
+    "pk": 25,
+    "model": "structure.structure"
+},
+{
+    "fields": {
+        "label": "DIN-RAREST",
+        "code": "DINRAR",
+        "parent": 15,
+        "is_active": true,
+        "groupe1": "Services Centraux",
+        "depth": 4,
+        "path": "/1/3/15"
+    },
+    "pk": 26,
+    "model": "structure.structure"
+},
+{
+    "fields": {
+        "label": "ECP-DEPART GC-SP",
+        "code": "ECP3DP1",
+        "parent": 17,
+        "is_active": true,
+        "groupe1": "Composantes",
+        "depth": 4,
+        "path": "/1/8/17"
+    },
+    "pk": 27,
+    "model": "structure.structure"
+},
+{
+    "fields": {
+        "label": "ECP-FORM CPI",
+        "code": "ECP3CPI",
+        "parent": 17,
+        "is_active": true,
+        "groupe1": "Composantes",
+        "depth": 4,
+        "path": "/1/8/17"
+    },
+    "pk": 28,
+    "model": "structure.structure"
+},
+{
+    "fields": {
+        "label": "ECP-INGENIEUR",
+        "code": "ECP3ING",
+        "parent": 17,
+        "is_active": true,
+        "groupe1": "Composantes",
+        "depth": 4,
+        "path": "/1/8/17"
+    },
+    "pk": 29,
+    "model": "structure.structure"
+},
+{
+    "fields": {
+        "label": "ECP-PROJETS IND",
+        "code": "ECP3DP7",
+        "parent": 17,
+        "is_active": true,
+        "groupe1": "Composantes",
+        "depth": 4,
+        "path": "/1/8/17"
+    },
+    "pk": 30,
+    "model": "structure.structure"
+},
+{
+    "fields": {
+        "label": "DIN-LOGICIELS",
+        "code": "DINLOG",
+        "parent": 15,
+        "is_active": true,
+        "groupe1": "Services Centraux",
+        "depth": 4,
+        "path": "/1/3/15"
+    },
+    "pk": 31,
+    "model": "structure.structure"
+},
+{
+    "fields": {
+        "label": "ECP-CHIMIE ORGA",
+        "code": "ECP3DP3",
+        "parent": 17,
+        "is_active": true,
+        "groupe1": "Composantes",
+        "depth": 4,
+        "path": "/1/8/17"
+    },
+    "pk": 32,
+    "model": "structure.structure"
+}
+]

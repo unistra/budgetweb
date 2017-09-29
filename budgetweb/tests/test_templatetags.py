@@ -41,9 +41,8 @@ class TemplatetagsTestCase(TestCase):
         self.assertEqual(tags.dictvalue(value, 'a'), 1)
 
     def test_resume_colspan(self):
-        periodes1 = ('BI', 'Virement')
-        periodes2 = ()
+        periodes = ('BI', 'VIR1')
         montant_types = {'AE': 1, 'CP': 2}
 
         self.assertEqual(
-            tags.resume_colspan(periodes1, periodes2, montant_types), 7)
+            tags.resume_colspan(periodes, montant_types), 7)

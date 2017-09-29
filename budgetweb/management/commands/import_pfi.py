@@ -2,7 +2,7 @@ import csv
 
 from django.core.management.base import BaseCommand
 
-from budgetweb.models import PlanFinancement, Structure
+from budgetweb.apps.structure.models import PlanFinancement, Structure
 
 
 class Command(BaseCommand):
@@ -22,23 +22,31 @@ class Command(BaseCommand):
                     pluri = (row[4] == 'oui' or row[4] == 'Oui')
                     struct_code = row[0]
                     try:
-                        struct = Structure.objects.get(code=struct_code)
-                        created = PlanFinancement.objects.update_or_create(
-                            structure=struct,
-                            code=row[1],
-                            label=row[2],
-                            eotp=row[5],
-                            centrecoutderive=row[6],
-                            centreprofitderive=row[7],
-                            groupe1=row[8],
-                            groupe2=row[9],
-                            is_fleche=pfi_is_fleche,
-                            is_pluriannuel=pluri,
-                            defaults={'is_active': True}
-                        )[1]
-                        total += int(created)
+                        struct = Structure.objects.get(
+                                                    code__iexact=struct_code)
+                        nb_exist = PlanFinancement.objects.filter(
+                                                    code__iexact=row[1])
+                        if nb_exist and row[1] != 'NA':
+                            print("Le PFI %s existe deja" % row[1])
+                        else:
+                            created = PlanFinancement.objects.update_or_create(
+                                structure=struct,
+                                code=row[1],
+                                label=row[2],
+                                eotp=row[5],
+                                centrecoutderive=row[6],
+                                centreprofitderive=row[7],
+                                groupe1=row[8],
+                                groupe2=row[9],
+                                is_fleche=pfi_is_fleche,
+                                is_pluriannuel=pluri,
+                                defaults={'is_active': True}
+                            )[1]
+                            total += int(created)
                     except Structure.DoesNotExist:
+                        print(struct_code)
                         struct_probleme.append(struct_code)
-                        pass
-                print('Financials Plans created with %s : %s\n\tMissing: %s' %
+                        continue
+                print('Financials Plans created with %s : %s\n\t\
+                       Missing structure : %s' %
                       (filename, total, ', '.join(struct_probleme)))

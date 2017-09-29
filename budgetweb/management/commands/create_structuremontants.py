@@ -6,13 +6,12 @@ import random
 from django import db
 from django.conf import settings
 from django.core.management.base import BaseCommand
-from django.core.management import call_command
-from django.db import transaction
 
-from budgetweb.models import (Depense, DomaineFonctionnel,
-                              NatureComptableDepense, NatureComptableRecette,
-                              PeriodeBudget, PlanFinancement, Recette,
-                              StructureMontant)
+from budgetweb.models import (
+    Depense, PeriodeBudget, Recette, StructureMontant)
+from budgetweb.apps.structure.models import (
+    DomaineFonctionnel, NatureComptableDepense, NatureComptableRecette,
+    PlanFinancement)
 
 
 NUMBER_ENTRIES = 100
@@ -105,7 +104,9 @@ class Command(BaseCommand):
             pfi = get_random_object(self.pfis)
             domainefonctionnel = get_random_object(self.domainefonctionnels)
             structure = pfi.structure
-            annee = self.periodebudget.annee
+            annee = (self.periodebudget.annee - 1) + random.randint(0, 4)\
+                if pfi.is_pluriannuel else self.periodebudget.annee
+
             naturecomptabledepense = get_random_object(
                 self.naturecomptabledepenses, qs={'is_fleche': pfi.is_fleche})
             naturecomptablerecette = get_random_object(

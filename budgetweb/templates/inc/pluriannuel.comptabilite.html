@@ -1,0 +1,100 @@
+{% load budgetweb_tags %}
+<fieldset>
+	<legend><a data-toggle="collapse" data-target="#table_{{ compta_type }}">{{ label }}</a></legend>
+	<div class="collapse in" id="table_{{ compta_type }}">
+	<table class='table-pluri {{ compta_type }}'>
+		<thead>
+			<tr>
+				<th>Etape</th>
+				<th>Type</th>
+				<th>Enveloppe</th>
+				{% for year in years %}
+                    <th colspan="2">{{ year }}</th>
+				{% endfor %}
+				<th>Total</th>
+			</tr>
+		</thead>
+		<tbody>
+	{% for periode, periode_values in types.0.items %}
+		{% for type in montants_types.split %}
+		    {% with enveloppe_values=periode_values|dictvalue:type %}
+			{% with rowspan=enveloppes.split|length|add:1 %}
+			<tr>
+			{% if forloop.counter == 1 %}
+                <td rowspan="{% pluriannuel_rowspan rowspan montants_types.split %}" style="text-align: center;">{{ periode }}</td>
+			{% endif %}
+				<td rowspan="{{ rowspan }}" style="text-align: center;">{% if compta_type == "depense" and type == "DC" %}Charges / Immos{% else %}{% if compta_type == "recette" and type == "DC" %}Produits / Ressources{% else %}{{ type }}{% endif %}{% endif %}</td>
+			{% for enveloppe in enveloppes.split %}
+			{% if enveloppe_values.0 %}
+			{% with year_values=enveloppe_values.0|dictvalue:enveloppe %}
+				{% if forloop.counter == 1 %}
+				<td nowrap=""><span class="pluri">{{ enveloppe }}</span></td>
+			     	{% for year in years %}
+				<td nowrap="" class="montant">{% if year_values.0 %}{% firstof year_values.0|dictvalue:year|intspace "0,00" %}{% else %}0,00{% endif %} &euro;</td>
+				<td rowspan="{{ rowspan }}" style="text-align:center;">
+                    <a href="/{{ compta_type }}/{{ PFI.id }}/{{ year }}/">Détails<br>(obligatoires)</a>
+                </td>
+				    {% endfor %}
+				<td nowrap="" class="montant">{% firstof year_values.1|intspace "0,00" %} &euro;</td>
+				{% else %}
+			<tr>
+			    <td nowrap=""><span class="pluri">{{ enveloppe }}</span></td>
+			    {% for year in years %}
+				<td nowrap="" class="montant">{% if year_values.0 %}{% firstof year_values.0|dictvalue:year|intspace "0,00" %}{% else %}0,00{% endif %} &euro;</td>
+				{% endfor %}
+				<td nowrap="" class="montant">{% firstof year_values.1|intspace "0,00" %} &euro;</td>
+				{% endif %}
+			</tr>
+			{% endwith %}
+			{% else %}
+			    {% if forloop.counter == 1 %}
+			    <td nowrap=""><span class="pluri">{{ enveloppe }}</span></td>
+                    {% for year in years %}
+                <td nowrap="" class="montant">0,00 &euro;</td>
+                <td rowspan="{{ rowspan }}" class="table-details">
+                <a href="/{{ compta_type }}/{{ PFI.id }}/{{ year }}/">Détails<br>(obligatoires)</a>
+                </td>
+                    {% endfor %}
+                <td nowrap="" class="montant">0,00 &euro;</td>
+            </tr>
+                {% else %}
+            <tr>
+                <td nowrap=""><span class="pluri">{{ enveloppe }}</span></td>
+                {% for year in years %}
+                <td nowrap="" class="montant">0,00 &euro;</td>
+                {% endfor %}
+                <td nowrap="" class="montant">0,00 &euro;</td>
+                {% endif %}
+            </tr>
+			{% endif %}
+			{% endfor %}
+			<tr>
+			    <td nowrap=""><span class="pluri">Total</span></td>
+			    {% for year in years %}
+				<td nowrap="" class="montant">{% if enveloppe_values.1 %}{% firstof enveloppe_values.1|dictvalue:year|intspace "0,00" %}{% else %}0,00{% endif %} &euro;</td>
+				{% endfor %}
+				<td nowrap="" class="montant">{% if enveloppe_values.1 %}{% firstof enveloppe_values.1.total|intspace "0,00" %}{% else %}0,00{% endif %} &euro;</td>
+			</tr>
+			{% endwith %}
+			{% endwith %}
+		{% endfor %}
+	{% endfor %}
+
+    {% comment %} Total per year and per type {% endcomment %}
+    {% for type, type_values in types.1.items %}
+            <tr>
+        {% if forloop.counter == 1 %}
+                <td nowrap="" rowspan="{{ types.1|length }}" style="text-align: center; font-size: bold;">Total</td>
+        {% endif %}
+                <td colspan="2" style="text-align: center;">{{ type }}</td>
+            {% for year in years %}
+                <td nowrap="" class="montant" colspan="2">
+                    {% firstof type_values|dictvalue:year|intspace "0,00" %} &euro;</td>
+                </td>
+            {% endfor %}
+            </tr>
+    {% endfor %}
+		</tbody>
+	</table>
+  </div>
+</fieldset>

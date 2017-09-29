@@ -1,13 +1,15 @@
+from datetime import datetime
 from functools import wraps
+from importlib import import_module
 
 from django.apps import apps as django_apps
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
-from django.db import transaction
 from django.http import HttpResponseForbidden
-from django.utils.importlib import import_module
 
-from .exceptions import StructureUnauthorizedException
+from .exceptions import (StructureUnauthorizedException,
+                         EditingUnauthorizedException,
+                         PeriodeBudgetUninitializeError)
 
 
 POSTGRESQL_LOCK_MODES = (
@@ -28,7 +30,7 @@ def is_authorized_structure(func):
     """
     @wraps(func)
     def wrapper(request, *args, **kwargs):
-        from .models import PlanFinancement, StructureAuthorizations
+        from budgetweb.apps.structure.models import PlanFinancement
         from .utils import get_authorized_structures_ids
 
         try:
@@ -42,9 +44,56 @@ def is_authorized_structure(func):
             is_authorized = structure_id in user_structures
             if not is_authorized:
                 raise StructureUnauthorizedException
-        except:
-            return HttpResponseForbidden(
-                StructureUnauthorizedException().message)
+        except Exception:
+            raise StructureUnauthorizedException
+        return func(request, *args, **kwargs)
+    return wrapper
+
+
+def is_authorized_editing(func):
+    """
+    Check if the user can write something in the period
+    """
+    @wraps(func)
+    def wrapper(request, *args, **kwargs):
+        from .models import PeriodeBudget
+        is_authorized = False
+        user = request.user
+        periode_active = PeriodeBudget.activebudget.first()
+
+        if not all([
+                periode_active.date_debut_saisie,
+                periode_active.date_fin_saisie,
+                periode_active.date_debut_retardataire,
+                periode_active.date_fin_retardataire,
+                periode_active.date_debut_dfi,
+                periode_active.date_fin_dfi,
+                periode_active.date_debut_admin,
+                periode_active.date_fin_admin]):
+            raise PeriodeBudgetUninitializeError
+
+        date_today = datetime.now().date()
+
+        if any([
+            (periode_active.date_debut_saisie <= date_today and
+             periode_active.date_fin_saisie >= date_today),
+            (periode_active.date_debut_retardataire <= date_today and
+             periode_active.date_fin_retardataire >= date_today and
+             user.groups.filter(name=settings.LATE_GROUP_NAME).exists()),
+            (periode_active.date_debut_dfi <= date_today and
+             periode_active.date_fin_dfi >= date_today and
+             user.groups.filter(name=settings.DFI_GROUP_NAME).exists()),
+            (periode_active.date_debut_admin <= date_today and
+             periode_active.date_fin_admin >= date_today and
+             user.is_superuser)
+        ]):
+            is_authorized = True
+
+        if not is_authorized:
+            raise EditingUnauthorizedException
+        # TODO Django > 1.8 :
+        # Raise PermissionDenied with an exception parameter
+        # https://docs.djangoproject.com/en/1.11/ref/views/#django.views.defaults.permission_denied
         return func(request, *args, **kwargs)
     return wrapper
 

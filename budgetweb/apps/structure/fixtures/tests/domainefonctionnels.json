@@ -1,0 +1,182 @@
+[
+{
+    "model": "structure.domainefonctionnel",
+    "fields": {
+        "label": "Formation initiale et continue de niveau Licence",
+        "is_active": true,
+        "label_court": "Form. Initial et continue Licence",
+        "code": "D101"
+    },
+    "pk": 1
+},
+{
+    "model": "structure.domainefonctionnel",
+    "fields": {
+        "label": "Formation initiale et continue de niveau Master",
+        "is_active": true,
+        "label_court": "Form. Initial et continue Master",
+        "code": "D102"
+    },
+    "pk": 2
+},
+{
+    "model": "structure.domainefonctionnel",
+    "fields": {
+        "label": "Formation initiale et continue de niveau Doctorat",
+        "is_active": true,
+        "label_court": "Form. Initial et continue Doctorat",
+        "code": "D103"
+    },
+    "pk": 3
+},
+{
+    "model": "structure.domainefonctionnel",
+    "fields": {
+        "label": "Biblioth\u00e8ques et documentation",
+        "is_active": true,
+        "label_court": "Biblioth\u00e8ques et documentation",
+        "code": "D105"
+    },
+    "pk": 4
+},
+{
+    "model": "structure.domainefonctionnel",
+    "fields": {
+        "label": "Recherche universitaire en sciences de la vie, biotechnologie et sant\u00e9",
+        "is_active": true,
+        "label_court": "Rech. U. en sc. de la vie, bio. et sant\u00e9",
+        "code": "D106"
+    },
+    "pk": 5
+},
+{
+    "model": "structure.domainefonctionnel",
+    "fields": {
+        "label": "Recherche universitaire en math\u00e9matiques, sciences et techniques de l'information et de la communication, micro et nanotechnologies",
+        "is_active": true,
+        "label_court": "Rech. U. en maths, TIC, micro et nano",
+        "code": "D107"
+    },
+    "pk": 6
+},
+{
+    "model": "structure.domainefonctionnel",
+    "fields": {
+        "label": "Recherche universitaire en physique, chimie et sciences pour l'ing\u00e9nieur",
+        "is_active": true,
+        "label_court": "Rech. U. en phy. chi et sci. De l'ing.",
+        "code": "D108"
+    },
+    "pk": 7
+},
+{
+    "model": "structure.domainefonctionnel",
+    "fields": {
+        "label": "Recherche universitaire en physique nucl\u00e9aire et des hautes \u00e9nergies",
+        "is_active": true,
+        "label_court": "Rech. U. phy. nucl\u00e9. et hautes \u00e9nergies",
+        "code": "D109"
+    },
+    "pk": 8
+},
+{
+    "model": "structure.domainefonctionnel",
+    "fields": {
+        "label": "Recherche universitaire en sciences de la terre, de l'univers et de l'environnement",
+        "is_active": true,
+        "label_court": "Rech. U. sci. de la terre, l'univ de l'env.",
+        "code": "D110"
+    },
+    "pk": 9
+},
+{
+    "model": "structure.domainefonctionnel",
+    "fields": {
+        "label": "Recherche universitaire en sciences de l'homme et de la soci\u00e9t\u00e9",
+        "is_active": true,
+        "label_court": "Rech. U. sci. de l'homme et de la soci\u00e9t\u00e9",
+        "code": "D111"
+    },
+    "pk": 10
+},
+{
+    "model": "structure.domainefonctionnel",
+    "fields": {
+        "label": "Recherche universitaire interdisciplinaire et transversale",
+        "is_active": true,
+        "label_court": "Rech. U. interdisciplinaire et tranversale",
+        "code": "D112"
+    },
+    "pk": 11
+},
+{
+    "model": "structure.domainefonctionnel",
+    "fields": {
+        "label": "Diffusion des savoirs et mus\u00e9es",
+        "is_active": true,
+        "label_court": "Diffusition des savoirs et mus\u00e9es",
+        "code": "D113"
+    },
+    "pk": 12
+},
+{
+    "model": "structure.domainefonctionnel",
+    "fields": {
+        "label": "Immobilier",
+        "is_active": true,
+        "label_court": "Immobilier",
+        "code": "D114"
+    },
+    "pk": 13
+},
+{
+    "model": "structure.domainefonctionnel",
+    "fields": {
+        "label": "Pilotage et support",
+        "is_active": true,
+        "label_court": "Pilotage et support",
+        "code": "D115"
+    },
+    "pk": 14
+},
+{
+    "model": "structure.domainefonctionnel",
+    "fields": {
+        "label": "Aides directes aux \u00e9tudiants",
+        "is_active": true,
+        "label_court": "Aides directes aux \u00e9tudiants",
+        "code": "D201"
+    },
+    "pk": 15
+},
+{
+    "model": "structure.domainefonctionnel",
+    "fields": {
+        "label": "Aides indirectes",
+        "is_active": true,
+        "label_court": "Aides indirects",
+        "code": "D202"
+    },
+    "pk": 16
+},
+{
+    "model": "structure.domainefonctionnel",
+    "fields": {
+        "label": "Sant\u00e9 des \u00e9tudiants et activit\u00e9s associatives, culturelles et sportives",
+        "is_active": true,
+        "label_court": "Sant\u00e9 des \u00e9tu. et act. csso. cult. et sp.",
+        "code": "D203"
+    },
+    "pk": 17
+},
+{
+    "model": "structure.domainefonctionnel",
+    "fields": {
+        "label": "D\u00e9penses non d\u00e9caissables",
+        "is_active": true,
+        "label_court": "D\u00e9penses non d\u00e9caissables",
+        "code": "DZ"
+    },
+    "pk": 18
+}
+]
