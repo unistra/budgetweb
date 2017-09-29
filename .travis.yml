@@ -1,15 +1,6 @@
 services:
   - postgresql
 
-postgres:
-  adapter: postgresql
-  database: budgetweb
-  username: budgetweb
-
-before_script:
-  - psql -c "CREATE DATABASE budgetweb;" -U postgres
-  - psql -c "CREATE USER budgetweb WITH PASSWORD 'budgetweb';" -U postgres
-
 variables:
   POSTGRES_DB: budgetweb
   POSTGRES_USER: budgetweb
