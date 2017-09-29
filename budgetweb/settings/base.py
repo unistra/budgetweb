@@ -176,6 +176,7 @@ TEMPLATES = [
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.request',
+                'budgetweb.context_processors.period_years'
             ],
         },
     },
@@ -241,6 +242,7 @@ THIRD_PARTY_APPS = (
 
 LOCAL_APPS = (
     'budgetweb',
+    'budgetweb.apps.structure',
 )
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

@@ -19,7 +19,6 @@ python:
 install:
   - pip install tox
 script:
-  - python manage.py migrate 
   - tox
 after_success:
   - pip install coveralls
