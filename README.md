@@ -219,14 +219,17 @@ Le jeu de test contient :
     Des programmes de financements fléchés / non fléchés. ( La naturecomptable est différente entre un PFI fléché et non fléché)
     Des programmes de financements pluri-annuel et non pluri-annuel. (Les écrans de saisies ne sont pas identiques).
 
-* Présentation de l'arborescence.
+* Présentation de l'arborescence au budget initial.
 ![Alt text](docs/images/capture1.jpg?raw=true "Title")
+* Présentation de l'arborescence au Budget Rectificatif
+![Alt text](docs/images/capture8.jpg?raw=true "Title")
 * Formulaire de saisie des dépenses.
 ![Alt text](docs/images/capture2.jpg?raw=true "Title")
 * Formulaire de saisie des recettes
 ![Alt text](docs/images/capture3.jpg?raw=true "Title")
 * Résumé disponible pour chaque niveau.
 ![Alt text](docs/images/capture4.jpg?raw=true "Title")
+![Alt text](docs/images/capture9.jpg?raw=true "Title")
 * Gestion des PFI pluri-annuel
 ![Alt text](docs/images/capture5.jpg?raw=true "Title")
 ![Alt text](docs/images/capture6.jpg?raw=true "Title")
