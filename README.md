@@ -203,7 +203,8 @@ Exemple : PFI non fléché ou NA;Investissement;NB-Restitution de dépôts ou ca
  
  **La gestion des virements**
  La gestion des virements se fait par l'import depuis ERP SAP. Pour ce faire, nous avons développé un Web service dédié qui sera prochainement publié (où pas) sur GitHub. L'application BudgetWeb appele le WebService qui lui appele la BAPI qui va bien.
-
+ 
+A chaque ouverture d'un nouveau BI, un script d'initialisation s'execute pour "migrer" les données saisies dans les PFI "pluriannuel".
 
 Documentation utilisateur
 -------------------------
