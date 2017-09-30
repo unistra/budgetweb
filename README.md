@@ -85,6 +85,52 @@ Installation des prerequis du projets
 Documentation technique
 -----------------------
 
+Initialisation des données.
+---------------------------
+
+Nous avons préparé plusieurs scripts d'import vous permettant d'insérer en masse vos données
+
+Le premier fichier à importer est les Structures (CFs)
+Le format est le suivant :
+Groupe1;Groupe2;Perimetre;CFParent;CF;Label
+Groupe1 et Groupe2 correspondent à des groupes personnalisés qui ne servent pas dans BudgetWeb mais qui permettent de faire des tris lors de la génération des annexes via BO. Vous pouvez laisser ces champs vides.
+Perimetre est le périmètre financier associé. Pour l'instant ce champs n'est d'aucune utilité. (Chez nous c'est 1010)
+CFParent est le nom du CF parent. Les CFs de niveau "0" sont crée directement dans la commande import_structure. Il conviendra d'adapter ce script en fonction du nombre de vos sociétés.
+CF est le code du CF (APS, ART, DPI, etc.)
+Label est le libellé associé au CFs.
+
+L'import des structures se fait via la commande suivante :
+``` 
+    python manage.py import_structure path/to/data.csv
+```
+
+Le deuxième fichier à importer est les Plan de Financements (PFi)
+Le format est le suivant :
+Structure;Code;Label;fleche;pluri;eotp;cc;cp;groupe1;groupe2
+Structure est le code du CF auquel est rattaché le PFI (Ex APS)
+Code est le code du PFi (Exemple : A13R316B). Le code n'a pas besoin d'être unique.
+Label est le libellé du PFi (Exemple : Mon super PFI)
+fleche défini si le PFi est fléché où non. Un PFi fléché dispose de nature comptable différentes d'un PFi non fléché
+pluri défini si le PFi est pluriannuel où pas. Les écrans de saisie ne sont pas les mêmes.
+eotp correspond  à l'eotp associé. Ce champs n'est pas obligatorie pour BudgetWeb.
+cc correspond au centre de cout du PFi
+cp correspond au centre de profil du PFi
+groupe1 et groupe2 correspondent à des groupes personnalisés (comme pour les structures)
+
+L'import des plan de financement se fait via la commande suivante :
+``` 
+    python manage.py import_pfi path/to/data.csv
+```
+
+Le troisième fichier à importer est les Domaines Fonctionnels
+Le format est le suivant :
+D101;Formation initiale et continue de niveau Licence;Formation de niveau Licence
+
+
+
+
+  Depuis la version 2 de BudgetWeb nous avons redécoupé l'application. Nous avons déplacé les données "Structures" dans une application Django à part (Pour pouvoir les réutiliser dans d'autres applications) et les données propre à BudgetWeb dans une autre application Django.
+
  * La table "Structure" contient la structure financière de l'établissement.
  * La table "StructureAuthorizations" contient les autorisatons des utilisateurs aux structures.
  * La table "StructureMontant" contient les montants cumulés des sous-structures / programme de financement.
