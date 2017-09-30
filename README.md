@@ -106,16 +106,16 @@ L'import des structures se fait via la commande suivante :
 
 Le deuxième fichier à importer est les Plan de Financements (PFi)
 Le format est le suivant :
-Structure;Code;Label;fleche;pluri;eotp;cc;cp;groupe1;groupe2
-Structure est le code du CF auquel est rattaché le PFI (Ex APS)
-Code est le code du PFi (Exemple : A13R316B). Le code n'a pas besoin d'être unique.
-Label est le libellé du PFi (Exemple : Mon super PFI)
-fleche défini si le PFi est fléché où non. Un PFi fléché dispose de nature comptable différentes d'un PFi non fléché
-pluri défini si le PFi est pluriannuel où pas. Les écrans de saisie ne sont pas les mêmes.
-eotp correspond  à l'eotp associé. Ce champs n'est pas obligatorie pour BudgetWeb.
-cc correspond au centre de cout du PFi
-cp correspond au centre de profil du PFi
-groupe1 et groupe2 correspondent à des groupes personnalisés (comme pour les structures)
+ * Structure;Code;Label;fleche;pluri;eotp;cc;cp;groupe1;groupe2
+ * **Structure** est le code du CF auquel est rattaché le PFI (Ex APS)
+ * **Code** est le code du PFi (Exemple : A13R316B). Le code n'a pas besoin d'être unique.
+ * **Label** est le libellé du PFi (Exemple : Mon super PFI)
+ * **fleche** défini si le PFi est fléché où non. Un PFi fléché dispose de nature comptable différentes d'un PFi non fléché
+ * **pluri** défini si le PFi est pluriannuel où pas. Les écrans de saisie ne sont pas les mêmes.
+ * **eotp** correspond  à l'eotp associé. Ce champs n'est pas obligatorie pour BudgetWeb.
+ * **cc** correspond au centre de cout du PFi
+ * **cp** correspond au centre de profil du PFi
+ * **groupe1** et **groupe2** correspondent à des groupes personnalisés (comme pour les structures)
 
 L'import des plan de financement se fait via la commande suivante :
 ``` 
@@ -124,10 +124,52 @@ L'import des plan de financement se fait via la commande suivante :
 
 Le troisième fichier à importer est les Domaines Fonctionnels
 Le format est le suivant :
-D101;Formation initiale et continue de niveau Licence;Formation de niveau Licence
+code;libelle_long;libelle_cours
+ * **code** correspond au code du domaine fonctionnel (identique à SAP)
+ * **libelle_long** correspond au libellé long du domaine fonctionnel. (Pas utile pour BudgetWeb)
+ * **libelle_cours** correspond au libellé cours du domaine fonctionnel. C'est ce libellé qui apparait dans les menus déroulant.
+Exemple : D101;Formation initiale et continue de niveau Licence;Formation de niveau Licence
+``` 
+    python manage.py import_functionaldomains path/to/data.csv
+```
 
+Le quatrième fichier à importer est les Natures Comptables Depenses.
+Le format est le suivant :
 
+ * pfi_fleche correspond à un boolean qui défini si la nature comptable est de type fléché où non. ('Valeur possible : 'PFI Fléché' où tout autre valeur)
+ * enveloppe correspond à une liste à choix ('Fonctionnement', 'Personnel', 'Investissement')
+ * libelle_nature_comptable correspond au libellé de la nature comptable.
+ * code_nature_comptable correspond au code du compte budgetaire
+ * code_compte_budgetaire correspond au code du compte budgetaire
+ * libelle_compte_budgetaire correspond au libellé du compte budgétaire
+ * regle_decallage_treso correspond à une des règle de gestion pour la nature comptable. (Voir plus loin pour les règles)
+ * regle_budgetaire correspond à une des règle de gestion pour la nature comptable. (Voir plus loin pour les règles)
+ * regle_pi_cfg correspond à une des règles de gestion pour la nature comptable. (Voir plus loin pour les règles)
+ * ordre est un chiffre qui permet le classement des natures comptables par enveloppe.
+ 
+Exemple : PFI fléché;Fonctionnement;Fluides;9DFLU;FF;Fonctionnement Fléché;non;non;non;1
+``` 
+    python manage.py import_naturecomptabledepense path/to/data.csv
+```
 
+Le cinquième fichier à importer est les Natures Comptables Recettes.
+Le format est le suivant :
+
+ * pfi_fleche correspond à un boolean qui défini si la nature comptable est de type fléché où non. ('Valeur possible : 'PFI Fléché' où tout autre valeur)
+ * code_fond correspond au code du fond
+ * libelle_fond correspond au libellé du fond
+ * code_nature_comptable correspond au code du compte budgetaire
+ * libelle_nature_comptable correspond au libellé de la nature comptable.
+ * code_compte_budgetaire correspond au code du compte budgetaire
+ * libelle_compte_budgetaire correspond au libellé du compte budgétaire
+ * regle_is_ar_re correspond à une des règles de gestion pour la nature comptable. (Voir plus loin pour les règles)
+ * regle_is_non_budgetaire correspond à une des règles de gestion pour la nature comptable. (Voir plus loin pour les règles)
+  * ordre est un chiffre qui permet le classement des natures comptables par enveloppe.
+Exemple : PFI non fléché ou NA;Investissement;NB-Restitution de dépôts ou cautionnements reçus d'un tiers;9DIDE;NEANT;Néant;non;oui;non;74
+
+``` 
+    python manage.py import_naturecomptablerecette path/to/data.csv
+```
 
   Depuis la version 2 de BudgetWeb nous avons redécoupé l'application. Nous avons déplacé les données "Structures" dans une application Django à part (Pour pouvoir les réutiliser dans d'autres applications) et les données propre à BudgetWeb dans une autre application Django.
 
@@ -141,15 +183,27 @@ D101;Formation initiale et continue de niveau Licence;Formation de niveau Licenc
  * La table "NatureComptableRecette" contient la liste des natures comptables recettes
  * La table "Depense" qui contient la liste des saisies en dépense.
  * La table "Recette" qui contient la liste des saisies en recette.
+ * FIX IT
 
-Quelques règles de gestion ont été implémentées :
-  * Si l'utilisateur appartient au groupe "DFI"
-        Alors le champ "DC" en recette et en dépense est ouvert à la saisie
-        Sinon le champ "DC" est bloqué et est égal au champ "CP" en dépense et au champ "RE" en recette.
-  * Si la nature comptable dépense autorise le décalage de trésorerie
-        Alors le champ CP n'est pas bloqué et la saisie est libre.
-        Sinon le champ CP est égal au champ AE.
-  * FIX IT.
+**Quelques règles de gestion ont été implémentées :**
+  * Pour la partie Dépense (1 seul règle possible par nature comptable !):
+   * La règle "Décallage trésorerie" définie la règle suivant : Le montant CP et DC doivent obligatoirement être identique.
+   * La règle "Non Budgétaire" définie la règle suivant : Le montant AE et CP ne peuvent pas être égal à 0.
+   * La règle "PI-CFG" s'applique alors AE = DC et CP = 0
+   * Si la nature comptable n'a pas pas de règle alors AE = CP = DC.
+  * Pour la partie Recette (1 seul règle possible par nature comptable !):
+   * La règle IS_AR_RE ne permet pas de saisir de valeur diffénrents entre AR et RE.
+   * La règle IS_NON_BUDGETAIRE définie cette rège : Si "is_non_budgetaire" = oui alors AR = RE = 0 et DC à saisir
+  * Enfin si l'utilisateur appartient au groupe "DFI", les règles par défaut s'applique mais il est possible de passer outre en saisissant d'autres valeurs.
+  * Les règles s'applique pour les gestionnaires en composantes.
+  
+ **La gestion des périodes budgétaires**
+ Maintenant l'application gère la période budgétaire BI (Budgt initial), la période VIREMENT, la période BR (Budget rectificatif).
+ Chaque période est activable via des dates de début et de fin. Les gestionnaires en composantes dispose d'une période de saisie.
+ 
+ **La gestion des virements**
+ La gestion des virements se fait par l'import depuis ERP SAP. Pour ce faire, nous avons développé un Web service dédié qui sera prochainement publié (où pas) sur GitHub. L'application BudgetWeb appele le WebService qui lui appele la BAPI qui va bien.
+
 
 Documentation utilisateur
 -------------------------
@@ -159,7 +213,7 @@ Documentation utilisateur
 
 La gestion des droits permets de donner des accès à des niveaux très fins (structure de niveau 3 où plus selon la structure financière intégrée.
 
-Un champ "is_active" est disponible pour les strcutres et les pfi, cela permet d'afficher / masquer les données voulues.
+Un champ "is_active" est disponible pour les structures et les pfi, cela permet d'afficher / masquer les données voulues.
 
 Le jeu de test contient :
     Des programmes de financements fléchés / non fléchés. ( La naturecomptable est différente entre un PFI fléché et non fléché)
