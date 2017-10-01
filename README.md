@@ -68,6 +68,9 @@ Installation des prerequis du projets
     CAS_SERVER_URL = XXXXXXXXXXXXXXXX
     CAS_LOGOUT_REQUEST_ALLOWED = ('XXXXXXXXXXXXX', 'XXXXXXXXXXXXXXX')
     
+    # Si on ne veut pas utiliser l'authentification CAS, on peut ajouter ce paramètre. Cela permet d'avoir une authentification local.
+    # CAS_ADMIN_AUTH = False
+    
     # Configuration du modèle.
     python manage.py migrate
     
