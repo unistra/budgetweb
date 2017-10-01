@@ -7,7 +7,7 @@ BudgetWeb
 [![Code Climate](https://codeclimate.com/github/unistra/budgetweb/badges/gpa.svg)](https://codeclimate.com/github/unistra/budgetweb)
 
 
-L'application BudgetWeb est basée sur Django, jQuery et BootStrap.
+L'application BudgetWeb est basée sur Django, jQuery et BootStrap. La version est maintenant configuré pour fonctionner avec PostGreSQL.
 
 
 Prérequis
@@ -15,6 +15,11 @@ Prérequis
 ```
   apt-get install virtualenv
   apt-get install virtualenvwrapper
+  apt-get install postgresql-9.5
+  sudo su postgres
+  psql -c "CREATE DATABASE budgetweb;"
+  psql -c "CREATE USER budgetweb WITH PASSWORD 'budgetweb';"
+  
 ``` 
   * virtualenvwrapper_ et le ``.bashrc`` complété avec les lignes suivantes :
 
@@ -52,6 +57,9 @@ Installation des prerequis du projets
     nano .virtualenvs/budgetweb/bin/postactivate
     export DJANGO_SETTINGS_MODULE=budgetweb.settings.dev
     
+    DEFAULT_DB_USER=budgetweb
+    DEFAULT_DB_PASSWORD=budgetweb
+    DEFAULT_DB_NAME=budgetweb
     workon budgetweb
     cdproject # Si la commande est installé pour se trouver dans le bon répertoire.
 
