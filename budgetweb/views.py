@@ -328,7 +328,9 @@ def recette(request, pfiid, annee):
 @is_authorized_structure
 def detailspfi(request, pfiid):
     to_dict = lambda x: {k: list(v) for k, v in x}
+    active_period = PeriodeBudget.active.select_related('period').first()
     current_year = get_selected_year(request)
+    is_active_period = active_period.annee == current_year
     pfi = PlanFinancement.objects.select_related('structure').get(pk=pfiid)
     compta_filters = {'pfi': pfi, 'periodebudget__annee': current_year}
     depenses = Depense.objects.filter(**compta_filters)\
@@ -390,6 +392,7 @@ def detailspfi(request, pfiid):
         'sommeDepense': sum_depenses, 'sommeRecette': sum_recettes,
         'resume_depenses': resume_depenses, 'resume_recettes': resume_recettes,
         'years': years, 'periods': periods, 'origin': 'detailspfi',
+        'is_active_period': is_active_period,
     }
     return render(request, 'detailsfullpfi.html', context)
 
