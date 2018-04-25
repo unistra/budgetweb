@@ -1,17 +1,16 @@
 from datetime import datetime
 from decimal import Decimal
 import json
-
+from django.core.management.base import BaseCommand
 import britney_utils
 from britney.middleware import auth
 from django.conf import settings
-from django.core.management.base import NoArgsCommand
 from django.db import transaction
 
-from budgetweb.apps.structure.models import Structure
-from budgetweb.models import (
-    Depense, DomaineFonctionnel, NatureComptableDepense,
-    NatureComptableRecette, PeriodeBudget, PlanFinancement, Recette, Virement)
+from budgetweb.apps.structure.models import (
+    DomaineFonctionnel, Structure, PlanFinancement,
+    NatureComptableDepense, NatureComptableRecette)
+from budgetweb.models import (Depense, PeriodeBudget, Recette, Virement)
 from budgetweb.utils import get_current_year
 
 
@@ -19,27 +18,34 @@ class CreationVirementException(BaseException):
     pass
 
 
-class Command(NoArgsCommand):
+class Command(BaseCommand):
 
     list_pfi_error = []
     list_pfi_created = []
     list_cf_error = []
 
-    def handle_noargs(self, **options):
-        client = britney_utils.get_client(
-            'test',
-            settings.SIFACWS_DESC,
-            middlewares=(
-               (auth.ApiKey, {
-                   'key_name': 'Authorization',
-                   'key_value': 'Token %s' % settings.SIFACWS_APIKEY
-               }),
-            ),
-            base_url=settings.SIFACWS_URL,
-        )
-        params = {'format': 'json'}
-        ct = client.list_transfers(creation_date='20170101', **params)
-        data = json.loads(ct.content.decode('utf-8'))
+    def add_arguments(self, parser):
+        parser.add_argument('filename', nargs='+')
+
+    def handle(self, *args, **options):
+        if options.get('filename'):
+            with open(options.get('filename')[0]) as json_data:
+                data = json.load(json_data)
+        else:
+            client = britney_utils.get_client(
+                'test',
+                settings.SIFACWS_DESC,
+                middlewares=(
+                   (auth.ApiKey, {
+                       'key_name': 'Authorization',
+                       'key_value': 'Token %s' % settings.SIFACWS_APIKEY
+                   }),
+                ),
+                base_url=settings.SIFACWS_URL,
+            )
+            params = {'format': 'json'}
+            ct = client.list_transfers(creation_date='20170501', **params)
+            data = json.loads(ct.content.decode('utf-8'))
 
         # Traitement des résultats un par un.
         for virement_info in data:
@@ -49,6 +55,11 @@ class Command(NoArgsCommand):
             vir_sender = virement_info['sender_item_data']
 
             doc_number = vir_header['DOCUMENT']
+            doc_year = vir_header['DOC_YEAR']
+            # Suppression des virements qui ne sont pas dans l'année.
+            if doc_year != str(get_current_year()):
+                print('DOC_YEAR (%s) ne match pas (%s)' % (doc_year, "2018"))
+                continue
 
             datestring = vir_header['CRTDATE'] + " " + vir_header['CRTTIME'] +\
                                                  " +0200"
@@ -58,19 +69,24 @@ class Command(NoArgsCommand):
                 continue
 
             if vir_header['VERSION'] != '000':
-                print('Le process du virement (%s) ne match pas (%s)'
+                print('La version du virement (%s) ne match pas (%s)'
                       % (doc_number, vir_header['VERSION']))
                 continue
-
             vir_date = datetime.strptime(datestring, '%Y-%m-%d %H:%M:%S %z')
             vir = 0
 
             with transaction.atomic():
                 try:
+                    # Temp FIX ?
+                    if vir_header['DOCDATE'] is None:
+                        continue
                     # Creation du virement.
                     if not Virement.objects.filter(
-                            document_number=doc_number).count():
-                        print("Création du Virement %s" % doc_number)
+                            document_number=doc_number,
+                            value_date=vir_header['DOCDATE']).count():
+                        print("Création du Virement %s (date %s)" %
+                              (doc_number, vir_header['DOCDATE']))
+
                         vir = Virement.objects.create(
                             document_number=doc_number,
                             document_type=vir_header['DOCTYPE'],
@@ -151,7 +167,6 @@ class Command(NoArgsCommand):
                     montant = montant * -1
                 else:
                     montant = montant * -1
-
 
             if type_budget == '9F':
                 montant_dc = montant_cp = Decimal(montant)
