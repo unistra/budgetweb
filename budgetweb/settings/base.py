@@ -317,7 +317,7 @@ LOGGING = {
 CAS_SERVER_URL = 'https://cas.unistra.fr/cas/login'
 CAS_LOGOUT_REQUEST_ALLOWED = ('cas1.di.unistra.fr', 'cas2.di.unistra.fr')
 CAS_USER_CREATION = False
-CAS_USERNAME_FORMAT = lambda username: username.lower()
+CAS_USERNAME_FORMAT = lambda username: username.lower().strip()
 
 DFI_GROUP_NAME = 'DFI'
 LATE_GROUP_NAME = 'RETARDATAIRE'
