@@ -1,7 +1,7 @@
 from decimal import Decimal
 from itertools import chain, groupby
 
-from django.db.models import F, Prefetch, Sum
+from django.db.models import F, Sum
 
 from budgetweb.apps.structure.models import Structure
 from .models import (Depense, PeriodeBudget, StructureAuthorizations, Recette,

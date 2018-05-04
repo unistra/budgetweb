@@ -41,13 +41,15 @@
                         </ul>
                     </li>
                     <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">{% trans "Year" %} {{ request.session.period_year }}
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">{% trans "Year" %} {{ period_years.0.0 }}{{ period_years.0.1 }}
                         <span class="caret"></span></a>
                         <ul class="dropdown-menu" id="period_years">
                             <form action="{% url 'set_year' %}" method="post">{% csrf_token %}
-                                {% for year in period_years %}
-                                <li><button type="submit" name="year" value="{{ year }}">{{ year }}</button></li>
-                                {% endfor %}
+                            {% for year, display in period_years %}
+                                {% if not forloop.first %}
+                                <li><button type="submit" name="year" value="{{ year }}">{{ year }}{{ display }}</button></li>
+                                {% endif %}
+                            {% endfor %}
                             </form>
                         </ul>
                     </li>
