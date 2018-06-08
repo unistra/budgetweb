@@ -58,7 +58,7 @@ textarea {
   text-align:center;
 }
 
-.container {
+body > .container {
   width:100%;
 }
 
@@ -283,4 +283,27 @@ input.decimal{
   .nav-tabs {
     display:none;
   }
+}
+
+/**********/
+/* Header */
+/**********/
+
+#period_years button {
+  border: none;
+  background: none;
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: normal;
+  color: #333;
+  white-space: nowrap;
+  width: 100%;
+  text-align: left;
+}
+
+#period_years button:hover, #period_years button:focus {
+  text-decoration: none;
+  color: #fff;
+  background-color: #358cd3;
 }

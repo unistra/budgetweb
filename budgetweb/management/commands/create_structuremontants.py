@@ -104,7 +104,9 @@ class Command(BaseCommand):
             pfi = get_random_object(self.pfis)
             domainefonctionnel = get_random_object(self.domainefonctionnels)
             structure = pfi.structure
-            annee = self.periodebudget.annee
+            annee = (self.periodebudget.annee - 1) + random.randint(0, 4)\
+                if pfi.is_pluriannuel else self.periodebudget.annee
+
             naturecomptabledepense = get_random_object(
                 self.naturecomptabledepenses, qs={'is_fleche': pfi.is_fleche})
             naturecomptablerecette = get_random_object(

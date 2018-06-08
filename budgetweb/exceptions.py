@@ -7,13 +7,13 @@ class StructureUnauthorizedException(Exception):
 class EditingUnauthorizedException(Exception):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.message = "La période de saisie n'est pas active. \
-                        Aucune modification n'est possible."
+        self.message = "La période de saisie n'est pas active. "\
+                       "Aucune modification n'est possible."
 
 
 class PeriodeBudgetUninitializeError(Exception):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.message = "Les périodes budgétaires ne sont pas configurées \
-                        correctement. \n\
-                        Tous les champs dates doivent être configurés."
+        self.message = "Les périodes budgétaires ne sont pas configurées "\
+                       "correctement.<br />"\
+                       "Tous les champs dates doivent être configurés."

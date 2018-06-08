@@ -1,16 +1,18 @@
 from decimal import Decimal
 from itertools import chain, groupby
 
-from django.db.models import F, Prefetch, Sum
+from django.db.models import F, Sum
 
 from budgetweb.apps.structure.models import Structure
 from .models import (Depense, PeriodeBudget, StructureAuthorizations, Recette,
                      StructureMontant)
 
 
-# TODO : Ajouter une exception si jamais pas de période ouverte
 def get_current_year():
-    return PeriodeBudget.active.first().annee
+    try:
+        return PeriodeBudget.active.first().annee
+    except Exception:
+        return None
 
 
 def get_authorized_structures_ids(user):
@@ -75,45 +77,48 @@ def get_detail_pfi_by_period(totals):
     return details
 
 
-def get_pfi_total(pfi, years=None):
+def get_pfi_total(pfi, year=None):
     """
     Retourne un tableau avec l'année
     """
-    query_params = {'pfi': pfi.id}
-    if years:
-        query_params.update({'annee__in': years})
+    year = year or get_current_year()
+    query_params = {'pfi': pfi.id, 'periodebudget__annee': year}
 
     depense = Depense.objects.filter(**query_params)\
         .annotate(enveloppe=F('naturecomptabledepense__enveloppe'))\
         .values('annee', 'periodebudget__period__code', 'enveloppe')\
         .annotate(sum_depense_ae=Sum('montant_ae'),
                   sum_depense_cp=Sum('montant_cp'),
-                  sum_depense_dc=Sum('montant_dc'))
+                  sum_depense_dc=Sum('montant_dc'))\
+        .order_by('annee')
     recette = Recette.objects.filter(**query_params)\
         .annotate(enveloppe=F('naturecomptablerecette__enveloppe'))\
         .values('annee', 'periodebudget__period__code', 'enveloppe')\
         .annotate(sum_recette_ar=Sum('montant_ar'),
                   sum_recette_re=Sum('montant_re'),
-                  sum_recette_dc=Sum('montant_dc'))
+                  sum_recette_dc=Sum('montant_dc'))\
+        .order_by('annee')
 
     return depense, recette
 
 
-def get_pfi_years(pfi, begin_current_period=False, year_number=4):
+def get_pfi_years(pfi, begin_current_period=False, year_number=4, year=None):
     from .utils import get_current_year
+
+    current_year = year or get_current_year()
 
     if pfi.date_debut and pfi.date_fin:
         if begin_current_period:
             begin_year = pfi.date_debut.year
         else:
-            begin_year = get_current_year()-1 if pfi.date_debut.year < get_current_year() else get_current_year()
+            begin_year = current_year - 1 if pfi.date_debut.year < current_year else current_year
         end_year = min(begin_year + year_number, pfi.date_fin.year)\
             if year_number else pfi.date_fin.year
         return list(range(begin_year, end_year + 1))
     return []
 
 
-def get_pfi_total_types(pfi):
+def get_pfi_total_types(pfi, year):
     # FIXME: docstring
     """
     Output format example for "depense":
@@ -135,13 +140,16 @@ def get_pfi_total_types(pfi):
     """
     montants_dict = {'gbcp': ('AE', 'CP', 'AR', 'RE'), 'dc': ('DC',)}
     default_period = 'BI'
-    montant_type = lambda x: [
-        k for k, v in montants_dict.items() if x in v][0]
-    types = []
-    years = get_pfi_years(pfi)
 
-    for comptabilite in get_pfi_total(pfi, years=years):
-        compta_types = {k: {default_period: {}} for k in montants_dict.keys()}
+    def montant_type(x):
+        return [k for k, v in montants_dict.items() if x in v][0]
+
+    types = []
+    years = get_pfi_years(pfi, year=year)
+
+    for comptabilite in get_pfi_total(pfi, year):
+        compta_types = {
+            k: [{default_period: {}}, {}] for k in montants_dict.keys()}
         for c in comptabilite:
             fields = [k for k in c.keys() if k.startswith('sum_')]
             for field in fields:
@@ -151,12 +159,15 @@ def get_pfi_total_types(pfi):
                 field_name = field.split('_')[-1].upper()
                 mt = montant_type(field_name)
                 ct = compta_types[mt]
-                periode_dict = ct.setdefault(periode, {})
+                periode_dict = ct[0].setdefault(periode, {})
+                total_year_dict = ct[1].setdefault(
+                    field_name, dict.fromkeys(years, Decimal(0)))
                 type_dict = periode_dict.setdefault(
                     field_name, [{}, dict.fromkeys(years, None)])
                 nature_dict = type_dict[0].setdefault(
                     c['enveloppe'], [dict.fromkeys(years, None), None])
                 nature_dict[0][annee] = montant
+
                 # Total per enveloppe
                 nature_dict[1] = (nature_dict[1] or Decimal(0)) + montant
 
@@ -166,11 +177,17 @@ def get_pfi_total_types(pfi):
                     (type_dict[1][annee] or Decimal(0)) + montant
                 type_dict[1]['total'] =\
                     type_dict[1].get('total', Decimal(0)) + montant
+
+                # Total per year
+                total_year_dict[annee] =\
+                    total_year_dict.get(annee, Decimal(0)) + montant
+
         types.append(compta_types)
+
     return types
 
 
-def tree_infos(active_period, period_code):
+def tree_infos(year, period_code):
     """
     BROLDn = Σ(BR(1..n-1))
     VIRn = Σ(VIR(1..n))
@@ -179,8 +196,9 @@ def tree_infos(active_period, period_code):
     BMn = BAn + BRn = montants
     """
 
-    structuremontant_filters = {'annee': active_period.annee}
-    pfi_filters = {'annee': active_period.annee}
+    structuremontant_filters = {
+        'annee': year, 'periodebudget__annee': year}
+    pfi_filters = {'annee': year, 'periodebudget__annee': year}
     prefetches = {}
     cols = {}
 
@@ -240,7 +258,7 @@ def tree_infos(active_period, period_code):
                     periodebudget__period__code__startswith='VIR', **structuremontant_filters),
                  'to_attr': 'vir'},
                 {'queryset': StructureMontant.objects.filter(
-                    periodebudget__period__code__startswith='BR', **structuremontant_filters),
+                    periodebudget__period__code=period_code, **structuremontant_filters),
                  'to_attr': 'br'},
                 {'queryset': StructureMontant.objects.filter(**structuremontant_filters),
                  'to_attr': 'bm'},
@@ -258,7 +276,7 @@ def tree_infos(active_period, period_code):
                         periodebudget__period__code__startswith='VIR', **pfi_filters),
                      'to_attr': 'depense_vir'},
                     {'queryset': Depense.objects.filter(
-                        periodebudget__period__code__startswith='BR', **pfi_filters),
+                        periodebudget__period__code=period_code, **pfi_filters),
                      'to_attr': 'depense_br'
                     },
                     {'queryset': Depense.objects.filter(**pfi_filters),
@@ -276,7 +294,7 @@ def tree_infos(active_period, period_code):
                         periodebudget__period__code__startswith='VIR', **pfi_filters),
                      'to_attr': 'recette_vir'},
                     {'queryset': Recette.objects.filter(
-                        periodebudget__period__code__startswith='BR', **pfi_filters),
+                        periodebudget__period__code=period_code, **pfi_filters),
                      'to_attr': 'recette_br'},
                     {'queryset': Recette.objects.filter(**pfi_filters),
                      'to_attr': 'recette_bm'},
@@ -368,3 +386,13 @@ def tree_infos(active_period, period_code):
         }
 
     return prefetches, cols
+
+
+def get_selected_year(request, default_period=None):
+    session_year = request.session.get('period_year')
+    if not session_year:
+        if default_period:
+            return default_period.annee
+        else:
+            return get_current_year()
+    return session_year

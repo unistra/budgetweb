@@ -12,8 +12,8 @@ from budgetweb.decorators import (is_ajax_get, is_authorized_editing,
 from budgetweb.exceptions import (
     EditingUnauthorizedException, PeriodeBudgetUninitializeError,
     StructureUnauthorizedException)
-from budgetweb.models import (PeriodeBudget, PlanFinancement, Structure,
-                              StructureAuthorizations)
+from budgetweb.apps.structure.models import PlanFinancement, Structure
+from budgetweb.models import PeriodeBudget, StructureAuthorizations
 
 
 class BaseDecoratorsTest(TestCase):
@@ -54,11 +54,8 @@ class BaseDecoratorsTest(TestCase):
         function.__name__ = 'mock'
         decorated_fuction = is_authorized_structure(function)
         pfi = PlanFinancement.objects.get(structure__code='ECP')
-        response = decorated_fuction(request, pfiid=pfi.pk)
-        self.assertFalse(function.called)
-        self.assertEqual(
-            response.content,
-            StructureUnauthorizedException().message.encode('utf-8'))
+        self.assertRaises(
+            StructureUnauthorizedException, decorated_fuction, request)
 
     def test_is_unauthorized_structure_no_parameters(self):
         request = HttpRequest()
@@ -66,11 +63,8 @@ class BaseDecoratorsTest(TestCase):
         function = Mock()
         function.__name__ = 'mock'
         decorated_fuction = is_authorized_structure(function)
-        response = decorated_fuction(request)
-        self.assertFalse(function.called)
-        self.assertEqual(
-            response.content,
-            StructureUnauthorizedException().message.encode('utf-8'))
+        self.assertRaises(
+            StructureUnauthorizedException, decorated_fuction, request)
 
     def test_is_ajax_get(self):
 
@@ -108,11 +102,8 @@ class IsAuthorizedEditingTest(TestCase):
         function = Mock()
         function.__name__ = 'mock'
         decorated_fuction = is_authorized_editing(function)
-        response = decorated_fuction(request)
-        self.assertFalse(function.called)
-        self.assertEqual(
-            response.content,
-            PeriodeBudgetUninitializeError().message.encode('utf-8'))
+        self.assertRaises(
+            PeriodeBudgetUninitializeError, decorated_fuction, request)
 
     def test_editing_unauthorized(self):
         begin_date = datetime.today() + timedelta(days=1)
@@ -129,11 +120,8 @@ class IsAuthorizedEditingTest(TestCase):
         function = Mock()
         function.__name__ = 'mock'
         decorated_fuction = is_authorized_editing(function)
-        response = decorated_fuction(request)
-        self.assertFalse(function.called)
-        self.assertEqual(
-            response.content,
-            EditingUnauthorizedException().message.encode('utf-8'))
+        self.assertRaises(
+            EditingUnauthorizedException, decorated_fuction, request)
 
     def test_valid_input_dates(self):
         begin_date = datetime.today()

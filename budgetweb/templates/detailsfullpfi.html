@@ -10,8 +10,8 @@
     {% include "detailspfi.html" %}
     {% for year in years %}
     <fieldset>
-    <legend><a data-toggle="collapse" data-target="#div-{{ year }}" href="#">Prévision budgétaire pour {{ year }}</a></legend>
-    <div style="margin-left:1px;width:100%;" class="row" id="div-{{ year }}">
+    <legend><a data-toggle="collapse" data-target="#div-{{ year }}" href="#div-{{ year }}">Prévision budgétaire pour {{ year }}</a></legend>
+    <div style="margin-left:1px;width:100%;" class="row collapse in" id="div-{{ year }}">
       <ul class="nav nav-tabs" role="tablist" id="pluri-tabs">
         <li role="presentation" class="active"><a href="#gbcp{{year}}" role="tab" data-toggle="tab">GBCP</a></li>
         <li role="presentation"><a href="#dc{{year}}" role="tab" data-toggle="tab">Droit Constaté</a></li>

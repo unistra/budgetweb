@@ -34,6 +34,17 @@ class StructureAuthorizationsModelTest(TestCase):
             [a.code for a in authorizations],
             ['PAIE', 'PAIE7DIN', 'PAIE7ECP', 'PAIE7R101'])
 
+    def test_add_child_structure(self):
+        user100 = User.objects.get(pk=100)
+        new_structure = Structure.objects.create(
+            groupe1='Recherche',
+            code='PAIE_NEW',
+            label='Paie New',
+            parent_id=4)
+        authorization = user100.structureauthorizations.structures\
+            .get(code='PAIE_NEW')
+        self.assertIsNotNone(authorization)
+
 
 class PeriodeBudgetModelTest(TestCase):
 

@@ -6,10 +6,10 @@ from django.contrib.auth.models import User
 from django.core.management import call_command
 from django.test import TestCase
 
-from budgetweb.models import (Depense, DomaineFonctionnel,
-                              NatureComptableDepense, NatureComptableRecette,
-                              PeriodeBudget, PlanFinancement, Recette,
-                              Structure, StructureMontant)
+from budgetweb.apps.structure.models import (
+    DomaineFonctionnel, NatureComptableDepense, NatureComptableRecette,
+    PlanFinancement, Structure)
+from budgetweb.models import Depense, PeriodeBudget, Recette, StructureMontant
 
 
 def get_random_object(object_list):

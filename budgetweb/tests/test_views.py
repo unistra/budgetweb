@@ -5,10 +5,11 @@ import json
 from django.contrib.auth.models import User
 from django.test import TestCase
 
-from budgetweb.models import (Depense, DomaineFonctionnel,
-                              NatureComptableDepense, NatureComptableRecette,
-                              PeriodeBudget, PlanFinancement, Recette,
-                              Structure)
+from budgetweb.apps.structure.models import (
+    DomaineFonctionnel, NatureComptableDepense, NatureComptableRecette,
+    PlanFinancement, Structure)
+from budgetweb.exceptions import StructureUnauthorizedException
+from budgetweb.models import Depense, PeriodeBudget, Recette
 
 
 class APIViewsTest(TestCase):
@@ -185,8 +186,8 @@ class ViewsTest(TestCase):
     def test_depense_unauthorized(self):
         view_url = '/depense/26/2017/'
         self.client.login(username='user1', password='pass')
-        response = self.client.get(view_url)
-        self.assertEqual(response.status_code, 403)
+        self.assertRaises(
+            StructureUnauthorizedException, self.client.get, view_url)
 
     def test_depense_add_valid(self):
         # https://github.com/django/django/blob/1.8.14/tests/model_formsets/tests.py
@@ -220,11 +221,26 @@ class ViewsTest(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(len(depenses), 1)
 
+    def test_depense_redirect(self):
+        view_url = '/depense/26/2017/'
+
+        today = datetime.date.today()
+        PeriodeBudget.objects.update(is_active=False)
+        PeriodeBudget.objects.create(
+            period_id=1, annee=2018, date_debut_saisie=today,
+            date_fin_saisie=today, date_debut_retardataire=today,
+            date_fin_retardataire=today, date_debut_dfi=today,
+            date_fin_dfi=today, date_debut_admin=today, date_fin_admin=today)
+
+        self.client.login(username='admin', password='pass')
+        response = self.client.get(view_url)
+        self.assertEqual(response.status_code, 302)
+
     def test_recette_unauthorized(self):
         view_url = '/recette/26/2017/'
         self.client.login(username='user1', password='pass')
-        response = self.client.get(view_url)
-        self.assertEqual(response.status_code, 403)
+        self.assertRaises(
+            StructureUnauthorizedException, self.client.get, view_url)
 
     def test_recette_add_valid(self):
         # https://github.com/django/django/blob/1.8.14/tests/model_formsets/tests.py
@@ -256,6 +272,21 @@ class ViewsTest(TestCase):
         recettes = Recette.objects.all()
         self.assertEqual(response.status_code, 302)
         self.assertEqual(len(recettes), 1)
+
+    def test_recette_redirect(self):
+        view_url = '/recette/26/2017/'
+
+        today = datetime.date.today()
+        PeriodeBudget.objects.update(is_active=False)
+        PeriodeBudget.objects.create(
+            period_id=1, annee=2018, date_debut_saisie=today,
+            date_fin_saisie=today, date_debut_retardataire=today,
+            date_fin_retardataire=today, date_debut_dfi=today,
+            date_fin_dfi=today, date_debut_admin=today, date_fin_admin=today)
+
+        self.client.login(username='admin', password='pass')
+        response = self.client.get(view_url)
+        self.assertEqual(response.status_code, 302)
 
     def test_detailspfi(self):
         view_url = '/detailspfi/%s/' % self.pfi_ecp.pk

@@ -21,6 +21,10 @@ class DomaineFonctionnel(models.Model):
     objects = models.Manager()
     active = ActiveManager()
 
+    class Meta:
+        verbose_name = _('functional domain')
+        verbose_name_plural = _('functional domains')
+
     def __str__(self):
         return '{0.code} - {0.label_court}'.format(self)
 
@@ -49,6 +53,8 @@ class Structure(models.Model):
 
     class Meta:
         ordering = ['code']
+        verbose_name = _('structure')
+        verbose_name_plural = _('structures')
 
     def __str__(self):
         return '{0.code} - {0.label}'.format(self)
@@ -100,7 +106,7 @@ class PlanFinancement(models.Model):
     Gestion des Plans de financement. En cours de précisions
     """
     structure = models.ForeignKey('Structure',
-                                  verbose_name=_('Structure'))
+                                  verbose_name=_('structure'))
     code = models.CharField(_('Code'), max_length=100, default='NA')
     label = models.CharField(_('Label'), max_length=255)
     eotp = models.CharField(_('EOTP short label'), max_length=100)
@@ -125,9 +131,11 @@ class PlanFinancement(models.Model):
 
     class Meta:
         ordering = ['label']
+        verbose_name = _('financial plan')
+        verbose_name_plural = _('financial plans')
 
     def __str__(self):
-        return '{0.code}'.format(self)
+        return '{0.structure.code} - {0.code}'.format(self)
 
 
 class NatureComptableDepense(models.Model):
@@ -155,6 +163,10 @@ class NatureComptableDepense(models.Model):
 
     objects = models.Manager()
     active = ActiveManager()
+
+    class Meta:
+        verbose_name = _('expense accounting nature')
+        verbose_name_plural = _('expenses accounting natures')
 
     def __str__(self):
         return '{0.code_nature_comptable} - {0.label_nature_comptable}'\
@@ -186,6 +198,10 @@ class NatureComptableRecette(models.Model):
 
     objects = models.Manager()
     active = ActiveManager()
+
+    class Meta:
+        verbose_name = _('receipt accounting nature')
+        verbose_name_plural = _('receipts accounting natures')
 
     def __str__(self):
         return '{0.code_nature_comptable} - {0.label_nature_comptable}'\

@@ -5,7 +5,11 @@
     <tr>
       <th colspan="13" style="text-align:left;padding-left:50px;">
     {% if PFI %}
+      {% if is_active_period %}
         <a href="{% url 'recette' pfiid=PFI.id annee=year %}">Liste des recettes</a>
+      {% else %}
+        Liste des recettes
+      {% endif %}
     {% else %}
         Liste des recettes
     {% endif %}

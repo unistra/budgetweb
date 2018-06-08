@@ -7,10 +7,11 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 from django.utils.translation import ugettext_lazy as _
 
+from budgetweb.apps.structure.models import (
+    DomaineFonctionnel, NatureComptableDepense, NatureComptableRecette,
+    PlanFinancement, Structure)
 from budgetweb.forms import DepenseForm, PlanFinancementPluriForm, RecetteForm
-from budgetweb.models import (Depense, DomaineFonctionnel,
-                              NatureComptableDepense, NatureComptableRecette,
-                              PeriodeBudget, PlanFinancement, Recette)
+from budgetweb.models import Depense, PeriodeBudget, Recette
 
 
 class RecetteFormTest(TestCase):
