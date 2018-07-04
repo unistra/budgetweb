@@ -1,7 +1,7 @@
 from decimal import Decimal
 from itertools import chain, groupby
 
-from django.db.models import F, Prefetch, Sum
+from django.db.models import F, Sum
 
 from budgetweb.apps.structure.models import Structure
 from .models import (Depense, PeriodeBudget, StructureAuthorizations, Recette,
@@ -258,7 +258,7 @@ def tree_infos(year, period_code):
                     periodebudget__period__code__startswith='VIR', **structuremontant_filters),
                  'to_attr': 'vir'},
                 {'queryset': StructureMontant.objects.filter(
-                    periodebudget__period__code__startswith='BR', **structuremontant_filters),
+                    periodebudget__period__code=period_code, **structuremontant_filters),
                  'to_attr': 'br'},
                 {'queryset': StructureMontant.objects.filter(**structuremontant_filters),
                  'to_attr': 'bm'},
@@ -276,7 +276,7 @@ def tree_infos(year, period_code):
                         periodebudget__period__code__startswith='VIR', **pfi_filters),
                      'to_attr': 'depense_vir'},
                     {'queryset': Depense.objects.filter(
-                        periodebudget__period__code__startswith='BR', **pfi_filters),
+                        periodebudget__period__code=period_code, **pfi_filters),
                      'to_attr': 'depense_br'
                     },
                     {'queryset': Depense.objects.filter(**pfi_filters),
@@ -294,7 +294,7 @@ def tree_infos(year, period_code):
                         periodebudget__period__code__startswith='VIR', **pfi_filters),
                      'to_attr': 'recette_vir'},
                     {'queryset': Recette.objects.filter(
-                        periodebudget__period__code__startswith='BR', **pfi_filters),
+                        periodebudget__period__code=period_code, **pfi_filters),
                      'to_attr': 'recette_br'},
                     {'queryset': Recette.objects.filter(**pfi_filters),
                      'to_attr': 'recette_bm'},

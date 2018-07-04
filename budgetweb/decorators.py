@@ -123,7 +123,7 @@ def require_lock(models, lock='ACCESS EXCLUSIVE'):  # pragma: no cover
         def wrapper(*args, **kwargs):
             if settings.DATABASES['default']['ENGINE'].endswith('psycopg2'):
                 if lock not in POSTGRESQL_LOCK_MODES:
-                    raise ValueError('%s is not a PostgreSQL supported lock mode.')
+                    raise ValueError('%s is not a PostgreSQL supported lock mode.' % lock)
                 from django.db import connection
                 cursor = connection.cursor()
                 for model in models:
