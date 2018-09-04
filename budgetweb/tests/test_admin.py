@@ -16,7 +16,7 @@ request = MockRequest()
 
 class StructureAuthorizationsAdminTest(TestCase):
 
-    fixtures = ['tests/structures.json']
+    fixtures = ['tests/structures']
 
     def setUp(self):
         self.admin_user = User.objects.create_superuser(

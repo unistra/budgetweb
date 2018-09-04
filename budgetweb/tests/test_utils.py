@@ -7,8 +7,9 @@ from django.test import TestCase
 from budgetweb.apps.structure.models import (
     DomaineFonctionnel, NatureComptableDepense, NatureComptableRecette,
     PlanFinancement, Structure)
-from budgetweb.utils import (get_authorized_structures_ids, get_current_year,
-                             get_pfi_total, get_pfi_years, get_pfi_total_types)
+from budgetweb.utils import (
+    get_authorized_structures_ids, get_current_year, get_pfi_total,
+    get_pfi_years)
 from ..models import Depense, PeriodeBudget, Recette
 
 
@@ -18,7 +19,6 @@ class UtilsTest(TestCase):
         'tests/structures', 'tests/periodebudgets',
         'tests/structureauthorizations'
     ]
-
 
     def test_get_current_year(self):
         self.assertEqual(get_current_year(), 2017)

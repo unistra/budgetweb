@@ -9,7 +9,7 @@ from django.test import TestCase
 from budgetweb.apps.structure.models import (
     DomaineFonctionnel, NatureComptableDepense, NatureComptableRecette,
     PlanFinancement, Structure)
-from budgetweb.models import Depense, PeriodeBudget, Recette, StructureMontant
+from budgetweb.models import Depense, PeriodeBudget, Recette
 
 
 def get_random_object(object_list):

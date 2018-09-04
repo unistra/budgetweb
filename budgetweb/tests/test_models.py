@@ -13,7 +13,7 @@ from ..utils import get_current_year
 
 class StructureAuthorizationsModelTest(TestCase):
 
-    fixtures = ['tests/structures.json', 'tests/structureauthorizations.json']
+    fixtures = ['tests/structures', 'tests/structureauthorizations']
 
     def test_str(self):
         auth = StructureAuthorizations.objects.get(pk=1)
@@ -36,7 +36,7 @@ class StructureAuthorizationsModelTest(TestCase):
 
     def test_add_child_structure(self):
         user100 = User.objects.get(pk=100)
-        new_structure = Structure.objects.create(
+        Structure.objects.create(
             groupe1='Recherche',
             code='PAIE_NEW',
             label='Paie New',
@@ -48,7 +48,7 @@ class StructureAuthorizationsModelTest(TestCase):
 
 class PeriodeBudgetModelTest(TestCase):
 
-    fixtures = ['tests/periodebudgets.json']
+    fixtures = ['tests/periodebudgets']
 
     def test_str(self):
         periode = PeriodeBudget.objects.get(pk=1)
@@ -58,10 +58,9 @@ class PeriodeBudgetModelTest(TestCase):
 class ComptabiliteModelTest(TestCase):
 
     fixtures = [
-        'tests/periodebudgets.json', 'tests/structures.json',
-        'tests/planfinancements.json', 'tests/domainefonctionnels.json',
-        'tests/naturecomptabledepenses.json',
-        'tests/naturecomptablerecettes.json',
+        'tests/periodebudgets', 'tests/structures', 'tests/planfinancements',
+        'tests/domainefonctionnels', 'tests/naturecomptabledepenses',
+        'tests/naturecomptablerecettes'
     ]
 
     def setUp(self):
@@ -188,9 +187,8 @@ class ComptabiliteModelTest(TestCase):
 class DepenseModelTest(TestCase):
 
     fixtures = [
-        'tests/periodebudgets.json', 'tests/structures.json',
-        'tests/planfinancements.json', 'tests/domainefonctionnels.json',
-        'tests/naturecomptabledepenses.json',
+        'tests/periodebudgets', 'tests/structures', 'tests/planfinancements',
+        'tests/domainefonctionnels', 'tests/naturecomptabledepenses',
     ]
 
     def setUp(self):
@@ -231,10 +229,10 @@ class DepenseModelTest(TestCase):
     #        "Le décalagage de trésorerie n'est pas possible sur cette nature "
     #        "comptable.")
 
-    #def test_save_without_montant_dc(self):
+    # def test_save_without_montant_dc(self):
     #    naturecomptabledepense = NatureComptableDepense.objects.get(
     #        code_nature_comptable='9DLOC', is_fleche=self.pfi_ecp.is_fleche)
-    #
+
     #    depense = Depense(
     #        pfi=self.pfi_ecp, structure=self.structure_ecp, annee=self.annee,
     #        periodebudget=self.periode, domainefonctionnel=self.domaine,
@@ -249,9 +247,8 @@ class DepenseModelTest(TestCase):
 class RecetteModelTest(TestCase):
 
     fixtures = [
-        'tests/periodebudgets.json', 'tests/structures.json',
-        'tests/planfinancements.json', 'tests/domainefonctionnels.json',
-        'tests/naturecomptablerecettes.json',
+        'tests/periodebudgets', 'tests/structures', 'tests/planfinancements',
+        'tests/domainefonctionnels', 'tests/naturecomptablerecettes',
     ]
 
     def setUp(self):
@@ -274,7 +271,7 @@ class RecetteModelTest(TestCase):
         recette.save()
         self.assertIsNotNone(recette.pk)
 
-    #def test_save_without_montant_dc(self):
+    # def test_save_without_montant_dc(self):
     #    recette = Recette.objects.create(
     #        pfi=self.pfi_ecp, structure=self.structure_ecp, annee=self.annee,
     #        periodebudget=self.periode,
@@ -288,7 +285,7 @@ class RecetteModelTest(TestCase):
 
 class ManagersTest(TestCase):
 
-    fixtures = ['tests/periodebudgets.json']
+    fixtures = ['tests/periodebudgets', 'tests/structures']
 
     def test_active_manager(self):
         DomaineFonctionnel.objects.create(
