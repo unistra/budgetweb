@@ -9,16 +9,15 @@ from django.utils.translation import ugettext_lazy as _
 
 from budgetweb.apps.structure.models import (
     DomaineFonctionnel, NatureComptableDepense, NatureComptableRecette,
-    PlanFinancement, Structure)
+    PlanFinancement)
 from budgetweb.forms import DepenseForm, PlanFinancementPluriForm, RecetteForm
 from budgetweb.models import Depense, PeriodeBudget, Recette
 
 
 class RecetteFormTest(TestCase):
 
-    fixtures = ['tests/periodebudgets.json', 'tests/structures.json',
-                'tests/planfinancements.json',
-                'tests/naturecomptablerecettes.json']
+    fixtures = ['tests/periodebudgets', 'tests/structures',
+                'tests/planfinancements', 'tests/naturecomptablerecettes']
 
     def setUp(self):
         self.periode = PeriodeBudget.objects.first()
@@ -225,7 +224,7 @@ class RecetteFormTest(TestCase):
             'annee': self.periode.annee,
             'pfi': self.pfi.pk,
             'enveloppe': 'Fonctionnement',
-            'naturecomptablerecette': self.natures,
+            'naturecomptablerecette': list(self.natures.keys())[0],
             'structure': self.pfi.structure.pk,
             'periodebudget': self.periode.pk,
             'montant_ae': Decimal(20),
@@ -251,7 +250,7 @@ class RecetteFormTest(TestCase):
             'annee': self.periode.annee,
             'pfi': self.pfi.pk,
             'enveloppe': 'Fonctionnement',
-            'naturecomptablerecette': self.natures,
+            'naturecomptablerecette': list(self.natures.keys())[0],
             'structure': self.pfi.structure.pk,
             'periodebudget': self.periode.pk,
             'montant_ae': Decimal(20),
@@ -360,10 +359,9 @@ class RecetteFormTest(TestCase):
 
 class DepenseFormTest(TestCase):
 
-    fixtures = ['tests/periodebudgets.json', 'tests/structures.json',
-                'tests/domainefonctionnels.json',
-                'tests/planfinancements.json',
-                'tests/naturecomptabledepenses.json']
+    fixtures = ['tests/periodebudgets', 'tests/structures',
+                'tests/domainefonctionnels', 'tests/planfinancements',
+                'tests/naturecomptabledepenses']
 
     def setUp(self):
         self.periode = PeriodeBudget.objects.first()
@@ -623,7 +621,7 @@ class DepenseFormTest(TestCase):
             'annee': self.periode.annee,
             'pfi': self.pfi.pk,
             'enveloppe': 'Fonctionnement',
-            'naturecomptabledepense': self.natures,
+            'naturecomptabledepense': list(self.natures.keys())[0],
             'structure': self.pfi.structure.pk,
             'domainefonctionnel': self.domaine.pk,
             'periodebudget': self.periode.pk,
@@ -652,7 +650,7 @@ class DepenseFormTest(TestCase):
             'pfi': self.pfi.pk,
             'structure': self.pfi.structure.pk,
             'enveloppe': 'Fonctionnement',
-            'naturecomptabledepense': self.natures,
+            'naturecomptabledepense': list(self.natures.keys())[0],
             'domainefonctionnel': self.domaine.pk,
             'periodebudget': self.periode.pk,
             'montant_ae': Decimal(20),
@@ -778,7 +776,7 @@ class DepenseFormTest(TestCase):
         post_data = {
             'annee': self.periode.annee,
             'pfi': self.pfi.pk,
-            'naturecomptabledepense': self.natures,
+            'naturecomptabledepense': list(self.natures.keys())[0],
             'enveloppe': 'Fonctionnement',
             'structure': self.pfi.structure.pk,
             'domainefonctionnel': self.domaine.pk,
@@ -801,15 +799,15 @@ class DepenseFormTest(TestCase):
         form = DepenseForm(data=post_data, **form_kwargs)
         self.assertTrue(form.is_bound)
         self.assertFalse(form.is_valid())
+        form.is_valid()
         form.clean()
 
 
 class PlanFinancementPluriFormTest(TestCase):
 
     fixtures = [
-        'tests/periodebudgets.json', 'tests/structures.json',
-        'tests/planfinancements.json', 'tests/domainefonctionnels.json',
-        'tests/naturecomptabledepenses.json',
+        'tests/periodebudgets', 'tests/structures', 'tests/planfinancements',
+        'tests/domainefonctionnels', 'tests/naturecomptabledepenses',
     ]
 
     def test_is_valid(self):
