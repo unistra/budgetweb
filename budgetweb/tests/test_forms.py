@@ -670,7 +670,7 @@ class DepenseFormTest(TestCase):
 
         form = DepenseForm(data=post_data, **form_kwargs)
         self.assertTrue(form.is_bound)
-        self.assertFalse(form.is_valid())
+        self.assertTrue(form.is_valid())
 
     def test_edit_depense(self):
         for code_nature in self.liste_nature_code:
@@ -798,7 +798,7 @@ class DepenseFormTest(TestCase):
 
         form = DepenseForm(data=post_data, **form_kwargs)
         self.assertTrue(form.is_bound)
-        self.assertFalse(form.is_valid())
+        self.assertTrue(form.is_valid())
         form.is_valid()
         form.clean()
 
