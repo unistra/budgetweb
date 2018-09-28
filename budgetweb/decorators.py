@@ -43,7 +43,8 @@ def is_authorized_structure(func):
             user_structures = get_authorized_structures_ids(user)[0]
             is_authorized = structure_id in user_structures
             if not is_authorized:
-                raise StructureUnauthorizedException
+                raise PermissionDenied(
+                    StructureUnauthorizedException().message)
         except Exception:
             raise StructureUnauthorizedException
         return func(request, *args, **kwargs)
@@ -90,10 +91,7 @@ def is_authorized_editing(func):
             is_authorized = True
 
         if not is_authorized:
-            raise EditingUnauthorizedException
-        # TODO Django > 1.8 :
-        # Raise PermissionDenied with an exception parameter
-        # https://docs.djangoproject.com/en/1.11/ref/views/#django.views.defaults.permission_denied
+            raise PermissionDenied(EditingUnauthorizedException().message)
         return func(request, *args, **kwargs)
     return wrapper
 
@@ -128,10 +126,7 @@ def require_lock(models, lock='ACCESS EXCLUSIVE'):  # pragma: no cover
                 cursor = connection.cursor()
                 for model in models:
                     if isinstance(model, str):
-                        app_label, model_name = model.split('.')
-                        app_package = django_apps.get_app_package(app_label)
-                        model_module = import_module('%s.models' % app_package)
-                        model = getattr(model_module, model_name)
+                        model = django_apps.get_model(model)
                     cursor.execute(
                         'LOCK TABLE %s IN %s MODE' % (model._meta.db_table, lock)
                     )

@@ -1,15 +1,13 @@
 from decimal import Decimal
 from io import StringIO
-import random
 
-from django.contrib.auth.models import User
 from django.core.management import call_command
 from django.test import TestCase
 
 from budgetweb.apps.structure.models import (
     DomaineFonctionnel, NatureComptableDepense, NatureComptableRecette,
     PlanFinancement, Structure)
-from budgetweb.models import Depense, PeriodeBudget, Recette, StructureMontant
+from budgetweb.models import Depense, PeriodeBudget, Recette
 
 
 class CheckStructureMontantsTest(TestCase):

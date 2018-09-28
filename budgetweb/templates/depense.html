@@ -4,15 +4,15 @@
 <a href="#depense"></a>
 <table class='supertable depense' id='supertable' border="1">
 {% for form in formset %}
-    {% if forloop.counter = 1 %}
+    {% if forloop.counter == 1 %}
     <thead>
         <tr><th colspan="10" align="center">{% trans "Expenditure forms"%}</th></tr>
         <tr>
         {% for field in form.visible_fields %}
             <th style="white-space:nowrap;">
-            {% if field.name = "DELETE" %}
+            {% if field.name == "DELETE" %}
                 <span class="danger glyphicon glyphicon-trash" align="center"></span>
-            {% elif field.name = "commentaire" %}
+            {% elif field.name == "commentaire" %}
                 <span class="danger glyphicon glyphicon-comment" align="center"></span>
             {% else %}
                 {{ field.label }}
