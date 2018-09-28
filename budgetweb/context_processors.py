@@ -30,7 +30,3 @@ def period_years(request):
         return {'period_years': years}
 
     return {'period_years': request.session['period_years']}
-
-
-def get_version(request):
-    return {'application_version': budgetweb.get_version()}
