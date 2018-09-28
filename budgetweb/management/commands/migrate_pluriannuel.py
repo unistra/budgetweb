@@ -78,11 +78,11 @@ class Command(BaseCommand):
                 depenses.extend(self.create_depenses(
                     pfi,
                     (Q(annee=year - 2) | Q(annee=year - 1)),
-                    year=year - 1))
+                    year=year - 1, periodebudget__annee=year - 1))
                 recettes.extend(self.create_recettes(
                     pfi,
                     (Q(annee=year - 2) | Q(annee=year - 1)),
-                    year=year - 1))
+                    year=year - 1, periodebudget__annee=year - 1))
 
                 # Budgets futurs
                 depenses.extend(self.create_depenses(
