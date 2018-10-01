@@ -6,6 +6,8 @@ from django.conf import settings
 from django.utils.encoding import force_text
 from django.utils.formats import number_format
 
+import budgetweb
+
 register = template.Library()
 
 
@@ -131,3 +133,8 @@ def attachment_link_modal(edit=False):
 @register.inclusion_tag('modal/montant_dc.html')
 def montant_dc_modal(edit=False):
     return {}
+
+
+@register.simple_tag
+def app_version():
+    return budgetweb.get_version()

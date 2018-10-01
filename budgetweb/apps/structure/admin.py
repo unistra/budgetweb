@@ -13,6 +13,8 @@ from .models import (DomaineFonctionnel, NatureComptableDepense,
 class DomaineFonctionnelAdmin(admin.ModelAdmin):
     list_display = ('code', 'label_court', 'label')
     search_fields = ['code', 'label_court', 'label']
+
+
 admin.site.register(DomaineFonctionnel, DomaineFonctionnelAdmin)
 
 
@@ -31,6 +33,7 @@ class NatureComptableDepenseAdmin(admin.ModelAdmin):
     def get_str(self, obj):
         return '{0} ({1.code_compte_budgetaire})'.format(str(obj), obj)
     get_str.short_description = _('accounting nature')
+
 
 admin.site.register(NatureComptableDepense, NatureComptableDepenseAdmin)
 
@@ -52,6 +55,7 @@ class NatureComptableRecetteAdmin(admin.ModelAdmin):
         return '{0} ({1.code_compte_budgetaire})'.format(str(obj), obj)
     get_str.short_description = _('accounting nature')
 
+
 admin.site.register(NatureComptableRecette, NatureComptableRecetteAdmin)
 
 
@@ -72,14 +76,19 @@ class PlanFinancementAdmin(admin.ModelAdmin):
 
     class Meta:
         ordering = ['pk', 'is_fleche', 'structure']
+
+
 admin.site.register(PlanFinancement, PlanFinancementAdmin)
 
 
 class StructureAdmin(admin.ModelAdmin):
-    fields = ('code', 'parent', 'groupe1', 'label', 'is_active')
-    list_display = ('code', 'parent', 'groupe1', 'label', 'is_active')
-    search_fields = ['code', 'label', 'groupe1']
+    fields = ('code', 'parent', 'groupe1', 'groupe2', 'label', 'is_active')
+    list_display = ('code', 'parent', 'groupe1', 'groupe2', 'label',
+                    'is_active')
+    search_fields = ['code', 'label', 'groupe1', 'groupe2']
 
     class Meta:
         ordering = ['is_active', 'code']
+
+
 admin.site.register(Structure, StructureAdmin)
