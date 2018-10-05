@@ -136,8 +136,15 @@ class StructureAuthorizationsForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        nodes = Structure.objects.all().select_related('parent').order_by('depth', 'code')
+        nodes = Structure.objects.all()\
+            .select_related('parent').order_by('depth', 'code')
         self.fields['structures'].choices = self.structures_tree(nodes)
+
+        # Initial datas
+        instance = kwargs.get('instance')
+        if instance:
+            self.initial['structures'] = list(
+                instance.structures.values_list('id', flat=True))
 
 
 class StructureAuthorizationsAdmin(admin.ModelAdmin):
