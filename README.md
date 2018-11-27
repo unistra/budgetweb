@@ -6,6 +6,18 @@ BudgetWeb
 [![AUR](https://img.shields.io/aur/license/yaourt.svg?maxAge=2592000?style=flat-square)]()
 [![Code Climate](https://codeclimate.com/github/unistra/budgetweb/badges/gpa.svg)](https://codeclimate.com/github/unistra/budgetweb)
 
+Résumé
+===================
+
+L'application BudgetWeb permet la pré-saisie d'un budget d'une Université en mode décentralisé. Toutes ces pré-saisies sont ensuite consolidées, corrigées et validées par service central pour ensuite être intégré dans le système financier. De nombreuses règles de gestions sont définies et personnalisables. Les accès se font via les profils suivants :
+  * un profil "utilisateur" qui permet la connexion et la saisie de prévisions de recettes et de dépenses sur lesquels il dispose d'habilitation. Il existe plusieurs type de programmes de financement (fléché / ou NA / non fléché et pluri-annuel / non pluri-annuel). Pour une PFI pluriannuel la saisie peut se faire sur plusieurs années. Quelques règles de gestion sont en place permettant de cadrer la saisie.
+  * un profil "budget" qui permet le suivi les différents saisies, et qui passe outre les règles de gestion.
+
+  L'exploitation des données se fait via un univers Business Objects .
+  L'outil permet, via un univers BO, de déverser dans le SI finance les fichiers suivants :
+  * Le budget d'engagement et de paiement
+  * Le BOPA (Budget pluriannuel)
+  * Des pré-budgets analytiques. 
 
 L'application BudgetWeb est basée sur Django, jQuery et BootStrap. La version est maintenant configuré pour fonctionner avec PostGreSQL.
 
