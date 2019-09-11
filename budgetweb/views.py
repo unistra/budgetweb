@@ -150,19 +150,25 @@ def show_tree(request, type_affichage, structid=0):
         authorized_structures, hierarchy_structures =\
             get_authorized_structures_ids(request.user)
 
-        structures = Structure.active.prefetch_related(
-            *(Prefetch('structuremontant_set', **prefetch)
-                for prefetch in prefetches['structure_montants'])
-        ).filter(pk__in=hierarchy_structures, **queryset).order_by('code')
+        structures = Structure.active\
+            .prefetch_related(
+                *(Prefetch('structuremontant_set', **prefetch)
+                    for prefetch in prefetches['structure_montants']))\
+            .filter(pk__in=hierarchy_structures, **queryset)\
+            .order_by('code')
 
         # if the PFI's structure is in the authorized structures
         if int(structid) in authorized_structures:
-            pfis = PlanFinancement.active.prefetch_related(*chain(
-                (Prefetch('depense_set', **prefetch)
-                    for prefetch in prefetches['pfis']['depense']),
-                (Prefetch('recette_set', **prefetch)
-                    for prefetch in prefetches['pfis']['recette']),)
-            ).select_related('structure').filter(structure__id=structid)
+            pfis = PlanFinancement.active\
+                .prefetch_related(*chain(
+                    (Prefetch('depense_set', **prefetch)
+                        for prefetch in prefetches['pfis']['depense']),
+                    (Prefetch('recette_set', **prefetch)
+                        for prefetch in prefetches['pfis']['recette']),)
+                )\
+                .select_related('structure')\
+                .filter(structure__id=structid)\
+                .order_by('code')
         else:
             pfis = []
 
