@@ -202,53 +202,7 @@ def tree_infos(year, period_code):
     prefetches = {}
     cols = {}
 
-    if period_code == 'BI':
-        prefetches = {
-            'structure_montants': (
-                {'queryset': StructureMontant.objects.filter(
-                    periodebudget__period__code='BI', **structuremontant_filters),
-                 'to_attr': 'montants'},
-            ),
-            'pfis': {
-                'depense': (
-                    {'queryset': Depense.objects.filter(
-                        periodebudget__period__code='BI', **pfi_filters),
-                     'to_attr': 'depense_bi'},),
-                'recette': (
-                    {'queryset': Recette.objects.filter(
-                        periodebudget__period__code='BI', **pfi_filters),
-                     'to_attr': 'recette_bi'},),
-            }
-        }
-        cols = {
-            'gbcp': (
-                # Dépenses
-                (('&sum; Dép. AE', 'Sommes des dépenses en AE',
-                    {'structure_montants': (('montants', 'depense_montant_ae'),),
-                     'pfis': (('depense_bi', 'montant_ae'),)}),
-                 ('&sum; Dép. CP', 'Sommes des dépenses en CP',
-                    {'structure_montants': (('montants', 'depense_montant_cp'),),
-                     'pfis': (('depense_bi', 'montant_cp'),)}),),
-                # Recettes
-                (('&sum; Rec. AR', 'Sommes des recettes en AR',
-                    {'structure_montants': (('montants', 'recette_montant_ar'),),
-                     'pfis': (('recette_bi', 'montant_ar'),)}),
-                 ('&sum; Rec. RE', 'Sommes des recettes en RE',
-                    {'structure_montants': (('montants', 'recette_montant_re'),),
-                     'pfis': (('recette_bi', 'montant_re'),)}),)
-            ),
-            'dc': (
-                # Dépenses
-                (('<span style="font-size:0.8em;">&sum; Dép. Charges / Immos</span>', 'Sommes des dépenses en DC',
-                    {'structure_montants': (('montants', 'depense_montant_dc'),),
-                     'pfis': (('depense_bi', 'montant_dc'),)}),),
-                # Recettes
-                (('<span style="font-size:0.7em;">&sum; Rec. Produits / Ressources</span>', 'Sommes des recettes en DC',
-                    {'structure_montants': (('montants', 'recette_montant_dc'),),
-                     'pfis': (('recette_bi', 'montant_dc'),)}),),
-            ),
-        }
-    elif period_code.startswith('BR'):
+    if period_code.startswith('BR'):
         prefetches = {
             'structure_montants': (
                 {'queryset': StructureMontant.objects.filter(
@@ -384,6 +338,52 @@ def tree_infos(year, period_code):
                      'pfis': (('recette_bm', 'montant_dc'),)}),),
             ),
         }
+    else:  # 'BI', 'VIRn':
+        prefetches = {
+            'structure_montants': (
+                {'queryset': StructureMontant.objects.filter(
+                    periodebudget__period__code='BI', **structuremontant_filters),
+                 'to_attr': 'montants'},
+            ),
+            'pfis': {
+                'depense': (
+                    {'queryset': Depense.objects.filter(
+                        periodebudget__period__code='BI', **pfi_filters),
+                     'to_attr': 'depense_bi'},),
+                'recette': (
+                    {'queryset': Recette.objects.filter(
+                        periodebudget__period__code='BI', **pfi_filters),
+                     'to_attr': 'recette_bi'},),
+            }
+        }
+        cols = {
+            'gbcp': (
+                # Dépenses
+                (('&sum; Dép. AE', 'Sommes des dépenses en AE',
+                    {'structure_montants': (('montants', 'depense_montant_ae'),),
+                     'pfis': (('depense_bi', 'montant_ae'),)}),
+                 ('&sum; Dép. CP', 'Sommes des dépenses en CP',
+                    {'structure_montants': (('montants', 'depense_montant_cp'),),
+                     'pfis': (('depense_bi', 'montant_cp'),)}),),
+                # Recettes
+                (('&sum; Rec. AR', 'Sommes des recettes en AR',
+                    {'structure_montants': (('montants', 'recette_montant_ar'),),
+                     'pfis': (('recette_bi', 'montant_ar'),)}),
+                 ('&sum; Rec. RE', 'Sommes des recettes en RE',
+                    {'structure_montants': (('montants', 'recette_montant_re'),),
+                     'pfis': (('recette_bi', 'montant_re'),)}),)
+            ),
+            'dc': (
+                # Dépenses
+                (('<span style="font-size:0.8em;">&sum; Dép. Charges / Immos</span>', 'Sommes des dépenses en DC',
+                    {'structure_montants': (('montants', 'depense_montant_dc'),),
+                     'pfis': (('depense_bi', 'montant_dc'),)}),),
+                # Recettes
+                (('<span style="font-size:0.7em;">&sum; Rec. Produits / Ressources</span>', 'Sommes des recettes en DC',
+                    {'structure_montants': (('montants', 'recette_montant_dc'),),
+                     'pfis': (('recette_bi', 'montant_dc'),)}),),
+            ),
+        }
 
     return prefetches, cols
 
@@ -396,3 +396,17 @@ def get_selected_year(request, default_period=None):
         else:
             return get_current_year()
     return session_year
+
+
+def get_updatable_periods(period_budget):
+    updatable_periods = []
+    if period_budget:
+        if not period_budget.is_active:
+            return []
+        period = period_budget.period
+        name, number = period.split_code
+        updatable_periods.append(period.code)
+        if name == 'BR':
+            # In a BRx period, VIRx entries can be updated
+            updatable_periods.append('VIR%s' % number)
+    return updatable_periods
