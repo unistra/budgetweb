@@ -2,7 +2,7 @@
 
 from os import environ
 from os.path import normpath
-from .base import *
+from .dev import *
 
 #######################
 # Debug configuration #
@@ -17,13 +17,12 @@ DEBUG = True
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.%s' 
-            % environ.get('DEFAULT_DB_TEST_ENGINE', 'sqlite3'),
-        'NAME': environ.get('DEFAULT_DB_TEST_NAME', 'budgetweb.db'),
-        'USER': environ.get('DEFAULT_DB_TEST_USER'),
-        'PASSWORD': environ.get('DEFAULT_DB_TEST_PASSWORD'),
-        'HOST': environ.get('DEFAULT_DB_TEST_HOST'),
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': environ.get('DEFAULT_DB_TEST_NAME', 'budgetweb'),
+        'USER': environ.get('DEFAULT_DB_TEST_USER', 'budgetweb'),
+        'PASSWORD': environ.get('DEFAULT_DB_TEST_PASSWORD', 'budgetweb'),
+        'HOST': environ.get('DEFAULT_DB_TEST_HOST', 'postgres'),
+        'PORT': environ.get('DEFAULT_DB_TEST_PORT', ''),
     },
 }
 

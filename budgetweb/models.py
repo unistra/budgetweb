@@ -1,4 +1,5 @@
 from decimal import Decimal
+import re
 
 from django.conf import settings
 from django.core.validators import URLValidator
@@ -79,6 +80,12 @@ class Period(models.Model):
 
     def __str__(self):
         return '{0.code} - {0.label}'.format(self)
+
+    @property
+    def split_code(self):
+        groups = re.match(r'([a-zA-Z]+)(\d*)', self.code)
+        return groups.groups()
+
 
 
 class PeriodeBudget(models.Model):
