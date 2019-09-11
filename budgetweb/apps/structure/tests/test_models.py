@@ -118,11 +118,11 @@ class StructureModelTest(TestCase):
 
 class PlanFinancementModelTest(TestCase):
 
-    fixtures = ['tests/planfinancements']
+    fixtures = ['tests/structures', 'tests/planfinancements']
 
     def test_str(self):
         plan = PlanFinancement.objects.get(pk=1)
-        self.assertEqual(str(plan), 'NA')
+        self.assertEqual(str(plan), 'DIN - NA')
 
 
 class NatureComptableDepenseModelTest(TestCase):
