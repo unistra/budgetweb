@@ -87,7 +87,6 @@ class Period(models.Model):
         return groups.groups()
 
 
-
 class PeriodeBudget(models.Model):
     """
     Gestion des périodes de budget. Une seule active

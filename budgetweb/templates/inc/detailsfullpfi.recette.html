@@ -35,7 +35,7 @@
   {% regroup recettes by naturecomptablerecette.code_compte_budgetaire as recettes_list %}
   {% for recettes_group in recettes_list %}
     {% for recette in recettes_group.list %}
-    {% is_comptabilite_updatable depense as is_updatable %}
+    {% is_comptabilite_updatable recette as is_updatable %}
     <tr class="{% cycle 'row1' 'row2' %}">
       <td>{{ recette.annee }}</td>
       <td>{{ recette.periodebudget.period.code }}</td>
