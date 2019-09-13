@@ -144,6 +144,23 @@ def get_pfi_total_types(pfi, year):
     def montant_type(x):
         return [k for k, v in montants_dict.items() if x in v][0]
 
+    def calculate_period(periode_dict, mnt, periode, annee, enveloppe,
+                         field_name):
+        type_dict = periode_dict.setdefault(
+            field_name, [{}, dict.fromkeys(years, None)])
+        nature_dict = type_dict[0].setdefault(
+            enveloppe, [dict.fromkeys(years, None), None])
+        nature_dict[0][annee] = (nature_dict[0][annee] or Decimal(0)) + mnt
+
+        # # Total per enveloppe
+        nature_dict[1] = (nature_dict[1] or Decimal(0)) + mnt
+
+        # # Total per type
+        type_dict[1][annee] = (type_dict[1].get(annee) or Decimal(0)) + mnt
+        type_dict[1]['total'] = (type_dict[1].get('total') or Decimal(0)) + mnt
+
+        return type_dict
+
     types = []
     years = get_pfi_years(pfi, year=year)
 
@@ -152,35 +169,24 @@ def get_pfi_total_types(pfi, year):
             k: [{default_period: {}}, {}] for k in montants_dict.keys()}
         for c in comptabilite:
             fields = [k for k in c.keys() if k.startswith('sum_')]
+            periode = c['periodebudget__period__code']
+            annee = c['annee']
+            enveloppe = c['enveloppe']
             for field in fields:
-                periode = c['periodebudget__period__code']
-                montant = c[field]
-                annee = c['annee']
+                mnt = c[field]
                 field_name = field.split('_')[-1].upper()
                 mt = montant_type(field_name)
                 ct = compta_types[mt]
+
+                # Calculation for each period
                 periode_dict = ct[0].setdefault(periode, {})
-                total_year_dict = ct[1].setdefault(
-                    field_name, dict.fromkeys(years, Decimal(0)))
-                type_dict = periode_dict.setdefault(
-                    field_name, [{}, dict.fromkeys(years, None)])
-                nature_dict = type_dict[0].setdefault(
-                    c['enveloppe'], [dict.fromkeys(years, None), None])
-                nature_dict[0][annee] = montant
+                calculate_period(periode_dict, mnt, periode, annee, enveloppe,
+                                 field_name)
 
-                # Total per enveloppe
-                nature_dict[1] = (nature_dict[1] or Decimal(0)) + montant
-
-                # Total per type
-                type_dict[1].setdefault(annee, None)
-                type_dict[1][annee] =\
-                    (type_dict[1][annee] or Decimal(0)) + montant
-                type_dict[1]['total'] =\
-                    type_dict[1].get('total', Decimal(0)) + montant
-
-                # Total per year
-                total_year_dict[annee] =\
-                    total_year_dict.get(annee, Decimal(0)) + montant
+                # Total calculation
+                total_dict = ct[0].setdefault('Total', {})
+                calculate_period(total_dict, mnt, periode, annee, enveloppe,
+                                 field_name)
 
         types.append(compta_types)
 

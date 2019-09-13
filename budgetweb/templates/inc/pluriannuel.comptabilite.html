@@ -83,21 +83,6 @@
 			{% endwith %}
 		{% endfor %}
 	{% endfor %}
-
-    {% comment %} Total per year and per type {% endcomment %}
-    {% for type, type_values in types.1.items %}
-            <tr>
-        {% if forloop.counter == 1 %}
-                <td nowrap="" rowspan="{{ types.1|length }}" style="text-align: center; font-size: bold;">Total</td>
-        {% endif %}
-                <td colspan="2" style="text-align: center;">{{ type }}</td>
-            {% for year in years %}
-                <td nowrap="" class="montant"{% if is_active_period %} colspan="2"{% endif %}>
-                    {% firstof type_values|dictvalue:year|intspace "0,00" %} &euro;</td>
-                </td>
-            {% endfor %}
-            </tr>
-    {% endfor %}
 		</tbody>
 	</table>
   </div>
