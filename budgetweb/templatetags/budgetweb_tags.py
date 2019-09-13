@@ -7,7 +7,6 @@ from django.utils.encoding import force_text
 from django.utils.formats import number_format
 
 import budgetweb
-from budgetweb.models import PeriodeBudget
 
 
 register = template.Library()
@@ -146,3 +145,10 @@ def app_version():
 def is_comptabilite_updatable(context, period):
     return period.periodebudget.period.code in context.get(
         'updatable_periods', ())
+
+
+@register.assignment_tag
+def order_periods(periods):
+    return dict(sorted(
+        periods.items(),
+        key=lambda t: 'Total'.__eq__(t[0])))

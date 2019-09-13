@@ -15,7 +15,9 @@
 			</tr>
 		</thead>
 		<tbody>
-	{% for periode, periode_values in types.0.items %}
+
+    {% order_periods types as ordered_types %}
+	{% for periode, periode_values in ordered_types.items %}
 		{% for type in montants_types.split %}
 		    {% with enveloppe_values=periode_values|dictvalue:type %}
 			{% with rowspan=enveloppes.split|length|add:1 %}
