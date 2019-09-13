@@ -166,7 +166,7 @@ def get_pfi_total_types(pfi, year):
 
     for comptabilite in get_pfi_total(pfi, year):
         compta_types = {
-            k: [{default_period: {}}, {}] for k in montants_dict.keys()}
+            k: {default_period: {}} for k in montants_dict.keys()}
         for c in comptabilite:
             fields = [k for k in c.keys() if k.startswith('sum_')]
             periode = c['periodebudget__period__code']
@@ -179,12 +179,12 @@ def get_pfi_total_types(pfi, year):
                 ct = compta_types[mt]
 
                 # Calculation for each period
-                periode_dict = ct[0].setdefault(periode, {})
+                periode_dict = ct.setdefault(periode, {})
                 calculate_period(periode_dict, mnt, periode, annee, enveloppe,
                                  field_name)
 
                 # Total calculation
-                total_dict = ct[0].setdefault('Total', {})
+                total_dict = ct.setdefault('Total', {})
                 calculate_period(total_dict, mnt, periode, annee, enveloppe,
                                  field_name)
 
