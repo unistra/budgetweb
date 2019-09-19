@@ -86,9 +86,11 @@ class Command(BaseCommand):
 
                 # Budgets futurs
                 depenses.extend(self.create_depenses(
-                    pfi, extra_values=['annee'], annee__gte=year))
+                    pfi, extra_values=['annee'], annee__gte=year,
+                    periodebudget__annee=year - 1))
                 recettes.extend(self.create_recettes(
-                    pfi, extra_values=['annee'], annee__gte=year))
+                    pfi, extra_values=['annee'], annee__gte=year,
+                    periodebudget__annee=year - 1))
 
             # bulk_create is faster but it does not trigger the save method.
             # Therefore, this script needs to launch check_structuremontants
