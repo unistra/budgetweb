@@ -70,7 +70,6 @@ class Command(BaseCommand):
                 raise Exception('Erreur : Entrées déjà existantes pour la '
                                 'période BI %s ' % year)
 
-            pfis = PlanFinancement.objects.filter(is_pluriannuel=True)
             depenses = []
             recettes = []
             for pfi in pfis:
