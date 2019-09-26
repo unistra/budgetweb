@@ -14,6 +14,7 @@
         Liste des recettes
     {% endif %}
       </th>
+    </tr>
     <tr>
       <th>Année</th>
       <th>Période</th>
@@ -34,6 +35,7 @@
   {% regroup recettes by naturecomptablerecette.code_compte_budgetaire as recettes_list %}
   {% for recettes_group in recettes_list %}
     {% for recette in recettes_group.list %}
+    {% is_comptabilite_updatable recette as is_updatable %}
     <tr class="{% cycle 'row1' 'row2' %}">
       <td>{{ recette.annee }}</td>
       <td>{{ recette.periodebudget.period.code }}</td>
@@ -47,7 +49,7 @@
       <td class="montant" nowrap>{{ recette.montant_re|intspace }} &euro;</td>
 
       <td class="montant" nowrap>
-        {% if recette.periodebudget.period.code|startswith:'VIR' %}
+        {% if recette.periodebudget.period.code|startswith:'VIR' and is_updatable%}
           <a href="#" data-backdrop="false" data-toggle="modal"
              data-target="#modalMontantDC"
              data-pk="{{ recette.pk }}"
@@ -60,7 +62,7 @@
         {% endif %}
       </td>
       <td align="center">
-        {% if recette.commentaire %}
+        {% if recette.commentaire and is_updatable%}
           <a href="#">
             <span data-backdrop="false" data-toggle="modal" data-target="#modal_commentaire" data-formid="{{ recette.commentaire }}" class="glyphicon glyphicon-paperclip" title="Afficher"></span>
           </a>
@@ -69,7 +71,7 @@
         {% endif %}
       </td>
       <td align="center">
-        {% if recette.lienpiecejointe %}
+        {% if recette.lienpiecejointe and is_updatable%}
           <a href="#">
             <span data-backdrop="false" data-toggle="modal" data-target="#modal_lienpiecejointe" data-formid="{{ recette.lienpiecejointe }}" class="glyphicon glyphicon-paperclip" title="Afficher"></span>
           </a>

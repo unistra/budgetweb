@@ -7,6 +7,6 @@ variables:
   POSTGRES_PASSWORD: budgetweb
 
 
-py34:
+unittest:
   script:
-  - tox -e py34
+  - tox

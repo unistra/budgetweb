@@ -35,6 +35,7 @@
   {% regroup depenses by naturecomptabledepense.code_compte_budgetaire as depenses_list %}
   {% for depenses_group in depenses_list %}
     {% for depense in depenses_group.list %}
+    {% is_comptabilite_updatable depense as is_updatable %}
     <tr class="{% cycle 'row1' 'row2' %}">
       <td>{{ depense.annee }}</td>
       <td>{{ depense.periodebudget.period.code }}</td>
@@ -47,7 +48,7 @@
       <td class="montant" nowrap>{{ depense.montant_ae|intspace }} &euro;</td>
       <td class="montant" nowrap>{{ depense.montant_cp|intspace }} &euro;</td>
       <td class="montant" nowrap>
-        {% if depense.periodebudget.period.code|startswith:'VIR' %}
+        {% if depense.periodebudget.period.code|startswith:'VIR' and is_updatable%}
           <a href="#" data-backdrop="false" data-toggle="modal"
              data-target="#modalMontantDC"
              data-pk="{{ depense.pk }}"
@@ -60,7 +61,7 @@
         {% endif %}
       </td>
       <td align="center">
-      {% if depense.commentaire %}
+      {% if depense.commentaire and is_updatable%}
         <a href="#">
           <span data-backdrop="false" data-toggle="modal" data-target="#modal_commentaire" data-formid="{{ depense.commentaire }}" class="glyphicon glyphicon-paperclip" title="Afficher"></span>
         </a>
@@ -69,7 +70,7 @@
       {% endif %}
       </td>
       <td align="center">
-        {% if depense.lienpiecejointe %}
+        {% if depense.lienpiecejointe and is_updatable %}
         <a href="#">
           <span data-backdrop="false" data-toggle="modal" data-target="#modal_lienpiecejointe" data-formid="{{ depense.lienpiecejointe }}" class="glyphicon glyphicon-paperclip" title="Afficher"></span>
         </a>

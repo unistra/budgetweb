@@ -30,7 +30,8 @@ from .models import Depense, PeriodeBudget, Recette
 from .templatetags.budgetweb_tags import sum_montants
 from .utils import (
     get_authorized_structures_ids, get_detail_pfi_by_period,
-    get_pfi_total_types, get_pfi_years, tree_infos, get_selected_year)
+    get_pfi_total_types, get_pfi_years, get_updatable_periods,
+    tree_infos, get_selected_year)
 
 
 @login_required
@@ -149,19 +150,25 @@ def show_tree(request, type_affichage, structid=0):
         authorized_structures, hierarchy_structures =\
             get_authorized_structures_ids(request.user)
 
-        structures = Structure.active.prefetch_related(
-            *(Prefetch('structuremontant_set', **prefetch)
-                for prefetch in prefetches['structure_montants'])
-        ).filter(pk__in=hierarchy_structures, **queryset).order_by('code')
+        structures = Structure.active\
+            .prefetch_related(
+                *(Prefetch('structuremontant_set', **prefetch)
+                    for prefetch in prefetches['structure_montants']))\
+            .filter(pk__in=hierarchy_structures, **queryset)\
+            .order_by('code')
 
         # if the PFI's structure is in the authorized structures
         if int(structid) in authorized_structures:
-            pfis = PlanFinancement.active.prefetch_related(*chain(
-                (Prefetch('depense_set', **prefetch)
-                    for prefetch in prefetches['pfis']['depense']),
-                (Prefetch('recette_set', **prefetch)
-                    for prefetch in prefetches['pfis']['recette']),)
-            ).select_related('structure').filter(structure__id=structid)
+            pfis = PlanFinancement.active\
+                .prefetch_related(*chain(
+                    (Prefetch('depense_set', **prefetch)
+                        for prefetch in prefetches['pfis']['depense']),
+                    (Prefetch('recette_set', **prefetch)
+                        for prefetch in prefetches['pfis']['recette']),)
+                )\
+                .select_related('structure')\
+                .filter(structure__id=structid)\
+                .order_by('code')
         else:
             pfis = []
 
@@ -392,7 +399,8 @@ def detailspfi(request, pfiid):
         'sommeDepense': sum_depenses, 'sommeRecette': sum_recettes,
         'resume_depenses': resume_depenses, 'resume_recettes': resume_recettes,
         'years': years, 'periods': periods, 'origin': 'detailspfi',
-        'is_active_period': is_active_period,
+        'is_active_period': is_active_period, 'active_period': active_period,
+        'updatable_periods': get_updatable_periods(active_period),
     }
     return render(request, 'detailsfullpfi.html', context)
 
