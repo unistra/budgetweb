@@ -61,14 +61,16 @@ admin.site.register(NatureComptableRecette, NatureComptableRecetteAdmin)
 
 class PlanFinancementAdmin(admin.ModelAdmin):
     fields = ('structure', 'code', 'label', 'eotp', 'centrecoutderive',
-              'centreprofitderive', 'is_fleche', 'is_pluriannuel', 'is_active',
-              'date_debut', 'date_fin')
+              'centreprofitderive', 'groupe1', 'groupe2', 'is_fleche',
+              'is_pluriannuel', 'is_active', 'date_debut', 'date_fin')
     list_display = ('get_str', 'label', 'eotp', 'centrecoutderive',
                     'centreprofitderive', 'is_fleche', 'is_pluriannuel',
-                    'is_active', 'date_debut', 'date_fin')
+                    'is_active', 'date_debut', 'date_fin', 'groupe1',
+                    'groupe2')
     search_fields = ['structure__code', 'code', 'eotp', 'centrecoutderive',
                      'centreprofitderive', 'is_fleche', 'is_pluriannuel',
-                     'is_active', 'date_debut', 'date_fin']
+                     'is_active', 'date_debut', 'date_fin', 'groupe1',
+                     'groupe2']
 
     def get_str(self, obj):
         return str(obj)
