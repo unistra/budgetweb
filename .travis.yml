@@ -4,7 +4,6 @@ services:
 before_script:
   - psql -c "CREATE DATABASE budgetweb;" -U postgres
   - psql -c "CREATE USER budgetweb WITH PASSWORD 'budgetweb';" -U postgres
-  - psql -c "ALTER USER budgetweb CREATEUSER CREATEDB;"
 
 variables:
   POSTGRES_DB: budgetweb
