@@ -121,7 +121,7 @@ class IsAuthorizedEditingTest(TestCase):
         function.__name__ = 'mock'
         decorated_fuction = is_authorized_editing(function)
         self.assertRaises(
-            EditingUnauthorizedException, decorated_fuction, request)
+            PermissionDenied, decorated_fuction, request)
 
     def test_valid_input_dates(self):
         begin_date = datetime.today()

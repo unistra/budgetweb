@@ -1,15 +1,15 @@
-from os.path import dirname, join
+from os.path import join
 
 from django.conf import settings
-from django.core.management.base import NoArgsCommand
 from django.core.management import call_command
+from django.core.management.base import BaseCommand
 from django.contrib.auth.models import Group
 
 
-class Command(NoArgsCommand):
+class Command(BaseCommand):
     help = 'Initial import for BudgetWeb'
 
-    def handle_noargs(self, **options):
+    def handle(self, *args, **options):
         datapath = join(settings.SITE_ROOT, 'datas')
 
         try:

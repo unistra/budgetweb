@@ -7,7 +7,7 @@ from ..models import (DomaineFonctionnel, NatureComptableDepense,
 
 class DomaineFonctionnelModelTest(TestCase):
 
-    fixtures = ['tests/domainefonctionnels.json']
+    fixtures = ['tests/domainefonctionnels']
 
     def test_str(self):
         domaine = DomaineFonctionnel.objects.get(pk=1)
@@ -17,7 +17,7 @@ class DomaineFonctionnelModelTest(TestCase):
 
 class StructureModelTest(TestCase):
 
-    fixtures = ['tests/structures.json']
+    fixtures = ['tests/structures']
 
     def setUp(self):
         """ Tree :
@@ -118,16 +118,16 @@ class StructureModelTest(TestCase):
 
 class PlanFinancementModelTest(TestCase):
 
-    fixtures = ['tests/planfinancements.json']
+    fixtures = ['tests/structures', 'tests/planfinancements']
 
     def test_str(self):
         plan = PlanFinancement.objects.get(pk=1)
-        self.assertEqual(str(plan), 'NA')
+        self.assertEqual(str(plan), 'DIN - NA')
 
 
 class NatureComptableDepenseModelTest(TestCase):
 
-    fixtures = ['tests/naturecomptabledepenses.json']
+    fixtures = ['tests/naturecomptabledepenses']
 
     def test_str(self):
         nature = NatureComptableDepense.objects.get(pk=1)
@@ -136,7 +136,7 @@ class NatureComptableDepenseModelTest(TestCase):
 
 class NatureComptableRecetteModelTest(TestCase):
 
-    fixtures = ['tests/naturecomptablerecettes.json']
+    fixtures = ['tests/naturecomptablerecettes']
 
     def test_str(self):
         nature = NatureComptableRecette.objects.get(pk=1)

@@ -75,13 +75,15 @@ admin.site.register(StructureMontant, StructureMontantAdmin)
 
 class VirementAdmin(admin.ModelAdmin):
     fields = ('document_number', 'document_type', 'version', 'perimetre',
-             'process')
+              'process', 'value_date')
     list_display = ('document_number', 'document_type', 'version',
-                    'perimetre', 'process')
+                    'perimetre', 'process', 'value_date')
     search_fields = ['document_number', 'depense__structure__code']
 
     class Meta:
         ordering = ['document_number']
+
+
 admin.site.register(Virement, VirementAdmin)
 
 
@@ -134,8 +136,15 @@ class StructureAuthorizationsForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        nodes = Structure.objects.all().select_related('parent').order_by('depth', 'code')
+        nodes = Structure.objects.all()\
+            .select_related('parent').order_by('depth', 'code')
         self.fields['structures'].choices = self.structures_tree(nodes)
+
+        # Initial datas
+        instance = kwargs.get('instance')
+        if instance:
+            self.initial['structures'] = list(
+                instance.structures.values_list('id', flat=True))
 
 
 class StructureAuthorizationsAdmin(admin.ModelAdmin):

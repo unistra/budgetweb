@@ -27,10 +27,11 @@ def recursive_requirements(requirement_file, libs, links, path=''):
 
 libraries, dependency_links = [], []
 recursive_requirements('requirements.txt', libraries, dependency_links)
+version = __import__('budgetweb').get_version()
 
 setup(
     name='budgetweb',
-    version='1.2.0',
+    version=version,
     packages=find_packages(),
     install_requires=libraries,
     dependency_links=dependency_links,

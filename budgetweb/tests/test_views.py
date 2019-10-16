@@ -15,9 +15,8 @@ from budgetweb.models import Depense, PeriodeBudget, Recette
 class APIViewsTest(TestCase):
 
     fixtures = [
-        'tests/structures.json', 'tests/planfinancements.json',
-        'tests/naturecomptabledepenses.json',
-        'tests/naturecomptablerecettes.json'
+        'tests/structures', 'tests/planfinancements',
+        'tests/naturecomptabledepenses', 'tests/naturecomptablerecettes'
     ]
 
     def setUp(self):

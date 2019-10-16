@@ -1,7 +1,7 @@
 from decimal import Decimal
 from itertools import chain, groupby
 
-from django.db.models import F, Prefetch, Sum
+from django.db.models import F, Sum
 
 from budgetweb.apps.structure.models import Structure
 from .models import (Depense, PeriodeBudget, StructureAuthorizations, Recette,
@@ -144,43 +144,49 @@ def get_pfi_total_types(pfi, year):
     def montant_type(x):
         return [k for k, v in montants_dict.items() if x in v][0]
 
+    def calculate_period(periode_dict, mnt, periode, annee, enveloppe,
+                         field_name):
+        type_dict = periode_dict.setdefault(
+            field_name, [{}, dict.fromkeys(years, None)])
+        nature_dict = type_dict[0].setdefault(
+            enveloppe, [dict.fromkeys(years, None), None])
+        nature_dict[0][annee] = (nature_dict[0][annee] or Decimal(0)) + mnt
+
+        # # Total per enveloppe
+        nature_dict[1] = (nature_dict[1] or Decimal(0)) + mnt
+
+        # # Total per type
+        type_dict[1][annee] = (type_dict[1].get(annee) or Decimal(0)) + mnt
+        type_dict[1]['total'] = (type_dict[1].get('total') or Decimal(0)) + mnt
+
+        return type_dict
+
     types = []
     years = get_pfi_years(pfi, year=year)
 
     for comptabilite in get_pfi_total(pfi, year):
         compta_types = {
-            k: [{default_period: {}}, {}] for k in montants_dict.keys()}
+            k: {default_period: {}} for k in montants_dict.keys()}
         for c in comptabilite:
             fields = [k for k in c.keys() if k.startswith('sum_')]
+            periode = c['periodebudget__period__code']
+            annee = c['annee']
+            enveloppe = c['enveloppe']
             for field in fields:
-                periode = c['periodebudget__period__code']
-                montant = c[field]
-                annee = c['annee']
+                mnt = c[field]
                 field_name = field.split('_')[-1].upper()
                 mt = montant_type(field_name)
                 ct = compta_types[mt]
-                periode_dict = ct[0].setdefault(periode, {})
-                total_year_dict = ct[1].setdefault(
-                    field_name, dict.fromkeys(years, Decimal(0)))
-                type_dict = periode_dict.setdefault(
-                    field_name, [{}, dict.fromkeys(years, None)])
-                nature_dict = type_dict[0].setdefault(
-                    c['enveloppe'], [dict.fromkeys(years, None), None])
-                nature_dict[0][annee] = montant
 
-                # Total per enveloppe
-                nature_dict[1] = (nature_dict[1] or Decimal(0)) + montant
+                # Calculation for each period
+                periode_dict = ct.setdefault(periode, {})
+                calculate_period(periode_dict, mnt, periode, annee, enveloppe,
+                                 field_name)
 
-                # Total per type
-                type_dict[1].setdefault(annee, None)
-                type_dict[1][annee] =\
-                    (type_dict[1][annee] or Decimal(0)) + montant
-                type_dict[1]['total'] =\
-                    type_dict[1].get('total', Decimal(0)) + montant
-
-                # Total per year
-                total_year_dict[annee] =\
-                    total_year_dict.get(annee, Decimal(0)) + montant
+                # Total calculation
+                total_dict = ct.setdefault('Total', {})
+                calculate_period(total_dict, mnt, periode, annee, enveloppe,
+                                 field_name)
 
         types.append(compta_types)
 
@@ -202,53 +208,7 @@ def tree_infos(year, period_code):
     prefetches = {}
     cols = {}
 
-    if period_code == 'BI':
-        prefetches = {
-            'structure_montants': (
-                {'queryset': StructureMontant.objects.filter(
-                    periodebudget__period__code='BI', **structuremontant_filters),
-                 'to_attr': 'montants'},
-            ),
-            'pfis': {
-                'depense': (
-                    {'queryset': Depense.objects.filter(
-                        periodebudget__period__code='BI', **pfi_filters),
-                     'to_attr': 'depense_bi'},),
-                'recette': (
-                    {'queryset': Recette.objects.filter(
-                        periodebudget__period__code='BI', **pfi_filters),
-                     'to_attr': 'recette_bi'},),
-            }
-        }
-        cols = {
-            'gbcp': (
-                # Dépenses
-                (('&sum; Dép. AE', 'Sommes des dépenses en AE',
-                    {'structure_montants': (('montants', 'depense_montant_ae'),),
-                     'pfis': (('depense_bi', 'montant_ae'),)}),
-                 ('&sum; Dép. CP', 'Sommes des dépenses en CP',
-                    {'structure_montants': (('montants', 'depense_montant_cp'),),
-                     'pfis': (('depense_bi', 'montant_cp'),)}),),
-                # Recettes
-                (('&sum; Rec. AR', 'Sommes des recettes en AR',
-                    {'structure_montants': (('montants', 'recette_montant_ar'),),
-                     'pfis': (('recette_bi', 'montant_ar'),)}),
-                 ('&sum; Rec. RE', 'Sommes des recettes en RE',
-                    {'structure_montants': (('montants', 'recette_montant_re'),),
-                     'pfis': (('recette_bi', 'montant_re'),)}),)
-            ),
-            'dc': (
-                # Dépenses
-                (('<span style="font-size:0.8em;">&sum; Dép. Charges / Immos</span>', 'Sommes des dépenses en DC',
-                    {'structure_montants': (('montants', 'depense_montant_dc'),),
-                     'pfis': (('depense_bi', 'montant_dc'),)}),),
-                # Recettes
-                (('<span style="font-size:0.7em;">&sum; Rec. Produits / Ressources</span>', 'Sommes des recettes en DC',
-                    {'structure_montants': (('montants', 'recette_montant_dc'),),
-                     'pfis': (('recette_bi', 'montant_dc'),)}),),
-            ),
-        }
-    elif period_code.startswith('BR'):
+    if period_code.startswith('BR'):
         prefetches = {
             'structure_montants': (
                 {'queryset': StructureMontant.objects.filter(
@@ -258,7 +218,7 @@ def tree_infos(year, period_code):
                     periodebudget__period__code__startswith='VIR', **structuremontant_filters),
                  'to_attr': 'vir'},
                 {'queryset': StructureMontant.objects.filter(
-                    periodebudget__period__code__startswith='BR', **structuremontant_filters),
+                    periodebudget__period__code=period_code, **structuremontant_filters),
                  'to_attr': 'br'},
                 {'queryset': StructureMontant.objects.filter(**structuremontant_filters),
                  'to_attr': 'bm'},
@@ -276,7 +236,7 @@ def tree_infos(year, period_code):
                         periodebudget__period__code__startswith='VIR', **pfi_filters),
                      'to_attr': 'depense_vir'},
                     {'queryset': Depense.objects.filter(
-                        periodebudget__period__code__startswith='BR', **pfi_filters),
+                        periodebudget__period__code=period_code, **pfi_filters),
                      'to_attr': 'depense_br'
                     },
                     {'queryset': Depense.objects.filter(**pfi_filters),
@@ -294,7 +254,7 @@ def tree_infos(year, period_code):
                         periodebudget__period__code__startswith='VIR', **pfi_filters),
                      'to_attr': 'recette_vir'},
                     {'queryset': Recette.objects.filter(
-                        periodebudget__period__code__startswith='BR', **pfi_filters),
+                        periodebudget__period__code=period_code, **pfi_filters),
                      'to_attr': 'recette_br'},
                     {'queryset': Recette.objects.filter(**pfi_filters),
                      'to_attr': 'recette_bm'},
@@ -384,6 +344,52 @@ def tree_infos(year, period_code):
                      'pfis': (('recette_bm', 'montant_dc'),)}),),
             ),
         }
+    else:  # 'BI', 'VIRn':
+        prefetches = {
+            'structure_montants': (
+                {'queryset': StructureMontant.objects.filter(
+                    periodebudget__period__code='BI', **structuremontant_filters),
+                 'to_attr': 'montants'},
+            ),
+            'pfis': {
+                'depense': (
+                    {'queryset': Depense.objects.filter(
+                        periodebudget__period__code='BI', **pfi_filters),
+                     'to_attr': 'depense_bi'},),
+                'recette': (
+                    {'queryset': Recette.objects.filter(
+                        periodebudget__period__code='BI', **pfi_filters),
+                     'to_attr': 'recette_bi'},),
+            }
+        }
+        cols = {
+            'gbcp': (
+                # Dépenses
+                (('&sum; Dép. AE', 'Sommes des dépenses en AE',
+                    {'structure_montants': (('montants', 'depense_montant_ae'),),
+                     'pfis': (('depense_bi', 'montant_ae'),)}),
+                 ('&sum; Dép. CP', 'Sommes des dépenses en CP',
+                    {'structure_montants': (('montants', 'depense_montant_cp'),),
+                     'pfis': (('depense_bi', 'montant_cp'),)}),),
+                # Recettes
+                (('&sum; Rec. AR', 'Sommes des recettes en AR',
+                    {'structure_montants': (('montants', 'recette_montant_ar'),),
+                     'pfis': (('recette_bi', 'montant_ar'),)}),
+                 ('&sum; Rec. RE', 'Sommes des recettes en RE',
+                    {'structure_montants': (('montants', 'recette_montant_re'),),
+                     'pfis': (('recette_bi', 'montant_re'),)}),)
+            ),
+            'dc': (
+                # Dépenses
+                (('<span style="font-size:0.8em;">&sum; Dép. Charges / Immos</span>', 'Sommes des dépenses en DC',
+                    {'structure_montants': (('montants', 'depense_montant_dc'),),
+                     'pfis': (('depense_bi', 'montant_dc'),)}),),
+                # Recettes
+                (('<span style="font-size:0.7em;">&sum; Rec. Produits / Ressources</span>', 'Sommes des recettes en DC',
+                    {'structure_montants': (('montants', 'recette_montant_dc'),),
+                     'pfis': (('recette_bi', 'montant_dc'),)}),),
+            ),
+        }
 
     return prefetches, cols
 
@@ -396,3 +402,17 @@ def get_selected_year(request, default_period=None):
         else:
             return get_current_year()
     return session_year
+
+
+def get_updatable_periods(period_budget):
+    updatable_periods = []
+    if period_budget:
+        if not period_budget.is_active:
+            return []
+        period = period_budget.period
+        name, number = period.split_code
+        updatable_periods.append(period.code)
+        if name == 'BR':
+            # In a BRx period, VIRx entries can be updated
+            updatable_periods.append('VIR%s' % number)
+    return updatable_periods

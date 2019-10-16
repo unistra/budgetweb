@@ -15,7 +15,7 @@ from django.forms.models import modelformset_factory
 from django.http import (
     HttpResponse, HttpResponseRedirect, HttpResponseServerError, JsonResponse)
 from django.shortcuts import (get_object_or_404, redirect, render)
-from django.template import loader, Context
+from django.template import loader
 from django.utils.http import is_safe_url
 from django.utils.translation import ugettext as _
 from django.views.decorators.csrf import requires_csrf_token
@@ -30,7 +30,8 @@ from .models import Depense, PeriodeBudget, Recette
 from .templatetags.budgetweb_tags import sum_montants
 from .utils import (
     get_authorized_structures_ids, get_detail_pfi_by_period,
-    get_pfi_total_types, get_pfi_years, tree_infos, get_selected_year)
+    get_pfi_total_types, get_pfi_years, get_updatable_periods,
+    tree_infos, get_selected_year)
 
 
 @login_required
@@ -149,19 +150,25 @@ def show_tree(request, type_affichage, structid=0):
         authorized_structures, hierarchy_structures =\
             get_authorized_structures_ids(request.user)
 
-        structures = Structure.active.prefetch_related(
-            *(Prefetch('structuremontant_set', **prefetch)
-                for prefetch in prefetches['structure_montants'])
-        ).filter(pk__in=hierarchy_structures, **queryset).order_by('code')
+        structures = Structure.active\
+            .prefetch_related(
+                *(Prefetch('structuremontant_set', **prefetch)
+                    for prefetch in prefetches['structure_montants']))\
+            .filter(pk__in=hierarchy_structures, **queryset)\
+            .order_by('code')
 
         # if the PFI's structure is in the authorized structures
         if int(structid) in authorized_structures:
-            pfis = PlanFinancement.active.prefetch_related(*chain(
-                (Prefetch('depense_set', **prefetch)
-                    for prefetch in prefetches['pfis']['depense']),
-                (Prefetch('recette_set', **prefetch)
-                    for prefetch in prefetches['pfis']['recette']),)
-            ).select_related('structure').filter(structure__id=structid)
+            pfis = PlanFinancement.active\
+                .prefetch_related(*chain(
+                    (Prefetch('depense_set', **prefetch)
+                        for prefetch in prefetches['pfis']['depense']),
+                    (Prefetch('recette_set', **prefetch)
+                        for prefetch in prefetches['pfis']['recette']),)
+                )\
+                .select_related('structure')\
+                .filter(structure__id=structid)\
+                .order_by('code')
         else:
             pfis = []
 
@@ -192,6 +199,7 @@ def show_tree(request, type_affichage, structid=0):
 def pluriannuel(request, pfiid):
     active_period = PeriodeBudget.active.select_related('period').first()
     current_year = get_selected_year(request)
+    is_active_period = active_period.annee == current_year
     pfi = get_object_or_404(PlanFinancement, pk=pfiid)
     if request.method == "POST":
         form = PlanFinancementPluriForm(request.POST, instance=pfi)
@@ -209,7 +217,8 @@ def pluriannuel(request, pfiid):
 
     context = {
         'PFI': pfi, 'form': form, 'depense': depense, 'recette': recette,
-        'years': get_pfi_years(pfi, year=current_year), 'origin': 'pluriannuel',
+        'years': get_pfi_years(pfi, year=current_year),
+        'is_active_period': is_active_period, 'origin': 'pluriannuel',
     }
     return render(request, 'pluriannuel.html', context)
 
@@ -326,7 +335,9 @@ def recette(request, pfiid, annee):
 @is_authorized_structure
 def detailspfi(request, pfiid):
     to_dict = lambda x: {k: list(v) for k, v in x}
+    active_period = PeriodeBudget.active.select_related('period').first()
     current_year = get_selected_year(request)
+    is_active_period = active_period.annee == current_year
     pfi = PlanFinancement.objects.select_related('structure').get(pk=pfiid)
     compta_filters = {'pfi': pfi, 'periodebudget__annee': current_year}
     depenses = Depense.objects.filter(**compta_filters)\
@@ -388,6 +399,8 @@ def detailspfi(request, pfiid):
         'sommeDepense': sum_depenses, 'sommeRecette': sum_recettes,
         'resume_depenses': resume_depenses, 'resume_recettes': resume_recettes,
         'years': years, 'periods': periods, 'origin': 'detailspfi',
+        'is_active_period': is_active_period, 'active_period': active_period,
+        'updatable_periods': get_updatable_periods(active_period),
     }
     return render(request, 'detailsfullpfi.html', context)
 
@@ -503,11 +516,11 @@ def handler500(request, template_name='500.html'):  # pragma: no cover
     exctype, value, tb = sys.exc_info()
     t = loader.get_template(template_name)
     return HttpResponseServerError(t.render(
-        Context({
+        {
             'error': value.message if hasattr(value, 'message') else value,
             'type': exctype.__name__,
             'tb': traceback.format_exception(exctype, value, tb)
-        })
+        }
     ))
 
 

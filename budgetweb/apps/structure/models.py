@@ -110,10 +110,10 @@ class PlanFinancement(models.Model):
     code = models.CharField(_('Code'), max_length=100, default='NA')
     label = models.CharField(_('Label'), max_length=255)
     eotp = models.CharField(_('EOTP short label'), max_length=100)
-    centrecoutderive = models.CharField(_('Related cost center'),
-                                        max_length=100)
-    centreprofitderive = models.CharField('Related profit center',
-                                          max_length=100)
+    centrecoutderive = models.CharField(
+        _('Related cost center'), max_length=100, null=True, blank=True)
+    centreprofitderive = models.CharField(
+        _('Related profit center'), max_length=100, null=True, blank=True)
     groupe1 = models.CharField(_('BudgetWeb group 1'), max_length=255,
                                null=True, blank=True)
     groupe2 = models.CharField(_('BudgetWeb group 2'), max_length=255,

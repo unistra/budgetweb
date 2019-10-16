@@ -6,6 +6,9 @@ from django.conf import settings
 from django.utils.encoding import force_text
 from django.utils.formats import number_format
 
+import budgetweb
+
+
 register = template.Library()
 
 
@@ -131,3 +134,21 @@ def attachment_link_modal(edit=False):
 @register.inclusion_tag('modal/montant_dc.html')
 def montant_dc_modal(edit=False):
     return {}
+
+
+@register.simple_tag
+def app_version():
+    return budgetweb.get_version()
+
+
+@register.assignment_tag(takes_context=True)
+def is_comptabilite_updatable(context, period):
+    return period.periodebudget.period.code in context.get(
+        'updatable_periods', ())
+
+
+@register.assignment_tag
+def order_periods(periods):
+    return dict(sorted(
+        periods.items(),
+        key=lambda t: 'Total'.__eq__(t[0])))
