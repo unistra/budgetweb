@@ -16,3 +16,4 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+MIDDLEWARE_CLASSES += ()
