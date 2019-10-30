@@ -69,20 +69,21 @@ class RecetteForm(forms.ModelForm):
         self.fields['annee'].initial = int(annee)
 
         if instance and instance.pk:
-            nature = self.natures[instance.naturecomptablerecette_id]
-            self.fields['enveloppe'].initial = nature.enveloppe
-            self.fields['naturecomptablerecette'].choices += [
-                (pk, str(n)) for pk, n in self.natures.items()
-                if n.enveloppe == nature.enveloppe]
-            self.fields['naturecomptablerecette'].initial = nature
+            nature = self.natures.get(instance.naturecomptablerecette_id)
+            if nature:
+                self.fields['enveloppe'].initial = nature.enveloppe
+                self.fields['naturecomptablerecette'].choices += [
+                    (pk, str(n)) for pk, n in self.natures.items()
+                    if n.enveloppe == nature.enveloppe]
+                self.fields['naturecomptablerecette'].initial = nature
 
-            if nature.is_ar_and_re and\
-               not self.is_dfi_member_or_admin:
-                self.fields['montant_re'].widget.attrs['readonly'] = True
-            if nature.is_non_budgetaire and\
-               not self.is_dfi_member_or_admin:
-                self.fields['montant_ar'].widget.attrs['readonly'] = True
-                self.fields['montant_re'].widget.attrs['readonly'] = True
+                if nature.is_ar_and_re and\
+                   not self.is_dfi_member_or_admin:
+                    self.fields['montant_re'].widget.attrs['readonly'] = True
+                if nature.is_non_budgetaire and\
+                   not self.is_dfi_member_or_admin:
+                    self.fields['montant_ar'].widget.attrs['readonly'] = True
+                    self.fields['montant_re'].widget.attrs['readonly'] = True
 
     def clean(self):
         cleaned_data = self.cleaned_data
@@ -205,17 +206,18 @@ class DepenseForm(forms.ModelForm):
         self.fields['annee'].initial = int(annee)
 
         if instance and instance.pk:
-            nature = self.natures[instance.naturecomptabledepense_id]
-            self.fields['enveloppe'].initial = nature.enveloppe
-            self.fields['naturecomptabledepense'].choices += [
-                (pk, str(n)) for pk, n in self.natures.items()\
-                    if n.enveloppe == nature.enveloppe]
-            self.fields['naturecomptabledepense'].initial = nature
-            if not nature.is_decalage_tresorerie and\
-               not self.is_dfi_member_or_admin:
-                self.fields['montant_cp'].widget.attrs['readonly'] = True
-            if not self.is_dfi_member_or_admin:
-                self.fields['montant_dc'].widget.attrs['readonly'] = True
+            nature = self.natures.get(instance.naturecomptabledepense_id)
+            if nature:
+                self.fields['enveloppe'].initial = nature.enveloppe
+                self.fields['naturecomptabledepense'].choices += [
+                    (pk, str(n)) for pk, n in self.natures.items()\
+                        if n.enveloppe == nature.enveloppe]
+                self.fields['naturecomptabledepense'].initial = nature
+                if not nature.is_decalage_tresorerie and\
+                   not self.is_dfi_member_or_admin:
+                    self.fields['montant_cp'].widget.attrs['readonly'] = True
+                if not self.is_dfi_member_or_admin:
+                    self.fields['montant_dc'].widget.attrs['readonly'] = True
 
     def clean(self):
         cleaned_data = self.cleaned_data
