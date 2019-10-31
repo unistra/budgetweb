@@ -1,4 +1,3 @@
-from collections import OrderedDict
 import datetime
 from decimal import Decimal
 
@@ -24,9 +23,8 @@ class RecetteFormTest(TestCase):
         self.pfi = PlanFinancement.objects.get(structure__code='ECP')
         self.naturecomptable = NatureComptableRecette.objects.get(
             code_nature_comptable='9RSCS', is_fleche=self.pfi.is_fleche)
-        self.natures = OrderedDict(((n.pk, n) for n in
-                                    NatureComptableRecette.objects.filter(
-                                                is_fleche=self.pfi.is_fleche)))
+        self.natures = {n.pk: n for n in NatureComptableRecette.objects
+                        .filter(is_fleche=self.pfi.is_fleche)}
         self.user1 = User.objects.create_user('user1')
 
     def test_add_recette(self):
@@ -45,7 +43,7 @@ class RecetteFormTest(TestCase):
             'annee': self.periode.annee,
             'periodebudget': self.periode,
             'pfi': self.pfi,
-            'is_dfi_member_or_admin': True,
+            'is_dfi': True,
             'natures': self.natures,
             'user': self.user1
         }
@@ -77,7 +75,7 @@ class RecetteFormTest(TestCase):
             'annee': self.periode.annee,
             'periodebudget': self.periode,
             'pfi': self.pfi,
-            'is_dfi_member_or_admin': True,
+            'is_dfi': True,
             'natures': self.natures,
             'user': self.user1
         }
@@ -109,7 +107,7 @@ class RecetteFormTest(TestCase):
             'annee': self.periode.annee,
             'periodebudget': self.periode,
             'pfi': self.pfi,
-            'is_dfi_member_or_admin': False,
+            'is_dfi': False,
             'natures': self.natures,
             'user': self.user1
         }
@@ -141,7 +139,7 @@ class RecetteFormTest(TestCase):
             'annee': self.periode.annee,
             'periodebudget': self.periode,
             'pfi': self.pfi,
-            'is_dfi_member_or_admin': False,
+            'is_dfi': False,
             'natures': self.natures,
             'user': self.user1
         }
@@ -173,7 +171,7 @@ class RecetteFormTest(TestCase):
             'annee': self.periode.annee,
             'periodebudget': self.periode,
             'pfi': self.pfi,
-            'is_dfi_member_or_admin': False,
+            'is_dfi': False,
             'natures': self.natures,
             'user': self.user1
         }
@@ -205,7 +203,7 @@ class RecetteFormTest(TestCase):
             'annee': self.periode.annee,
             'periodebudget': self.periode,
             'pfi': self.pfi,
-            'is_dfi_member_or_admin': False,
+            'is_dfi': False,
             'natures': self.natures,
             'user': self.user1
         }
@@ -236,7 +234,7 @@ class RecetteFormTest(TestCase):
             'annee': self.periode.annee,
             'periodebudget': self.periode,
             'pfi': self.pfi,
-            'is_dfi_member_or_admin': False,
+            'is_dfi': False,
             'natures': self.natures,
             'user': self.user1
         }
@@ -262,7 +260,7 @@ class RecetteFormTest(TestCase):
             'annee': self.periode.annee,
             'periodebudget': self.periode,
             'pfi': self.pfi,
-            'is_dfi_member_or_admin': True,
+            'is_dfi': True,
             'natures': self.natures,
             'user': self.user1
         }
@@ -282,7 +280,7 @@ class RecetteFormTest(TestCase):
             'annee': self.periode.annee,
             'periodebudget': self.periode,
             'pfi': self.pfi,
-            'is_dfi_member_or_admin': True,
+            'is_dfi': True,
             'natures': self.natures,
             'user': self.user1
         }
@@ -311,7 +309,7 @@ class RecetteFormTest(TestCase):
             'annee': self.periode.annee,
             'periodebudget': self.periode,
             'pfi': self.pfi,
-            'is_dfi_member_or_admin': False,
+            'is_dfi': False,
             'natures': self.natures,
             'user': self.user1
         }
@@ -340,7 +338,7 @@ class RecetteFormTest(TestCase):
             'annee': self.periode.annee,
             'periodebudget': self.periode,
             'pfi': self.pfi,
-            'is_dfi_member_or_admin': False,
+            'is_dfi': False,
             'natures': self.natures,
             'user': self.user1
         }
@@ -371,9 +369,8 @@ class DepenseFormTest(TestCase):
         # 9DAMO : Non budgétaire
         # 9DCFG : PI CFG
         self.liste_nature_code = ['9DLOC', '9DAMO', '9DCFG']
-        self.natures = OrderedDict(((n.pk, n) for n in
-                                    NatureComptableDepense.objects.filter(
-                                                is_fleche=self.pfi.is_fleche)))
+        self.natures = {n.pk: n for n in NatureComptableDepense.objects
+                        .filter(is_fleche=self.pfi.is_fleche)}
         self.domaines = [
             (d.pk, str(d)) for d in DomaineFonctionnel.active.all()]
         self.user1 = User.objects.create_user('user1')
@@ -433,7 +430,7 @@ class DepenseFormTest(TestCase):
             'annee': self.periode.annee,
             'periodebudget': self.periode,
             'pfi': self.pfi,
-            'is_dfi_member_or_admin': is_admin_or_not,
+            'is_dfi': is_admin_or_not,
             'natures': self.natures,
             'domaines': self.domaines,
             'user': self.user1
@@ -462,7 +459,7 @@ class DepenseFormTest(TestCase):
             'annee': self.periode.annee,
             'periodebudget': self.periode,
             'pfi': self.pfi,
-            'is_dfi_member_or_admin': False,
+            'is_dfi': False,
             'natures': self.natures,
             'domaines': self.domaines,
             'user': self.user1
@@ -497,7 +494,7 @@ class DepenseFormTest(TestCase):
             'annee': self.periode.annee,
             'periodebudget': self.periode,
             'pfi': self.pfi,
-            'is_dfi_member_or_admin': False,
+            'is_dfi': False,
             'natures': self.natures,
             'domaines': self.domaines,
             'user': self.user1
@@ -532,7 +529,7 @@ class DepenseFormTest(TestCase):
             'annee': self.periode.annee,
             'periodebudget': self.periode,
             'pfi': self.pfi,
-            'is_dfi_member_or_admin': False,
+            'is_dfi': False,
             'natures': self.natures,
             'domaines': self.domaines,
             'user': self.user1
@@ -566,7 +563,7 @@ class DepenseFormTest(TestCase):
             'annee': self.periode.annee,
             'periodebudget': self.periode,
             'pfi': self.pfi,
-            'is_dfi_member_or_admin': False,
+            'is_dfi': False,
             'natures': self.natures,
             'domaines': self.domaines,
             'user': self.user1
@@ -601,7 +598,7 @@ class DepenseFormTest(TestCase):
             'annee': self.periode.annee,
             'periodebudget': self.periode,
             'pfi': self.pfi,
-            'is_dfi_member_or_admin': False,
+            'is_dfi': False,
             'natures': self.natures,
             'domaines': self.domaines,
             'user': self.user1
@@ -634,7 +631,7 @@ class DepenseFormTest(TestCase):
             'annee': self.periode.annee,
             'periodebudget': self.periode,
             'pfi': self.pfi,
-            'is_dfi_member_or_admin': False,
+            'is_dfi': False,
             'natures': self.natures,
             'domaines': self.domaines,
             'user': self.user1
@@ -662,7 +659,7 @@ class DepenseFormTest(TestCase):
             'annee': self.periode.annee,
             'periodebudget': self.periode,
             'pfi': self.pfi,
-            'is_dfi_member_or_admin': True,
+            'is_dfi': True,
             'natures': self.natures,
             'domaines': self.domaines,
             'user': self.user1
@@ -691,7 +688,7 @@ class DepenseFormTest(TestCase):
             'annee': self.periode.annee,
             'periodebudget': self.periode,
             'pfi': self.pfi,
-            'is_dfi_member_or_admin': True,
+            'is_dfi': True,
             'natures': self.natures,
             'domaines': self.domaines,
             'user': self.user1
@@ -723,7 +720,7 @@ class DepenseFormTest(TestCase):
             'annee': self.periode.annee,
             'periodebudget': self.periode,
             'pfi': self.pfi,
-            'is_dfi_member_or_admin': False,
+            'is_dfi': False,
             'natures': self.natures,
             'domaines': self.domaines,
             'user': self.user1
@@ -755,7 +752,7 @@ class DepenseFormTest(TestCase):
             'annee': self.periode.annee,
             'periodebudget': self.periode,
             'pfi': self.pfi,
-            'is_dfi_member_or_admin': False,
+            'is_dfi': False,
             'natures': self.natures,
             'domaines': self.domaines,
             'user': self.user1
@@ -790,7 +787,7 @@ class DepenseFormTest(TestCase):
             'annee': self.periode.annee,
             'periodebudget': self.periode,
             'pfi': self.pfi,
-            'is_dfi_member_or_admin': True,
+            'is_dfi': True,
             'natures': self.natures,
             'domaines': self.domaines,
             'user': self.user1

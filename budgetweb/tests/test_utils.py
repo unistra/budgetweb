@@ -1,7 +1,7 @@
 import datetime
 from decimal import Decimal
 
-from django.contrib.auth.models import User
+from django.contrib.auth.models import Group, User
 from django.test import TestCase
 
 from budgetweb.apps.structure.models import (
@@ -9,7 +9,7 @@ from budgetweb.apps.structure.models import (
     PlanFinancement, Structure)
 from budgetweb.utils import (
     get_authorized_structures_ids, get_current_year, get_pfi_total,
-    get_pfi_years)
+    get_pfi_years, in_groups)
 from ..models import Depense, PeriodeBudget, Recette
 
 
@@ -41,6 +41,18 @@ class UtilsTest(TestCase):
             len(get_authorized_structures_ids(admin_user)[0]),
             len(active_structures)
         )
+
+    def test_in_groups(self):
+        admin_user = User.objects.create_superuser(
+            'admin', email='admin@unistra.fr', password='pass')
+        self.assertTrue(in_groups(admin_user, 'unexisting'))
+        self.assertFalse(in_groups(admin_user, 'unexisting', superuser=False))
+
+        user = User.objects.create_user('user_in_groups')
+        group = Group.objects.create(name='existing')
+        self.assertFalse(in_groups(user, 'existing'))
+        user.groups.add(group)
+        self.assertTrue(in_groups(user, 'existing'))
 
 
 class PFIUtilsTest(TestCase):

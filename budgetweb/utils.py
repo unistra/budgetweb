@@ -15,14 +15,21 @@ def get_current_year():
         return None
 
 
+def in_groups(user, *groups, superuser=True):
+    return any([
+        user.is_superuser if superuser else False,
+        user.groups.filter(name__in=groups).exists()
+    ])
+
+
 def get_authorized_structures_ids(user):
     """
     Return a tuple of authorized structures and the authorized structures with
     the full ascending hierarchy
     """
     if user.is_superuser:
-        user_structures = list(Structure.active.all()
-            .values_list('pk', flat=True))
+        user_structures = list(
+            Structure.active.all().values_list('pk', flat=True))
         return (user_structures, user_structures)
     else:
         try:
