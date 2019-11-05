@@ -1,12 +1,20 @@
+stages:
+  - test
+
 services:
-  - postgres
+  - postgres:9.5
 
 variables:
   POSTGRES_DB: budgetweb
   POSTGRES_USER: budgetweb
   POSTGRES_PASSWORD: budgetweb
 
-
 unittest:
+  stage: test
+  tags:
+    - python3.6
   script:
-  - tox
+    - pip3 install -r requirements/dev.txt
+    - coverage erase
+    - coverage run manage.py test budgetweb --settings=budgetweb.settings.unittest
+    - coverage report
