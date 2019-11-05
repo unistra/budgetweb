@@ -42,11 +42,12 @@ class StructureAuthorizations(models.Model):
     Gestion des autorisations utilisateurs sur les CF
     Possibilités: * P* PAIE* ou un nom précis
     """
-    user = models.OneToOneField(to=settings.AUTH_USER_MODEL,
-                                verbose_name=_('User'))
-    structures = models.ManyToManyField('structure.Structure',
-                                        related_name='authorized_structures',
-                                        verbose_name=_('structures'))
+    user = models.OneToOneField(
+        to=settings.AUTH_USER_MODEL, verbose_name=_('User'),
+        on_delete=models.CASCADE)
+    structures = models.ManyToManyField(
+        'structure.Structure', related_name='authorized_structures',
+        verbose_name=_('structures'))
 
     class Meta:
         verbose_name = _('structure authorizations')
@@ -94,7 +95,8 @@ class PeriodeBudget(models.Model):
     sont saisies pour une période
     """
 
-    period = models.ForeignKey(Period, verbose_name=_('Period'))
+    period = models.ForeignKey(Period, verbose_name=_('Period'),
+                               on_delete=models.CASCADE)
     annee = models.PositiveIntegerField('Année')
     is_active = models.BooleanField('Activé (oui/non)', default=True)
 
@@ -146,11 +148,12 @@ class PeriodeBudget(models.Model):
 
 
 class StructureMontant(models.Model):
-    structure = models.ForeignKey('structure.Structure',
-                                  verbose_name=_('structure'))
-    periodebudget = models.ForeignKey('PeriodeBudget',
-                                      verbose_name=_('budget period'),
-                                      related_name='periodebudgetmontants')
+    structure = models.ForeignKey(
+        'structure.Structure', verbose_name=_('structure'),
+        on_delete=models.CASCADE)
+    periodebudget = models.ForeignKey(
+        'PeriodeBudget', verbose_name=_('budget period'),
+        related_name='periodebudgetmontants', on_delete=models.CASCADE)
     annee = models.PositiveIntegerField(verbose_name='Année')
     depense_montant_dc = models.DecimalField(
         max_digits=12, decimal_places=2, default=Decimal(0))
@@ -176,22 +179,24 @@ class StructureMontant(models.Model):
 
 
 class Comptabilite(models.Model):
-    pfi = models.ForeignKey('structure.PlanFinancement',
-                            verbose_name='Plan de financement')
-    structure = models.ForeignKey('structure.Structure',
-                                  verbose_name='Centre financier')
+    pfi = models.ForeignKey(
+        'structure.PlanFinancement', verbose_name='Plan de financement',
+        on_delete=models.CASCADE)
+    structure = models.ForeignKey(
+        'structure.Structure', verbose_name='Centre financier',
+        on_delete=models.CASCADE)
     commentaire = models.TextField(blank=True, null=True)
     lienpiecejointe = models.CharField(max_length=255,
                                        verbose_name='Lien vers un fichier',
                                        validators=[URLValidator()],
                                        blank=True, null=True)
-    periodebudget = models.ForeignKey('PeriodeBudget',
-                                      verbose_name='Période budgétaire')
+    periodebudget = models.ForeignKey(
+        'PeriodeBudget', verbose_name='Période budgétaire',
+        on_delete=models.CASCADE)
     annee = models.PositiveIntegerField(verbose_name='Année')
     virement = models.ForeignKey(
-        'Virement',
-        verbose_name="Renvoie vers le virement correspondant s'il existe",
-        null=True, blank=True)
+        'Virement', null=True, blank=True, on_delete=models.CASCADE,
+        verbose_name="Renvoie vers le virement correspondant s'il existe")
     creele = models.DateTimeField(auto_now_add=True, blank=True)
     creepar = models.CharField(max_length=100, blank=True, null=True)
     modifiele = models.DateTimeField(verbose_name='Date de modification',
@@ -291,10 +296,12 @@ class Depense(Comptabilite):
         verbose_name='Montant Autorisation d\'Engagement',
         max_digits=12, decimal_places=2, blank=True, null=True)
     fonds = models.CharField(max_length=100, default='NA', editable=False)
-    domainefonctionnel = models.ForeignKey('structure.DomaineFonctionnel',
-                                           verbose_name='Domaine fonctionnel')
+    domainefonctionnel = models.ForeignKey(
+        'structure.DomaineFonctionnel', verbose_name='Domaine fonctionnel',
+        on_delete=models.CASCADE)
     naturecomptabledepense = models.ForeignKey(
-        'structure.NatureComptableDepense', verbose_name='Nature Comptable')
+        'structure.NatureComptableDepense', verbose_name='Nature Comptable',
+        on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = _('expense')
@@ -319,7 +326,8 @@ class Recette(Comptabilite):
     domainefonctionnel = models.CharField(max_length=100, default='NA',
                                           editable=False)
     naturecomptablerecette = models.ForeignKey(
-        'structure.NatureComptableRecette', verbose_name='Nature Comptable')
+        'structure.NatureComptableRecette', verbose_name='Nature Comptable',
+        on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = _('receipt')

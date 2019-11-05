@@ -37,7 +37,8 @@ class Structure(models.Model):
     label = models.CharField(_('Label'), max_length=255)
     parent = models.ForeignKey(
         'Structure', blank=True, null=True, related_name='fils',
-        verbose_name=u'Lien direct vers la structure parent')
+        verbose_name=u'Lien direct vers la structure parent',
+        on_delete=models.CASCADE)
     groupe1 = models.CharField(_('BudgetWeb group 1'), max_length=255,
                                blank=True, null=True)
     groupe2 = models.CharField(_('BudgetWeb group 2'), max_length=255,
@@ -105,8 +106,8 @@ class PlanFinancement(models.Model):
     """
     Gestion des Plans de financement. En cours de précisions
     """
-    structure = models.ForeignKey('Structure',
-                                  verbose_name=_('structure'))
+    structure = models.ForeignKey(
+        'Structure', verbose_name=_('structure'), on_delete=models.CASCADE)
     code = models.CharField(_('Code'), max_length=100, default='NA')
     label = models.CharField(_('Label'), max_length=255)
     eotp = models.CharField(_('EOTP short label'), max_length=100)

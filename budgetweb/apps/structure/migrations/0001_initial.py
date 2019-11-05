@@ -104,7 +104,7 @@ class Migration(migrations.Migration):
                 ('is_active', models.BooleanField(default=True, max_length=100, verbose_name='Is active')),
                 ('depth', models.PositiveIntegerField(verbose_name='Depth')),
                 ('path', models.TextField(blank=True, verbose_name='Path')),
-                ('parent', models.ForeignKey(null=True, to='structure.Structure', blank=True, related_name='fils', verbose_name='Lien direct vers la structure parent')),
+                ('parent', models.ForeignKey(null=True, to='structure.Structure', blank=True, related_name='fils', verbose_name='Lien direct vers la structure parent', on_delete=models.CASCADE)),
             ],
             options={
                 'ordering': ['code'],
@@ -115,7 +115,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='planfinancement',
             name='structure',
-            field=models.ForeignKey(to='structure.Structure', verbose_name='structure'),
+            field=models.ForeignKey(to='structure.Structure', verbose_name='structure', on_delete=models.CASCADE),
         ),
     ]
 
