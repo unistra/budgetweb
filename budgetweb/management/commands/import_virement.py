@@ -25,27 +25,29 @@ class Command(BaseCommand):
     list_cf_error = []
 
     def add_arguments(self, parser):
+        current_year = get_current_year()
         parser.add_argument('filename', nargs='+')
+        parser.add_argument(
+            '-p', dest='period', help='Period (default: VIR)',
+            metavar='PERIOD', default='VIR')
+        parser.add_argument(
+            '-y', dest='year', help=f'Year (default: {current_year})',
+            type=int, metavar='YEAR', default=current_year)
 
     def handle(self, *args, **options):
-        if options.get('filename'):
-            with open(options.get('filename')[0]) as json_data:
-                data = json.load(json_data)
-        else:
-            client = britney_utils.get_client(
-                'test',
-                settings.SIFACWS_DESC,
-                middlewares=(
-                   (auth.ApiKey, {
-                       'key_name': 'Authorization',
-                       'key_value': 'Token %s' % settings.SIFACWS_APIKEY
-                   }),
-                ),
-                base_url=settings.SIFACWS_URL,
-            )
-            params = {'format': 'json'}
-            ct = client.list_transfers(creation_date='20170501', **params)
-            data = json.loads(ct.content.decode('utf-8'))
+        print(f'Options : {options}')
+        self.year = options.get('year')
+        try:
+            self.period = PeriodeBudget.objects.get(
+                annee=self.year,
+                period__code__startswith=options.get('period'))
+        except (PeriodeBudget.DoesNotExist,
+                PeriodeBudget.MultipleObjectsReturned) as e:
+            print("Something wrong with Periode %s (%s)" % (self.year, e))
+            raise CreationVirementException()
+
+        with open(options.get('filename')[0]) as json_data:
+            data = json.load(json_data)
 
         # Traitement des résultats un par un.
         for virement_info in data:
@@ -56,13 +58,13 @@ class Command(BaseCommand):
 
             doc_number = vir_header['DOCUMENT']
             doc_year = vir_header['DOC_YEAR']
+
             # Suppression des virements qui ne sont pas dans l'année.
-            if doc_year != str(get_current_year()):
+            if doc_year != str(self.year):
                 print('DOC_YEAR (%s) ne match pas (%s)' % (doc_year, "2018"))
                 continue
 
-            datestring = vir_header['CRTDATE'] + " " + vir_header['CRTTIME'] +\
-                                                 " +0200"
+            datestring = vir_header['CRTDATE'] + " " + vir_header['CRTTIME']
             if vir_header['PROCESS'] != 'TRAN':
                 print('Le process du virement (%s) ne match pas (%s)'
                       % (doc_number, vir_header['PROCESS']))
@@ -72,7 +74,7 @@ class Command(BaseCommand):
                 print('La version du virement (%s) ne match pas (%s)'
                       % (doc_number, vir_header['VERSION']))
                 continue
-            vir_date = datetime.strptime(datestring, '%Y-%m-%d %H:%M:%S %z')
+            vir_date = datetime.strptime(datestring, '%Y-%m-%d %H:%M:%S')
             vir = 0
 
             with transaction.atomic():
@@ -124,9 +126,6 @@ class Command(BaseCommand):
         try:
             cf = Structure.objects.get(code=cf_code)
             pfi = PlanFinancement.objects.get(code=pfi_code, structure=cf)
-            period = PeriodeBudget.objects.get(
-                annee=get_current_year(),
-                period__code__startswith="VIR")
         except (Structure.DoesNotExist,
                 Structure.MultipleObjectsReturned) as e:
             print("Something wrong with CF %s (%s)" % (cf_code, e))
@@ -148,11 +147,6 @@ class Command(BaseCommand):
             print("Something wrong with PFI %s on CF %s (%s)" % (pfi_code,
                   cf_code, e))
             self.list_pfi_error.append(pfi_code)
-            raise CreationVirementException()
-        except (PeriodeBudget.DoesNotExist,
-                PeriodeBudget.MultipleObjectsReturned) as e:
-            print("Something wrong with Periode %s (%s)" % (
-                get_current_year(), e))
             raise CreationVirementException()
 
         type_budget = item_data['BUDCAT']
@@ -176,9 +170,9 @@ class Command(BaseCommand):
             code_compte_budgetaire = item_data['CMMT_ITEM']
             try:
                 naturecomptabledep = NatureComptableDepense.active.get(
-                                code_compte_budgetaire=code_compte_budgetaire)
+                    code_compte_budgetaire=code_compte_budgetaire)
                 domaine = DomaineFonctionnel.active.get(
-                                code=item_data['FUNC_AREA'])
+                    code=item_data['FUNC_AREA'])
             except (NatureComptableDepense.DoesNotExist,
                     NatureComptableDepense.MultipleObjectsReturned) as e:
                 print("Something wrong with NCD %s (%s)" % (
@@ -194,10 +188,10 @@ class Command(BaseCommand):
                 item_data['ITEM_TEXT'], virement.document_number)
             fonds = item_data['FUND']
             dep = Depense.objects.create(
-                structure=cf, pfi=pfi, periodebudget=period,
+                structure=cf, pfi=pfi, periodebudget=self.period,
                 naturecomptabledepense=naturecomptabledep,
-                domainefonctionnel=domaine, annee=period.annee, fonds=fonds,
-                montant_ae=montant_ae, montant_cp=montant_cp,
+                domainefonctionnel=domaine, annee=self.period.annee,
+                fonds=fonds, montant_ae=montant_ae, montant_cp=montant_cp,
                 montant_dc=montant_dc, commentaire=commentaire,
                 virement=virement)
 
@@ -221,7 +215,7 @@ class Command(BaseCommand):
             code_compte_budgetaire = item_data['CMMT_ITEM']
             try:
                 naturecomptablerecette = NatureComptableRecette.active.get(
-                                code_compte_budgetaire=code_compte_budgetaire)
+                    code_compte_budgetaire=code_compte_budgetaire)
             except (NatureComptableRecette.DoesNotExist,
                     NatureComptableRecette.MultipleObjectsReturned) as e:
                 print("Something wrong with NCR %s (%s)" % (
@@ -232,9 +226,9 @@ class Command(BaseCommand):
                 item_data['ITEM_TEXT'], virement.document_number)
             fonds = item_data['FUND']
             rec = Recette.objects.create(
-                structure=cf, pfi=pfi, periodebudget=period,
+                structure=cf, pfi=pfi, periodebudget=self.period,
                 naturecomptablerecette=naturecomptablerecette,
-                annee=period.annee,
+                annee=self.period.annee,
                 montant_ar=montant_ar, montant_re=montant_re,
                 montant_dc=montant_dc, commentaire=commentaire,
                 virement=virement)
