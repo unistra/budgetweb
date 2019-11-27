@@ -28,18 +28,17 @@ class Command(BaseCommand):
         current_year = get_current_year()
         parser.add_argument('filename', nargs='+')
         parser.add_argument(
-            '-p', dest='period', help='Period (default: VIR)',
-            metavar='PERIOD', default='VIR')
+            '-p', dest='period', help='Period', metavar='PERIOD')
         parser.add_argument(
             '-y', dest='year', help=f'Year (default: {current_year})',
             type=int, metavar='YEAR', default=current_year)
 
     def handle(self, *args, **options):
         self.year = options.get('year')
+        assert options.get('period'), "Missing period in parameter"
         try:
             self.period = PeriodeBudget.objects.get(
-                annee=self.year,
-                period__code__startswith=options.get('period'))
+                annee=self.year, period__code=options.get('period'))
         except (PeriodeBudget.DoesNotExist,
                 PeriodeBudget.MultipleObjectsReturned) as e:
             print("Something wrong with Periode %s (%s)" % (self.year, e))
