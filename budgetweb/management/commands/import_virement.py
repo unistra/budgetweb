@@ -35,7 +35,6 @@ class Command(BaseCommand):
             type=int, metavar='YEAR', default=current_year)
 
     def handle(self, *args, **options):
-        print(f'Options : {options}')
         self.year = options.get('year')
         try:
             self.period = PeriodeBudget.objects.get(
