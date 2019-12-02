@@ -122,8 +122,8 @@ class Command(BaseCommand):
         cf_code = item_data['FUNDS_CTR']
         pfi_code = item_data['MEASURE']
         try:
-            cf = Structure.objects.get(code=cf_code)
-            pfi = PlanFinancement.objects.get(code=pfi_code, structure=cf)
+            cf = Structure.active.get(code=cf_code)
+            pfi = PlanFinancement.active.get(code=pfi_code, structure=cf)
         except (Structure.DoesNotExist,
                 Structure.MultipleObjectsReturned) as e:
             print("Something wrong with CF %s (%s)" % (cf_code, e))
