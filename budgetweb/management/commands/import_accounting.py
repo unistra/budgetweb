@@ -2,6 +2,7 @@ import csv
 from decimal import Decimal
 
 from django.core.management.base import BaseCommand
+from django.db import transaction
 
 from budgetweb import models
 from budgetweb.apps.structure import models as structure_models
@@ -19,7 +20,9 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
+        accountings = []
         period = models.PeriodeBudget.active.first()
+        errors = []
 
         # Structure du fichier :
 
@@ -55,32 +58,63 @@ class Command(BaseCommand):
             with open(filename, encoding='iso-8859-1') as h:
                 reader = csv.reader(h, delimiter=';', quotechar='"')
                 for index, row in enumerate(reader):
+                    self.row_errors = []
                     if index == 0:
                         # Ignore header
                         continue
+
                     (year, structure, pfi, accounting_type, enveloppe, nature,
                      domain, ae, cp, d_dc, ar, re, r_dc, commentary) = row
+
                     if accounting_type.lower().startswith('d'):
                         # Dépense
                         model = models.Depense
+                        nature = self.get_object(dan, nature, 'nature')
+                        functional_domain = self.get_object(
+                            domains, domain, 'domaine fonctionnel')
+
                         amounts = {
                             'montant_dc': to_decimal(d_dc),
                             'montant_cp': to_decimal(cp),
                             'montant_ae': to_decimal(ae),
-                            'naturecomptabledepense': dan[nature],
-                            'domainefonctionnel': domains[domain],
+                            'naturecomptabledepense': nature,
+                            'domainefonctionnel': functional_domain,
                         }
                     else:
                         # Recette
                         model = models.Recette
+                        nature = self.get_object(ran, nature, 'nature')
+
                         amounts = {
                             'montant_dc': to_decimal(d_dc),
                             'montant_re': to_decimal(re),
                             'montant_ar': to_decimal(ar),
-                            'naturecomptablerecette': ran[nature],
+                            'naturecomptablerecette': nature,
                             'domainefonctionnel': domain,
                         }
-                    model.objects.create(
+
+                    accountings.append(model(
                         pfi=pfis[pfi], structure=structures[structure],
                         commentaire=commentary or None,
-                        periodebudget=period, annee=year, **amounts)
+                        periodebudget=period, annee=year, **amounts))
+
+                    errors.extend(self.row_errors)
+
+        if errors:
+            print('ERRORS :\n\n{}'.format('\n'.join(errors)))
+        else:
+            sid = transaction.savepoint()
+            try:
+                for obj in accountings:
+                    obj.save()
+            except Exception as e:
+                print(f'Exception on save : {e}')
+                transaction.savepoint_rollback(sid)
+            else:
+                transaction.savepoint_commit(sid)
+
+    def get_object(self, dict, key, name):
+        try:
+            return dict[key]
+        except KeyError:
+            self.row_errors.append(f'{name.title()} "{key}" does not exist')
