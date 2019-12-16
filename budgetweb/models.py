@@ -178,6 +178,7 @@ class StructureMontant(models.Model):
 class Comptabilite(models.Model):
     pfi = models.ForeignKey('structure.PlanFinancement',
                             verbose_name='Plan de financement')
+    # TODO: useful ? structure is already in PFI
     structure = models.ForeignKey('structure.Structure',
                                   verbose_name='Centre financier')
     commentaire = models.TextField(blank=True, null=True)
