@@ -107,6 +107,7 @@ class Command(BaseCommand):
             try:
                 for obj in accountings:
                     obj.save()
+                print(f'{len(accountings)} accountings created')
             except Exception as e:
                 print(f'Exception on save : {e}')
                 transaction.savepoint_rollback(sid)
