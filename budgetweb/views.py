@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from collections import OrderedDict
 from decimal import Decimal
 from itertools import chain, groupby
 import json
@@ -30,7 +29,7 @@ from .models import Depense, PeriodeBudget, Recette
 from .templatetags.budgetweb_tags import sum_montants
 from .utils import (
     get_authorized_structures_ids, get_detail_pfi_by_period,
-    get_pfi_total_types, get_pfi_years, get_updatable_periods,
+    get_pfi_total_types, get_pfi_years, get_updatable_periods, in_groups,
     tree_infos, get_selected_year)
 
 
@@ -106,11 +105,11 @@ def api_set_dcfield_value_by_id(request):
     try:
         is_dfi_member = request.user.groups.filter(
             name=settings.DFI_GROUP_NAME).exists()
-        is_dfi_member_or_admin = is_dfi_member or request.user.is_superuser
+        is_dfi = is_dfi_member or request.user.is_superuser
         pk = int(request.GET.get('pk'))
         type_compta = request.GET.get('type')
         montant = request.GET.get('montant').replace(',', '.')
-        if is_dfi_member_or_admin:
+        if is_dfi:
             if type_compta == "depense":
                 compta = Depense.objects.get(pk=pk)
             else:
@@ -243,31 +242,26 @@ def depense(request, pfiid, annee):
     if int(annee) < periodebudget.annee and not pfi.is_pluriannuel:
         return HttpResponseRedirect('/detailspfi/%s' % pfiid)
 
-    is_dfi_member = request.user.groups.filter(name=settings.DFI_GROUP_NAME).exists()
-    is_dfi_member_or_admin = is_dfi_member or request.user.is_superuser
-    natures = OrderedDict(((n.pk, n) for n in\
-        NatureComptableDepense.objects.filter(is_fleche=pfi.is_fleche).order_by('priority','ordre')))
+    is_dfi = in_groups(request.user, settings.DFI_GROUP_NAME)
+    natures = {n.pk: n for n in NatureComptableDepense.objects
+               .filter(is_fleche=pfi.is_fleche).order_by('priority', 'ordre')}
     domaines = [(d.pk, str(d)) for d in DomaineFonctionnel.active.all()]
 
     DepenseFormSet = modelformset_factory(
-        Depense,
+        Depense, exclude=[], extra=3, can_delete=True,
         form=modelformset_factory_with_kwargs(
             DepenseForm, pfi=pfi, periodebudget=periodebudget, annee=annee,
-            is_dfi_member_or_admin=is_dfi_member_or_admin, natures=natures,
-            domaines=domaines, user=request.user
-        ),
-        exclude=[],
-        extra=3,
-        can_delete=True
+            is_dfi=is_dfi, natures=natures, domaines=domaines,
+            user=request.user
+        )
     )
-    formset = DepenseFormSet(queryset=Depense.objects.filter(
-        pfi=pfi,
-        annee=annee,
-        periodebudget=periodebudget
-    ).order_by('naturecomptabledepense__priority', '-montant_ae'))
+    formset_query = Depense.objects\
+        .filter(pfi=pfi, annee=annee, periodebudget=periodebudget)\
+        .order_by('naturecomptabledepense__priority', '-montant_ae')
+    formset = DepenseFormSet(queryset=formset_query)
 
     if request.method == "POST":
-        formset = DepenseFormSet(request.POST)
+        formset = DepenseFormSet(request.POST, queryset=formset_query)
         if formset.is_valid():
             formset.save()
             return HttpResponseRedirect('/detailspfi/%s' % pfi.pk)
@@ -276,7 +270,7 @@ def depense(request, pfiid, annee):
         'PFI': pfi,
         'formset': formset,
         'currentYear': annee,
-        'is_dfi_member_or_admin': is_dfi_member_or_admin,
+        'is_dfi': is_dfi,
         'form_template': 'depense.html'
 
     }
@@ -295,28 +289,24 @@ def recette(request, pfiid, annee):
     if int(annee) < periodebudget.annee and not pfi.is_pluriannuel:
         return HttpResponseRedirect('/detailspfi/%s' % pfiid)
 
-    is_dfi_member = request.user.groups.filter(name=settings.DFI_GROUP_NAME).exists()
-    is_dfi_member_or_admin = is_dfi_member or request.user.is_superuser
-    natures = OrderedDict(((n.pk, n) for n in\
-        NatureComptableRecette.objects.filter(is_fleche=pfi.is_fleche).order_by('priority', 'ordre')))
+    is_dfi = in_groups(request.user, settings.DFI_GROUP_NAME)
+    natures = {n.pk: n for n in NatureComptableRecette.objects
+               .filter(is_fleche=pfi.is_fleche).order_by('priority', 'ordre')}
 
     RecetteFormSet = modelformset_factory(
-        Recette,
+        Recette, exclude=[], extra=3, can_delete=True,
         form=modelformset_factory_with_kwargs(
             RecetteForm, pfi=pfi, periodebudget=periodebudget, annee=annee,
-            is_dfi_member_or_admin=is_dfi_member_or_admin, natures=natures,
-            user=request.user
-        ),
-        exclude=[],
-        extra=3,
-        can_delete=True
+            is_dfi=is_dfi, natures=natures, user=request.user
+        )
     )
-    formset = RecetteFormSet(queryset=Recette.objects.filter(
-        pfi=pfi, annee=annee, periodebudget=periodebudget
-    ).order_by('naturecomptablerecette__priority', '-montant_ar'))
+    formset_query = Recette.objects\
+        .filter(pfi=pfi, annee=annee, periodebudget=periodebudget)\
+        .order_by('naturecomptablerecette__priority', '-montant_ar')
+    formset = RecetteFormSet(queryset=formset_query)
 
     if request.method == "POST":
-        formset = RecetteFormSet(request.POST)
+        formset = RecetteFormSet(request.POST, queryset=formset_query)
         if formset.is_valid():
             formset.save()
             return HttpResponseRedirect('/detailspfi/%s' % pfi.pk)
@@ -325,7 +315,7 @@ def recette(request, pfiid, annee):
         'PFI': pfi,
         'formset': formset,
         'currentYear': annee,
-        'is_dfi_member_or_admin': is_dfi_member_or_admin,
+        'is_dfi': is_dfi,
         'form_template': 'recette.html'
     }
     return render(request, 'comptabilite.html', context)
@@ -409,6 +399,7 @@ def detailspfi(request, pfiid):
 @is_authorized_structure
 def detailscf(request, structid):
     to_dict = lambda x: {k: list(v) for k, v in x}
+    active_period = PeriodeBudget.active.select_related('period').first()
     structparent = Structure.objects.get(id=structid)
     liste_structure = list(structparent.get_unordered_children())
     liste_structure.insert(0, structparent)
@@ -466,7 +457,8 @@ def detailscf(request, structid):
     context = {
         'cf': structparent, 'currentYear': current_year,
         'resume_depenses': resume_depenses, 'resume_recettes': resume_recettes,
-        'years': years, 'periods': periods
+        'years': years, 'periods': periods,
+        'updatable_periods': get_updatable_periods(active_period)
     }
 
     if structparent.depth > 2 or\
@@ -485,7 +477,6 @@ def detailscf(request, structid):
             'listeDepense': depenses, 'listeRecette': recettes,
             'sommeDepense': sum_depenses, 'sommeRecette': sum_recettes
         })
-
     return render(request, 'detailscf.html', context)
 
 

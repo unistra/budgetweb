@@ -18,7 +18,7 @@
 <script src="{% static 'js/jquery.formset.js' %}"></script>
 <script>
     $(document).ready(function() {
-      var is_dfi_member_or_admin = {{ is_dfi_member_or_admin|yesno:"true,false" }};
+      var is_dfi = {{ is_dfi|yesno:"true,false" }};
 
       // NatureComptableDepense rulezzzz
       $("#supertable").on("change", ".form-naturecomptabledepense", function (e) {
@@ -29,7 +29,7 @@
           if ($nature.val() != "") {
             $.getJSON("/api/naturecomptabledepense/rules/" + $nature.val() + "/", function(data) {
                 // Première règle de gestion.
-                if ( is_dfi_member_or_admin) {
+                if ( is_dfi) {
                   if (data.is_decalage_tresorerie) {  // Si "décalage de trésorerie" = oui alors AE <> CP = DC
                     if ( $("#id_form-" + form_id + "-montant_dc").val().length == 0 )
                       $("#id_form-" + form_id + "-montant_dc").val($("#id_form-" + form_id + "-montant_cp").val());
@@ -96,7 +96,7 @@
           if ($nature.val() != "") {
             $.getJSON("/api/naturecomptablerecette/rules/" + $nature.val() + "/", function(data) {
                 // Première règle de gestion.
-                if ( is_dfi_member_or_admin) {
+                if ( is_dfi) {
                   if (data.is_ar_and_re) {   // * Si "AR et RE" = oui  alors AR = RE
                     $("#id_form-" + form_id + "-montant_ar").prop("readonly", false);
                     $("#id_form-" + form_id + "-montant_re").prop("readonly", false);
