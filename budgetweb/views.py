@@ -399,6 +399,7 @@ def detailspfi(request, pfiid):
 @is_authorized_structure
 def detailscf(request, structid):
     to_dict = lambda x: {k: list(v) for k, v in x}
+    active_period = PeriodeBudget.active.select_related('period').first()
     structparent = Structure.objects.get(id=structid)
     liste_structure = list(structparent.get_unordered_children())
     liste_structure.insert(0, structparent)
@@ -456,7 +457,8 @@ def detailscf(request, structid):
     context = {
         'cf': structparent, 'currentYear': current_year,
         'resume_depenses': resume_depenses, 'resume_recettes': resume_recettes,
-        'years': years, 'periods': periods
+        'years': years, 'periods': periods,
+        'updatable_periods': get_updatable_periods(active_period)
     }
 
     if structparent.depth > 2 or\
@@ -475,7 +477,6 @@ def detailscf(request, structid):
             'listeDepense': depenses, 'listeRecette': recettes,
             'sommeDepense': sum_depenses, 'sommeRecette': sum_recettes
         })
-
     return render(request, 'detailscf.html', context)
 
 
