@@ -1,10 +1,9 @@
 from datetime import datetime
 from decimal import Decimal
 import json
-from django.core.management.base import BaseCommand
-import britney_utils
-from britney.middleware import auth
+
 from django.conf import settings
+from django.core.management.base import BaseCommand
 from django.db import transaction
 
 from budgetweb.apps.structure.models import (
