@@ -86,7 +86,7 @@ class Command(BaseCommand):
                         nature = self.get_object(ran, nature, 'nature')
 
                         amounts = {
-                            'montant_dc': to_decimal(d_dc),
+                            'montant_dc': to_decimal(r_dc),
                             'montant_re': to_decimal(re),
                             'montant_ar': to_decimal(ar),
                             'naturecomptablerecette': nature,
