@@ -45,9 +45,9 @@ class Command(BaseCommand):
                       in structure_models.Structure.active.all()}
         pfis = {pfi.code: pfi for pfi
                 in structure_models.PlanFinancement.active.all()}
-        dan = {an.code_nature_comptable: an for an
+        dan = {(an.code_nature_comptable, an.is_fleche): an for an
                in structure_models.NatureComptableDepense.active.all()}
-        ran = {an.code_nature_comptable: an for an
+        ran = {(an.code_nature_comptable, an.is_fleche): an for an
                in structure_models.NatureComptableRecette.active.all()}
         domains = {d.code: d for d
                    in structure_models.DomaineFonctionnel.active.all()}
@@ -66,10 +66,11 @@ class Command(BaseCommand):
                     (year, structure, pfi, accounting_type, enveloppe, nature,
                      domain, ae, cp, d_dc, ar, re, r_dc, commentary) = row
 
+                    pfi = pfis[pfi]
                     if accounting_type.lower().startswith('d'):
                         # Dépense
                         model = models.Depense
-                        nature = self.get_object(dan, nature, 'nature')
+                        nature = self.get_object(dan, (nature, pfi.is_fleche), 'nature')
                         functional_domain = self.get_object(
                             domains, domain, 'domaine fonctionnel')
 
@@ -83,7 +84,7 @@ class Command(BaseCommand):
                     else:
                         # Recette
                         model = models.Recette
-                        nature = self.get_object(ran, nature, 'nature')
+                        nature = self.get_object(ran, (nature, pfi.is_fleche), 'nature')
 
                         amounts = {
                             'montant_dc': to_decimal(r_dc),
@@ -94,7 +95,7 @@ class Command(BaseCommand):
                         }
 
                     accountings.append(model(
-                        pfi=pfis[pfi], structure=structures[structure],
+                        pfi=pfi, structure=structures[structure],
                         commentaire=commentary or None,
                         periodebudget=period, annee=year, **amounts))
 
@@ -114,8 +115,8 @@ class Command(BaseCommand):
             else:
                 transaction.savepoint_commit(sid)
 
-    def get_object(self, dict, key, name):
+    def get_object(self, dct, key, name):
         try:
-            return dict[key]
+            return dct[key]
         except KeyError:
             self.row_errors.append(f'{name.title()} "{key}" does not exist')
