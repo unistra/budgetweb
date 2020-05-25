@@ -70,7 +70,7 @@ class Command(BaseCommand):
                         (year, structure, pfi, accounting_type, enveloppe, nature,
                          domain, ae, cp, d_dc, ar, re, r_dc, commentary) = row
 
-                        pfi = pfis[pfi]
+                        pfi = self.get_object(pfis, pfi, 'PFI')
                         if accounting_type.lower().startswith('d'):
                             # Dépense
                             model = models.Depense
