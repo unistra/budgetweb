@@ -12,6 +12,10 @@ def to_decimal(amount):
     return Decimal((amount.replace(' ', '').replace(',', '.')) or 0)
 
 
+class RowError(Exception):
+    pass
+
+
 class Command(BaseCommand):
     help = 'Import the accounting'
 
@@ -22,7 +26,7 @@ class Command(BaseCommand):
 
         accountings = []
         period = models.PeriodeBudget.active.first()
-        errors = []
+        self.errors = []
 
         # Structure du fichier :
 
@@ -45,9 +49,9 @@ class Command(BaseCommand):
                       in structure_models.Structure.active.all()}
         pfis = {pfi.code: pfi for pfi
                 in structure_models.PlanFinancement.active.all()}
-        dan = {an.code_nature_comptable: an for an
+        dan = {(an.code_nature_comptable, an.is_fleche): an for an
                in structure_models.NatureComptableDepense.active.all()}
-        ran = {an.code_nature_comptable: an for an
+        ran = {(an.code_nature_comptable, an.is_fleche): an for an
                in structure_models.NatureComptableRecette.active.all()}
         domains = {d.code: d for d
                    in structure_models.DomaineFonctionnel.active.all()}
@@ -58,50 +62,53 @@ class Command(BaseCommand):
             with open(filename, encoding='iso-8859-1') as h:
                 reader = csv.reader(h, delimiter=';', quotechar='"')
                 for index, row in enumerate(reader):
-                    self.row_errors = []
                     if index == 0:
                         # Ignore header
                         continue
 
-                    (year, structure, pfi, accounting_type, enveloppe, nature,
-                     domain, ae, cp, d_dc, ar, re, r_dc, commentary) = row
+                    try:
+                        (year, structure, pfi, accounting_type, enveloppe, nature,
+                         domain, ae, cp, d_dc, ar, re, r_dc, commentary) = row
 
-                    if accounting_type.lower().startswith('d'):
-                        # Dépense
-                        model = models.Depense
-                        nature = self.get_object(dan, nature, 'nature')
-                        functional_domain = self.get_object(
-                            domains, domain, 'domaine fonctionnel')
+                        pfi = self.get_object(pfis, pfi, 'PFI')
+                        if accounting_type.lower().startswith('d'):
+                            # Dépense
+                            model = models.Depense
+                            nature = self.get_object(dan, (nature, pfi.is_fleche), 'nature')
+                            functional_domain = self.get_object(
+                                domains, domain, 'domaine fonctionnel', msg=f'- nature : {nature}')
 
-                        amounts = {
-                            'montant_dc': to_decimal(d_dc),
-                            'montant_cp': to_decimal(cp),
-                            'montant_ae': to_decimal(ae),
-                            'naturecomptabledepense': nature,
-                            'domainefonctionnel': functional_domain,
-                        }
-                    else:
-                        # Recette
-                        model = models.Recette
-                        nature = self.get_object(ran, nature, 'nature')
+                            amounts = {
+                                'montant_dc': to_decimal(d_dc),
+                                'montant_cp': to_decimal(cp),
+                                'montant_ae': to_decimal(ae),
+                                'naturecomptabledepense': nature,
+                                'domainefonctionnel': functional_domain,
+                            }
+                        else:
+                            # Recette
+                            model = models.Recette
+                            nature = self.get_object(ran, (nature, pfi.is_fleche), 'nature')
 
-                        amounts = {
-                            'montant_dc': to_decimal(r_dc),
-                            'montant_re': to_decimal(re),
-                            'montant_ar': to_decimal(ar),
-                            'naturecomptablerecette': nature,
-                            'domainefonctionnel': domain,
-                        }
+                            amounts = {
+                                'montant_dc': to_decimal(r_dc),
+                                'montant_re': to_decimal(re),
+                                'montant_ar': to_decimal(ar),
+                                'naturecomptablerecette': nature,
+                                'domainefonctionnel': domain,
+                            }
 
-                    accountings.append(model(
-                        pfi=pfis[pfi], structure=structures[structure],
-                        commentaire=commentary or None,
-                        periodebudget=period, annee=year, **amounts))
+                        structure = self.get_object(structures, structure, 'structure')
+                        accountings.append(model(
+                            pfi=pfi, structure=structure,
+                            commentaire=commentary or None,
+                            periodebudget=period, annee=year, **amounts))
 
-                    errors.extend(self.row_errors)
+                    except RowError:
+                        continue
 
-        if errors:
-            print('ERRORS :\n\n{}'.format('\n'.join(errors)))
+        if self.errors:
+            print('ERRORS :\n\n{}'.format('\n'.join(self.errors)))
         else:
             sid = transaction.savepoint()
             try:
@@ -114,8 +121,10 @@ class Command(BaseCommand):
             else:
                 transaction.savepoint_commit(sid)
 
-    def get_object(self, dict, key, name):
+    def get_object(self, dct, key, name, msg=''):
         try:
-            return dict[key]
+            return dct[key]
         except KeyError:
-            self.row_errors.append(f'{name.title()} "{key}" does not exist')
+            msg = '' or f' {msg}'
+            self.errors.append(f'{name.title()} "{key}" does not exist{msg}')
+            raise RowError
