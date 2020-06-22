@@ -15,37 +15,37 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='depense',
             name='domainefonctionnel',
-            field=models.ForeignKey(verbose_name='Domaine fonctionnel', to='structure.DomaineFonctionnel'),
+            field=models.ForeignKey(verbose_name='Domaine fonctionnel', to='structure.DomaineFonctionnel', on_delete=models.CASCADE),
         ),
         migrations.AlterField(
             model_name='depense',
             name='naturecomptabledepense',
-            field=models.ForeignKey(verbose_name='Nature Comptable', to='structure.NatureComptableDepense'),
+            field=models.ForeignKey(verbose_name='Nature Comptable', to='structure.NatureComptableDepense', on_delete=models.CASCADE),
         ),
         migrations.AlterField(
             model_name='depense',
             name='pfi',
-            field=models.ForeignKey(verbose_name='Plan de financement', to='structure.PlanFinancement'),
+            field=models.ForeignKey(verbose_name='Plan de financement', to='structure.PlanFinancement', on_delete=models.CASCADE),
         ),
         migrations.AlterField(
             model_name='depense',
             name='structure',
-            field=models.ForeignKey(verbose_name='Centre financier', to='structure.Structure'),
+            field=models.ForeignKey(verbose_name='Centre financier', to='structure.Structure', on_delete=models.CASCADE),
         ),
         migrations.AlterField(
             model_name='recette',
             name='naturecomptablerecette',
-            field=models.ForeignKey(verbose_name='Nature Comptable', to='structure.NatureComptableRecette'),
+            field=models.ForeignKey(verbose_name='Nature Comptable', to='structure.NatureComptableRecette', on_delete=models.CASCADE),
         ),
         migrations.AlterField(
             model_name='recette',
             name='pfi',
-            field=models.ForeignKey(verbose_name='Plan de financement', to='structure.PlanFinancement'),
+            field=models.ForeignKey(verbose_name='Plan de financement', to='structure.PlanFinancement', on_delete=models.CASCADE),
         ),
         migrations.AlterField(
             model_name='recette',
             name='structure',
-            field=models.ForeignKey(verbose_name='Centre financier', to='structure.Structure'),
+            field=models.ForeignKey(verbose_name='Centre financier', to='structure.Structure', on_delete=models.CASCADE),
         ),
         migrations.AlterField(
             model_name='structureauthorizations',
@@ -55,7 +55,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='structuremontant',
             name='structure',
-            field=models.ForeignKey(to='structure.Structure'),
+            field=models.ForeignKey(to='structure.Structure', on_delete=models.CASCADE),
         ),
     ]
 

@@ -34,13 +34,13 @@ class Migration(migrations.Migration):
             name='virement',
             field=models.ForeignKey(
                 verbose_name="Renvoie vers le virement correspondant s'il existe",
-                to='budgetweb.Virement', null=True, blank=True),
+                to='budgetweb.Virement', null=True, blank=True, on_delete=models.CASCADE),
         ),
         migrations.AddField(
             model_name='recette',
             name='virement',
             field=models.ForeignKey(
                 verbose_name="Renvoie vers le virement correspondant s'il existe",
-                to='budgetweb.Virement', null=True, blank=True),
+                to='budgetweb.Virement', null=True, blank=True, on_delete=models.CASCADE),
         ),
     ]

@@ -133,9 +133,9 @@ class Migration(migrations.Migration):
                 ('montant_re', models.DecimalField(blank=True, max_digits=12, decimal_places=2, null=True, verbose_name='Montant Recette Encaissable')),
                 ('montant_ar', models.DecimalField(blank=True, max_digits=12, decimal_places=2, null=True, verbose_name='Montant Autorisation de Recette')),
                 ('domainefonctionnel', models.CharField(max_length=100, editable=False, default='NA')),
-                ('naturecomptablerecette', models.ForeignKey(to='budgetweb.NatureComptableRecette', verbose_name='Nature Comptable')),
-                ('periodebudget', models.ForeignKey(to='budgetweb.PeriodeBudget', verbose_name='Période budgétaire')),
-                ('pfi', models.ForeignKey(to='budgetweb.PlanFinancement', verbose_name='Plan de financement')),
+                ('naturecomptablerecette', models.ForeignKey(to='budgetweb.NatureComptableRecette', verbose_name='Nature Comptable', on_delete=models.CASCADE)),
+                ('periodebudget', models.ForeignKey(to='budgetweb.PeriodeBudget', verbose_name='Période budgétaire', on_delete=models.CASCADE)),
+                ('pfi', models.ForeignKey(to='budgetweb.PlanFinancement', verbose_name='Plan de financement', on_delete=models.CASCADE)),
             ],
             options={
                 'abstract': False,
@@ -154,7 +154,7 @@ class Migration(migrations.Migration):
                 ('is_active', models.BooleanField(max_length=100, default=True, verbose_name='Actif')),
                 ('depth', models.PositiveIntegerField()),
                 ('path', models.TextField(blank=True, verbose_name='Path')),
-                ('parent', models.ForeignKey(null=True, blank=True, verbose_name='Lien direct vers la structure parent', to='budgetweb.Structure', related_name='fils')),
+                ('parent', models.ForeignKey(null=True, blank=True, verbose_name='Lien direct vers la structure parent', to='budgetweb.Structure', related_name='fils', on_delete=models.CASCADE)),
             ],
             options={
                 'ordering': ['code'],
@@ -165,7 +165,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(primary_key=True, auto_created=True, serialize=False, verbose_name='ID')),
                 ('structures', models.ManyToManyField(to='budgetweb.Structure', related_name='authorized_structures', verbose_name='structures')),
-                ('user', models.OneToOneField(to=settings.AUTH_USER_MODEL, verbose_name='User')),
+                ('user', models.OneToOneField(to=settings.AUTH_USER_MODEL, verbose_name='User', on_delete=models.CASCADE)),
             ],
             options={
                 'verbose_name': 'structure authorizations',
@@ -184,8 +184,8 @@ class Migration(migrations.Migration):
                 ('recette_montant_re', models.DecimalField(max_digits=12, decimal_places=2, default=Decimal('0'))),
                 ('recette_montant_ar', models.DecimalField(max_digits=12, decimal_places=2, default=Decimal('0'))),
                 ('modification_date', models.DateTimeField(auto_now=True)),
-                ('periodebudget', models.ForeignKey(to='budgetweb.PeriodeBudget', related_name='periodebudgetmontants', verbose_name='budget period')),
-                ('structure', models.ForeignKey(to='budgetweb.Structure', verbose_name='structure')),
+                ('periodebudget', models.ForeignKey(to='budgetweb.PeriodeBudget', related_name='periodebudgetmontants', verbose_name='budget period', on_delete=models.CASCADE)),
+                ('structure', models.ForeignKey(to='budgetweb.Structure', verbose_name='structure', on_delete=models.CASCADE)),
             ],
             options={
                 'verbose_name': 'structure amounts',
@@ -195,37 +195,37 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='recette',
             name='structure',
-            field=models.ForeignKey(to='budgetweb.Structure', verbose_name='Centre financier'),
+            field=models.ForeignKey(to='budgetweb.Structure', verbose_name='Centre financier', on_delete=models.CASCADE),
         ),
         migrations.AddField(
             model_name='planfinancement',
             name='structure',
-            field=models.ForeignKey(to='budgetweb.Structure', verbose_name='Lien direct vers le CF'),
+            field=models.ForeignKey(to='budgetweb.Structure', verbose_name='Lien direct vers le CF', on_delete=models.CASCADE),
         ),
         migrations.AddField(
             model_name='depense',
             name='domainefonctionnel',
-            field=models.ForeignKey(to='budgetweb.DomaineFonctionnel', verbose_name='Domaine fonctionnel'),
+            field=models.ForeignKey(to='budgetweb.DomaineFonctionnel', verbose_name='Domaine fonctionnel', on_delete=models.CASCADE),
         ),
         migrations.AddField(
             model_name='depense',
             name='naturecomptabledepense',
-            field=models.ForeignKey(to='budgetweb.NatureComptableDepense', verbose_name='Nature Comptable'),
+            field=models.ForeignKey(to='budgetweb.NatureComptableDepense', verbose_name='Nature Comptable', on_delete=models.CASCADE),
         ),
         migrations.AddField(
             model_name='depense',
             name='periodebudget',
-            field=models.ForeignKey(to='budgetweb.PeriodeBudget', verbose_name='Période budgétaire'),
+            field=models.ForeignKey(to='budgetweb.PeriodeBudget', verbose_name='Période budgétaire', on_delete=models.CASCADE),
         ),
         migrations.AddField(
             model_name='depense',
             name='pfi',
-            field=models.ForeignKey(to='budgetweb.PlanFinancement', verbose_name='Plan de financement'),
+            field=models.ForeignKey(to='budgetweb.PlanFinancement', verbose_name='Plan de financement', on_delete=models.CASCADE),
         ),
         migrations.AddField(
             model_name='depense',
             name='structure',
-            field=models.ForeignKey(to='budgetweb.Structure', verbose_name='Centre financier'),
+            field=models.ForeignKey(to='budgetweb.Structure', verbose_name='Centre financier', on_delete=models.CASCADE),
         ),
         migrations.AlterUniqueTogether(
             name='structuremontant',

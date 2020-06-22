@@ -1,6 +1,5 @@
-Django>1.11,<1.12
+Django>2.2,<2.3
 django-cas-sso
-psycopg2
 psycopg2-binary
 britney
 britney_utils
