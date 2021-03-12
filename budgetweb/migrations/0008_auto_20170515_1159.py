@@ -26,7 +26,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='periodebudget',
             name='period',
-            field=models.ForeignKey(verbose_name='Period', default=1, to='budgetweb.Period'),
+            field=models.ForeignKey(verbose_name='Period', default=1, to='budgetweb.Period', on_delete=models.CASCADE),
             preserve_default=False,
         ),
     ]

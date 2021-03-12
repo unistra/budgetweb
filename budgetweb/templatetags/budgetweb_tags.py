@@ -141,13 +141,13 @@ def app_version():
     return budgetweb.get_version()
 
 
-@register.assignment_tag(takes_context=True)
+@register.simple_tag(takes_context=True)
 def is_comptabilite_updatable(context, period):
     return period.periodebudget.period.code in context.get(
         'updatable_periods', ())
 
 
-@register.assignment_tag
+@register.simple_tag
 def order_periods(periods):
     return dict(sorted(
         periods.items(),

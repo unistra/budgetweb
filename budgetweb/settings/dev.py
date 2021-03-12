@@ -74,6 +74,6 @@ INTERNAL_IPS = ('127.0.0.1', '0.0.0.0')
 # Interfaces SI #
 #################
 
-SIFACWS_DESC = 'https://rest-api-test.u-strasbg.fr/sifacws/description.json'
-SIFACWS_URL = 'https://sifacws-test.u-strasbg.fr/'
+SIFACWS_DESC = 'https://rest-api-test.app.unistra.fr/sifacws/description.json'
+SIFACWS_URL = 'https://sifacws-test.app.unistra.fr/'
 SIFACWS_APIKEY = environ.get('SIFACWS_APIKEY')

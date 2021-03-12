@@ -61,7 +61,7 @@
         {% endif %}
       </td>
       <td align="center">
-      {% if depense.commentaire and is_updatable%}
+      {% if depense.commentaire %}
         <a href="#">
           <span data-backdrop="false" data-toggle="modal" data-target="#modal_commentaire" data-formid="{{ depense.commentaire }}" class="glyphicon glyphicon-paperclip" title="Afficher"></span>
         </a>
@@ -70,7 +70,7 @@
       {% endif %}
       </td>
       <td align="center">
-        {% if depense.lienpiecejointe and is_updatable %}
+        {% if depense.lienpiecejointe %}
         <a href="#">
           <span data-backdrop="false" data-toggle="modal" data-target="#modal_lienpiecejointe" data-formid="{{ depense.lienpiecejointe }}" class="glyphicon glyphicon-paperclip" title="Afficher"></span>
         </a>
