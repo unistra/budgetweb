@@ -488,9 +488,9 @@ def set_year(request):
     This view is based on django.viwes.i18n.set_language
     """
     next = request.POST.get('next', request.GET.get('next'))
-    if not is_safe_url(url=next, host=request.get_host()):
+    if not is_safe_url(next, request.get_host()):
         next = request.META.get('HTTP_REFERER')
-        if not is_safe_url(url=next, host=request.get_host()):
+        if not is_safe_url(next, request.get_host()):
             next = '/'
     response = HttpResponseRedirect(next)
     if request.method == 'POST':
