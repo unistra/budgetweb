@@ -13,6 +13,25 @@ from budgetweb.models import (Depense, PeriodeBudget, Recette, Virement)
 from budgetweb.utils import get_current_year
 
 
+VIR_DATETIME_FORMATS = (
+    '%Y-%m-%d %H:%M:%S',
+    '%Y%m%d %H%M%S',
+)
+
+VIR_DATE_FORMATS = (
+    '%Y-%m-%d',
+    '%Y%m%d',
+)
+
+
+def vir_date_format(datestring, formats):
+    for format_ in formats:
+        try:
+            return datetime.strptime(datestring, format_)
+        except ValueError:
+            continue
+
+
 class CreationVirementException(BaseException):
     pass
 
@@ -32,12 +51,14 @@ class Command(BaseCommand):
             '-y', dest='year', help=f'Year (default: {current_year})',
             type=int, metavar='YEAR', default=current_year)
         parser.add_argument(
-            '-r', dest='repo', type=boolean, default=False)
+            '-r', dest='repo', action='store_true')
 
     def handle(self, *args, **options):
         self.year = options.get('year')
         self.is_repo = options.get('repo')
-        assert options.get('period'), "Missing period in parameter"
+        if not self.is_repo:
+            assert options.get('period'), "Missing period in parameter"
+
         try:
             period = 'VIR1' if self.is_repo else options.get('period')
             self.period = PeriodeBudget.objects.get(
@@ -51,8 +72,7 @@ class Command(BaseCommand):
             data = json.load(json_data)
 
         # Traitement des résultats un par un.
-        for virement_info in data:
-            # try:
+        for virement_info in data:            # try:
             vir_header = virement_info['header']
             vir_item_data = virement_info['item_data']
             vir_sender = virement_info['sender_item_data']
@@ -63,7 +83,6 @@ class Command(BaseCommand):
             process = vir_header['PROCESS']
             version = vir_header['VERSION']
 
-            is_repo = doc_type == 'REPO'
 
             # Suppression des virements qui ne sont pas dans l'année.
             if doc_year != str(self.year):
@@ -71,14 +90,15 @@ class Command(BaseCommand):
                 continue
 
             datestring = vir_header['CRTDATE'] + " " + vir_header['CRTTIME']
-            if process != 'TRAN':
+            if process != 'TRAN' and (not self.is_repo or process != 'COVR'):
                 print(f'Le process du virement ({doc_number}) ne match pas ({process})')
                 continue
 
             if version != '000':
                 print(f'La version du virement ({doc_number}) ne match pas ({version})')
                 continue
-            vir_date = datetime.strptime(datestring, '%Y-%m-%d %H:%M:%S')
+
+            vir_date = vir_date_format(datestring, VIR_DATETIME_FORMATS)
             vir = 0
 
             with transaction.atomic():
@@ -87,9 +107,11 @@ class Command(BaseCommand):
                     if vir_header['DOCDATE'] is None:
                         continue
                     # Creation du virement.
-                    if not Virement.objects.filter(
-                            document_number=doc_number,
-                            value_date=vir_header['DOCDATE']).count():
+                    if not Virement.objects\
+                            .filter(
+                                document_number=doc_number,
+                                value_date=vir_date_format(vir_header['DOCDATE'], VIR_DATE_FORMATS))\
+                            .count():
                         print(f"Création du Virement {doc_number} (date {vir_header['DOCDATE']})")
 
                         vir = Virement.objects.create(
@@ -100,13 +122,14 @@ class Command(BaseCommand):
                             process=process,
                             creator_login=vir_header['CRTUSER'],
                             creation_date=vir_date,
-                            value_date=vir_header['DOCDATE'])
+                            value_date=vir_date_format(vir_header['DOCDATE'], VIR_DATE_FORMATS))
 
                         for item_data in vir_item_data:
                             self.parseItemData(item_data, vir, "receiver", vir_date)
 
-                        for item_data in vir_sender:
-                            self.parseItemData(item_data, vir, "sender", vir_date)
+                        if not self.is_repo:
+                            for item_data in vir_sender:
+                                self.parseItemData(item_data, vir, "sender", vir_date)
 
                     else:
                         print(f"Le virement {doc_number} docnumber existe déjà.")
@@ -149,7 +172,7 @@ class Command(BaseCommand):
         type_budget = item_data['BUDCAT']
 
         # Virement Depense
-        if item_data['CTEM_CATEGORY'] == '3' and not self.is_repo:
+        if item_data['CTEM_CATEGORY'] == '3':
             # On est en dépense.
             montant_ae = montant_cp = montant_dc = Decimal('0.00')
             montant = round(item_data['TOTAL_AMOUNT_TCUR'], 2)
