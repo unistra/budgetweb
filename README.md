@@ -124,7 +124,7 @@ Label est le libellé associé au CFs.
 
 L'import des structures se fait via la commande suivante :
 ``` 
-    python manage.py import_structure path/to/data.csv
+    python manage.py import_structures path/to/data.csv
 ```
 
 Le deuxième fichier à importer est les Plan de Financements (PFi)
