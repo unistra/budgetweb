@@ -83,14 +83,15 @@ class Command(BaseCommand):
             process = vir_header['PROCESS']
             version = vir_header['VERSION']
 
-
             # Suppression des virements qui ne sont pas dans l'année.
             if doc_year != str(self.year):
                 print(f'DOC_YEAR ({doc_year}) ne match pas ({self.year})')
                 continue
 
             datestring = vir_header['CRTDATE'] + " " + vir_header['CRTTIME']
-            if process != 'TRAN' and (not self.is_repo or process != 'COVR'):
+
+            if any((not self.is_repo and process != 'TRAN',
+                    self.is_repo and process != 'COVR')):
                 print(f'Le process du virement ({doc_number}) ne match pas ({process})')
                 continue
 
