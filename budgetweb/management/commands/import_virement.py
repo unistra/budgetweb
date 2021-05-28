@@ -91,7 +91,7 @@ class Command(BaseCommand):
             datestring = vir_header['CRTDATE'] + " " + vir_header['CRTTIME']
 
             if any((not self.is_repo and process != 'TRAN',
-                    self.is_repo and process != 'COVR' and doc_type != 'REPO')):
+                    self.is_repo and (process != 'COVR' or doc_type != 'REPO'))):
                 print(f'Le process du virement ({doc_number}) ne match pas ({process})')
                 continue
 
