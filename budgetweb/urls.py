@@ -54,6 +54,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('migrate_pluriannuel/<int:period_id>/',
          views.migrate_pluriannuel, name='migrate-pluriannuel'),
+
+    # Django-hijack
+    path('hijack/', include('hijack.urls', namespace='hijack')),
 ]
 
 # debug toolbar for dev
