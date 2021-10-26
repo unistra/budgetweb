@@ -182,10 +182,6 @@ class Comptabilite(models.Model):
     pfi = models.ForeignKey(
         'structure.PlanFinancement', verbose_name='Plan de financement',
         on_delete=models.CASCADE)
-    # TODO: useful ? structure is already in PFI
-    structure = models.ForeignKey(
-        'structure.Structure', verbose_name='Centre financier',
-        on_delete=models.CASCADE)
     commentaire = models.TextField(blank=True, null=True)
     lienpiecejointe = models.CharField(max_length=255,
                                        verbose_name='Lien vers un fichier',
@@ -232,8 +228,9 @@ class Comptabilite(models.Model):
             initial = self.__class__.objects.get(pk=self.pk)
 
         super().save(*args, **kwargs)
-        # Get the ascending hierarchy
-        structures = [self.structure] + self.structure.get_ancestors()
+        # Get the ascending hierarchy
+        structure = self.pfi.structure
+        structures = [structure] + structure.get_ancestors()
         # Difference with the original values
         diffs = {m: getattr(self, m) - (
             getattr(initial, m, None) or Decimal(0))\
@@ -271,8 +268,9 @@ class Comptabilite(models.Model):
         comptabilite = self.__class__.__name__.lower()
         montant_name = lambda x: '%s_%s' % (comptabilite, x)
 
-        # Get the ascending hierarchy
-        structures = [self.structure] + self.structure.get_ancestors()
+        # Get the ascending hierarchy
+        structure = self.pfi.structure
+        structures = [structure] + structure.get_ancestors()
         for structure in structures:
             montant = StructureMontant.objects.get(
                 structure=structure, periodebudget=self.periodebudget,

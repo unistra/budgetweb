@@ -414,7 +414,7 @@ def detailscf(request, structid):
             'naturecomptabledepense', 'periodebudget__period', 'pfi',
             'domainefonctionnel', 'pfi__structure')\
         .annotate(enveloppe=F('naturecomptabledepense__enveloppe'))\
-        .order_by('annee', 'structure',
+        .order_by('annee', 'pfi__structure',
                   'naturecomptabledepense__code_nature_comptable',
                   'periodebudget__period__order',
                   'virement__document_number')
@@ -423,7 +423,7 @@ def detailscf(request, structid):
             'naturecomptablerecette', 'periodebudget__period', 'pfi',
             'pfi__structure')\
         .annotate(enveloppe=F('naturecomptablerecette__enveloppe'))\
-        .order_by('annee', 'structure',
+        .order_by('annee', 'pfi__structure',
                   'naturecomptablerecette__code_nature_comptable',
                   'periodebudget__period__order',
                   'virement__document_number')

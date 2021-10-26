@@ -78,26 +78,26 @@ class ComptabiliteModelTest(TestCase):
             code_nature_comptable='9RSCS', is_fleche=self.pfi_ecp.is_fleche)
         self.domaine = DomaineFonctionnel.objects.get(pk=1)
         self.depense_ecp = Depense.objects.create(
-            pfi=self.pfi_ecp, structure=self.structure_ecp, annee=self.annee,
+            pfi=self.pfi_ecp, annee=self.annee,
             periodebudget=self.periode, domainefonctionnel=self.domaine,
             naturecomptabledepense=self.naturecomptabledepense,
             montant_dc=Decimal(1), montant_cp=Decimal(2), montant_ae=Decimal(3)
         )
         self.recette_ecp = Recette.objects.create(
-            pfi=self.pfi_ecp, structure=self.structure_ecp, annee=self.annee,
+            pfi=self.pfi_ecp, annee=self.annee,
             periodebudget=self.periode,
             naturecomptablerecette=self.naturecomptablerecette,
             montant_dc=Decimal(4), montant_re=Decimal(5), montant_ar=Decimal(6)
         )
         self.depense_ecp1 = Depense(
-            pfi=self.pfi_ecp1, structure=self.structure_ecp1, annee=self.annee,
+            pfi=self.pfi_ecp1, annee=self.annee,
             periodebudget=self.periode, domainefonctionnel=self.domaine,
             naturecomptabledepense=self.naturecomptabledepense,
             montant_dc=Decimal(10), montant_cp=Decimal(20),
             montant_ae=Decimal(30)
         )
         self.recette_ecp1 = Recette(
-            pfi=self.pfi_ecp1, structure=self.structure_ecp1,
+            pfi=self.pfi_ecp1,
             annee=self.annee, periodebudget=self.periode,
             naturecomptablerecette=self.naturecomptablerecette,
             montant_dc=Decimal(40), montant_re=Decimal(50),
@@ -204,7 +204,7 @@ class DepenseModelTest(TestCase):
             code_nature_comptable='9DLOC', is_fleche=self.pfi_ecp.is_fleche)
 
         depense = Depense(
-            pfi=self.pfi_ecp, structure=self.structure_ecp, annee=self.annee,
+            pfi=self.pfi_ecp, annee=self.annee,
             periodebudget=self.periode, domainefonctionnel=self.domaine,
             naturecomptabledepense=naturecomptabledepense,
             montant_dc=Decimal(1), montant_cp=Decimal(2), montant_ae=Decimal(3)
@@ -262,9 +262,8 @@ class RecetteModelTest(TestCase):
             code_nature_comptable='9RSCS', is_fleche=self.pfi_ecp.is_fleche)
 
     def test_save(self):
-        recette = Recette.objects.create(
-            pfi=self.pfi_ecp, structure=self.structure_ecp, annee=self.annee,
-            periodebudget=self.periode,
+        recette = Recette(
+            pfi=self.pfi_ecp, annee=self.annee, periodebudget=self.periode,
             naturecomptablerecette=self.naturecomptablerecette,
             montant_dc=Decimal(4), montant_re=Decimal(5), montant_ar=Decimal(6)
         )

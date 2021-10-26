@@ -15,8 +15,7 @@ class Command(BaseCommand):
     def create_depenses(self, pfi, *args, **kwargs):
         year = kwargs.pop('year', None)
         extra_values = kwargs.pop('extra_values', [])
-        values = ['structure', 'naturecomptabledepense',
-                  'domainefonctionnel'] + extra_values
+        values = ['naturecomptabledepense', 'domainefonctionnel'] + extra_values
         depenses = pfi.depense_set\
             .filter(*args, **kwargs)\
             .values(*values)\
@@ -24,7 +23,7 @@ class Command(BaseCommand):
 
         depenses_list = [
             Depense(
-                structure_id=depense['structure'], pfi=pfi,
+                pfi=pfi,
                 periodebudget=self.period, annee=year or depense['annee'],
                 naturecomptabledepense_id=depense['naturecomptabledepense'],
                 domainefonctionnel_id=depense['domainefonctionnel'],
@@ -38,7 +37,7 @@ class Command(BaseCommand):
     def create_recettes(self, pfi, *args, **kwargs):
         year = kwargs.pop('year', None)
         extra_values = kwargs.pop('extra_values', [])
-        values = ['structure', 'naturecomptablerecette'] + extra_values
+        values = ['naturecomptablerecette'] + extra_values
         recettes = pfi.recette_set\
             .filter(*args, **kwargs)\
             .values(*values)\
@@ -46,7 +45,7 @@ class Command(BaseCommand):
 
         recettes_list = [
             Recette(
-                structure_id=recette['structure'], pfi=pfi,
+                pfi=pfi,
                 periodebudget=self.period, annee=year or recette['annee'],
                 naturecomptablerecette_id=recette['naturecomptablerecette'],
                 montant_ar=recette['montant_ar__sum'],
@@ -100,5 +99,5 @@ class Command(BaseCommand):
             check_structuremontants_parameters = filter(
                 bool, ('-v %s' % verbosity,))
 
-            call_command('check_structuremontants', '-u', '-y %s' % year ,
+            call_command('check_structuremontants', '-u', '-y %s' % year,
                          *check_structuremontants_parameters, stdout=self.stdout)

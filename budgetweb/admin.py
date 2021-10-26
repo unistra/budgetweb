@@ -48,7 +48,7 @@ admin.site.register(User, UserAdmin)
 
 
 class DepenseAdmin(admin.ModelAdmin):
-    list_display = ('pfi', 'structure', 'domainefonctionnel',
+    list_display = ('pfi', 'domainefonctionnel',
                     'naturecomptabledepense', 'periodebudget', 'annee',
                     'montant_ae', 'montant_cp', 'montant_dc')
     search_fields = ['pfi__code', 'structure__code',
@@ -76,8 +76,7 @@ admin.site.register(PeriodeBudget, PeriodeBudgetAdmin)
 
 
 class RecetteAdmin(admin.ModelAdmin):
-    list_display = ('pfi', 'structure',
-                    'naturecomptablerecette', 'periodebudget', 'annee',
+    list_display = ('pfi', 'naturecomptablerecette', 'periodebudget', 'annee',
                     'montant_ar', 'montant_re', 'montant_dc')
     search_fields = ['pfi__code', 'structure__code', 'domainefonctionnel',
                      'naturecomptablerecette__code_nature_comptable',

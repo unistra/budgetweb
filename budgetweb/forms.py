@@ -30,10 +30,8 @@ class RecetteForm(forms.ModelForm):
 
     class Meta:
         model = Recette
-        fields = ('annee', 'enveloppe', 'naturecomptablerecette',
-                  'pfi', 'structure', 'periodebudget', 'montant_ar',
-                  'montant_re', 'montant_dc', 'commentaire',
-                  'lienpiecejointe')
+        fields = ('annee', 'enveloppe', 'naturecomptablerecette', 'pfi', 'periodebudget', 'montant_ar',
+                  'montant_re', 'montant_dc', 'commentaire', 'lienpiecejointe')
         widgets = {
             'commentaire': forms.Textarea(attrs={'cols': 40, 'rows': 2}),
             'annee': forms.TextInput(attrs={
@@ -66,7 +64,7 @@ class RecetteForm(forms.ModelForm):
             'form-naturecomptable form-naturecomptablerecette'
 
         # Set the initial values
-        self.fields['structure'].initial = pfi.structure_id
+        # self.fields['structure'].initial = pfi.structure_id
         self.fields['pfi'].initial = pfi.pk
         self.fields['periodebudget'].initial = periodebudget.pk
         self.fields['annee'].initial = int(annee)
@@ -166,12 +164,8 @@ class DepenseForm(forms.ModelForm):
 
     class Meta:
         model = Depense
-        fields = ('annee', 'enveloppe', 'naturecomptabledepense',
-                  'pfi', 'structure',
-                  'domainefonctionnel',
-                  'periodebudget',
-                  'montant_ae', 'montant_cp', 'montant_dc', 'commentaire',
-                  'lienpiecejointe')
+        fields = ('annee', 'enveloppe', 'naturecomptabledepense', 'pfi', 'domainefonctionnel', 'periodebudget',
+                  'montant_ae', 'montant_cp', 'montant_dc', 'commentaire', 'lienpiecejointe')
         widgets = {
             'commentaire': forms.Textarea(attrs={'cols': 40, 'rows': 2}),
             'pfi': forms.HiddenInput(attrs={'readonly': 'readonly'}),
@@ -205,7 +199,7 @@ class DepenseForm(forms.ModelForm):
         self.fields['domainefonctionnel'].choices = [('', '---------')] + self.domaines
 
         # Set the initial values
-        self.fields['structure'].initial = pfi.structure_id
+        # self.fields['structure'].initial = pfi.structure_id
         self.fields['pfi'].initial = pfi.pk
         self.fields['periodebudget'].initial = periodebudget.pk
         self.fields['annee'].initial = int(annee)

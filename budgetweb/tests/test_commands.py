@@ -32,15 +32,13 @@ class CheckStructureMontantsTest(TestCase):
     def test_comparison_without_structure_montants(self):
         # Create Depense and Recette objects without triggering the save method
         depenses = [Depense(
-            structure=self.structure_ecp, pfi=self.pfi_ecp,
-            periodebudget=self.period, annee=self.period.annee,
+            pfi=self.pfi_ecp, periodebudget=self.period, annee=self.period.annee,
             naturecomptabledepense=self.naturecomptabledepense,
             domainefonctionnel=self.domain, montant_ae=Decimal(1),
             montant_cp=Decimal(2), montant_dc=Decimal(3))]
 
         recettes = [Recette(
-            structure=self.structure_ecp, pfi=self.pfi_ecp,
-            periodebudget=self.period, annee=self.period.annee,
+            pfi=self.pfi_ecp, periodebudget=self.period, annee=self.period.annee,
             naturecomptablerecette=self.naturecomptablerecette,
             montant_ar=Decimal(10), montant_re=Decimal(20),
             montant_dc=Decimal(20))]
@@ -91,15 +89,13 @@ class CheckMigratePluriannuelTest(TestCase):
             code_nature_comptable='9RANR', is_fleche=self.pfi.is_fleche)
 
     def _create_depense(self, period, year, nature, ae, cp, dc):
-        depense_values = {
-            'structure': self.structure, 'pfi': self.pfi,
-            'domainefonctionnel': self.domain}
+        depense_values = {'pfi': self.pfi, 'domainefonctionnel': self.domain}
         Depense.objects.create(
             periodebudget=period, annee=year, naturecomptabledepense=nature,
             montant_ae=ae, montant_cp=cp, montant_dc=dc, **depense_values)
 
     def _create_recette(self, period, year, nature, ar, re, dc):
-        recette_values = {'structure': self.structure, 'pfi': self.pfi}
+        recette_values = {'pfi': self.pfi}
         Recette.objects.create(
             periodebudget=period, annee=year, naturecomptablerecette=nature,
             montant_ar=ar, montant_re=re, montant_dc=dc, **recette_values)
