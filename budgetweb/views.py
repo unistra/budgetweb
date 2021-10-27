@@ -401,7 +401,7 @@ def detailscf(request, structid):
     to_dict = lambda x: {k: list(v) for k, v in x}
     active_period = PeriodeBudget.active.select_related('period').first()
     structparent = Structure.objects.get(id=structid)
-    liste_structure = list(structparent.get_unordered_children())
+    liste_structure = list(structparent.get_children_from_path())
     liste_structure.insert(0, structparent)
     structure_ids = [s.pk for s in liste_structure]
     current_year = get_selected_year(request)

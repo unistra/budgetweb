@@ -230,7 +230,7 @@ class Comptabilite(models.Model):
         super().save(*args, **kwargs)
         # Get the ascending hierarchy
         structure = self.pfi.structure
-        structures = [structure] + structure.get_ancestors()
+        structures = [structure] + list(structure.get_ancestors())
         # Difference with the original values
         diffs = {m: getattr(self, m) - (
             getattr(initial, m, None) or Decimal(0))\
@@ -270,7 +270,7 @@ class Comptabilite(models.Model):
 
         # Get the ascending hierarchy
         structure = self.pfi.structure
-        structures = [structure] + structure.get_ancestors()
+        structures = [structure] + list(structure.get_ancestors())
         for structure in structures:
             montant = StructureMontant.objects.get(
                 structure=structure, periodebudget=self.periodebudget,
