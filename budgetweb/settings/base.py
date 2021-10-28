@@ -272,12 +272,20 @@ LOGGING = {
     'filters': {
         'require_debug_false': {
             '()': 'django.utils.log.RequireDebugFalse'
-        }
+        },
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
     },
     'handlers': {
         'null': {
             'level': 'DEBUG',
             'class': 'logging.NullHandler'
+        },
+        'console': {
+            'level': 'INFO',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
         },
         'mail_admins': {
             'level': 'ERROR',
@@ -295,7 +303,7 @@ LOGGING = {
     },
     'loggers': {
         'django': {
-            'handlers': ['null'],
+            'handlers': ['console'],
             'propagate': True,
             'level': 'INFO'
         },

@@ -60,14 +60,14 @@ class Command(BaseCommand):
                     'values': list(
                         Depense.objects.filter(**default_filters)\
                             .select_related(
-                                'structure', 'periodebudget__period').all()),
+                                'pfi__structure', 'periodebudget__period').all()),
                 },
                 'recette': {
                     'model': Recette,
                     'values': list(
                         Recette.objects.filter(**default_filters)\
                             .select_related(
-                                'structure', 'periodebudget__period').all()),
+                                'pfi__structure', 'periodebudget__period').all()),
                 },
             }
 
@@ -80,12 +80,10 @@ class Command(BaseCommand):
             values = infos['values']
             intial_montants = model().initial_montants
             for value in values:
-                structures = [value.structure.pk] +\
-                    self.get_structure_ancestors(value.structure.pk)
+                structure = value.pfi.structure
+                structures = [structure.pk] + self.get_structure_ancestors(structure.pk)
                 for structure in structures:
-                    montant_key = (structure,
-                         value.periodebudget.pk,
-                         value.annee)
+                    montant_key = (structure, value.periodebudget.pk, value.annee)
                     montants_dict = check_results.setdefault(montant_key, {})
                     for montant in intial_montants:
                         key = montant_name(montant)

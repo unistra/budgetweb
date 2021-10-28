@@ -272,7 +272,7 @@ class RecetteFormTest(TestCase):
     def test_edit_recette(self):
         recette = Recette.objects.create(
             naturecomptablerecette=self.naturecomptable, pfi=self.pfi,
-            structure=self.pfi.structure, annee=self.periode.annee,
+            annee=self.periode.annee,
             periodebudget=self.periode, montant_ar=Decimal(1),
             montant_re=Decimal(2), montant_dc=Decimal(3), creepar='user2'
         )
@@ -301,7 +301,7 @@ class RecetteFormTest(TestCase):
             code_nature_comptable='9RCFG', is_fleche=self.pfi.is_fleche)
         recette = Recette.objects.create(
             naturecomptablerecette=self.naturecomptable, pfi=self.pfi,
-            structure=self.pfi.structure, annee=self.periode.annee,
+            annee=self.periode.annee,
             periodebudget=self.periode, montant_ar=Decimal(10),
             montant_re=Decimal(10), montant_dc=Decimal(30), creepar='user2'
         )
@@ -330,7 +330,7 @@ class RecetteFormTest(TestCase):
             code_nature_comptable='9RCFG', is_fleche=self.pfi.is_fleche)
         recette = Recette.objects.create(
             naturecomptablerecette=naturecomptable, pfi=self.pfi,
-            structure=self.pfi.structure, annee=self.periode.annee,
+            annee=self.periode.annee,
             periodebudget=self.periode, montant_ar=Decimal(10),
             montant_re=Decimal(10), montant_dc=Decimal(30), creepar='user2'
         )
@@ -679,7 +679,7 @@ class DepenseFormTest(TestCase):
     def edit_depense(self, naturecomptabledepense):
         depense = Depense.objects.create(
             naturecomptabledepense=naturecomptabledepense, pfi=self.pfi,
-            structure=self.pfi.structure, domainefonctionnel=self.domaine,
+            domainefonctionnel=self.domaine,
             annee=self.periode.annee, periodebudget=self.periode,
             montant_ae=Decimal(1), montant_cp=Decimal(2),
             montant_dc=Decimal(3), creepar='user2'
@@ -711,7 +711,7 @@ class DepenseFormTest(TestCase):
             is_fleche=self.pfi.is_fleche)
         depense = Depense.objects.create(
             naturecomptabledepense=naturecomptabledepense, pfi=self.pfi,
-            structure=self.pfi.structure, domainefonctionnel=self.domaine,
+            domainefonctionnel=self.domaine,
             annee=self.periode.annee, periodebudget=self.periode,
             montant_ae=Decimal(1), montant_cp=Decimal(2),
             montant_dc=Decimal(3), creepar='user2'
@@ -743,7 +743,7 @@ class DepenseFormTest(TestCase):
             is_fleche=self.pfi.is_fleche)
         depense = Depense.objects.create(
             naturecomptabledepense=naturecomptabledepense, pfi=self.pfi,
-            structure=self.pfi.structure, domainefonctionnel=self.domaine,
+            domainefonctionnel=self.domaine,
             annee=self.periode.annee, periodebudget=self.periode,
             montant_ae=Decimal(20), montant_cp=Decimal(20),
             montant_dc=Decimal(0), creepar='user2'
@@ -835,7 +835,7 @@ class PlanFinancementPluriFormTest(TestCase):
             code_nature_comptable='9DLOC', is_fleche=pfi_pluriannuel.is_fleche)
         domaine = DomaineFonctionnel.objects.get(pk=1)
         Depense.objects.create(
-            pfi=pfi_pluriannuel, structure=pfi_pluriannuel.structure,
+            pfi=pfi_pluriannuel,
             annee=periode.annee, periodebudget=periode,
             domainefonctionnel=domaine,
             naturecomptabledepense=naturecomptabledepense,

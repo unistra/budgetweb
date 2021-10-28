@@ -39,10 +39,8 @@ class Structure(models.Model):
         'Structure', blank=True, null=True, related_name='fils',
         verbose_name=u'Lien direct vers la structure parent',
         on_delete=models.CASCADE)
-    groupe1 = models.CharField(_('BudgetWeb group 1'), max_length=255,
-                               blank=True, null=True)
-    groupe2 = models.CharField(_('BudgetWeb group 2'), max_length=255,
-                               blank=True, null=True)
+    groupe1 = models.CharField(_('BudgetWeb group 1'), max_length=255, blank=True, null=True)
+    groupe2 = models.CharField(_('BudgetWeb group 2'), max_length=255, blank=True, null=True)
     is_active = models.BooleanField(_('Is active'), max_length=100, default=True)
     # Depth: 1 == root
     depth = models.PositiveIntegerField(_('Depth'))
@@ -66,9 +64,23 @@ class Structure(models.Model):
         self.depth = parent.depth + 1 if parent else 1
         super().save(*args, **kwargs)
 
-    def get_ancestors(self):
+    def get_ancestors_old(self):
         parent = self.parent
-        return [parent] + parent.get_ancestors() if parent else []
+        return [parent] + parent.get_ancestors_old() if parent else []
+
+    def get_ancestors(self):
+        return Structure.objects.raw(
+            """
+            WITH RECURSIVE t(s_id) AS (
+                VALUES (%s)
+              UNION ALL
+                SELECT s.parent_id from structure_structure as s, t where t.s_id = s.id
+            )
+            SELECT * FROM t, structure_structure s
+            WHERE t.s_id = s.id AND t.s_id <> %s
+            ORDER BY depth DESC
+            """, (self.pk, self.pk)
+        )
 
     def get_first_ancestor(self):
         if self.parent is None:
@@ -76,16 +88,31 @@ class Structure(models.Model):
         else:
             return self.parent.get_first_ancestor()
 
-    def get_children(self):
+    def get_children_old(self):
         children = []
         for sons in self.get_sons():
             children.append(sons)
-            children.extend(sons.get_children())
+            children.extend(sons.get_children_old())
         return children
 
-    def get_unordered_children(self):
-        return Structure.objects.filter(
-            Q(path__contains='/%s/' % self.pk) | Q(parent_id=self.pk))
+    def get_children_from_path(self, *orders):
+        return Structure.objects\
+            .filter(Q(path__contains='/%s/' % self.pk) | Q(parent_id=self.pk))\
+            .order_by(*orders)
+
+    def get_children(self):
+        return Structure.objects.raw(
+            """
+            WITH RECURSIVE t(s_id) AS (
+                VALUES (%s)
+              UNION ALL
+                SELECT s.id from structure_structure as s, t where t.s_id = s.parent_id
+            )
+            SELECT * FROM t, structure_structure s
+            WHERE t.s_id = s.id AND t.s_id <> %s
+            ORDER BY code
+            """, (self.pk, self.pk)
+        )
 
     def get_sons(self):
         return self.fils.filter(is_active=True).order_by('code')
