@@ -361,7 +361,7 @@ def detailspfi(request, pfiid):
     recettes = to_dict(groupby(recettes.order_by(
         'annee', 'naturecomptablerecette__code_compte_budgetaire',
         'periodebudget__period__order'), lambda x: x.annee))
-    years = (depenses.keys() | recettes.keys()) or [current_year]
+    years = sorted(depenses.keys() | recettes.keys()) or [current_year]
 
     # TODO: refactoring avec year_depenses
     sum_depenses = Depense.objects.filter(**compta_filters).values('annee')\
@@ -446,7 +446,7 @@ def detailscf(request, structid):
 
     depenses = to_dict(groupby(depenses, lambda x: x.annee))
     recettes = to_dict(groupby(recettes, lambda x: x.annee))
-    years = depenses.keys() | recettes.keys()
+    years = sorted(depenses.keys() | recettes.keys())
 
     resume_depenses, resume_recettes = get_detail_pfi_by_period(
         [year_depenses, year_recettes])
