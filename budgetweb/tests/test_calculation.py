@@ -93,7 +93,6 @@ class CalculationTest(TestCase):
                 'form-%s-annee' % i: self.annee,
                 'form-%s-naturecomptablerecette' % i: self.naturecomptablerecette.pk,
                 'form-%s-pfi' % i: self.pfi_ecp.pk,
-                'form-%s-structure' % i: self.structure_ecp.pk,
                 'form-%s-periodebudget' % i: self.periode.pk,
                 'form-%s-montant_ar' % i: value,
                 'form-%s-montant_re' % i: value,
@@ -120,13 +119,13 @@ class CalculationTest(TestCase):
         for i in range(insertions_number):
             value = generate_montant(max_montant)
             depense = Depense(
-                pfi=self.pfi_ecp, structure=self.structure_ecp, annee=self.annee,
+                pfi=self.pfi_ecp, annee=self.annee,
                 periodebudget=self.periode, domainefonctionnel=self.domaine,
                 naturecomptabledepense=self.naturecomptabledepense,
                 montant_dc=value, montant_cp=value, montant_ae=value
             )
             recette = Recette(
-                pfi=self.pfi_ecp, structure=self.structure_ecp, annee=self.annee,
+                pfi=self.pfi_ecp, annee=self.annee,
                 periodebudget=self.periode,
                 naturecomptablerecette=self.naturecomptablerecette,
                 montant_dc=value, montant_re=value, montant_ar=value

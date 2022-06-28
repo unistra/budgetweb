@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-{% load budgetweb_tags i18n static %}
+{% load budgetweb_tags hijack_tags i18n static %}
 <html>
 <head>
     <!-- Budgetweb v. {% app_version %} -->
@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="{% static 'css/bootstrap-unistra.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/bootstrap-theme-unistra.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'hijack/hijack-styles.css' %}" />
     <link rel="stylesheet" href="{% static 'css/budgetweb.css' %}" type="text/css" title="no title" charset="utf-8" />
     <script src="{% static 'js/vendor/modernizr-2.6.2-respond-1.1.0.min.js' %}"></script>
     <script src="{% static 'js/vendor/jquery-1.11.0.min.js' %}"></script>
@@ -19,6 +20,7 @@
 </head>
 
 <body>
+    {% hijack_notification %}
     <div class="navbar navbar-default navbar-fixed-top">
         <img class="pull-left" src="{% static 'img/unistra-white.png' %}" alt="unistra" />
         <div class="container">
