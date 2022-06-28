@@ -216,8 +216,9 @@ class Comptabilite(models.Model):
                 getattr(self, x, Decimal(0))),
             self.initial_montants))
 
+    # @transaction.atomic
+    # @require_lock([StructureMontant, 'budgetweb.Depense', 'budgetweb.Recette'])
     @transaction.atomic
-    @require_lock([StructureMontant, 'budgetweb.Depense', 'budgetweb.Recette'])
     def save(self, *args, **kwargs):
         """
         Change all the StructureMontant of the structure's ascending hierarchy
@@ -259,8 +260,9 @@ class Comptabilite(models.Model):
                 obj = StructureMontant(**updated_values)
                 obj.save()
 
+    # @transaction.atomic
+    # @require_lock([StructureMontant, 'budgetweb.Depense', 'budgetweb.Recette'])
     @transaction.atomic
-    @require_lock([StructureMontant, 'budgetweb.Depense', 'budgetweb.Recette'])
     def delete(self, **kwargs):
         """
         Change all the StructureMontant of the structure's asending hierarchy
