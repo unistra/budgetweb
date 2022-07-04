@@ -201,7 +201,7 @@ class Command(BaseCommand):
 
             commentaire = f"{item_data['ITEM_TEXT']} ({virement.document_number})"
             dep = Depense.objects.create(
-                structure=cf, pfi=pfi, periodebudget=self.period,
+                pfi=pfi, periodebudget=self.period,
                 naturecomptabledepense=naturecomptabledep,
                 domainefonctionnel=domaine, annee=self.period.annee,
                 fonds=item_data['FUND'], montant_ae=montant_ae, montant_cp=montant_cp,
@@ -233,7 +233,7 @@ class Command(BaseCommand):
 
             commentaire = f"{item_data['ITEM_TEXT']} ({virement.document_number})"
             rec = Recette.objects.create(
-                structure=cf, pfi=pfi, periodebudget=self.period,
+                pfi=pfi, periodebudget=self.period,
                 naturecomptablerecette=naturecomptablerecette,
                 annee=self.period.annee,
                 montant_ar=montant_ar, montant_re=montant_re,
