@@ -1,3 +1,4 @@
+import os
 from decimal import Decimal
 from io import StringIO
 
@@ -7,7 +8,7 @@ from django.test import TestCase
 from budgetweb.apps.structure.models import (
     DomaineFonctionnel, NatureComptableDepense, NatureComptableRecette,
     PlanFinancement, Structure)
-from budgetweb.models import Depense, PeriodeBudget, Recette
+from budgetweb.models import Depense, Period, PeriodeBudget, Recette, Virement
 
 
 class CheckStructureMontantsTest(TestCase):
@@ -293,3 +294,33 @@ class CheckMigratePluriannuelTest(TestCase):
                 annee=2018, naturecomptablerecette=self.nature_9ranr),
             montant_ar=Decimal(62), montant_re=Decimal(64),
             montant_dc=Decimal(66))
+
+
+class ImportVirementTest(TestCase):
+
+    fixtures = [
+        'tests/structures', 'tests/domainefonctionnels', 'tests/planfinancements',
+        'tests/naturecomptabledepenses', 'tests/naturecomptablerecettes'
+    ]
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.transfer_detail_file = os.path.join(os.path.dirname(__file__), 'transfer_detail.json')
+
+    def test_non_repo_virement_creation(self):
+        PeriodeBudget.objects.create(
+            period=Period.objects.get(code='VIR1'), annee=2017)
+
+        out = StringIO()
+        call_command('import_virement', self.transfer_detail_file,
+                     period='VIR1', year=2017, stdout=out)
+
+        virement = Virement.objects.get()
+
+        # 9F category depense
+        depense = Depense.objects.get(virement=virement)
+        self.assertEqual(depense.montant_dc, Decimal('2246.7'))
+        self.assertEqual(depense.montant_cp, Decimal('2246.7'))
+
+        self.assertIsNotNone(Recette.objects.get(virement=virement))

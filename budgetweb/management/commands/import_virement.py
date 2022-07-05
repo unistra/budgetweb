@@ -5,6 +5,7 @@ import json
 from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.db import transaction
+from django.utils.timezone import make_aware
 
 from budgetweb.apps.structure.models import (
     DomaineFonctionnel, Structure, PlanFinancement,
@@ -65,7 +66,7 @@ class Command(BaseCommand):
                 annee=self.year, period__code=period)
         except (PeriodeBudget.DoesNotExist,
                 PeriodeBudget.MultipleObjectsReturned) as e:
-            print("Something wrong with Periode %s (%s)" % (self.year, e))
+            self.stdout.write(f"Something wrong with Periode {self.year} ({e})")
             raise CreationVirementException()
 
         with open(options.get('filename')[0]) as json_data:
@@ -85,18 +86,18 @@ class Command(BaseCommand):
 
             # Suppression des virements qui ne sont pas dans l'année.
             if doc_year != str(self.year):
-                print(f'DOC_YEAR ({doc_year}) ne match pas ({self.year})')
+                self.stdout.write(f'DOC_YEAR ({doc_year}) ne match pas ({self.year})')
                 continue
 
             datestring = vir_header['CRTDATE'] + " " + vir_header['CRTTIME']
 
             if any((not self.is_repo and process != 'TRAN',
                     self.is_repo and (process != 'COVR' or doc_type != 'REPO'))):
-                print(f'Le process du virement ({doc_number}) ne match pas ({process})')
+                self.stdout.write(f'Le process du virement ({doc_number}) ne match pas ({process})')
                 continue
 
             if version != '000':
-                print(f'La version du virement ({doc_number}) ne match pas ({version})')
+                self.stdout.write(f'La version du virement ({doc_number}) ne match pas ({version})')
                 continue
 
             vir_date = vir_date_format(datestring, VIR_DATETIME_FORMATS)
@@ -113,7 +114,8 @@ class Command(BaseCommand):
                                 document_number=doc_number,
                                 value_date=vir_date_format(vir_header['DOCDATE'], VIR_DATE_FORMATS))\
                             .count():
-                        print(f"Création du Virement {doc_number} (date {vir_header['DOCDATE']})")
+                        self.stdout.write(
+                            f"Création du Virement {doc_number} (date {vir_header['DOCDATE']})")
 
                         vir = Virement.objects.create(
                             document_number=doc_number,
@@ -122,7 +124,7 @@ class Command(BaseCommand):
                             perimetre=vir_header['FM_AREA'],
                             process=process,
                             creator_login=vir_header['CRTUSER'],
-                            creation_date=vir_date,
+                            creation_date=make_aware(vir_date),
                             value_date=vir_date_format(vir_header['DOCDATE'], VIR_DATE_FORMATS))
 
                         for item_data in vir_item_data:
@@ -133,15 +135,15 @@ class Command(BaseCommand):
                                 self.parseItemData(item_data, vir, "sender", vir_date)
 
                     else:
-                        print(f"Le virement {doc_number} docnumber existe déjà.")
+                        self.stdout.write(f"Le virement {doc_number} docnumber existe déjà.")
                 except CreationVirementException:
                     if vir:
-                        print(f"Suppression du virement en erreur {vir.document_number}")
+                        self.stdout.write(f"Suppression du virement en erreur {vir.document_number}")
                         vir.delete()
-        print('Missing Structure : {}'.format(', '.join(set(self.list_cf_error))))
-        print('Missing PFI : {}'.format(', '.join(set(self.list_pfi_error))))
+        self.stdout.write('Missing Structure : {}'.format(', '.join(set(self.list_cf_error))))
+        self.stdout.write('Missing PFI : {}'.format(', '.join(set(self.list_pfi_error))))
         for pfi in self.list_pfi_created:
-            print(f"PFI created : {pfi}")
+            self.stdout.write(f"PFI created : {pfi}")
 
     def parseItemData(self, item_data, virement, type, vir_date):
         cf_code = item_data['FUNDS_CTR']
@@ -151,7 +153,7 @@ class Command(BaseCommand):
             pfi = PlanFinancement.active.get(code=pfi_code, structure=cf)
         except (Structure.DoesNotExist,
                 Structure.MultipleObjectsReturned) as e:
-            print(f"Something wrong with CF {cf_code} ({e})")
+            self.stdout.write(f"Something wrong with CF {cf_code} ({e})")
             self.list_cf_error.append(cf_code)
             raise CreationVirementException()
         except PlanFinancement.DoesNotExist as e:
@@ -166,7 +168,7 @@ class Command(BaseCommand):
             self.list_pfi_created.append(f"PFI {created} created on structure {cf}")
             raise CreationVirementException()
         except PlanFinancement.MultipleObjectsReturned as e:
-            print(f"Something wrong with PFI {pfi_code} on CF {cf_code} ({e})")
+            self.stdout.write(f"Something wrong with PFI {pfi_code} on CF {cf_code} ({e})")
             self.list_pfi_error.append(pfi_code)
             raise CreationVirementException()
 
@@ -192,11 +194,11 @@ class Command(BaseCommand):
                 domaine = DomaineFonctionnel.active.get(code=item_data['FUNC_AREA'])
             except (NatureComptableDepense.DoesNotExist,
                     NatureComptableDepense.MultipleObjectsReturned) as e:
-                print(f"Something wrong with NCD {code_compte_budgetaire} ({e})")
+                self.stdout.write(f"Something wrong with NCD {code_compte_budgetaire} ({e})")
                 raise CreationVirementException()
             except (DomaineFonctionnel.DoesNotExist,
                     DomaineFonctionnel.MultipleObjectsReturned) as e:
-                print("Something wrong with DF {item_data['FUNC_AREA']} ({e})")
+                self.stdout.write(f"Something wrong with DF {item_data['FUNC_AREA']} ({e})")
                 raise CreationVirementException()
 
             commentaire = f"{item_data['ITEM_TEXT']} ({virement.document_number})"
@@ -228,7 +230,7 @@ class Command(BaseCommand):
                     .get(code_compte_budgetaire=code_compte_budgetaire)
             except (NatureComptableRecette.DoesNotExist,
                     NatureComptableRecette.MultipleObjectsReturned) as e:
-                print(f"Something wrong with NCR {code_compte_budgetaire} ({e})")
+                self.stdout.write(f"Something wrong with NCR {code_compte_budgetaire} ({e})")
                 raise CreationVirementException()
 
             commentaire = f"{item_data['ITEM_TEXT']} ({virement.document_number})"
