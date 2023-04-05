@@ -100,8 +100,7 @@ class Command(BaseCommand):
 
                         structure = self.get_object(structures, structure, 'structure')
                         accountings.append(model(
-                            pfi=pfi, structure=structure,
-                            commentaire=commentary or None,
+                            pfi=pfi, commentaire=commentary or None,
                             periodebudget=period, annee=year, **amounts))
 
                     except RowError:

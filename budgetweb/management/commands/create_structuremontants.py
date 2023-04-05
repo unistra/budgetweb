@@ -103,7 +103,6 @@ class Command(BaseCommand):
         for i in range(begin, end):
             pfi = get_random_object(self.pfis)
             domainefonctionnel = get_random_object(self.domainefonctionnels)
-            structure = pfi.structure
             annee = (self.periodebudget.annee - 1) + random.randint(0, 4)\
                 if pfi.is_pluriannuel else self.periodebudget.annee
 
@@ -115,7 +114,6 @@ class Command(BaseCommand):
             data = (
                 (Depense, {
                     'pfi': pfi,
-                    'structure': structure,
                     'periodebudget': self.periodebudget,
                     'annee': annee,
                     'domainefonctionnel': domainefonctionnel,
@@ -124,7 +122,6 @@ class Command(BaseCommand):
                 }),
                 (Recette, {
                     'pfi': pfi,
-                    'structure': structure,
                     'periodebudget': self.periodebudget,
                     'annee': annee,
                     'naturecomptablerecette': naturecomptablerecette,
