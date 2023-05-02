@@ -1,6 +1,7 @@
 from datetime import datetime
 from decimal import Decimal
 import json
+import logging
 
 from django.conf import settings
 from django.core.management.base import BaseCommand
@@ -12,6 +13,9 @@ from budgetweb.apps.structure.models import (
     NatureComptableDepense, NatureComptableRecette)
 from budgetweb.models import (Depense, PeriodeBudget, Recette, Virement)
 from budgetweb.utils import get_current_year
+
+
+commands_logger = logging.getLogger('import_commands')
 
 
 VIR_DATETIME_FORMATS = (
@@ -144,6 +148,8 @@ class Command(BaseCommand):
         self.stdout.write('Missing PFI : {}'.format(', '.join(set(self.list_pfi_error))))
         for pfi in self.list_pfi_created:
             self.stdout.write(f"PFI created : {pfi}")
+
+        commands_logger.info('Command import_virement launched with parameters : %s' % options)
 
     def parseItemData(self, item_data, virement, type, vir_date):
         cf_code = item_data['FUNDS_CTR']

@@ -33,6 +33,8 @@ DATABASES = {
 
 LOGGING['handlers']['file']['filename'] = environ.get('LOG_DIR',
         normpath(join('/tmp', 'test_%s.log' % SITE_NAME)))
+LOGGING['handlers']['import_commands_file']['filename'] = environ.get('LOG_DIR',
+        normpath(join('/tmp', 'import_commands_%s.log' % SITE_NAME)))
 LOGGING['handlers']['file']['level'] = 'DEBUG'
 
 for logger in LOGGING['loggers']:

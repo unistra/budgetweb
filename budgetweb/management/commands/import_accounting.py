@@ -1,11 +1,15 @@
 import csv
 from decimal import Decimal
+import logging
 
 from django.core.management.base import BaseCommand
 from django.db import transaction
 
 from budgetweb import models
 from budgetweb.apps.structure import models as structure_models
+
+
+commands_logger = logging.getLogger('import_commands')
 
 
 def to_decimal(amount):
@@ -119,6 +123,8 @@ class Command(BaseCommand):
                 transaction.savepoint_rollback(sid)
             else:
                 transaction.savepoint_commit(sid)
+
+        commands_logger.info('Command import_accounting launched with parameters : %s' % options)
 
     def get_object(self, dct, key, name, msg=''):
         try:

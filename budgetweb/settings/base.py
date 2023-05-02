@@ -299,6 +299,14 @@ LOGGING = {
             'maxBytes': 209715200,
             'backupCount': 3,
             'formatter': 'default'
+        },
+        'import_commands_file': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': '',
+            'maxBytes': 209715200,
+            'backupCount': 3,
+            'formatter': 'default'
         }
     },
     'loggers': {
@@ -316,6 +324,11 @@ LOGGING = {
             'handlers': ['mail_admins', 'file'],
             'level': 'ERROR',
             'propagate': True
+        },
+        'import_commands': {
+            'handlers': ['import_commands_file'],
+            'level': 'INFO',
+            'propagate': True,
         }
     }
 }

@@ -36,6 +36,8 @@ DATABASES['default']['NAME'] = environ.get('DEFAULT_DB_NAME', 'budgetweb')
 
 LOGGING['handlers']['file']['filename'] = environ.get('LOG_DIR',
         normpath(join('/tmp', '%s.log' % SITE_NAME)))
+LOGGING['handlers']['import_commands_file']['filename'] = environ.get('LOG_DIR',
+        normpath(join('/tmp', 'import_commands_%s.log' % SITE_NAME)))
 LOGGING['handlers']['file']['level'] = 'DEBUG'
 
 for logger in LOGGING['loggers']:
