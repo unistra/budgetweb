@@ -132,7 +132,8 @@ def api_set_dcfield_value_by_id(request):
 
 @login_required
 def show_tree(request, type_affichage, structid=0):
-    is_tree_node = request.is_ajax()
+    # https://docs.djangoproject.com/en/dev/releases/3.1/#id2
+    is_tree_node = request.headers.get('x-requested-with') == 'XMLHttpRequest'
     active_period = PeriodeBudget.active.select_related('period').first()
     context = {
         'typeAffichage': type_affichage,

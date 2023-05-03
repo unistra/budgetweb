@@ -3,7 +3,7 @@ import re
 
 from django import template
 from django.conf import settings
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.utils.formats import number_format
 
 import budgetweb
@@ -28,8 +28,8 @@ def intspace(value, use_l10n=True):
             return number_format(value, force_grouping=True)
     if value is None:
         return value
-    orig = force_text(value)
-    new = re.sub("^(-?\d+)(\d{3})", '\g<1> \g<2>', orig)
+    orig = force_str(value)
+    new = re.sub(r"^(-?\d+)(\d{3})", r'\g<1> \g<2>', orig)
     if orig == new:
         return new
     else:
