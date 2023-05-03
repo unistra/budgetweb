@@ -2,7 +2,7 @@ from decimal import Decimal
 
 from django import forms
 from django.db.models import Q
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from budgetweb.apps.structure.models import PlanFinancement
 from .models import Depense, Recette

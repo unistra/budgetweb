@@ -107,7 +107,7 @@ class CalculationTest(TestCase):
         # Check
         out = StringIO()
         call_command('check_structuremontants', stdout=out)
-        self.assertEquals(out.getvalue().strip(), 'No calculation errors')
+        self.assertEqual(out.getvalue().strip(), 'No calculation errors')
 
     def test_random_actions_on_comptabilite_models(self):
         max_montant = 1000
@@ -136,7 +136,7 @@ class CalculationTest(TestCase):
         # Check
         out = StringIO()
         call_command('check_structuremontants', stdout=out)
-        self.assertEquals(out.getvalue().strip(), 'No calculation errors')
+        self.assertEqual(out.getvalue().strip(), 'No calculation errors')
 
         # Updates
         depenses = Depense.objects.all()
@@ -171,4 +171,4 @@ class CalculationTest(TestCase):
         # Check
         out = StringIO()
         call_command('check_structuremontants', stdout=out)
-        self.assertEquals(out.getvalue().strip(), 'No calculation errors')
+        self.assertEqual(out.getvalue().strip(), 'No calculation errors')

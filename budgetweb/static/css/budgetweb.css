@@ -307,3 +307,8 @@ input.decimal{
   color: #fff;
   background-color: #358cd3;
 }
+
+/* Django-hijack */
+div#djhj {
+  z-index: 2000;
+}

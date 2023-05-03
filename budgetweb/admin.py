@@ -6,14 +6,12 @@
 from collections import OrderedDict
 from functools import reduce
 
-from hijack_admin.admin import HijackUserAdminMixin
-
 from django import forms
 from django.contrib import admin
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from budgetweb.apps.structure.models import Structure
 from .models import (Depense, PeriodeBudget, Recette, StructureAuthorizations,
@@ -31,20 +29,6 @@ deactivate_periods.short_description = _("Mark selected periods as deactivated")
 def activate_periods(modeladmin, request, queryset):
     queryset.update(is_active=True)
 activate_periods.short_description = _("Mark selected periods as activated")
-
-
-class UserAdmin(BaseUserAdmin, HijackUserAdminMixin):
-    def get_list_display(self, request):
-        # Add hijack button for admin users
-        if request.user.is_superuser and 'hijack_field' not in self.list_display:
-            self.list_display += ('hijack_field',)
-        else:
-            self.list_display = tuple(f for f in self.list_display if f != 'hijack_field')
-        return self.list_display
-
-
-admin.site.unregister(User)
-admin.site.register(User, UserAdmin)
 
 
 class DepenseAdmin(admin.ModelAdmin):
