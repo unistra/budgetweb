@@ -214,7 +214,7 @@ class Command(BaseCommand):
                 domainefonctionnel=domaine, annee=self.period.annee,
                 fonds=item_data['FUND'], montant_ae=montant_ae, montant_cp=montant_cp,
                 montant_dc=montant_dc, commentaire=commentaire,
-                virement=virement)
+                virement=virement, creepar='Command import_virement')
 
             return True
 
@@ -246,6 +246,6 @@ class Command(BaseCommand):
                 annee=self.period.annee,
                 montant_ar=montant_ar, montant_re=montant_re,
                 montant_dc=montant_dc, commentaire=commentaire,
-                virement=virement)
+                virement=virement, creepar='Command import_virement')
 
             return True
