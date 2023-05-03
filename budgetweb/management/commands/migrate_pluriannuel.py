@@ -35,8 +35,9 @@ class Command(BaseCommand):
                 domainefonctionnel_id=depense['domainefonctionnel'],
                 montant_ae=depense['montant_ae__sum'],
                 montant_cp=depense['montant_cp__sum'],
-                montant_dc=depense['montant_dc__sum'])
-            for depense in depenses
+                montant_dc=depense['montant_dc__sum'],
+                creepar=f'Command migrate_pluriannuel',
+            ) for depense in depenses
         ]
         return depenses_list
 
@@ -57,8 +58,9 @@ class Command(BaseCommand):
                 naturecomptablerecette_id=recette['naturecomptablerecette'],
                 montant_ar=recette['montant_ar__sum'],
                 montant_re=recette['montant_re__sum'],
-                montant_dc=recette['montant_dc__sum'])
-            for recette in recettes
+                montant_dc=recette['montant_dc__sum'],
+                creepar=f'Command migrate_pluriannuel',
+            ) for recette in recettes
         ]
         return recettes_list
 

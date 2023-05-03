@@ -73,6 +73,7 @@ class Command(BaseCommand):
                     try:
                         (year, structure, pfi, accounting_type, enveloppe, nature,
                          domain, ae, cp, d_dc, ar, re, r_dc, commentary) = row
+                        created_by = 'Command import_accounting'
 
                         pfi = self.get_object(pfis, pfi, 'PFI')
                         if accounting_type.lower().startswith('d'):
@@ -105,7 +106,7 @@ class Command(BaseCommand):
                         structure = self.get_object(structures, structure, 'structure')
                         accountings.append(model(
                             pfi=pfi, commentaire=commentary or None,
-                            periodebudget=period, annee=year, **amounts))
+                            periodebudget=period, annee=year, creepar=created_by, **amounts))
 
                     except RowError:
                         continue
