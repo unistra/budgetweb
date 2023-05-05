@@ -42,9 +42,9 @@ L'application BudgetWeb est basée sur Django, jQuery et BootStrap. La version e
 	source /usr/share/virtualenvwrapper/virtualenvwrapper.sh
 ```
 
-- python3.5-dev (comptatible python 3.4)
+- python3.7-dev
 
-On revient dans le home dir (exemple /home/lhutin)
+On revient dans le home dir (exemple /home/myuser)
 
 ```
   git clone https://github.com/unistra/budgetweb.git
@@ -53,7 +53,7 @@ On revient dans le home dir (exemple /home/lhutin)
 On créé le virtualenv pour BudgetWeb.
 
 ```
-  mkvirtualenv -p /usr/bin/python3.5 -a /home/lhutin/budgetweb budgetweb
+  mkvirtualenv -p /usr/bin/python3.7 -a /home/myuser/budgetweb budgetweb
 ```
 
 Vous lancerez et désactiverez l'env. avec les commandes suivantes::
