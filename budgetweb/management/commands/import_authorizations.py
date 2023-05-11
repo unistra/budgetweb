@@ -8,7 +8,7 @@ from budgetweb.models import StructureAuthorizations
 from budgetweb.apps.structure.models import Structure
 
 
-ADMINS = (('ludovic.hutin', 'ludovic.hutin@unistra.fr'),)
+ADMINS = (('myuser', 'myuser@my.little.poney.com'),)
 
 
 def is_admin(username):
