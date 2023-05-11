@@ -32,6 +32,8 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'ssl')
 #####################
 
 LOGGING['handlers']['file']['filename'] = '{{ remote_current_path }}/log/app.log'
+LOGGING['handlers']['import_commands_file']['filename'] = '{{ remote_current_path }}/log/import_commands.log'
+
 
 ##############
 # Secret key #

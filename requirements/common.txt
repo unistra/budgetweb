@@ -1,8 +1,5 @@
-Django>2.2,<2.3
+Django>3.2,<3.3
 django-cas-sso
-psycopg2-binary<2.9
-britney
-britney_utils
+psycopg2-binary
 django-extensions
-django-hijack<2.4
-django-hijack-admin<2.2
+django-hijack<3.3

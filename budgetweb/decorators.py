@@ -102,7 +102,8 @@ def is_ajax_get(view_func):
     """
     @wraps(view_func)
     def wrapper(request, *args, **kwargs):
-        if request.is_ajax() and request.method == 'GET':
+        # https://docs.djangoproject.com/en/dev/releases/3.1/#id2
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest' and request.method == 'GET':
             return view_func(request, *args, **kwargs)
         raise PermissionDenied()
     return wrapper

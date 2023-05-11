@@ -92,6 +92,8 @@ USE_L10N = True
 # If you set this to False, Django will not use timezone-aware datetimes.
 USE_TZ = True
 
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
 
 #######################
 # locale configuration #
@@ -196,6 +198,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_cas.middleware.CASMiddleware',
+    'hijack.middleware.HijackUserMiddleware',
 ]
 
 
@@ -239,8 +242,7 @@ THIRD_PARTY_APPS = (
     'django_cas',
     'django_extensions',
     'hijack',
-    'compat',
-    'hijack_admin',
+    'hijack.contrib.admin',
 )
 
 LOCAL_APPS = (
@@ -267,7 +269,11 @@ LOGGING = {
     'formatters': {
         'default': {
             'format': '%(levelname)s %(asctime)s %(name)s:%(lineno)s %(message)s'
-        }
+        },
+        'django.server': {
+            '()': 'django.utils.log.ServerFormatter',
+            'format': '[%(server_time)s] %(message)s',
+        },
     },
     'filters': {
         'require_debug_false': {
@@ -287,12 +293,25 @@ LOGGING = {
             'filters': ['require_debug_true'],
             'class': 'logging.StreamHandler',
         },
+        'django.server': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'django.server',
+        },
         'mail_admins': {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
         },
         'file': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': '',
+            'maxBytes': 209715200,
+            'backupCount': 3,
+            'formatter': 'default'
+        },
+        'import_commands_file': {
             'level': 'INFO',
             'class': 'logging.handlers.RotatingFileHandler',
             'filename': '',
@@ -307,18 +326,31 @@ LOGGING = {
             'propagate': True,
             'level': 'INFO'
         },
-        'django.request': {
-            'handlers': ['mail_admins', 'file'],
-            'level': 'ERROR',
-            'propagate': True,
+        'django.server': {
+            'handlers': ['django.server'],
+            'level': 'INFO',
+            'propagate': False,
         },
         'budgetweb': {
             'handlers': ['mail_admins', 'file'],
             'level': 'ERROR',
             'propagate': True
+        },
+        'import_commands': {
+            'handlers': ['import_commands_file'],
+            'level': 'INFO',
+            'propagate': True,
         }
     }
 }
+
+
+#####################
+# Logout/logout url #
+#####################
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
 
 
 #####################
@@ -337,13 +369,3 @@ CAS_USERNAME_FORMAT = lambda username: username.lower().strip()
 
 DFI_GROUP_NAME = 'DFI'
 LATE_GROUP_NAME = 'RETARDATAIRE'
-
-
-###################
-# HIJACK SETTINGS #
-###################
-HIJACK_LOGIN_REDIRECT_URL = '/'  # Where admins are redirected to after hijacking a user
-HIJACK_LOGOUT_REDIRECT_URL = '/'  # Where admins are redirected to after releasing a user
-HIJACK_ALLOW_GET_REQUESTS = True
-HIJACK_REGISTER_ADMIN = False
-HIJACK_USE_BOOTSTRAP = True

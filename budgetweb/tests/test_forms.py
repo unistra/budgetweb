@@ -4,7 +4,7 @@ from decimal import Decimal
 from django import forms
 from django.contrib.auth.models import User
 from django.test import TestCase
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from budgetweb.apps.structure.models import (
     DomaineFonctionnel, NatureComptableDepense, NatureComptableRecette,
@@ -117,7 +117,7 @@ class RecetteFormTest(TestCase):
         with self.assertRaises(forms.ValidationError) as e:
             form.is_valid()
             form.clean()
-        self.assertRegexpMatches(
+        self.assertRegex(
             e.exception.message,
             'Le montant AR et RE ne peuvent pas être différent')
 
@@ -149,7 +149,7 @@ class RecetteFormTest(TestCase):
         with self.assertRaises(forms.ValidationError) as e:
             form.is_valid()
             form.clean()
-        self.assertRegexpMatches(
+        self.assertRegex(
             e.exception.message,
             'Le montant AR ne peut être différent de 0')
 
@@ -181,7 +181,7 @@ class RecetteFormTest(TestCase):
         with self.assertRaises(forms.ValidationError) as e:
             form.is_valid()
             form.clean()
-        self.assertRegexpMatches(
+        self.assertRegex(
             e.exception.message,
             'Le montant RE ne peut être différent de 0')
 
@@ -388,21 +388,21 @@ class DepenseFormTest(TestCase):
                     with self.assertRaises(forms.ValidationError) as e:
                         form.is_valid()
                         form.clean()
-                        self.assertRegexpMatches(
+                        self.assertRegex(
                             e.exception.message,
                             'Le montant CP et DC ne peuvent pas être')
                 elif code_nature == '9DAMO' and not is_admin_or_not:
                     with self.assertRaises(forms.ValidationError) as e:
                         form.is_valid()
                         form.clean()
-                    self.assertRegexpMatches(
+                    self.assertRegex(
                         e.exception.message,
                         'Le montant AE ne peut être différent de 0')
                 elif code_nature == '9DCFG' and not is_admin_or_not:
                     with self.assertRaises(forms.ValidationError) as e:
                         form.is_valid()
                         form.clean()
-                    self.assertRegexpMatches(
+                    self.assertRegex(
                         e.exception.message,
                         'Le montant CP ne peut être différent de 0')
                 else:
@@ -470,7 +470,7 @@ class DepenseFormTest(TestCase):
         with self.assertRaises(forms.ValidationError) as e:
             form.is_valid()
             form.clean()
-        self.assertRegexpMatches(
+        self.assertRegex(
             e.exception.message,
             'Le montant AE et CP ne peuvent pas être différent')
 
@@ -505,7 +505,7 @@ class DepenseFormTest(TestCase):
         with self.assertRaises(forms.ValidationError) as e:
             form.is_valid()
             form.clean()
-        self.assertRegexpMatches(
+        self.assertRegex(
             e.exception.message,
             'Le montant CP et DC ne peuvent pas être différent')
 
@@ -574,7 +574,7 @@ class DepenseFormTest(TestCase):
         with self.assertRaises(forms.ValidationError) as e:
             form.is_valid()
             form.clean()
-        self.assertRegexpMatches(
+        self.assertRegex(
             e.exception.message,
             'Le montant AE doit être identique au montant DC')
 
@@ -609,7 +609,7 @@ class DepenseFormTest(TestCase):
         with self.assertRaises(forms.ValidationError) as e:
             form.is_valid()
             form.clean()
-        self.assertRegexpMatches(
+        self.assertRegex(
             e.exception.message,
             'Le montant CP ne peut être différent de 0')
 

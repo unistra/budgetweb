@@ -1,9 +1,14 @@
+import logging
+
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
 from django.db.models import Q, Sum
 
 from budgetweb.apps.structure.models import PlanFinancement
 from budgetweb.models import Depense, PeriodeBudget, Recette
+
+
+commands_logger = logging.getLogger('import_commands')
 
 
 class Command(BaseCommand):
@@ -24,13 +29,15 @@ class Command(BaseCommand):
         depenses_list = [
             Depense(
                 pfi=pfi,
-                periodebudget=self.period, annee=year or depense['annee'],
+                periodebudget=self.period,
+                annee=year or depense['annee'],
                 naturecomptabledepense_id=depense['naturecomptabledepense'],
                 domainefonctionnel_id=depense['domainefonctionnel'],
                 montant_ae=depense['montant_ae__sum'],
                 montant_cp=depense['montant_cp__sum'],
-                montant_dc=depense['montant_dc__sum'])
-            for depense in depenses
+                montant_dc=depense['montant_dc__sum'],
+                creepar='Command migrate_pluriannuel',
+            ) for depense in depenses
         ]
         return depenses_list
 
@@ -46,12 +53,14 @@ class Command(BaseCommand):
         recettes_list = [
             Recette(
                 pfi=pfi,
-                periodebudget=self.period, annee=year or recette['annee'],
+                periodebudget=self.period,
+                annee=year or recette['annee'],
                 naturecomptablerecette_id=recette['naturecomptablerecette'],
                 montant_ar=recette['montant_ar__sum'],
                 montant_re=recette['montant_re__sum'],
-                montant_dc=recette['montant_dc__sum'])
-            for recette in recettes
+                montant_dc=recette['montant_dc__sum'],
+                creepar='Command migrate_pluriannuel',
+            ) for recette in recettes
         ]
         return recettes_list
 
@@ -101,3 +110,5 @@ class Command(BaseCommand):
 
             call_command('check_structuremontants', '-u', '-y %s' % year,
                          *check_structuremontants_parameters, stdout=self.stdout)
+
+        commands_logger.info('Command migrate_pluriannuel launched with parameters : %s' % options)

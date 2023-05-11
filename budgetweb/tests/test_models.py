@@ -299,7 +299,9 @@ class ManagersTest(TestCase):
     def test_active_period_manager(self):
         StructureMontant.objects.create(structure_id=1, periodebudget_id=1,
                                         annee=get_current_year())
-        StructureMontant.objects.create(structure_id=1, periodebudget_id=2,
+        period_budget = PeriodeBudget.objects.create(
+            period_id=1, annee=get_current_year(), is_active =False)
+        StructureMontant.objects.create(structure_id=1, periodebudget=period_budget,
                                         annee=get_current_year())
 
         montants = StructureMontant.active_period.all()

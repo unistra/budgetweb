@@ -1,11 +1,15 @@
 import csv
 from decimal import Decimal
+import logging
 
 from django.core.management.base import BaseCommand
 from django.db import transaction
 
 from budgetweb import models
 from budgetweb.apps.structure import models as structure_models
+
+
+commands_logger = logging.getLogger('import_commands')
 
 
 def to_decimal(amount):
@@ -69,6 +73,7 @@ class Command(BaseCommand):
                     try:
                         (year, structure, pfi, accounting_type, enveloppe, nature,
                          domain, ae, cp, d_dc, ar, re, r_dc, commentary) = row
+                        created_by = 'Command import_accounting'
 
                         pfi = self.get_object(pfis, pfi, 'PFI')
                         if accounting_type.lower().startswith('d'):
@@ -100,9 +105,8 @@ class Command(BaseCommand):
 
                         structure = self.get_object(structures, structure, 'structure')
                         accountings.append(model(
-                            pfi=pfi, structure=structure,
-                            commentaire=commentary or None,
-                            periodebudget=period, annee=year, **amounts))
+                            pfi=pfi, commentaire=commentary or None,
+                            periodebudget=period, annee=year, creepar=created_by, **amounts))
 
                     except RowError:
                         continue
@@ -120,6 +124,8 @@ class Command(BaseCommand):
                 transaction.savepoint_rollback(sid)
             else:
                 transaction.savepoint_commit(sid)
+
+        commands_logger.info('Command import_accounting launched with parameters : %s' % options)
 
     def get_object(self, dct, key, name, msg=''):
         try:

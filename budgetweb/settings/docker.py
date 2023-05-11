@@ -23,12 +23,16 @@ DEBUG = True
 # engine : sqlite3
 # name : PROJECT_ROOT_DIR/default.db
 
-
-DATABASES['default']['HOST'] = environ.get('DEFAULT_DB_HOST', 'localhost')
-DATABASES['default']['USER'] = environ.get('DEFAULT_DB_USER', '')
-DATABASES['default']['PASSWORD'] = environ.get('DEFAULT_DB_PASSWORD', '')
-DATABASES['default']['NAME'] = environ.get('DEFAULT_DB_NAME', 'budgetweb')
-
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'budgetweb',
+        'USER': 'budgetweb',
+        'PASSWORD': 'budgetweb',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}
 
 #####################
 # Log configuration #
@@ -36,8 +40,6 @@ DATABASES['default']['NAME'] = environ.get('DEFAULT_DB_NAME', 'budgetweb')
 
 LOGGING['handlers']['file']['filename'] = environ.get('LOG_DIR',
         normpath(join('/tmp', '%s.log' % SITE_NAME)))
-LOGGING['handlers']['import_commands_file']['filename'] = environ.get('LOG_DIR',
-        normpath(join('/tmp', 'import_commands_%s.log' % SITE_NAME)))
 LOGGING['handlers']['file']['level'] = 'DEBUG'
 
 for logger in LOGGING['loggers']:
@@ -50,9 +52,8 @@ for logger in LOGGING['loggers']:
 
 INSTALLED_APPS += (
     'coverage',
-    'debug_toolbar',
 )
-# TEST_RUNNER = 'django_coverage.coverage_runner.CoverageRunner'
+#TEST_RUNNER = 'django_coverage.coverage_runner.CoverageRunner'
 
 ############
 # Dipstrap #
@@ -66,16 +67,14 @@ DIPSTRAP_STATIC_URL += '%s/' % DIPSTRAP_VERSION
 #################
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
-MIDDLEWARE += [
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
-]
-INTERNAL_IPS = ('127.0.0.1', '0.0.0.0')
-
+INTERNAL_IPS = ('172.16.240.1', '127.0.0.1', '0.0.0.0')
+TEMPLATE_DEBUG = True
+ALLOWED_HOSTS = ['*']
 
 #################
 # Interfaces SI #
 #################
 
-SIFACWS_DESC = 'https://rest-api-test.app.unistra.fr/sifacws/description.json'
-SIFACWS_URL = 'https://sifacws-test.app.unistra.fr/'
-SIFACWS_APIKEY = environ.get('SIFACWS_APIKEY')
+SIFACWS_DESC = 'https://FIXIT/sifacws/description.json'
+SIFACWS_URL = 'https://FIXIT/'
+SIFACWS_APIKEY = 'FIXIT'
